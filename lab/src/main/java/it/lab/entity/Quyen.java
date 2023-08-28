@@ -18,7 +18,7 @@ public class Quyen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "maquyen")
+    @Column(name = "maquyen",unique = true)
     private String maQuyen;
     @Column(name = "tenquyen")
     private String tenQuyen;

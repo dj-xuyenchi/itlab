@@ -18,7 +18,7 @@ public class RankKhachHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "marank")
+    @Column(name = "marank",unique = true)
     private String maRank;
     @Column(name = "tenrank")
     private String tenRank;

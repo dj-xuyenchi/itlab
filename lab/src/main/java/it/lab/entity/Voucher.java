@@ -21,7 +21,7 @@ public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "mavoucher")
+    @Column(name = "mavoucher",unique = true)
     private String maVoucher;
     @Column(name = "tenvoucher")
     private String tenVoucher;

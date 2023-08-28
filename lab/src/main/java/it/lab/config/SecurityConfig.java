@@ -2,6 +2,9 @@ package it.lab.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -16,16 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails admin = User.withUsername("hach")
-                .password(encoder.encode("hacheery"))
-                .roles("ADMIN")
-                .build();
-        UserDetails user = User.withUsername("user")
-                .password(encoder.encode("pwd1"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(admin, user);
+    public UserDetailsService userDetailsService() {
+        return new UserService();
     }
 
     @Bean
@@ -35,15 +30,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // return http.
-        return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/hello").permitAll() // với endpoint /hello thì sẽ được cho qua
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/customer/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
-                .and().formLogin() // trả về page login nếu chưa authenticate
-                .and().build();
+        http.authorizeHttpRequests(req -> req.requestMatchers("/api/home/**").permitAll())
+                .authorizeHttpRequests(req -> req.requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().permitAll())
+                .formLogin(Customizer.withDefaults());
+        return http.build();
     }
-
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 }

@@ -25,7 +25,7 @@ public class HoaDon {
     @JoinColumn(name = "diachigiaoid")
     @ManyToOne
     private DiaChi diaChiGiao;
-    @Column(name = "mahoadon")
+    @Column(name = "mahoadon",unique = true)
     private String maHoaDon;
     @JoinColumn(name = "phuongthucthanhtoan")
     @ManyToOne

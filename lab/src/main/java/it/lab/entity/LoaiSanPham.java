@@ -18,7 +18,7 @@ public class LoaiSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "maloai")
+    @Column(name = "maloai",unique = true)
     private String maLoai;
     @Column(name = "tenloai")
     private String tenLoai;
