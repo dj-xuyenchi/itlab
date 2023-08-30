@@ -30,9 +30,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(req -> req.requestMatchers("/api/home/**").permitAll())
-                .authorizeHttpRequests(req -> req.requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().permitAll())
-                .formLogin(Customizer.withDefaults());
+       // http.authorizeHttpRequests(req -> req.requestMatchers("/api/home/**").permitAll())
+        //        .authorizeHttpRequests(req -> req.requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().permitAll())
+        //        .formLogin(Customizer.withDefaults());
         return http.build();
     }
     @Bean
