@@ -19,4 +19,8 @@ public class BaseTest {
     public ResponseEntity<?> layDuLieu() {
         return ResponseEntity.ok(_nguoiDungService.layNguoiDung());
     }
+     @RequestMapping(value = "/test2", method = RequestMethod.GET)
+    public ResponseEntity<?> layDuLieu2() {
+        return ResponseEntity.ok("hihi");
+    }
 }
