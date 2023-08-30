@@ -25,6 +25,6 @@ public class BaseTest {
     }
       @RequestMapping(value = "/test3", method = RequestMethod.GET)
     public ResponseEntity<?> layDuLieu3() {
-        return ResponseEntity.ok("éc éc éc :3");
+        return ResponseEntity.ok("éc éc éc :3:3");
     }
 }
