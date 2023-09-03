@@ -11,7 +11,7 @@
     <groupId>it</groupId>
     <artifactId>lab</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>lab</name>
     <description>Demo project for Spring Boot</description>
     <properties>
