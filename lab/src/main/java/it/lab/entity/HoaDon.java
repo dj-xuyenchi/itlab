@@ -33,7 +33,7 @@ public class HoaDon {
     @JoinColumn(name = "phuongthucvanchuyen")
     @ManyToOne
     private PhuongThucVanChuyen phuongThucVanChuyen;
-    @Column(name = "ghichu")
+    @Column(name = "ghichu",columnDefinition = "nvarchar(max)")
     private String ghiChu;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;
@@ -51,7 +51,6 @@ public class HoaDon {
     @JoinColumn(name = "nhanvienid")
     @ManyToOne
     private NguoiDung nhanVien;
-
     @OneToMany(mappedBy = "hoaDon")
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
     @OneToMany(mappedBy = "hoaDon")

@@ -20,7 +20,7 @@ public class LoaiSanPham {
     private Long id;
     @Column(name = "maloai",unique = true)
     private String maLoai;
-    @Column(name = "tenloai")
+    @Column(name = "tenloai",columnDefinition = "nvarchar(max)")
     private String tenLoai;
     @OneToMany(mappedBy = "loaiSanPham")
     private List<SanPham> sanPhamList;

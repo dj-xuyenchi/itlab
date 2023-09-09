@@ -23,7 +23,7 @@ public class Voucher {
     private Long id;
     @Column(name = "mavoucher",unique = true)
     private String maVoucher;
-    @Column(name = "tenvoucher")
+    @Column(name = "tenvoucher",columnDefinition = "nvarchar(max)")
     private String tenVoucher;
     @Column(name = "giatrigiam")
     private Double giaTriGiam;

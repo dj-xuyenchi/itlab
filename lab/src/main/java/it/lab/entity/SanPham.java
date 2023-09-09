@@ -22,7 +22,7 @@ public class SanPham {
     private Long id;
     @Column(name = "masanpham",unique = true)
     private String maSanPham;
-    @Column(name = "tensanpham")
+    @Column(name = "tensanpham",columnDefinition = "nvarchar(max)")
     private String tenSanPham;
     @Column(name = "hinhanh")
     private String hinhAnh;

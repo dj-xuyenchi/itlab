@@ -19,9 +19,9 @@ public class PhuongThucVanChuyen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "maphuongthuc")
+    @Column(name = "maphuongthuc",unique = true)
     private String maPhuongThuc;
-    @Column(name = "tenphuongthuc")
+    @Column(name = "tenphuongthuc",columnDefinition = "nvarchar(max)")
     private String tenPhuongThuc;
     @Column(name = "trangthai")
     private TrangThaiPhuongThucThanhToan trangThai;

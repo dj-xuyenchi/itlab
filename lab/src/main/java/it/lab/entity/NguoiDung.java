@@ -20,13 +20,15 @@ public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "email")
+    @Column(name = "manguoidung",unique = true)
+    private String maNguoiDung;
+    @Column(name = "email",columnDefinition = "nvarchar(max)")
     private String email;
-    @Column(name = "matkhau")
+    @Column(name = "matkhau",columnDefinition = "nvarchar(max)")
     private String matKhau;
-    @Column(name = "ten")
+    @Column(name = "ten",columnDefinition = "nvarchar(max)")
     private String ten;
-    @Column(name = "ho")
+    @Column(name = "ho",columnDefinition = "nvarchar(max)")
     private String ho;
     @Column(name = "anhdaidien")
     private String anhDaiDien;

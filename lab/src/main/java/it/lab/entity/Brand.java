@@ -20,7 +20,7 @@ public class Brand {
     private Long id;
     @Column(name = "mabrand",unique = true)
     private String maBrand;
-    @Column(name = "tenbrand")
+    @Column(name = "tenbrand",columnDefinition = "nvarchar(max)")
     private String tenBrand;
     @OneToMany(mappedBy = "brand")
     private List<SanPham> sanPhamList;

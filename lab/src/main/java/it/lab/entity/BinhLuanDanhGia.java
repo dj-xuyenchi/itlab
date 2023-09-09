@@ -27,6 +27,6 @@ public class BinhLuanDanhGia {
     private HoaDon hoaDon;
     @Column(name = "hinhanh")
     private String hinhAnh;
-    @Column(name = "binhluan")
+    @Column(name = "binhluan",columnDefinition = "nvarchar(max)")
     private String binhLuan;
 }

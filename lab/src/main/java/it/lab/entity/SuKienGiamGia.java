@@ -26,7 +26,7 @@ public class SuKienGiamGia {
     private LocalDate ngayBatDau;
     @Column(name = "ngayketthuc")
     private LocalDate ngayKetThuc;
-    @Column(name = "mota")
+    @Column(name = "mota",columnDefinition = "nvarchar(max)")
     private String moTa;
     @Column(name = "logosukien")
     private String logoSuKien;

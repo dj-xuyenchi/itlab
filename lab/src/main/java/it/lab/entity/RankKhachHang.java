@@ -20,7 +20,7 @@ public class RankKhachHang {
     private Long id;
     @Column(name = "marank",unique = true)
     private String maRank;
-    @Column(name = "tenrank")
+    @Column(name = "tenrank",columnDefinition = "nvarchar(max)")
     private String tenRank;
     @Column(name = "phantramgiam")
     private Double phanTramGiam;

@@ -29,7 +29,7 @@ public class DiaChi {
     private String huyenId;
     @Column(name = "tinhid")
     private String tinhId;
-    @Column(name = "chitietdiachi")
+    @Column(name = "chitietdiachi",columnDefinition = "nvarchar(max)")
     private String chiTietDiaChi;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;

@@ -23,7 +23,6 @@ public class BaseTest {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<?> layDuLieu() throws IOException {
-        System.out.println( CloudinaryUpload.uploadFile(null));
         return ResponseEntity.ok(_nguoiDungService.layNguoiDung());
     }
      @RequestMapping(value = "/test2", method = RequestMethod.GET)
