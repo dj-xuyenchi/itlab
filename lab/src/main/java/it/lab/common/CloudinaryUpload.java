@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,6 @@ public class CloudinaryUpload {
     private static String cloudName = "dh0kxilvg";
     private static String apiKey = "111557288631136";
     private static String apiSecret = "H93J0UqHhuLgQGei2qJTD6-G_SA";
-    private static final Random rnd = new Random();
 
     private static Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
             "cloud_name", cloudName,
@@ -28,8 +28,7 @@ public class CloudinaryUpload {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("No file selected.");
         }
-
-        File tmpFile = File.createTempFile("temp", null);
+        File tmpFile = new File(UUID.randomUUID().toString() + "." + getFileExtension(file));
         file.transferTo(tmpFile);
 
         try {
@@ -52,5 +51,16 @@ public class CloudinaryUpload {
         } finally {
             tmpFile.delete(); // Xóa tệp tạm sau khi tải lên
         }
+    }
+
+    private static String getFileExtension(MultipartFile file) {
+        String originalFileName = file.getOriginalFilename();
+        if (originalFileName != null) {
+            int lastDotIndex = originalFileName.lastIndexOf(".");
+            if (lastDotIndex != -1) {
+                return originalFileName.substring(lastDotIndex + 1);
+            }
+        }
+        return "";
     }
 }
