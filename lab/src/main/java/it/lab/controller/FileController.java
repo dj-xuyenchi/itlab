@@ -13,7 +13,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/file")
-@CrossOrigin(value = "*", allowedHeaders = "*")
 public class FileController {
     @Autowired
     private IFileService _file;

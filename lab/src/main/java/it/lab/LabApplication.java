@@ -1,6 +1,7 @@
 package it.lab;
 
 import it.lab.entity.NguoiDung;
+import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.repository.NguoiDungRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

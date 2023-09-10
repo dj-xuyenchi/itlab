@@ -16,7 +16,6 @@ import java.io.InputStream;
 
 @RestController
 @RequestMapping("/api/home")
-@CrossOrigin(value = "*", allowedHeaders = "*")
 public class BaseTest {
     @Autowired
     private TestService _nguoiDungService;

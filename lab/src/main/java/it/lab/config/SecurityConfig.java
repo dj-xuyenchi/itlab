@@ -18,6 +18,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final String DEV_PORT = "8080";
+    private final String DEV_URL = "http://localhost:";
+    private final String DEV_EVN = DEV_URL + DEV_PORT + "/#";
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserService();
@@ -30,14 +34,30 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(req -> req.requestMatchers("/api/file/**","/api/home/**").permitAll())
-                .authorizeHttpRequests(req -> req.requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().permitAll())
-                .formLogin(Customizer.withDefaults());
+        http.authorizeHttpRequests(req -> req
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/member/**").hasRole("MEMBER")
+                .requestMatchers("/api/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .anyRequest().permitAll()
+        )
+                .formLogin((formLogin) ->
+                        formLogin
+                                .usernameParameter("username")
+                                .passwordParameter("password")
+                                .loginPage(DEV_EVN + "/authentication/login")
+                                .failureUrl(DEV_EVN + "/authentication/login?failed")
+                                .loginProcessingUrl("/auth")
+                                .successForwardUrl("/home")
+                )
+                .csrf((csrf) -> csrf.disable())
+                .cors(Customizer.withDefaults())
+        ;
         return http.build();
     }
+
     @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
