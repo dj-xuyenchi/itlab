@@ -35,17 +35,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(req -> req
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/member/**").hasRole("MEMBER")
-                .requestMatchers("/api/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
+//                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+//                .requestMatchers("/api/member/**").hasRole("MEMBER")
+//                .requestMatchers("/api/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
                 .anyRequest().permitAll()
         )
                 .formLogin((formLogin) ->
                         formLogin
                                 .usernameParameter("username")
                                 .passwordParameter("password")
-                                .loginPage(DEV_EVN + "/authentication/login")
-                                .failureUrl(DEV_EVN + "/authentication/login?failed")
+                                .loginPage("/authentication/login")
+                                .failureUrl("/authentication/login?failed")
                                 .loginProcessingUrl("/auth")
                                 .successForwardUrl("/home")
                 )

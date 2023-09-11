@@ -1,12 +1,15 @@
 package it.lab.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class HomeController {
-    @RequestMapping("/home")
-    public String TrangChu(){
-        return "index";
+    @GetMapping ("/index")
+    public String getIndexPage() {
+        return "index"; // Trả về tên của trang JSP, Spring sẽ tự động tìm nó trong thư mục "WEB-INF/jsp/"
     }
 }
