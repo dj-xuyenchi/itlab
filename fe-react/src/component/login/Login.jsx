@@ -1,9 +1,4 @@
 import { Button, Card, Divider, Input } from "antd";
-import {
-    exchangeCodeForToken,
-    getGoogleAuthUrl,
-    getUserInfo,
-} from "../../plugins/ggoauth2";
 import "./style.css";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -12,28 +7,25 @@ import { selectLanguage } from "../../language/selectLanguage";
 
 function Login() {
     const language = useSelector(selectLanguage);
-    console.log(language);
     const [typeError, setTypeError] = useState(undefined)
-    const loginWithGoogle = async () => {
-        const authUrl = await getGoogleAuthUrl();
+    // const loginWithGoogle = async () => {
+    //     const authUrl = await getGoogleAuthUrl();
+    //     // dieu huong sang google
+    //     console.log(authUrl);
+    //     window.location.href = authUrl;
+    // };
 
-        // dieu huong sang google
-        console.log(authUrl);
-        window.location.href = authUrl;
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    if (code) {
-        const getUser = async () => {
-            const user = await exchangeCodeForToken(code);
-            // đã lấy được info
-            //  const info = await getUserInfo(user.token);
-            // console.log(info);
-        };
-        getUser();
-    }
-    const hour = new Date().getHours;
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const code = urlParams.get("code");
+    // if (code) {
+    //     const getUser = async () => {
+    //         const user = await exchangeCodeForToken(code);
+    //         // đã lấy được info
+    //         //  const info = await getUserInfo(user.token);
+    //         // console.log(info);
+    //     };
+    //     getUser();
+    // }
 
     return (
         <>
