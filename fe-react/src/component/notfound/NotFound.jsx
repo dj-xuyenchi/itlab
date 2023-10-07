@@ -8,7 +8,7 @@ function NotFound() {
 
     return (
         <>
-            <div></div>
+            <div>Hú nầu</div>
         </>
     );
 }

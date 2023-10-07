@@ -1,16 +1,16 @@
-import "./style.css";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import "./style.css";
 import { selectLanguage } from "../../language/selectLanguage";
-function Login() {
-    const language = useSelector(selectLanguage);
-    const [typeError, setTypeError] = useState(undefined)
-   
-    return (
-        <>
-            <div></div>
-        </>
-    );
+import Header from "../common/header/Header";
+import Body from "./body/Body";
+function HomePage() {
+  const language = useSelector(selectLanguage);
+  return (
+    <>
+      <Header />
+      <Body />
+    </>
+  );
 }
 
-export default Login;
+export default HomePage;

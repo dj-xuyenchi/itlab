@@ -1,0 +1,29 @@
+.product-item {
+    width: 25%;
+    height: 38%;
+    display: flex;
+    float: left;
+    margin-bottom: 12px;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-item .product-detail {
+    padding: 0px 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-item .product-detail .product-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.product-item .product-detail .product-img img {
+    height: 100%;
+    width: auto;
+}

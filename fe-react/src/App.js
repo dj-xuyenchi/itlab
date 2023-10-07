@@ -11,6 +11,7 @@ import { openNotification } from './plugins/notificationProvider';
 import { selectLanguage } from './language/selectLanguage';
 import { selectNotiApi } from './redux/selectNoti';
 import NotFound from './component/notfound/NotFound';
+import HomePage from './component/home/HomePage';
 
 function App() {
   const dispath = useDispatch()
@@ -39,12 +40,13 @@ function App() {
       {contextHolder}
       <Routes>
         <Route path="/*" element={<NotFound />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      <button type="" onClick={() => {
+      {/* <button type="" onClick={() => {
         openNotification(languageSystem.systemNotification.system, languageSystem.systemNotification.disconnect, 'error', notiApi.noti)
 
-      }}>sss</button>
+      }}>sss</button> */}
     </>
   );
 }

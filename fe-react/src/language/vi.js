@@ -24,4 +24,36 @@ export const vi = {
         closeConnect: "Đóng kết nối!",
     },
     type: 'vi',
+    header: {
+        search: {
+            inputHolder: "Tìm kiếm"
+        },
+        title: "Sale up to 50%"
+    }
+    ,
+    body: {
+        filter: {
+            title: "Bộ lọc",
+            item: {
+                size: "Kích thước",
+                color: "Màu sắc",
+                cost: "Khoảng giá",
+                type: "Loại sản phẩm"
+            }
+        },
+        product: {
+            subFilter: {
+                sort: {
+                    total: "sản phẩm",
+                    title: "Sắp xếp theo",
+                    select: {
+                        title: "Mặc định",
+                        option: [
+                            "Giá thấp đến cao", "Giá cao đến thấp"
+                        ]
+                    }
+                }
+            }
+        }
+    }
 }
