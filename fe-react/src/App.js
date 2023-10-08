@@ -12,6 +12,7 @@ import { selectLanguage } from './language/selectLanguage';
 import { selectNotiApi } from './redux/selectNoti';
 import NotFound from './component/notfound/NotFound';
 import HomePage from './component/home/HomePage';
+import DashBoard from './component/admin/dashboard/DashBoard';
 
 function App() {
   const dispath = useDispatch()
@@ -42,6 +43,7 @@ function App() {
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<DashBoard />} />
       </Routes>
       {/* <button type="" onClick={() => {
         openNotification(languageSystem.systemNotification.system, languageSystem.systemNotification.disconnect, 'error', notiApi.noti)
