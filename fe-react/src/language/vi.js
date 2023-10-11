@@ -35,11 +35,23 @@ export const vi = {
         filter: {
             title: "Bộ lọc",
             item: {
-                size: "Kích thước",
-                color: "Màu sắc",
-                cost: "Khoảng giá",
-                type: "Loại sản phẩm"
-            }
+                size: { title: "Kích thước" },
+                color: { title: "Màu sắc" },
+                cost: {
+                    title: "Khoảng giá",
+                    option: [{
+                        type: 1,
+                        name: "Dưới 500.000đ"
+                    }, {
+                        type: 2,
+                        name: "Dưới 1.000.000đ"
+                    }, {
+                        type: 3,
+                        name: "Dưới 1.500.000đ"
+                    }]
+                },
+                type: { title: "Loại sản phẩm" }
+            },
         },
         product: {
             subFilter: {

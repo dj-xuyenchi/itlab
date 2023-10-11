@@ -1,0 +1,39 @@
+.image-gallery-content {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.image-gallery-thumbnails {
+    padding: 0px 0px !important;
+}
+
+.image-gallery-thumbnails-container {
+    flex-direction: column;
+    display: flex;
+}
+
+.image-gallery-thumbnails-wrapper {
+    margin-right: 12px;
+}
+
+.slider-img {
+    display: block;
+    width: 40%;
+}
+
+/* Custom CSS for React Image Gallery */
+.image-gallery {
+    position: relative;
+}
+
+/* Hide navigation buttons by default */
+.image-gallery-left-nav,
+.image-gallery-right-nav {
+    display: none;
+}
+
+/* Show navigation buttons when hovering over the gallery container */
+.image-gallery:hover .image-gallery-left-nav,
+.image-gallery:hover .image-gallery-right-nav {
+    display: block;
+}

@@ -53,12 +53,6 @@ function Header() {
                 {
                   title: <a href="">Application Center</a>,
                 },
-                {
-                  title: <a href="">Application List</a>,
-                },
-                {
-                  title: "An Application",
-                },
               ]}
             />
           </div>
@@ -92,15 +86,6 @@ function Header() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="header-banner">
-          <img
-            src="https://routine.vn/media/catalog/category/SALE_UP_TO_50_-_T1023_1__1.jpg"
-            alt="anh"
-          />
-        </div>
-        <div className="header-title">
-          <h3>{language.header.title}</h3>
         </div>
       </div>
     </>
