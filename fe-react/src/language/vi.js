@@ -67,5 +67,8 @@ export const vi = {
                 }
             }
         }
+    },
+    wish: {
+        title: "Yêu thích"
     }
 }

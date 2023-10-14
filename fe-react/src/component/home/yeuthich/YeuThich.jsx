@@ -3,6 +3,7 @@ import "./style.css";
 import { selectLanguage } from "../../../language/selectLanguage";
 import { Drawer } from "antd";
 import { useState } from "react";
+import YeuThichItem from "./YeuThichItem";
 function YeuThich({ open, setOpen }) {
   const language = useSelector(selectLanguage);
   const [placement, setPlacement] = useState("right");
@@ -12,16 +13,14 @@ function YeuThich({ open, setOpen }) {
   return (
     <>
       <Drawer
-        title="Basic Drawer"
+        title={language.wish.title}
         placement={placement}
         closable={false}
         onClose={handleCloseGioHang}
         open={open}
         key={placement}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <YeuThichItem />
       </Drawer>
     </>
   );
