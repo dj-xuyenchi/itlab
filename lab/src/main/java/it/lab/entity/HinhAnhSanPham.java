@@ -18,11 +18,12 @@ public class HinhAnhSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "soluongloi")
+    @Column(name = "linkhinhanh")
     private String linkHinhAnh;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
-    private SanPham sanPham; @Column(name = "ngaytao")
+    private SanPham sanPham;
+    @Column(name = "ngaytao")
     private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDate ngayCapNhat;

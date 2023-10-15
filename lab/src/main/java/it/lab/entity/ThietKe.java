@@ -19,8 +19,8 @@ public class ThietKe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "maloai")
-    private String maLoai;
+    @Column(name = "mathietke")
+    private String maThietKe;
     @Column(name = "tenthietke")
     private String tenThietKe;
     @OneToMany(mappedBy = "thietKe")
