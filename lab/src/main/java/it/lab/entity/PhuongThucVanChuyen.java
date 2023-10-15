@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,5 +27,8 @@ public class PhuongThucVanChuyen {
     @Column(name = "trangthai")
     private TrangThaiPhuongThucThanhToan trangThai;
     @OneToMany(mappedBy = "phuongThucVanChuyen")
-    private List<HoaDon> hoaDonList;
+    private List<HoaDon> hoaDonList; @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }

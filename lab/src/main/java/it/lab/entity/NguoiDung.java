@@ -50,8 +50,6 @@ public class NguoiDung {
     @OneToMany(mappedBy = "nguoiDung")
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
     @OneToMany(mappedBy = "nguoiDung")
-    private List<DanhGiaSao> danhGiaSaoList;
-    @OneToMany(mappedBy = "nguoiDung")
     private List<DiaChi> diaChiList;
     @OneToMany(mappedBy = "nguoiMua")
     private List<GioHang> gioHangList;

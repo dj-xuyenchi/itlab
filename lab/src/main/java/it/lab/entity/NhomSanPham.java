@@ -10,20 +10,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "brand")
+@Table(name = "nhomsanpham")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Brand {
+public class NhomSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "mabrand",unique = true)
-    private String maBrand;
-    @Column(name = "tenbrand",columnDefinition = "nvarchar(max)")
-    private String tenBrand;
-    @OneToMany(mappedBy = "brand")
+    @Column(name = "maloai")
+    private String maNhom;
+    @Column(name = "tenthietke")
+    private String tenNhom;
+    @OneToMany(mappedBy = "nhomSanPham")
     private List<SanPham> sanPhamList; @Column(name = "ngaytao")
     private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")

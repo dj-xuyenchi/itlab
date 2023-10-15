@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "quyennguoidung")
 @Getter
@@ -21,5 +23,8 @@ public class QuyenNguoiDung {
     private NguoiDung nguoiDung;
     @JoinColumn(name = "quyenid")
     @ManyToOne
-    private Quyen quyen;
+    private Quyen quyen; @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }

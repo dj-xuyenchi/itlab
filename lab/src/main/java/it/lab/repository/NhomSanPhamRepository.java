@@ -1,9 +1,9 @@
 package it.lab.repository;
 
-import it.lab.entity.LoaiSanPham;
+import it.lab.entity.NhomSanPham;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LoaiSanPhamRepo extends JpaRepository<LoaiSanPham, Long> {
+public interface NhomSanPhamRepository extends JpaRepository<NhomSanPham,Long> {
 }

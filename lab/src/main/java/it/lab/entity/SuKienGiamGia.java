@@ -33,5 +33,8 @@ public class SuKienGiamGia {
     @Column(name = "trangthai")
     private TrangThaiSuKienGiamGia trangThai;
     @OneToMany(mappedBy = "suKienGiamGia")
-    private List<SanPhamSuKien> sanPhamSuKienList;
+    private List<SanPhamSuKien> sanPhamSuKienList; @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }

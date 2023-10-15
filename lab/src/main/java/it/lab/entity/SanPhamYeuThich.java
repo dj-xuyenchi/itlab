@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "sanphamyeuthich")
 @Getter
@@ -19,7 +21,10 @@ public class SanPhamYeuThich {
     @JoinColumn(name = "nguoidungid")
     @ManyToOne
     private NguoiDung nguoiDung;
-    @JoinColumn(name = "sanphamid")
+    @JoinColumn(name = "sanphamchitietid")
     @ManyToOne
-    private SanPham sanPham;
+    private SanPhamChiTiet sanPhamChiTiet; @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }

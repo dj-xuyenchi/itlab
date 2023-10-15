@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -23,5 +24,8 @@ public class KichThuoc {
     @Column(name = "tenkichthuoc",columnDefinition = "nvarchar(max)")
     private String tenKichThuoc;
     @OneToMany(mappedBy = "kichThuoc")
-    private List<SanPham> sanPhamList;
+    private List<SanPhamChiTiet> sanPhamChiTietList; @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }

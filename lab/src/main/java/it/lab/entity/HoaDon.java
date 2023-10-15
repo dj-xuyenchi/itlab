@@ -37,6 +37,8 @@ public class HoaDon {
     private String ghiChu;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
     @Column(name = "ngaygiao")
     private LocalDate ngayGiao;
     @JoinColumn(name = "vouchergiaohangid")
@@ -53,8 +55,6 @@ public class HoaDon {
     private NguoiDung nhanVien;
     @OneToMany(mappedBy = "hoaDon")
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
-    @OneToMany(mappedBy = "hoaDon")
-    private List<DanhGiaSao> danhGiaSaoList;
     @OneToMany(mappedBy = "hoaDon")
     private List<HoaDonChiTiet> hoaDonChiTietList;
 }
