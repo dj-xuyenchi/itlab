@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiNguoiDung;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -46,21 +47,31 @@ public class NguoiDung {
     private LocalDate ngayCapNhat;
     @JoinColumn(name = "rankkhachhang")
     @ManyToOne
+    @JsonIgnore
     private RankKhachHang rankKhachHang;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<DiaChi> diaChiList;
     @OneToMany(mappedBy = "nguoiMua")
+    @JsonIgnore
     private List<GioHang> gioHangList;
     @OneToMany(mappedBy = "nguoiMua")
+    @JsonIgnore
     private List<HoaDon> danhSachMua;
     @OneToMany(mappedBy = "nhanVien")
+    @JsonIgnore
     private List<HoaDon> danhSachHoaDonXacNhan;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<NguoiDungVoucher> nguoiDungVoucherList;
     @OneToMany(mappedBy = "nguoiDung")
+
+    @JsonIgnore
     private List<QuyenNguoiDung> quyenNguoiDungList;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<SanPhamYeuThich> sanPhamYeuThichList;
 }

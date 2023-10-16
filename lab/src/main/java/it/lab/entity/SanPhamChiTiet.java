@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiSanPhamChiTiet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,19 +40,26 @@ public class SanPhamChiTiet {
     private LocalDate ngayCapNhat;
     @JoinColumn(name = "mausacid")
     @ManyToOne
+    @JsonIgnore
     private MauSac mauSac;
     @JoinColumn(name = "kichthuocid")
     @ManyToOne
+    @JsonIgnore
     private KichThuoc kichThuoc;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
+    @JsonIgnore
     private SanPham sanPham;
     @OneToMany(mappedBy = "sanPhamChiTiet")
+    @JsonIgnore
     private List<HoaDonChiTiet> hoaDonChiTietList;
     @OneToMany(mappedBy = "sanPhamChiTiet")
+    @JsonIgnore
     private List<GioHang> gioHangList;
+    @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet")
     private List<SanPhamYeuThich> sanPhamYeuThichList;
+    @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet")
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
 }

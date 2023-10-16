@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class HinhAnhSanPham {
     private String linkHinhAnh;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
+    @JsonIgnore
     private SanPham sanPham;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;

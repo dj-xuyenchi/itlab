@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.LoaiGiam;
 import it.lab.enums.TrangThaiNguoiDungVoucher;
 import jakarta.persistence.*;
@@ -23,9 +24,11 @@ public class NguoiDungVoucher {
     private Long id;
     @JoinColumn(name = "nguoidungid")
     @ManyToOne
+    @JsonIgnore
     private NguoiDung nguoiDung;
     @JoinColumn(name = "voucherid")
     @ManyToOne
+    @JsonIgnore
     private Voucher voucher;
     @Column(name = "hansudung")
     private LocalDate hanSuDung;
@@ -36,7 +39,9 @@ public class NguoiDungVoucher {
     @Column(name = "trangthai")
     private TrangThaiNguoiDungVoucher trangThai;
     @OneToMany(mappedBy = "voucherGiaoHang")
+    @JsonIgnore
     private List<HoaDon> giaoHangList;
+    @JsonIgnore
     @OneToMany(mappedBy = "voucherGiam")
     private List<HoaDon> giamList;
 }

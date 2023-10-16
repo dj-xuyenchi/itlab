@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +25,9 @@ public class Brand {
     @Column(name = "tenbrand",columnDefinition = "nvarchar(max)")
     private String tenBrand;
     @OneToMany(mappedBy = "brand")
-    private List<SanPham> sanPhamList; @Column(name = "ngaytao")
+    @JsonIgnore
+    private List<SanPham> sanPhamList;
+    @Column(name = "ngaytao")
     private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDate ngayCapNhat;

@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiSanPham;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,19 +50,25 @@ public class SanPham {
     @Column(name = "soluongloi")
     private Integer soLuongLoi;
     @JoinColumn(name = "brandid")
+    @JsonIgnore
     @ManyToOne
     private Brand brand;
     @JoinColumn(name = "thietkeid")
     @ManyToOne
+    @JsonIgnore
     private ThietKe thietKe;
     @JoinColumn(name = "nhomsanphamid")
     @ManyToOne
+    @JsonIgnore
     private NhomSanPham nhomSanPham;
     @JoinColumn(name = "chatlieuid")
     @ManyToOne
+    @JsonIgnore
     private ChatLieu chatLieu;
     @OneToMany(mappedBy = "sanPham")
+    @JsonIgnore
     private List<SanPhamSuKien> sanPhamSuKienList;
     @OneToMany(mappedBy = "sanPham")
+    @JsonIgnore
     private List<HinhAnhSanPham> hinhAnhSanPhamList;
 }

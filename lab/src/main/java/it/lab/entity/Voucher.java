@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.LoaiGiam;
 import it.lab.enums.TrangThaiVoucher;
 import jakarta.persistence.*;
@@ -36,5 +37,6 @@ public class Voucher {
     @Column(name = "trangthai")
     private TrangThaiVoucher trangThai;
     @OneToMany(mappedBy = "voucher")
+    @JsonIgnore
     private List<NguoiDungVoucher> nguoiDungVoucherList;
 }
