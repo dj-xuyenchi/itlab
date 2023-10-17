@@ -21,15 +21,15 @@ public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "manguoidung",unique = true)
+    @Column(name = "manguoidung", unique = true)
     private String maNguoiDung;
-    @Column(name = "email",columnDefinition = "nvarchar(max)")
+    @Column(name = "email", columnDefinition = "nvarchar(max)")
     private String email;
-    @Column(name = "matkhau",columnDefinition = "nvarchar(max)")
+    @Column(name = "matkhau", columnDefinition = "nvarchar(max)")
     private String matKhau;
-    @Column(name = "ten",columnDefinition = "nvarchar(max)")
+    @Column(name = "ten", columnDefinition = "nvarchar(max)")
     private String ten;
-    @Column(name = "ho",columnDefinition = "nvarchar(max)")
+    @Column(name = "ho", columnDefinition = "nvarchar(max)")
     private String ho;
     @Column(name = "anhdaidien")
     private String anhDaiDien;
@@ -68,7 +68,6 @@ public class NguoiDung {
     @JsonIgnore
     private List<NguoiDungVoucher> nguoiDungVoucherList;
     @OneToMany(mappedBy = "nguoiDung")
-
     @JsonIgnore
     private List<QuyenNguoiDung> quyenNguoiDungList;
     @OneToMany(mappedBy = "nguoiDung")
