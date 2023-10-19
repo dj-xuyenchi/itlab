@@ -9,7 +9,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Checkbox,
   Stack,
 } from "@chakra-ui/react";
 import { Col, InputNumber, Radio, Row, Slider, Space, Tag } from "antd";
@@ -22,30 +21,36 @@ function Filter() {
   const [value, setValue] = useState(undefined);
   const [searchParam, setSearchParam] = useState({
     isEmpty: false,
-    color: [{
-      id: 1,
-      name: "vàng"
-    }],
-    type: [{
-      id: 1,
-      name: "Áo ngắn tay"
-    }],
-    size: [{
-      id: 2,
-      name: "Size XL"
-    }],
+    color: [
+      {
+        id: 1,
+        name: "vàng",
+      },
+    ],
+    type: [
+      {
+        id: 1,
+        name: "Áo ngắn tay",
+      },
+    ],
+    size: [
+      {
+        id: 2,
+        name: "Size XL",
+      },
+    ],
     cost: {
       isUse: false,
       min: 0,
-      max: 100
-    }
-  })
+      max: 100,
+    },
+  });
   const onChange = (e) => {
-    console.log('radio checked', e.target.value);
+    console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
   const formatter = (value) => {
-    return fixMoney(value)
+    return fixMoney(value);
   };
   const [inputValue, setInputValue] = useState(1);
   const [inputValueSlider, setInputValueSlider] = useState(1);
@@ -54,38 +59,40 @@ function Filter() {
   };
   const options = [
     {
-      label: 'Apple',
-      value: 'Apple',
+      label: "Apple",
+      value: "Apple",
     },
     {
-      label: 'Pear',
-      value: 'Pear',
+      label: "Pear",
+      value: "Pear",
     },
     {
-      label: 'Orange',
-      value: 'Orange',
-    }, {
-      label: 'Apple',
-      value: 'Apple',
+      label: "Orange",
+      value: "Orange",
     },
     {
-      label: 'Pear',
-      value: 'Pear',
+      label: "Apple",
+      value: "Apple",
     },
     {
-      label: 'Orange',
-      value: 'Orange',
-    }, {
-      label: 'Apple',
-      value: 'Apple',
+      label: "Pear",
+      value: "Pear",
     },
     {
-      label: 'Pear',
-      value: 'Pear',
+      label: "Orange",
+      value: "Orange",
     },
     {
-      label: 'Orange',
-      value: 'Orange',
+      label: "Apple",
+      value: "Apple",
+    },
+    {
+      label: "Pear",
+      value: "Pear",
+    },
+    {
+      label: "Orange",
+      value: "Orange",
     },
   ];
   return (
@@ -98,14 +105,20 @@ function Filter() {
           </div>
         </div>
         <div className="filter-item">
-          {!searchParam.isEmpty ? <div style={{
-            marginBottom: "8px"
-          }}>
-            <Space>
-              <Tag1 color="pink" content="giá" />
-              <Tag color="purple">Xóa tất cả</Tag>
-            </Space>
-          </div> : ""}
+          {!searchParam.isEmpty ? (
+            <div
+              style={{
+                marginBottom: "8px",
+              }}
+            >
+              <Space>
+                <Tag1 color="pink" content="giá" />
+                <Tag color="purple">Xóa tất cả</Tag>
+              </Space>
+            </div>
+          ) : (
+            ""
+          )}
           <Accordion allowMultiple allowToggle>
             <AccordionItem>
               <h2>
@@ -117,16 +130,15 @@ function Filter() {
                 </AccordionButton>
               </h2>
               <AccordionPanel pb={4}>
-                <div style={{
-                  marginTop: "8px",
-                  marginLeft: "8px",
-                  width: '90%'
-                }}>
-                  <Stack spacing={[1, 5]} direction={['column', 'row']}>
-
-                    <Checkbox size='lg' colorScheme='orange' defaultChecked>
-                      S
-                    </Checkbox>
+                <div
+                  style={{
+                    marginTop: "8px",
+                    marginLeft: "8px",
+                    width: "90%",
+                  }}
+                >
+                  <Stack spacing={[1, 5]} direction={["column", "row"]}>
+                 
                   </Stack>
                 </div>
               </AccordionPanel>
@@ -141,13 +153,18 @@ function Filter() {
                 </AccordionButton>
               </h2>
               <AccordionPanel pb={4}>
-                <div style={{
-                  marginTop: "8px",
-                  marginLeft: "8px",
-                  width: '90%'
-                }}>
-                  <ckr.Group options={options} defaultValue={['Pear']} onChange={() => { }} />
-
+                <div
+                  style={{
+                    marginTop: "8px",
+                    marginLeft: "8px",
+                    width: "90%",
+                  }}
+                >
+                  <ckr.Group
+                    options={options}
+                    defaultValue={["Pear"]}
+                    onChange={() => {}}
+                  />
                 </div>
               </AccordionPanel>
             </AccordionItem>
@@ -161,13 +178,18 @@ function Filter() {
                 </AccordionButton>
               </h2>
               <AccordionPanel pb={4}>
-                <div style={{
-                  marginTop: "8px",
-                  marginLeft: "8px",
-                  width: '90%'
-                }}>
-                  <ckr.Group options={options} defaultValue={['Pear']} onChange={() => { }} />
-
+                <div
+                  style={{
+                    marginTop: "8px",
+                    marginLeft: "8px",
+                    width: "90%",
+                  }}
+                >
+                  <ckr.Group
+                    options={options}
+                    defaultValue={["Pear"]}
+                    onChange={() => {}}
+                  />
                 </div>
               </AccordionPanel>
             </AccordionItem>
@@ -181,19 +203,25 @@ function Filter() {
                 </AccordionButton>
               </h2>
               <AccordionPanel pb={4}>
-                <div style={{
-                  marginTop: "8px",
-                  marginLeft: "8px",
-                  width: '90%'
-                }}>
-                  <Radio.Group onChange={onChange} value={value} >
+                <div
+                  style={{
+                    marginTop: "8px",
+                    marginLeft: "8px",
+                    width: "90%",
+                  }}
+                >
+                  <Radio.Group onChange={onChange} value={value}>
                     <Space direction="vertical">
-                      {language.body.filter.item.cost.option.map((item, index) => {
-                        return <Radio value={item.type} key={index}>{item.name}</Radio>
-                      })}
-
+                      {language.body.filter.item.cost.option.map(
+                        (item, index) => {
+                          return (
+                            <Radio value={item.type} key={index}>
+                              {item.name}
+                            </Radio>
+                          );
+                        }
+                      )}
                     </Space>
-
                   </Radio.Group>
                   <Row>
                     <Col span={24}>
@@ -220,7 +248,12 @@ function Filter() {
                         onChange={onChangeSlider}
                       />
                     </Col>
-                    <Col span={2} className="d-flex align-items-center justify-content-center">-</Col>
+                    <Col
+                      span={2}
+                      className="d-flex align-items-center justify-content-center"
+                    >
+                      -
+                    </Col>
                     <Col span={11}>
                       <InputNumber
                         min={1}

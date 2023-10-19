@@ -24,11 +24,8 @@ public class BaseTest {
     public ResponseEntity<?> layDuLieu() throws IOException {
         return ResponseEntity.ok(_nguoiDungService.layNguoiDung());
     }
-     @RequestMapping(value = "/test2", method = RequestMethod.GET)
-    public ResponseEntity<?> layDuLieu2() {
-        return ResponseEntity.ok("hihi anh quang anh đệp trai vãi lol");
-    }
-      @RequestMapping(value = "/test3", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/test3", method = RequestMethod.GET)
     public ResponseEntity<?> layDuLieu3() {
         return ResponseEntity.ok("éc éc éc :3:3");
     }

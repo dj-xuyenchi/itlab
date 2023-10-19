@@ -1,12 +1,35 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { Select, Spin } from "antd";
 import { selectProduct } from "./selectProduct";
 import ProductItem from "./productitem/ProductItem";
+import { useEffect } from "react";
+import { useSanPhamStore } from "./useSanPhamStore";
+import productSlice from "./productSlice";
 function Product() {
   const language = useSelector(selectLanguage);
   const product = useSelector(selectProduct);
+  const dispath = useDispatch();
+  useEffect(() => {
+    dispath(productSlice.actions.setIsLoading(true));
+    const fetchData = async () => {
+      const data = await useSanPhamStore.actions.fetchSanPham(
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      );
+      dispath(productSlice.actions.setSanPham(data));
+      dispath(productSlice.actions.setIsLoading(false));
+    };
+    fetchData();
+    console.log(product);
+  }, []);
   return (
     <>
       <div className="product-container">
@@ -46,7 +69,7 @@ function Product() {
               <Spin size="large"></Spin>
             </div>
           ) : (
-            product.product.map((item, index) => {
+            product.data.map((item, index) => {
               return <ProductItem key={index} item={item} />;
             })
           )}

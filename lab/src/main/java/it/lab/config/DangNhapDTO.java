@@ -1,21 +1,20 @@
 package it.lab.config;
 
-import it.lab.dto.NguoiDungDTO;
-import it.lab.entity.NguoiDung;
-import it.lab.entity.Quyen;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NguoiDungData {
-    private NguoiDungDTO nguoiDung;
+public class DangNhapDTO {
     private String token;
-    private List<String> quyenList;
+    private String type="Bearer";
+    private int status;
+    private String userName;
+    private String email;
+    private List<String> roles;
 }

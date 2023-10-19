@@ -71,4 +71,7 @@ public class SanPham {
     @OneToMany(mappedBy = "sanPham")
     @JsonIgnore
     private List<HinhAnhSanPham> hinhAnhSanPhamList;
+    @OneToMany(mappedBy = "sanPham")
+    @JsonIgnore
+    private List<SanPhamChiTiet> sanPhamChiTietList;
 }

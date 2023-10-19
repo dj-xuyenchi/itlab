@@ -26,12 +26,14 @@ public class SanPhamYeuThichDTO {
     private SanPhamChiTiet sanPhamChiTiet;
     private LocalDate ngayTao;
     private LocalDate ngayCapNhat;
-    public static SanPhamYeuThichDTO fromEntity(SanPhamYeuThich entity){
-       return new SanPhamYeuThichDTO(entity.getId(),entity.getNguoiDung(),entity.getSanPhamChiTiet(),entity.getNgayTao(),entity.getNgayCapNhat());
+
+    public static SanPhamYeuThichDTO fromEntity(SanPhamYeuThich entity) {
+        return new SanPhamYeuThichDTO(entity.getId(), entity.getNguoiDung(), entity.getSanPhamChiTiet(), entity.getNgayTao(), entity.getNgayCapNhat());
     }
-    public static List<SanPhamYeuThichDTO>  fromCollection(List<SanPhamYeuThich> collection){
+
+    public static List<SanPhamYeuThichDTO> fromCollection(List<SanPhamYeuThich> collection) {
         List<SanPhamYeuThichDTO> to = new ArrayList<>();
-        collection.forEach(x->{
+        collection.forEach(x -> {
             to.add(fromEntity(x));
         });
         return to;
