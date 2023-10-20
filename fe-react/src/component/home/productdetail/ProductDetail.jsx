@@ -8,8 +8,12 @@ import { CiRuler } from "react-icons/ci";
 import { AiOutlineHeart } from "react-icons/ai";
 import { Button, HStack, Input, useNumberInput } from "@chakra-ui/react";
 import { Rate } from "antd";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useSanPhamChiTiet } from "./useSanPhamChiTiet";
 function ProductDetail() {
   const language = useSelector(selectLanguage);
+  const { id } = useParams();
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
@@ -17,10 +21,17 @@ function ProductDetail() {
       min: 1,
       max: 6,
     });
-
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
+  const [sanPham, setSanPham] = useState({})
+  useEffect(() => {
+    async function handleLayDuLieu() {
+      const data = await useSanPhamChiTiet.actions.layThongTinSanPham(id)
+      setSanPham(data.data)
+    }
+    handleLayDuLieu()
+  }, [])
   return (
     <>
       <Header />
@@ -37,7 +48,7 @@ function ProductDetail() {
             width: "40%",
           }}
         >
-          <ProductImgSlider />
+          <ProductImgSlider imgs={sanPham.hinhAnhSanPhamList} />
         </div>
         <div
           style={{
@@ -59,8 +70,7 @@ function ProductDetail() {
                 textTransform: "uppercase",
               }}
             >
-              Áo Khoác Nam Flannel Tay Dài Khóa Kéo Kẻ Caro Form Regular -
-              10F23JAC002
+              {sanPham.tenSanPham}
             </h1>
           </div>
           <div
@@ -76,7 +86,7 @@ function ProductDetail() {
                 fontSize: "24px",
               }}
             >
-              {fixMoney("100000") + "đ"}
+              {fixMoney(sanPham.giaBan)}
             </span>
           </div>
           <div>
@@ -204,7 +214,7 @@ function ProductDetail() {
                 alignItems: "center",
               }}
             >
-              <div class="btn-add-2-cart">
+              <div className="btn-add-2-cart">
                 <span>Thêm vào giỏ hàng</span>
               </div>
               <div

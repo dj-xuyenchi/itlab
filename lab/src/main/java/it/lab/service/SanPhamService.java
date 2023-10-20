@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SanPhamService implements ISanPhamService {
@@ -45,5 +46,14 @@ public class SanPhamService implements ISanPhamService {
             list = list.stream().filter(x -> x.getSanPhamChiTietList().stream().anyMatch(y -> y.getKichThuoc().getId() == kichThuocId)).toList();
         }
         return new Page<SanPhamDTO>(SanPhamDTO.fromCollection(list), page, pageSize);
+    }
+
+    @Override
+    public SanPhamDTO chiTietSanPham(Long sanPhamId) {
+        Optional<SanPham> sp = _sanPhamRepository.findById(sanPhamId);
+        if (sp.isEmpty()) {
+            return null;
+        }
+        return SanPhamDTO.fromEntity(sp.get());
     }
 }

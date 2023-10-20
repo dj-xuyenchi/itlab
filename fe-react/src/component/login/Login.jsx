@@ -1,13 +1,45 @@
 import { Button, Card, Divider, Input } from "antd";
 import "./style.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { selectLanguage } from "../../language/selectLanguage";
-
+import { useLoginStore } from './useLoginStore'
 function Login() {
     const language = useSelector(selectLanguage);
+    const dispath = useDispatch()
     const [typeError, setTypeError] = useState(undefined)
+    const [loginPayload, setLoginPayload] = useState({
+        userName: "",
+        password: ""
+    })
+    async function handleLogin() {
+        const login = await useLoginStore.actions.dangNhap(loginPayload);
+        setLoginPayload({
+            userName: "",
+            password: ""
+        })
+        if (!login) {
+            localStorage.removeItem("user")
+            window.location.href = process.env.REACT_APP_FRONTEND_URL + "login";
+            return
+        }
+        localStorage.setItem("user", JSON.stringify(login))
+        window.location.href = process.env.REACT_APP_FRONTEND_URL;
+    }
+    function handleUpdateUserName(e) {
+        setLoginPayload({
+            password: loginPayload.password,
+            userName: e.target.value
+        })
+    }
+
+    function handleUpdatePassword(e) {
+        setLoginPayload({
+            password: e.target.value,
+            userName: loginPayload.userName
+        })
+    }
     // const loginWithGoogle = async () => {
     //     const authUrl = await getGoogleAuthUrl();
     //     // dieu huong sang google
@@ -45,9 +77,9 @@ function Login() {
                             <h3>{language.login.company}</h3>
                             <p>{language.login.subTitle}</p>
                             <label htmlFor="">{language.login.userName}</label>
-                            <Input size="large" placeholder={language.login.userNamePlaceHolder} className="input" />
+                            <Input onChange={handleUpdateUserName} size="large" placeholder={language.login.userNamePlaceHolder} className="input" value={loginPayload.userName} />
                             <label htmlFor="">{language.login.password}</label>
-                            <Input.Password size="large" placeholder={language.login.passwordPlaceHolder} className="input" />
+                            <Input.Password onChange={handleUpdatePassword} value={loginPayload.password} size="large" placeholder={language.login.passwordPlaceHolder} className="input" />
                             <Link>
                                 {language.login.forgotPass}
                             </Link>
@@ -66,7 +98,7 @@ function Login() {
                                     </Card> : ""
                             }
 
-                            <Button size='large'>
+                            <Button size='large' onClick={handleLogin}>
                                 {language.login.loginBtn}
                             </Button>
                             <Divider className="span"> {language.login.or}</Divider>

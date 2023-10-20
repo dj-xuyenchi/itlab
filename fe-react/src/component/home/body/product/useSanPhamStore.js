@@ -19,7 +19,29 @@ export const useSanPhamStore = {
             loaiSanPhamId,
             kichThuocId
         ) {
-            return await axiosIns.get(`/api/sanpham/phantrangsanpham?loaiSanPhamId=${loaiSanPhamId}&kichThuocId=${kichThuocId}&page=${page}&pageSize=${pageSize}&chatLieuId=${chatLieuId}&thietKeId=${thietKeId}&thuongHieuId=${thuongHieuId}&mauSacId=${mauSacId}&loaiSanPhamId=${loaiSanPhamId}`)
+            var url = "/api/sanpham/phantrangsanpham?";
+            if (chatLieuId) {
+                url += 'loaiSanPhamId=' + loaiSanPhamId + "&"
+            }
+            if (thietKeId) {
+                url += 'thietKeId=' + thietKeId + "&"
+            }
+            if (mauSacId) {
+                url += 'mauSacId=' + mauSacId + "&"
+            }
+            if (thuongHieuId) {
+                url += 'thuongHieuId=' + thuongHieuId + "&"
+            }
+            if (kichThuocId) {
+                url += 'kichThuocId=' + thuongHieuId + "&"
+            }
+            if (page) {
+                url += 'page=' + page + "&"
+            }
+            if (pageSize) {
+                url += 'pageSize=' + pageSize + "&"
+            }
+            return await axiosIns.get(url)
         },
         async updateEmails(ids, data) {
             return axiosIns.post('/apps/email/update-emails/', {

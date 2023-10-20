@@ -37,4 +37,10 @@ public class SanPhamController {
                 kichThuocId.orElse(null))
         );
     }
+
+    @RequestMapping(value = "/sanphamchitiet", method = RequestMethod.GET)
+    public ResponseEntity<?> layDuLieuSanPhamYeuThich(
+            @RequestParam Long sanPhamId) {
+        return ResponseEntity.ok(_sanPhamService.chiTietSanPham(sanPhamId));
+    }
 }

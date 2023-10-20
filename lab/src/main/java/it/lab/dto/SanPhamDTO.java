@@ -59,7 +59,7 @@ public class SanPhamDTO {
                 entity.getSoLuongLoi(),
                 entity.getBrand(),
                 entity.getThietKe(), entity.getNhomSanPham(),
-                entity.getChatLieu(), null, null
+                entity.getChatLieu(), null, entity.getHinhAnhSanPhamList()
         );
     }
 
