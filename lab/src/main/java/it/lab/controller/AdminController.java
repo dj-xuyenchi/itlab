@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin")
-@CrossOrigin(value = "*", allowedHeaders = "*")
+@RequestMapping("/api/admin")
 public class AdminController {
     @Autowired
     private TestService _nguoiDungService;

@@ -1,11 +1,13 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,8 +22,13 @@ public class KichThuoc {
     private Long id;
     @Column(name = "makichthuoc",unique = true)
     private String maKichThuoc;
-    @Column(name = "tenkichthuoc")
+    @Column(name = "tenkichthuoc",columnDefinition = "nvarchar(max)")
     private String tenKichThuoc;
     @OneToMany(mappedBy = "kichThuoc")
-    private List<SanPham> sanPhamList;
+    @JsonIgnore
+    private List<SanPhamChiTiet> sanPhamChiTietList;
+    @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }

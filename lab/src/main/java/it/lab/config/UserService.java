@@ -26,8 +26,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<NguoiDung> nguoiDung = _nguoiDungRepo.findNguoiDungByEmailEquals(email.toLowerCase());
         List<Quyen> quyen = _quyenRepo.getAllQuyen(nguoiDung.get().getId());
-           NguoiDungData nguoiDungData = new NguoiDungData(nguoiDung.get(),quyen);
-           Optional<NguoiDungData> optCheck = Optional.of(nguoiDungData);
+           NguoiDungData2 nguoiDungData = new NguoiDungData2(nguoiDung.get(),quyen);
+           Optional<NguoiDungData2> optCheck = Optional.of(nguoiDungData);
         return optCheck.map(NguoiDungUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tồn tại người dùng có email là: " + email));
     }

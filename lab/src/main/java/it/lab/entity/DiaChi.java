@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiDiaChi;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class DiaChi {
     private Long id;
     @JoinColumn(name = "nguoidungid")
     @ManyToOne
+    @JsonIgnore
     private NguoiDung nguoiDung;
     @Column(name = "xaid")
     private String xaId;
@@ -29,7 +31,7 @@ public class DiaChi {
     private String huyenId;
     @Column(name = "tinhid")
     private String tinhId;
-    @Column(name = "chitietdiachi")
+    @Column(name = "chitietdiachi",columnDefinition = "nvarchar(max)")
     private String chiTietDiaChi;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;
@@ -42,5 +44,6 @@ public class DiaChi {
     @Column(name = "trangthai")
     private TrangThaiDiaChi trangThai;
     @OneToMany(mappedBy = "diaChiGiao")
+    @JsonIgnore
     private List<HoaDon> hoaDonList;
 }

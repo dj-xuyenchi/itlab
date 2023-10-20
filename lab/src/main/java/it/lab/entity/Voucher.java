@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.LoaiGiam;
 import it.lab.enums.TrangThaiVoucher;
 import jakarta.persistence.*;
@@ -21,9 +22,9 @@ public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "mavoucher",unique = true)
+    @Column(name = "mavoucher", unique = true)
     private String maVoucher;
-    @Column(name = "tenvoucher")
+    @Column(name = "tenvoucher", columnDefinition = "nvarchar(max)")
     private String tenVoucher;
     @Column(name = "giatrigiam")
     private Double giaTriGiam;
@@ -36,5 +37,6 @@ public class Voucher {
     @Column(name = "trangthai")
     private TrangThaiVoucher trangThai;
     @OneToMany(mappedBy = "voucher")
+    @JsonIgnore
     private List<NguoiDungVoucher> nguoiDungVoucherList;
 }

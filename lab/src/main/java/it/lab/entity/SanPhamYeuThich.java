@@ -1,10 +1,13 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sanphamyeuthich")
@@ -18,8 +21,13 @@ public class SanPhamYeuThich {
     private Long id;
     @JoinColumn(name = "nguoidungid")
     @ManyToOne
+    @JsonIgnore
     private NguoiDung nguoiDung;
-    @JoinColumn(name = "sanphamid")
+    @JoinColumn(name = "sanphamchitietid")
     @ManyToOne
-    private SanPham sanPham;
+    @JsonIgnore
+    private SanPhamChiTiet sanPhamChiTiet; @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }

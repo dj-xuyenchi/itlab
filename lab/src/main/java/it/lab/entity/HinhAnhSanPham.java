@@ -1,31 +1,32 @@
 package it.lab.entity;
 
-import it.lab.enums.SaoDanhGia;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
-@Table(name = "danhgiasao")
+@Table(name = "hinhanhsanpham")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DanhGiaSao {
+public class HinhAnhSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn(name = "nguoidungid")
-    @ManyToOne
-    private NguoiDung nguoiDung;
+    @Column(name = "linkhinhanh")
+    private String linkHinhAnh;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
+    @JsonIgnore
     private SanPham sanPham;
-    @JoinColumn(name = "hoadonid")
-    @ManyToOne
-    private HoaDon hoaDon;
-    @Column(name = "sosao")
-    private SaoDanhGia soSao;
+    @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }
