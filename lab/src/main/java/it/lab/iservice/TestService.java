@@ -10,8 +10,10 @@ import java.util.List;
 public interface TestService {
     List<NguoiDungCustom> layNguoiDung();
     Page<NguoiDung> getPage(Pageable pageable);
+    List<NguoiDung> getAll();
 
-    public void save(NguoiDung nguoiDung);
+    public NguoiDung save(NguoiDung nguoiDung);
     public void deleteById(long id);
-    public void update(NguoiDung nguoiDung);
+    public NguoiDung update(NguoiDung nguoiDung,Long id);
+    public NguoiDung findById(long id);
 }

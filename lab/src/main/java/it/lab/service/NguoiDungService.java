@@ -22,7 +22,6 @@ public class NguoiDungService implements TestService {
 //    }
 
 
-
     @Override
     public List<NguoiDungCustom> layNguoiDung() {
         return null;
@@ -34,17 +33,28 @@ public class NguoiDungService implements TestService {
     }
 
     @Override
-    public void save(NguoiDung nguoiDung) {
+    public List<NguoiDung> getAll() {
+        return _nguoiDungRepo.findAll();
+    }
 
+    @Override
+    public NguoiDung save(NguoiDung nguoiDung) {
+        return _nguoiDungRepo.save(nguoiDung);
     }
 
     @Override
     public void deleteById(long id) {
-
+        _nguoiDungRepo.deleteById(id);
     }
 
     @Override
-    public void update(NguoiDung nguoiDung) {
+    public NguoiDung update(NguoiDung nguoiDung,Long id) {
+        nguoiDung=_nguoiDungRepo.findById(id).orElse(null);
+        return _nguoiDungRepo.save(nguoiDung);
+    }
 
+    @Override
+    public NguoiDung findById(long id) {
+        return _nguoiDungRepo.findById(id).orElse(null);
     }
 }
