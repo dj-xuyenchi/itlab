@@ -14,6 +14,6 @@ public interface TestService {
 
     public NguoiDung save(NguoiDung nguoiDung);
     public void deleteById(long id);
-    public NguoiDung update(NguoiDung nguoiDung,Long id);
+    public NguoiDung update(NguoiDung nguoiDung);
     public NguoiDung findById(long id);
 }

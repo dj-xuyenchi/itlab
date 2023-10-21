@@ -1,6 +1,7 @@
 package it.lab.controller;
 
 import it.lab.entity.NguoiDung;
+import it.lab.repository.NguoiDungRepo;
 import it.lab.service.NguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class NguoiDungController {
     @Autowired
     NguoiDungService nguoiDungService;
+    @Autowired
+    NguoiDungRepo nguoiDungRepo;
 
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
@@ -34,11 +37,23 @@ public class NguoiDungController {
     public void delete(@PathVariable long id){
         nguoiDungService.deleteById(id);
     }
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<?> update(@RequestBody NguoiDung nguoiDung,@PathVariable(name = "id") Long id){
+//        nguoiDung=nguoiDungService.findById(id);
+//        nguoiDungService.update(nguoiDung);
+//        return ResponseEntity.ok(nguoiDung);
+//
+//    }
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody NguoiDung nguoiDung,@PathVariable Long id){
-        nguoiDungService.update(nguoiDung,id);
-        return ResponseEntity.ok(nguoiDung);
-
+    public ResponseEntity<?> update(@RequestBody NguoiDung updatedNguoiDung, @PathVariable(name = "id") Long id) {
+        NguoiDung nguoiDung = nguoiDungService.findById(id);
+        if (nguoiDung != null) {
+           nguoiDung=updatedNguoiDung;
+            nguoiDungService.update(nguoiDung);
+            return ResponseEntity.ok(nguoiDung);
+        } else {
+            // Xử lý trường hợp người dùng không tồn tại
+            return ResponseEntity.notFound().build();
+        }
     }
-
 }

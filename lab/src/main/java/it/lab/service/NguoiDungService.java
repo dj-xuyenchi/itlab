@@ -15,16 +15,9 @@ import java.util.List;
 public class NguoiDungService implements TestService {
     @Autowired
     private NguoiDungRepo _nguoiDungRepo;
-
-//    @Override
-//    public List<NguoiDungCustom> layNguoiDung() {
-//        return _nguoiDungRepo.layDuLieu();
-//    }
-
-
     @Override
     public List<NguoiDungCustom> layNguoiDung() {
-        return null;
+        return _nguoiDungRepo.layDuLieu();
     }
 
     @Override
@@ -48,8 +41,7 @@ public class NguoiDungService implements TestService {
     }
 
     @Override
-    public NguoiDung update(NguoiDung nguoiDung,Long id) {
-        nguoiDung=_nguoiDungRepo.findById(id).orElse(null);
+    public NguoiDung update(NguoiDung nguoiDung) {
         return _nguoiDungRepo.save(nguoiDung);
     }
 
