@@ -6,10 +6,10 @@ import Product from "./product/Product";
 import userSlice from "../../login/userSlice";
 function Body() {
   const language = useSelector(selectLanguage);
-  const disPath = useDispatch()
-  const user = JSON.parse(localStorage.getItem('user'));
+  const disPath = useDispatch();
+  const user = JSON.parse(localStorage.getItem("user"));
   if (user) {
-    disPath(userSlice.actions.dangNhap(user.data))
+    disPath(userSlice.actions.dangNhap(user.data));
   }
   return (
     <>

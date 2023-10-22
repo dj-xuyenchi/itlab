@@ -2,9 +2,12 @@ package it.lab.service;
 
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
+import it.lab.dto.SanPhamChiTietDTO;
 import it.lab.dto.SanPhamDTO;
 import it.lab.entity.SanPham;
 import it.lab.iservice.ISanPhamService;
+import it.lab.modelcustom.respon.SanPhamChiTiet;
+import it.lab.repository.SanPhamChiTietRepo;
 import it.lab.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,8 @@ import java.util.Optional;
 public class SanPhamService implements ISanPhamService {
     @Autowired
     private SanPhamRepo _sanPhamRepository;
+    @Autowired
+    private SanPhamChiTietRepo _sanPhamChiTietRepository;
 
     @Override
     public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page,
@@ -49,11 +54,11 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
-    public SanPhamDTO chiTietSanPham(Long sanPhamId) {
+    public SanPhamChiTiet chiTietSanPham(Long sanPhamId) {
         Optional<SanPham> sp = _sanPhamRepository.findById(sanPhamId);
         if (sp.isEmpty()) {
             return null;
         }
-        return SanPhamDTO.fromEntity(sp.get());
+        return new SanPhamChiTiet(SanPhamDTO.fromEntity(sp.get()), SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findSanPhamChiTietsBySanPham(sp.get())));
     }
 }

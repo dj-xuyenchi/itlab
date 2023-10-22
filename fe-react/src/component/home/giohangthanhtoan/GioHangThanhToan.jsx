@@ -1,0 +1,574 @@
+import { useSelector } from "react-redux";
+import "./style.css";
+import Header from "../../common/header/Header";
+import {
+  Button,
+  Col,
+  Divider,
+  Input,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Spin,
+  notification,
+} from "antd";
+import { useEffect, useState } from "react";
+import { selectLanguage } from "../../../language/selectLanguage";
+import { useGioHangStore } from "./useGioHangStore";
+import { BsCart2 } from "react-icons/bs";
+import { GrMapLocation } from "react-icons/gr";
+import { FaTruckFast } from "react-icons/fa6";
+import { FaMoneyCheck } from "react-icons/fa";
+import { selectThanhToan } from "./selectThanhToan";
+import SanPhamItem from "./SanPhamItem";
+import { fixMoney } from "../../../extensions/fixMoney";
+function GioHangThanhToan() {
+  const language = useSelector(selectLanguage);
+  const thanhToan = useSelector(selectThanhToan);
+  const [duLieuThanhToan, setDuLieuThanhToan] = useState(undefined);
+  const [soTienPhaiTra, setSoTienPhaiTra] = useState(0);
+  const [soLuong, setSoLong] = useState(0);
+  const [phiVanChuyen, setPhiVanChuyen] = useState(0);
+  const [api, contextHolder] = notification.useNotification();
+  const options = [];
+  const size = "large";
+  function handleSetSoTienPhaiTra() {
+    var chuaTinhChiPhi = duLieuThanhToan.data.sanPhamList.reduce((pre, cur) => {
+      return pre + cur.sanPhamChiTiet.sanPham.giaBan * cur.soLuong;
+    }, 0);
+    var soLuongSanPham = duLieuThanhToan.data.sanPhamList.reduce((pre, cur) => {
+      return pre + cur.soLuong;
+    }, 0);
+    setSoTienPhaiTra(chuaTinhChiPhi);
+    setSoLong(soLuongSanPham);
+  }
+  function handleSetDiaChi(diaChiId) {}
+  useEffect(() => {
+    async function handleLayGioHang() {
+      const data = await useGioHangStore.actions.layDuLieuThanhToan(
+        JSON.parse(localStorage.getItem("user")).data.nguoiDung.id
+      );
+      setDuLieuThanhToan(data.data);
+    }
+    handleLayGioHang();
+  }, []);
+  async function handleCapNhatSoLuongSanPhamGioHang(gioHangId, soLuongMoi) {
+    const data = await useGioHangStore.actions.capNhatSoLuongSanPhamGioHang({
+      nguoiDungId: JSON.parse(localStorage.getItem("user")).data.nguoiDung.id,
+      gioHangId: gioHangId,
+      soLuongMoi: soLuongMoi,
+    });
+    setDuLieuThanhToan(data.data);
+  }
+  useEffect(() => {
+    if (duLieuThanhToan) {
+      handleSetSoTienPhaiTra();
+    }
+  }, [duLieuThanhToan]);
+  return (
+    <>
+      {contextHolder}
+      <Header />
+      <div
+        style={{
+          maxWidth: "1340px",
+          width: "100%",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
+        <div className="content">
+          <div className="title">
+            <BsCart2
+              style={{
+                fontWeight: 700,
+                fontSize: "36px",
+              }}
+            />
+            <span
+              style={{
+                fontWeight: 600,
+                fontSize: "24px",
+                marginLeft: "24px",
+              }}
+            >
+              Giỏ hàng
+            </span>
+          </div>
+          <div className="list">
+            {thanhToan.isLoading ? (
+              <div className="loading">
+                <Spin size="large" />
+              </div>
+            ) : (
+              ""
+            )}
+            {!thanhToan.isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <div className="sanpham">
+                  <p>{soLuong} sản phẩm</p>
+                  <div className="sanpham-list">
+                    {duLieuThanhToan
+                      ? duLieuThanhToan.data.sanPhamList.map((item, index) => {
+                          return (
+                            <SanPhamItem
+                              key={index}
+                              item={item}
+                              handleCapNhatSoLuongSanPhamGioHang={
+                                handleCapNhatSoLuongSanPhamGioHang
+                              }
+                            />
+                          );
+                        })
+                      : ""}
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "18px",
+                    }}
+                  >
+                    <Row>
+                      <GrMapLocation
+                        style={{
+                          fontWeight: 700,
+                          fontSize: "30px",
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontWeight: 600,
+                          fontSize: "18px",
+                          marginLeft: "24px",
+                        }}
+                      >
+                        Thông tin giao hàng
+                      </span>
+                    </Row>
+                    <Row
+                      style={{
+                        marginTop: "12px",
+                      }}
+                    >
+                      <Radio.Group
+                        value={2}
+                        style={{
+                          marginLeft: "14px",
+                        }}
+                      >
+                        <Space direction="vertical">
+                          {duLieuThanhToan
+                            ? duLieuThanhToan.data.diaChiDTOList.map(
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.nguoiDung.ho +
+                                        " " +
+                                        item.nguoiDung.ten +
+                                        "," +
+                                        item.soDienThoai +
+                                        " " +
+                                        item.chiTietDiaChi}
+                                    </Radio>
+                                  );
+                                }
+                              )
+                            : ""}
+                        </Space>
+                      </Radio.Group>
+                    </Row>
+                    <Row
+                      style={{
+                        marginTop: "14px",
+                      }}
+                    >
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Select
+                          size={size}
+                          defaultValue="a1"
+                          style={{
+                            width: "100%",
+                          }}
+                          options={options}
+                        />
+                      </Col>
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Select
+                          size={size}
+                          style={{
+                            width: "100%",
+                          }}
+                          defaultValue="a1"
+                          options={options}
+                        />
+                      </Col>
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Select
+                          size={size}
+                          style={{
+                            width: "100%",
+                          }}
+                          defaultValue="a1"
+                          options={options}
+                        />
+                      </Col>
+                    </Row>{" "}
+                    <Row
+                      style={{
+                        marginTop: "14px",
+                      }}
+                    >
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Input
+                          placeholder="Basic usage"
+                          size={size}
+                          style={{
+                            backgroundColor: "#F1F1F1",
+                          }}
+                        />
+                      </Col>
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Input
+                          placeholder="Basic usage"
+                          size={size}
+                          style={{
+                            backgroundColor: "#F1F1F1",
+                          }}
+                        />
+                      </Col>
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Input
+                          placeholder="Basic usage"
+                          size={size}
+                          style={{
+                            backgroundColor: "#F1F1F1",
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Row
+                      style={{
+                        marginTop: "14px",
+                      }}
+                    >
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Input
+                          placeholder="Basic usage"
+                          size={size}
+                          style={{
+                            backgroundColor: "#F1F1F1",
+                          }}
+                        />
+                      </Col>
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Input
+                          placeholder="Basic usage"
+                          size={size}
+                          style={{
+                            backgroundColor: "#F1F1F1",
+                          }}
+                        />
+                      </Col>
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Input
+                          placeholder="Basic usage"
+                          size={size}
+                          style={{
+                            backgroundColor: "#F1F1F1",
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+                <div className="option">
+                  <div className="voucher">
+                    <p className="title">Nhập mã giảm giá ưu đãi</p>
+                    <Input
+                      size="large"
+                      placeholder="Nhập mã giảm giá"
+                      style={{
+                        backgroundColor: "white",
+                        width: "70%",
+                      }}
+                    />
+                    <span className="app">Áp dụng</span>
+                    <Divider></Divider>
+                    <p
+                      className="title"
+                      style={{
+                        height: "20px",
+                      }}
+                    >
+                      Ưu đãi khách hàng VIP
+                      <span
+                        style={{
+                          fontWeight: 400,
+                          fontSize: "15px",
+                          textTransform: "none",
+                        }}
+                      >
+                        {" " + " (Nếu có)"}
+                      </span>
+                    </p>
+                    <p
+                      style={{
+                        marginTop: "2px",
+                        textDecoration: "underline",
+                        fontSize: "13px",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Hướng dẫn sử dụng ưu đãi VIP
+                    </p>
+                    <Input
+                      size="large"
+                      placeholder="Nhập mã giảm giá"
+                      style={{
+                        backgroundColor: "white",
+                        width: "70%",
+                      }}
+                    />
+                    <span className="app">Áp dụng</span>
+                  </div>
+                  <div className="checkout">
+                    <p className="title">Tạm tính</p>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <div
+                        className="content"
+                        style={{
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <div>
+                          <p>Số lượng</p>
+                          <p>Tạm tính</p>
+                          <p>Phí vận chuyển</p>
+                        </div>
+                      </div>
+                      <div
+                        className="content"
+                        style={{
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <div>
+                          <p
+                            style={{
+                              textAlign: "right",
+                            }}
+                          >
+                            {soLuong}
+                          </p>
+                          <p
+                            style={{
+                              textAlign: "right",
+                            }}
+                          >
+                            {fixMoney(soTienPhaiTra)}
+                          </p>
+                          <p
+                            style={{
+                              textAlign: "right",
+                            }}
+                          >
+                            {fixMoney(0)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <Divider></Divider>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <div
+                        className="content"
+                        style={{
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <div>
+                          <p>Tổng cộng</p>
+                        </div>
+                      </div>
+                      <div
+                        className="content"
+                        style={{
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <div>
+                          <p
+                            style={{
+                              textAlign: "right",
+                              fontWeight: 700,
+                              fontSize: "20px",
+                              lineHeight: "23px",
+                            }}
+                          >
+                            {fixMoney(soTienPhaiTra + phiVanChuyen)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="checkout-option">
+                    <div>
+                      <p className="title">
+                        <FaTruckFast
+                          style={{
+                            fontSize: "24px",
+                          }}
+                        />
+                        {"  "}
+                        Phương thức vận chuyển
+                      </p>
+                      <Radio.Group
+                        style={{
+                          marginLeft: "14px",
+                        }}
+                      >
+                        <Space direction="vertical">
+                          {duLieuThanhToan
+                            ? duLieuThanhToan.data.phuongThucVanChuyenDTOList.map(
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.tenPhuongThuc}
+                                    </Radio>
+                                  );
+                                }
+                              )
+                            : ""}
+                        </Space>
+                      </Radio.Group>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "12px",
+                      }}
+                    >
+                      <p className="title">
+                        <FaMoneyCheck
+                          style={{
+                            fontSize: "24px",
+                          }}
+                        />
+                        {"  "}
+                        Phương thức thanh toán
+                      </p>
+                      <Radio.Group
+                        style={{
+                          marginLeft: "14px",
+                        }}
+                      >
+                        <Space direction="vertical">
+                          {duLieuThanhToan
+                            ? duLieuThanhToan.data.phuongThucThanhToanDTOList.map(
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.tenPhuongThuc}
+                                    </Radio>
+                                  );
+                                }
+                              )
+                            : ""}
+                        </Space>
+                      </Radio.Group>
+                    </div>
+                    <Button
+                      type="primary"
+                      size={size}
+                      style={{
+                        marginTop: "14px",
+                        backgroundColor: "black",
+                        fontSize: "14px",
+                        color: "white",
+                        width: "100%",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Thanh Toán{" "}
+                      <span
+                        style={{
+                          textDecoration: "underline",
+                          marginLeft: "4px",
+                        }}
+                      >
+                        {" " + fixMoney(7000000)}
+                      </span>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default GioHangThanhToan;

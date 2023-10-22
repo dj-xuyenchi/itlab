@@ -24,6 +24,8 @@ public class MauSac {
     private String maMau;
     @Column(name = "tenmau",columnDefinition = "nvarchar(max)")
     private String tenMau;
+    @Column(name = "mamaucss",columnDefinition = "nvarchar(max)")
+    private String maMauCss;
     @OneToMany(mappedBy = "mauSac")
     @JsonIgnore
     private List<SanPhamChiTiet> sanPhamChiTietList;
