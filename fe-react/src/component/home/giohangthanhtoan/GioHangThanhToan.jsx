@@ -30,9 +30,15 @@ function GioHangThanhToan() {
   const [soTienPhaiTra, setSoTienPhaiTra] = useState(0);
   const [soLuong, setSoLong] = useState(0);
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
+  const [diaChiChon, setDiaChiChon] = useState(undefined)
   const [api, contextHolder] = notification.useNotification();
   const options = [];
   const size = "large";
+  function handleChonDiaChi(e) {
+    setDiaChiChon(duLieuThanhToan.data.diaChiDTOList.find((item) => {
+      return item.id == e.target.value
+    }))
+  }
   function handleSetSoTienPhaiTra() {
     var chuaTinhChiPhi = duLieuThanhToan.data.sanPhamList.reduce((pre, cur) => {
       return pre + cur.sanPhamChiTiet.sanPham.giaBan * cur.soLuong;
@@ -43,13 +49,14 @@ function GioHangThanhToan() {
     setSoTienPhaiTra(chuaTinhChiPhi);
     setSoLong(soLuongSanPham);
   }
-  function handleSetDiaChi(diaChiId) {}
+  function handleSetDiaChi(diaChiId) { }
   useEffect(() => {
     async function handleLayGioHang() {
       const data = await useGioHangStore.actions.layDuLieuThanhToan(
         JSON.parse(localStorage.getItem("user")).data.nguoiDung.id
       );
       setDuLieuThanhToan(data.data);
+
     }
     handleLayGioHang();
   }, []);
@@ -64,6 +71,10 @@ function GioHangThanhToan() {
   useEffect(() => {
     if (duLieuThanhToan) {
       handleSetSoTienPhaiTra();
+      const diaChiMacDinh = duLieuThanhToan.data.diaChiDTOList.find((item) => {
+        return item.laDiaChiChinh
+      })
+      setDiaChiChon(diaChiMacDinh)
     }
   }, [duLieuThanhToan]);
   return (
@@ -116,16 +127,16 @@ function GioHangThanhToan() {
                   <div className="sanpham-list">
                     {duLieuThanhToan
                       ? duLieuThanhToan.data.sanPhamList.map((item, index) => {
-                          return (
-                            <SanPhamItem
-                              key={index}
-                              item={item}
-                              handleCapNhatSoLuongSanPhamGioHang={
-                                handleCapNhatSoLuongSanPhamGioHang
-                              }
-                            />
-                          );
-                        })
+                        return (
+                          <SanPhamItem
+                            key={index}
+                            item={item}
+                            handleCapNhatSoLuongSanPhamGioHang={
+                              handleCapNhatSoLuongSanPhamGioHang
+                            }
+                          />
+                        );
+                      })
                       : ""}
                   </div>
                   <div
@@ -156,7 +167,8 @@ function GioHangThanhToan() {
                       }}
                     >
                       <Radio.Group
-                        value={2}
+                        value={diaChiChon ? diaChiChon.id : 1}
+                        onChange={handleChonDiaChi}
                         style={{
                           marginLeft: "14px",
                         }}
@@ -164,20 +176,20 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.diaChiDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.nguoiDung.ho +
-                                        " " +
-                                        item.nguoiDung.ten +
-                                        "," +
-                                        item.soDienThoai +
-                                        " " +
-                                        item.chiTietDiaChi}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.nguoiDung.ho +
+                                      " " +
+                                      item.nguoiDung.ten +
+                                      "," +
+                                      item.soDienThoai +
+                                      " " +
+                                      item.chiTietDiaChi}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -489,14 +501,14 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucVanChuyenDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.tenPhuongThuc}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.tenPhuongThuc}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -523,14 +535,14 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucThanhToanDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.tenPhuongThuc}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.tenPhuongThuc}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
