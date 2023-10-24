@@ -23,7 +23,7 @@ function Body() {
         <h3>{language.header.title}</h3>
       </div>
       <div className="body-container">
-        <Fillter />
+        {/* <Fillter /> */}
         <Product />
       </div>
     </>

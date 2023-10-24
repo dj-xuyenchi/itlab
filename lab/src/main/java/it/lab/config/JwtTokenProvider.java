@@ -32,6 +32,7 @@ public class JwtTokenProvider {
         return  claims.getSubject();
     }
     public boolean validToken(String token){
+
         try{
             Jwts.parser().setSigningKey(JWT_SECRET)
                     .parseClaimsJws(token);

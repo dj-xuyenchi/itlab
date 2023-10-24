@@ -4,6 +4,7 @@ import it.lab.common.Page;
 import it.lab.common.ResponObject;
 import it.lab.dto.SanPhamChiTietDTO;
 import it.lab.dto.SanPhamDTO;
+import it.lab.entity.MauSac;
 import it.lab.entity.SanPham;
 import it.lab.iservice.ISanPhamService;
 import it.lab.modelcustom.respon.SanPhamChiTiet;
@@ -12,6 +13,7 @@ import it.lab.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +34,9 @@ public class SanPhamService implements ISanPhamService {
                                                      Long loaiSanPhamId,
                                                      Long kichThuocId) {
         List<SanPham> list = _sanPhamRepository.findAll();
+        if (list.size() > 0) {
+            list.sort(Comparator.comparing(SanPham::getNgayTao));
+        }
         if (thietKeId != null) {
             list = list.stream().filter(x -> x.getThietKe().getId() == thietKeId).toList();
         }

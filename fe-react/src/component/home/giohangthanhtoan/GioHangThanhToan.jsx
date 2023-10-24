@@ -23,6 +23,7 @@ import { FaMoneyCheck } from "react-icons/fa";
 import { selectThanhToan } from "./selectThanhToan";
 import SanPhamItem from "./SanPhamItem";
 import { fixMoney } from "../../../extensions/fixMoney";
+import { redirect2VnPay } from "../../../plugins/vnpay";
 function GioHangThanhToan() {
   const language = useSelector(selectLanguage);
   const thanhToan = useSelector(selectThanhToan);
@@ -30,23 +31,28 @@ function GioHangThanhToan() {
   const [soTienPhaiTra, setSoTienPhaiTra] = useState(0);
   const [soLuong, setSoLong] = useState(0);
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
-  const [ghiChu, setGhiChu] = useState('')
-  const [diaChiChon, setDiaChiChon] = useState(undefined)
+  const [ghiChu, setGhiChu] = useState("");
+  const [diaChiChon, setDiaChiChon] = useState(undefined);
   const [api, contextHolder] = notification.useNotification();
   const options = [];
   const size = "large";
   function handleTaoRequest() {
-    return {
-      phuongThucThanhToanId: 1,
-      phuongThucVanChuyenId: 1,
-      diaChiId: diaChiChon.id,
-      ghiChu: ghiChu
-    }
+    // return {
+    //   phuongThucThanhToanId: 1,
+    //   phuongThucVanChuyenId: 1,
+    //   diaChiId: diaChiChon.id,
+    //   ghiChu: ghiChu,
+    // };
+    window.location.href = redirect2VnPay({
+      giaTien: soTienPhaiTra,
+    });
   }
   function handleChonDiaChi(e) {
-    setDiaChiChon(duLieuThanhToan.data.diaChiDTOList.find((item) => {
-      return item.id == e.target.value
-    }))
+    setDiaChiChon(
+      duLieuThanhToan.data.diaChiDTOList.find((item) => {
+        return item.id == e.target.value;
+      })
+    );
   }
   function handleSetSoTienPhaiTra() {
     var chuaTinhChiPhi = duLieuThanhToan.data.sanPhamList.reduce((pre, cur) => {
@@ -64,7 +70,6 @@ function GioHangThanhToan() {
         JSON.parse(localStorage.getItem("user")).data.nguoiDung.id
       );
       setDuLieuThanhToan(data.data);
-
     }
     handleLayGioHang();
   }, []);
@@ -80,9 +85,9 @@ function GioHangThanhToan() {
     if (duLieuThanhToan) {
       handleSetSoTienPhaiTra();
       const diaChiMacDinh = duLieuThanhToan.data.diaChiDTOList.find((item) => {
-        return item.laDiaChiChinh
-      })
-      setDiaChiChon(diaChiMacDinh)
+        return item.laDiaChiChinh;
+      });
+      setDiaChiChon(diaChiMacDinh);
     }
   }, [duLieuThanhToan]);
   return (
@@ -135,16 +140,16 @@ function GioHangThanhToan() {
                   <div className="sanpham-list">
                     {duLieuThanhToan
                       ? duLieuThanhToan.data.sanPhamList.map((item, index) => {
-                        return (
-                          <SanPhamItem
-                            key={index}
-                            item={item}
-                            handleCapNhatSoLuongSanPhamGioHang={
-                              handleCapNhatSoLuongSanPhamGioHang
-                            }
-                          />
-                        );
-                      })
+                          return (
+                            <SanPhamItem
+                              key={index}
+                              item={item}
+                              handleCapNhatSoLuongSanPhamGioHang={
+                                handleCapNhatSoLuongSanPhamGioHang
+                              }
+                            />
+                          );
+                        })
                       : ""}
                   </div>
                   <div
@@ -184,20 +189,20 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.diaChiDTOList.map(
-                              (item, index) => {
-                                return (
-                                  <Radio value={item.id} key={index}>
-                                    {item.nguoiDung.ho +
-                                      " " +
-                                      item.nguoiDung.ten +
-                                      "," +
-                                      item.soDienThoai +
-                                      " " +
-                                      item.chiTietDiaChi}
-                                  </Radio>
-                                );
-                              }
-                            )
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.nguoiDung.ho +
+                                        " " +
+                                        item.nguoiDung.ten +
+                                        "," +
+                                        item.soDienThoai +
+                                        " " +
+                                        item.chiTietDiaChi}
+                                    </Radio>
+                                  );
+                                }
+                              )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -350,7 +355,7 @@ function GioHangThanhToan() {
                           size={size}
                           value={ghiChu}
                           onChange={(e) => {
-                            setGhiChu(e.target.value)
+                            setGhiChu(e.target.value);
                           }}
                           style={{
                             backgroundColor: "#F1F1F1",
@@ -518,14 +523,14 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucVanChuyenDTOList.map(
-                              (item, index) => {
-                                return (
-                                  <Radio value={item.id} key={index}>
-                                    {item.tenPhuongThuc}
-                                  </Radio>
-                                );
-                              }
-                            )
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.tenPhuongThuc}
+                                    </Radio>
+                                  );
+                                }
+                              )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -552,14 +557,14 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucThanhToanDTOList.map(
-                              (item, index) => {
-                                return (
-                                  <Radio value={item.id} key={index}>
-                                    {item.tenPhuongThuc}
-                                  </Radio>
-                                );
-                              }
-                            )
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.tenPhuongThuc}
+                                    </Radio>
+                                  );
+                                }
+                              )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -576,6 +581,7 @@ function GioHangThanhToan() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                       }}
+                      onClick={handleTaoRequest}
                     >
                       Thanh Toán{" "}
                       <span
@@ -584,7 +590,7 @@ function GioHangThanhToan() {
                           marginLeft: "4px",
                         }}
                       >
-                        {" " + fixMoney(7000000)}
+                        {" " + fixMoney(soTienPhaiTra)}
                       </span>
                     </Button>
                   </div>
