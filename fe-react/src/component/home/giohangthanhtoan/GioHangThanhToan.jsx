@@ -30,10 +30,19 @@ function GioHangThanhToan() {
   const [soTienPhaiTra, setSoTienPhaiTra] = useState(0);
   const [soLuong, setSoLong] = useState(0);
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
+  const [ghiChu, setGhiChu] = useState('')
   const [diaChiChon, setDiaChiChon] = useState(undefined)
   const [api, contextHolder] = notification.useNotification();
   const options = [];
   const size = "large";
+  function handleTaoRequest() {
+    return {
+      phuongThucThanhToanId: 1,
+      phuongThucVanChuyenId: 1,
+      diaChiId: diaChiChon.id,
+      ghiChu: ghiChu
+    }
+  }
   function handleChonDiaChi(e) {
     setDiaChiChon(duLieuThanhToan.data.diaChiDTOList.find((item) => {
       return item.id == e.target.value
@@ -49,7 +58,6 @@ function GioHangThanhToan() {
     setSoTienPhaiTra(chuaTinhChiPhi);
     setSoLong(soLuongSanPham);
   }
-  function handleSetDiaChi(diaChiId) { }
   useEffect(() => {
     async function handleLayGioHang() {
       const data = await useGioHangStore.actions.layDuLieuThanhToan(
@@ -257,7 +265,8 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
-                          placeholder="Basic usage"
+                          placeholder="Tên người nhận"
+                          value={diaChiChon ? diaChiChon.nguoiDung.ten : ""}
                           size={size}
                           style={{
                             backgroundColor: "#F1F1F1",
@@ -271,7 +280,8 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
-                          placeholder="Basic usage"
+                          placeholder="Họ người nhận"
+                          value={diaChiChon ? diaChiChon.nguoiDung.ho : ""}
                           size={size}
                           style={{
                             backgroundColor: "#F1F1F1",
@@ -285,8 +295,9 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
-                          placeholder="Basic usage"
+                          placeholder="SDT người nhận"
                           size={size}
+                          value={diaChiChon ? diaChiChon.soDienThoai : ""}
                           style={{
                             backgroundColor: "#F1F1F1",
                           }}
@@ -305,8 +316,9 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
-                          placeholder="Basic usage"
+                          placeholder="Số nhà, đường"
                           size={size}
+                          value={diaChiChon ? diaChiChon.chiTietDiaChi : ""}
                           style={{
                             backgroundColor: "#F1F1F1",
                           }}
@@ -319,8 +331,9 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
-                          placeholder="Basic usage"
+                          placeholder="Email người nhận"
                           size={size}
+                          value={diaChiChon ? diaChiChon.nguoiDung.email : ""}
                           style={{
                             backgroundColor: "#F1F1F1",
                           }}
@@ -333,8 +346,12 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
-                          placeholder="Basic usage"
+                          placeholder="Ghi chú cho hóa đơn"
                           size={size}
+                          value={ghiChu}
+                          onChange={(e) => {
+                            setGhiChu(e.target.value)
+                          }}
                           style={{
                             backgroundColor: "#F1F1F1",
                           }}

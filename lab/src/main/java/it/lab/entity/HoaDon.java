@@ -1,6 +1,7 @@
 package it.lab.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.lab.enums.TrangThaiHoaDon;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +47,8 @@ public class HoaDon {
     private LocalDate ngayCapNhat;
     @Column(name = "ngaygiao")
     private LocalDate ngayGiao;
+    @Column(name = "trangthai")
+    private TrangThaiHoaDon trangThai;
     @JoinColumn(name = "vouchergiaohangid")
     @ManyToOne
     @JsonIgnore

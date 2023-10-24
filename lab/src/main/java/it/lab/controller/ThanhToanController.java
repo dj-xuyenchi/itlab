@@ -1,12 +1,10 @@
 package it.lab.controller;
 
 import it.lab.iservice.IThanhToan;
+import it.lab.modelcustom.request.TaoHoaDonOnline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/thanhtoan")
@@ -18,5 +16,11 @@ public class ThanhToanController {
     public ResponseEntity<?> thanhToan(
             @RequestParam Long nguoiDungId) {
         return ResponseEntity.ok(_thanhToanService.layDuLieuThanhToan(nguoiDungId));
+    }
+
+    @RequestMapping(value = "/taohoadononline", method = RequestMethod.POST)
+    public ResponseEntity<?> taoHoaDonOnline(
+            @RequestBody TaoHoaDonOnline yeuCau) {
+        return ResponseEntity.ok(_thanhToanService.taoHoaDonOnline(yeuCau));
     }
 }
