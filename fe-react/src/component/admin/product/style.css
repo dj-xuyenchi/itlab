@@ -1,0 +1,41 @@
+.body-container {
+    display: inline-block;
+    min-height: 100vh;
+    margin-top: 80px;
+    padding-left: 18rem;
+    width: 100%;
+    background-color: #F3F5F9;
+}
+
+.body-container .content {
+    width: 96%;
+    margin-top: 20px;
+}
+
+
+.body-container .content .header-status {
+    min-height: 120px;
+    border: 1px solid red;
+}
+
+.body-container .content .table-sanpham {
+    border: 1px solid red;
+    margin-top: 12px;
+}
+
+.body-container .content .table-sanpham .btn-gruop {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.body-container .content .table-sanpham .btn-sua {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    color: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aqua;
+}

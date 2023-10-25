@@ -10,7 +10,7 @@ function DashBoard() {
       <div>
         <Header />
         <MenuAdmin />
-        <div className="dashboard-container">
+        <div className="body-container">
           <div className="content">sss</div>
         </div>
       </div>

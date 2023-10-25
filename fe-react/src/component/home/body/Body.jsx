@@ -22,7 +22,7 @@ function Body() {
       <div className="header-title">
         <h3>{language.header.title}</h3>
       </div>
-      <div className="body-container">
+      <div className="body-home-container">
         {/* <Fillter /> */}
         <Product />
       </div>

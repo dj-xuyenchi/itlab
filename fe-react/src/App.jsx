@@ -12,6 +12,7 @@ import ProductDetail from "./component/home/productdetail/ProductDetail";
 import userSlice from "./component/login/userSlice";
 import { useEffect } from "react";
 import GioHangThanhToan from "./component/home/giohangthanhtoan/GioHangThanhToan";
+import Product from "./component/admin/product/Product";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -46,6 +47,7 @@ function App() {
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/sanpham/:id" element={<ProductDetail />} />
         <Route path="/thanhtoan" element={<GioHangThanhToan />} />
+        <Route path="/admin/sanpham" element={<Product />} />
       </Routes>
     </>
   );
