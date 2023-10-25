@@ -5,28 +5,29 @@
     padding-left: 18rem;
     width: 100%;
     background-color: #F3F5F9;
+    position: relative;
+    z-index: 1;
 }
 
 .body-container .content {
     width: 96%;
+    z-index: 1;
     margin-top: 20px;
+    margin-left: 2%;
 }
 
 
 .body-container .content .header-status {
     min-height: 120px;
-    border: 1px solid red;
 }
 
 .body-container .content .table-sanpham {
-    border: 1px solid red;
     margin-top: 12px;
 }
 
 .body-container .content .table-sanpham .btn-gruop {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
 }
 
 .body-container .content .table-sanpham .btn-sua {
@@ -34,6 +35,7 @@
     width: 30px;
     border-radius: 50%;
     color: blue;
+    margin-right: 4px;
     display: flex;
     justify-content: center;
     align-items: center;

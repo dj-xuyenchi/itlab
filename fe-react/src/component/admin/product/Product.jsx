@@ -3,17 +3,17 @@ import "./style.css";
 import Header from "../layout/header/Header";
 import MenuAdmin from "../layout/menu/MenuAdmin";
 import { selectLanguage } from "../../../language/selectLanguage";
-import { SearchOutlined } from '@ant-design/icons';
-import React, { useEffect, useRef, useState } from 'react';
-import Highlighter from 'react-highlight-words';
-import { Button, Image, Input, Space, Table } from 'antd';
+import { SearchOutlined } from "@ant-design/icons";
+import React, { useEffect, useRef, useState } from "react";
+import Highlighter from "react-highlight-words";
+import { Button, Image, Input, Space, Table } from "antd";
 import { useSanPhamStore } from "./useSanPhamStore";
-import { BsFillPencilFill } from 'react-icons/bs';
+import { BsFillPencilFill } from "react-icons/bs";
 function Product() {
   const language = useSelector(selectLanguage);
-  const dispath = useDispatch()
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const dispath = useDispatch();
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -22,10 +22,16 @@ function Product() {
   };
   const handleReset = (clearFilters) => {
     clearFilters();
-    setSearchText('');
+    setSearchText("");
   };
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -36,11 +42,13 @@ function Product() {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: 'block',
+            display: "block",
           }}
         />
         <Space>
@@ -92,7 +100,7 @@ function Product() {
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
-          color: filtered ? '#1677ff' : undefined,
+          color: filtered ? "#1677ff" : undefined,
         }}
       />
     ),
@@ -107,127 +115,109 @@ function Product() {
       searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{
-            backgroundColor: '#ffc069',
+            backgroundColor: "#ffc069",
             padding: 0,
           }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString() : ""}
         />
       ) : (
         text
       ),
   });
-  const [filteredInfo, setFilteredInfo] = useState({});
   const [filter, setFilter] = useState({
-    brand: []
-  })
-  const [sanPham, setSanPham] = useState([{
-    key: '1',
-    maSanPham: 'ABC',
-    hinhAnh1: "",
-    soLuongTon: 32,
-    brand: {
-      tenBrand: "abc"
+    brand: [],
+  });
+  const [sanPham, setSanPham] = useState([
+    {
+      key: "1",
+      maSanPham: "ABC",
+      hinhAnh1: "",
+      soLuongTon: 32,
+      brand: {
+        tenBrand: "abc",
+      },
+      chatLieu: {
+        tenChatLieu: "abc",
+      },
+      thietKe: {
+        tenThietKe: "abc",
+      },
+      nhomSanPham: {
+        tenNhom: "abc",
+      },
     },
-    chatLieu: {
-      tenChatLieu: "abc"
-    },
-    thietKe: {
-      tenThietKe: "abc"
-    },
-    nhomSanPham: {
-      tenNhom: "abc"
-    },
-  },])
+  ]);
+  const [filteredInfo, setFilteredInfo] = useState({});
   const columns = [
     {
-      title: 'Mã sản phẩm',
-      dataIndex: 'maSanPham',
-      key: 'name',
-      width: '15%',
-      ...getColumnSearchProps('maSanPham'),
+      title: "Mã sản phẩm",
+      dataIndex: "maSanPham",
+      key: "name",
+      width: "15%",
+      ...getColumnSearchProps("maSanPham"),
     },
     {
-      title: 'Hình ảnh',
-      dataIndex: 'hinhAnh1',
-      key: 'age',
-      width: '10%',
+      title: "Hình ảnh",
+      dataIndex: "hinhAnh1",
+      key: "age",
+      width: "10%",
       render: (hinhAnh1) => (
-        <Image
-          src={hinhAnh1}
-          style={{ width: '120px', height: '180px' }}
-        />
+        <Image src={hinhAnh1} style={{ width: "120px", height: "180px" }} />
       ),
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'tenSanPham',
-      key: 'address',
-      width: '30%',
-      ...getColumnSearchProps('tenSanPham'),
+      title: "Tên sản phẩm",
+      dataIndex: "tenSanPham",
+      key: "address",
+      width: "30%",
+      ...getColumnSearchProps("tenSanPham"),
     },
     {
-      title: 'SLT',
-      dataIndex: 'soLuongTon',
-      key: 'address',
-      width: '5%',
+      title: "SLT",
+      dataIndex: "soLuongTon",
+      key: "address",
+      width: "5%",
       sorter: (a, b) => a.soLuongTon - b.soLuongTon,
-      sortDirections: ['descend', 'ascend'],
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: 'Nhãn hiệu',
-      dataIndex: 'brand',
-      key: 'address',
-      width: '7.5%',
-      render: (brand) => (
-        <span>{brand.tenBrand}</span>
-      ),
+      title: "Nhãn hiệu",
+      dataIndex: "brand",
+      key: "address",
+      width: "7.5%",
+      render: (brand) => <span>{brand.tenBrand}</span>,
       filters: filter.brand,
-      filteredValue: filteredInfo.tenBrand || null,
+      filteredValue: filteredInfo.address || null,
       onFilter: (value, record) => record.brand.tenBrand.includes(value),
     },
     {
-      title: 'Chất liệu',
-      dataIndex: 'chatLieu',
-      key: 'address',
-      width: '7.5%',
-      render: (chatLieu) => (
-        <span>{chatLieu.tenChatLieu}</span>
-      ),
-      filters: filter.brand,
-      filteredValue: filteredInfo.tenBrand || null,
-      onFilter: (value, record) => record.brand.tenBrand.includes(value),
+      title: "Chất liệu",
+      dataIndex: "chatLieu",
+      key: "address",
+      width: "7.5%",
+      render: (chatLieu) => <span>{chatLieu.tenChatLieu}</span>,
     },
     {
-      title: 'Nhóm sản phẩm',
-      dataIndex: 'nhomSanPham',
-      key: 'address',
-      width: '7.5%',
-      render: (nhomSanPham) => (
-        <span>{nhomSanPham.tenNhom}</span>
-      ),
-      filters: filter.brand,
-      filteredValue: filteredInfo.tenBrand || null,
-      onFilter: (value, record) => record.brand.tenBrand.includes(value),
+      title: "Nhóm sản phẩm",
+      dataIndex: "nhomSanPham",
+      key: "address",
+      width: "7.5%",
+      render: (nhomSanPham) => <span>{nhomSanPham.tenNhom}</span>,
     },
     {
-      title: 'Thiết kế',
-      dataIndex: 'thietKe',
-      key: 'address',
-      width: '7.5%',
-      render: (thietKe) => (
-        <span>{thietKe.tenThietKe}</span>
-      ),
-      filters: filter.brand,
-      filteredValue: filteredInfo.tenBrand || null,
-      onFilter: (value, record) => record.brand.tenBrand.includes(value),
+      title: "Thiết kế",
+      dataIndex: "thietKe",
+      key: "address",
+      width: "7.5%",
+      render: (thietKe) => <span>{thietKe.tenThietKe}</span>,
     },
     {
-      title: 'Thao tác',
-      dataIndex: 'id',
-      key: 'address',
-      width: '10%',
+      title: "Thao tác",
+      dataIndex: "id",
+      key: "address",
+      width: "10%",
       render: (thietKe) => (
         <div className="btn-gruop">
           <div className="btn-sua">
@@ -241,31 +231,39 @@ function Product() {
     },
   ];
   function handleSetFilter(source) {
-    const brand = []
+    const brand = [];
     for (var item of source) {
       if (
         !brand.some((item2) => {
-          return item2.id === item.brand.id;
+          return item2.id == item.brand.id;
         })
       ) {
-        brand.push(item.brand);
+        brand.push({
+          id: item.brand.id,
+          text: item.brand.tenBrand,
+          value: item.brand.tenBrand,
+        });
       }
     }
     setFilter({
-      brand: brand
-    })
+      brand: brand,
+    });
   }
   useEffect(() => {
     // dispath(productSlice.actions.setIsLoading(true));
     const fetchData = async () => {
-      const data = await useSanPhamStore.actions.fetchSanPham(1, 20);
-      setSanPham(data.data.data)
-      handleSetFilter(data.data.data)
+      const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
+      setSanPham(data.data.data);
+      handleSetFilter(data.data.data);
       // dispath(productSlice.actions.setSanPham(data));
       // dispath(productSlice.actions.setIsLoading(false));
     };
     fetchData();
-  }, [])
+  }, []);
+  const onChange = (pagination, filters, sorter, extra) => {
+    setFilteredInfo(filters);
+    console.log(filteredInfo);
+  };
   return (
     <>
       <div>
@@ -275,7 +273,14 @@ function Product() {
           <div className="content">
             <div className="header-status background-color"></div>
             <div className="table-sanpham background-color">
-              <Table columns={columns} dataSource={sanPham} />;
+              <Table
+                columns={columns}
+                dataSource={sanPham}
+                onChange={onChange}
+                pagination={{
+                  position: ["bottomRight"],
+                }}
+              />
             </div>
           </div>
         </div>

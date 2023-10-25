@@ -7,4 +7,5 @@ public enum TrangThaiHoaDon {
     CUAHANGHUY,
     DATHANHTOAN,
     CHOXACNHAN,
+    CHOTHANHTOANBANKING
 }

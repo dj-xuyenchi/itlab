@@ -33,23 +33,33 @@ function GioHangThanhToan() {
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
   const [ghiChu, setGhiChu] = useState("");
   const [diaChiChon, setDiaChiChon] = useState(undefined);
+  const [phuongThucThanhThoanChon, setPhuongThucThanhToanChon] =
+    useState(undefined);
   const [api, contextHolder] = notification.useNotification();
   const options = [];
   const size = "large";
-  function handleTaoRequest() {
-    // return {
-    //   phuongThucThanhToanId: 1,
-    //   phuongThucVanChuyenId: 1,
-    //   diaChiId: diaChiChon.id,
-    //   ghiChu: ghiChu,
-    // };
-    window.location.href = redirect2VnPay({
-      giaTien: soTienPhaiTra,
-    });
+  async function handleTaoRequest() {
+    if (phuongThucThanhThoanChon.maPhuongThuc == "VNPAY") {
+      const request = await useGioHangStore.actions.vnPay({
+        ghiChu: ghiChu,
+        diaChiId: diaChiChon.id,
+        phuongThucThanhToanId: phuongThucThanhThoanChon.id,
+        phuongThucVanChuyenId: 1,
+        gia: soTienPhaiTra,
+      });
+      window.location.href = request.data;
+    }
   }
   function handleChonDiaChi(e) {
     setDiaChiChon(
       duLieuThanhToan.data.diaChiDTOList.find((item) => {
+        return item.id == e.target.value;
+      })
+    );
+  }
+  function handleChonPhuongThucThanhToan(e) {
+    setPhuongThucThanhToanChon(
+      duLieuThanhToan.data.phuongThucThanhToanDTOList.find((item) => {
         return item.id == e.target.value;
       })
     );
@@ -70,6 +80,7 @@ function GioHangThanhToan() {
         JSON.parse(localStorage.getItem("user")).data.nguoiDung.id
       );
       setDuLieuThanhToan(data.data);
+      setPhuongThucThanhToanChon(data.data.data.phuongThucThanhToanDTOList[0]);
     }
     handleLayGioHang();
   }, []);
@@ -550,6 +561,12 @@ function GioHangThanhToan() {
                         Phương thức thanh toán
                       </p>
                       <Radio.Group
+                        value={
+                          phuongThucThanhThoanChon
+                            ? phuongThucThanhThoanChon.id
+                            : 0
+                        }
+                        onChange={handleChonPhuongThucThanhToan}
                         style={{
                           marginLeft: "14px",
                         }}

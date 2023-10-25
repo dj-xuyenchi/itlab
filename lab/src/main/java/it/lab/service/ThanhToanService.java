@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ThanhToanService implements IThanhToan {
@@ -72,6 +73,31 @@ public class ThanhToanService implements IThanhToan {
         _hoaDonRepo.save(hd);
         _gioHangRepo.deleteAll(ghList);
         return null;
+    }
+
+    @Override
+    public String taoHoaDonOnlineVnPay(TaoHoaDonOnline yeuCau) {
+        Optional<DiaChi> dc = _diaChiRepo.findById(yeuCau.getDiaChiId());
+        Optional<PhuongThucThanhToan> pttt = _phuongThucThanhToanRepo.findById(yeuCau.getPhuongThucThanhToanId());
+        Optional<PhuongThucVanChuyen> ptvc = _phuongThucVanChuyenRepo.findById(yeuCau.getPhuongThucVanChuyenId());
+        if (!kiemTraTonTai(dc, pttt, ptvc)) {
+            return null;
+        }
+        NguoiDung nguoiMua = dc.get().getNguoiDung();
+        HoaDon hd = new HoaDon();
+        hd.setDiaChiGiao(dc.get());
+        hd.setGhiChu(yeuCau.getGhiChu());
+        hd.setNgayTao(LocalDate.now());
+        hd.setNguoiMua(nguoiMua);
+        hd.setPhuongThucThanhToan(pttt.get());
+        hd.setPhuongThucVanChuyen(ptvc.get());
+        hd.setTrangThai(TrangThaiHoaDon.CHOTHANHTOANBANKING);
+        hd.setMaHoaDon("HD"+ UUID.randomUUID().toString());
+        List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(nguoiMua);
+        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList));
+        _hoaDonRepo.save(hd);
+        _gioHangRepo.deleteAll(ghList);
+        return hd.getMaHoaDon();
     }
 
     private List<HoaDonChiTiet> taoHoaDonChiTiet(List<GioHang> gioHangList) {

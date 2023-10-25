@@ -18,5 +18,9 @@ export const useGioHangStore = {
             const response = await axiosIns.post(`/api/thanhtoan/taohoadononline`)
             return response
         },
+        async vnPay(payload) {
+            const response = await axiosIns.post(`/api/vnpay/thanhtoan`, payload)
+            return response
+        },
     },
 }

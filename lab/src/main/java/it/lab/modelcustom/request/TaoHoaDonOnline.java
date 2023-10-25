@@ -15,4 +15,5 @@ public class TaoHoaDonOnline {
     private Long diaChiId;
     private Long phuongThucThanhToanId;
     private Long phuongThucVanChuyenId;
+    private Integer gia;
 }
