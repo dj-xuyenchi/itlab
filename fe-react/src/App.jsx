@@ -13,6 +13,7 @@ import userSlice from "./component/login/userSlice";
 import { useEffect } from "react";
 import GioHangThanhToan from "./component/home/giohangthanhtoan/GioHangThanhToan";
 import Product from "./component/admin/product/Product";
+import HuyDon from "./component/home/giohangthanhtoan/HuyDon";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -48,6 +49,7 @@ function App() {
         <Route path="/sanpham/:id" element={<ProductDetail />} />
         <Route path="/thanhtoan" element={<GioHangThanhToan />} />
         <Route path="/admin/sanpham" element={<Product />} />
+        <Route path="/vnpay/ketqua" element={<HuyDon />} />
       </Routes>
     </>
   );

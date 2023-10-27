@@ -9,6 +9,7 @@ import Highlighter from "react-highlight-words";
 import { Button, Image, Input, Space, Table } from "antd";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
+import ModalThemSua from "./ModalThemSua";
 function Product() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -128,6 +129,9 @@ function Product() {
   });
   const [filter, setFilter] = useState({
     brand: [],
+    thietKe: [],
+    nhomSanPham: [],
+    chatLieu: []
   });
   const [sanPham, setSanPham] = useState([
     {
@@ -198,6 +202,9 @@ function Product() {
       key: "address",
       width: "7.5%",
       render: (chatLieu) => <span>{chatLieu.tenChatLieu}</span>,
+      // filters: filter.chatLieu,
+      // filteredValue: filteredInfo.address || null,
+      // onFilter: (value, record) => record.chatLieu.tenChatLieu.includes(value),
     },
     {
       title: "Nhóm sản phẩm",
@@ -205,6 +212,9 @@ function Product() {
       key: "address",
       width: "7.5%",
       render: (nhomSanPham) => <span>{nhomSanPham.tenNhom}</span>,
+      // filters: filter.nhomSanPham,
+      // filteredValue: filteredInfo.address || null,
+      // onFilter: (value, record) => record.nhomSanPham.tenNhom.includes(value),
     },
     {
       title: "Thiết kế",
@@ -212,6 +222,9 @@ function Product() {
       key: "address",
       width: "7.5%",
       render: (thietKe) => <span>{thietKe.tenThietKe}</span>,
+      // filters: filter.thietKe,
+      // filteredValue: filteredInfo.address || null,
+      // onFilter: (value, record) => record.thietKe.tenThietKe.includes(value),
     },
     {
       title: "Thao tác",
@@ -232,6 +245,9 @@ function Product() {
   ];
   function handleSetFilter(source) {
     const brand = [];
+    const thietKe = [];
+    const nhomSanPham = []
+    const chatLieu = []
     for (var item of source) {
       if (
         !brand.some((item2) => {
@@ -244,25 +260,67 @@ function Product() {
           value: item.brand.tenBrand,
         });
       }
+      if (
+        !thietKe.some((item2) => {
+          return item2.id == item.thietKe.id;
+        })
+      ) {
+        thietKe.push({
+          id: item.thietKe.id,
+          text: item.thietKe.tenThietKe,
+          value: item.thietKe.tenThietKe,
+        });
+      }
+    }
+    if (
+      !nhomSanPham.some((item2) => {
+        return item2.id == item.nhomSanPham.id;
+      })
+    ) {
+      nhomSanPham.push({
+        id: item.nhomSanPham.id,
+        text: item.nhomSanPham.tenNhom,
+        value: item.nhomSanPham.tenNhom,
+      });
+    }
+    if (
+      !chatLieu.some((item2) => {
+        return item2.id == item.chatLieu.id;
+      })
+    ) {
+      chatLieu.push({
+        id: item.chatLieu.id,
+        text: item.chatLieu.tenChatLieu,
+        value: item.chatLieu.tenChatLieu,
+      });
     }
     setFilter({
       brand: brand,
+      thietKe: thietKe,
+      nhomSanPham: nhomSanPham,
+      chatLieu: chatLieu
     });
   }
+  const [thuocTinh, setThuocTinh] = useState(undefined)
+  const fetchData = async () => {
+    const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
+    setSanPham(data.data.data);
+    handleSetFilter(data.data.data);
+    // dispath(productSlice.actions.setSanPham(data));
+    // dispath(productSlice.actions.setIsLoading(false));
+  };
   useEffect(() => {
     // dispath(productSlice.actions.setIsLoading(true));
-    const fetchData = async () => {
-      const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
-      setSanPham(data.data.data);
-      handleSetFilter(data.data.data);
-      // dispath(productSlice.actions.setSanPham(data));
-      // dispath(productSlice.actions.setIsLoading(false));
-    };
+    const fetchThuocTinh = async () => {
+      const data = await useSanPhamStore.actions.fetchThuocTinh();
+      setThuocTinh(data.data)
+    }
     fetchData();
+    fetchThuocTinh()
   }, []);
   const onChange = (pagination, filters, sorter, extra) => {
     setFilteredInfo(filters);
-    console.log(filteredInfo);
+    console.log(filters);
   };
   return (
     <>
@@ -271,7 +329,9 @@ function Product() {
         <MenuAdmin />
         <div className="body-container">
           <div className="content">
-            <div className="header-status background-color"></div>
+            <div className="header-status background-color">
+              <ModalThemSua type={1} thuocTinh={thuocTinh} fetchData={fetchData} />
+            </div>
             <div className="table-sanpham background-color">
               <Table
                 columns={columns}
@@ -288,5 +348,6 @@ function Product() {
     </>
   );
 }
+
 
 export default Product;

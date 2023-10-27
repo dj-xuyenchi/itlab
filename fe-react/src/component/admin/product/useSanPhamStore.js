@@ -36,6 +36,9 @@ export const useSanPhamStore = {
             }
             return await axiosIns.get(url)
         },
+        async fetchThuocTinh() {
+            return axiosIns.get('/api/sanpham/laythuoctinh')
+        },
         async updateEmails(ids, data) {
             return axiosIns.post('/apps/email/update-emails/', {
                 ids,
@@ -47,6 +50,9 @@ export const useSanPhamStore = {
                 ids,
                 label,
             })
+        },
+        async themSanPham(payload) {
+            return axiosIns.post('/api/sanpham/themsanpham',payload)
         },
     },
 }

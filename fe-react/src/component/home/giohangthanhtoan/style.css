@@ -93,3 +93,21 @@
     text-transform: uppercase;
     margin-bottom: 4px;
 }
+
+.btn-transaction {
+    height: 46px;
+    width: 200px;
+    background-color: #CB7A58;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.btn-transaction:hover {
+    cursor: pointer;
+}

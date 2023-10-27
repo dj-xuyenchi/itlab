@@ -5,6 +5,7 @@ import {
   Button,
   Col,
   Divider,
+  Empty,
   Input,
   Radio,
   Row,
@@ -24,6 +25,8 @@ import { selectThanhToan } from "./selectThanhToan";
 import SanPhamItem from "./SanPhamItem";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { redirect2VnPay } from "../../../plugins/vnpay";
+import { useGHN } from "../../../plugins/ghnapi";
+import { Option } from "antd/es/mentions";
 function GioHangThanhToan() {
   const language = useSelector(selectLanguage);
   const thanhToan = useSelector(selectThanhToan);
@@ -33,7 +36,12 @@ function GioHangThanhToan() {
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
   const [ghiChu, setGhiChu] = useState("");
   const [diaChiChon, setDiaChiChon] = useState(undefined);
+  const [tinh, setTinh] = useState(undefined)
+  const [huyen, setHuyen] = useState(undefined)
+  const [xa, setXa] = useState(undefined)
   const [phuongThucThanhThoanChon, setPhuongThucThanhToanChon] =
+    useState(undefined);
+  const [phuongThucVanChuyen, setPhuongThucVanChuyen] =
     useState(undefined);
   const [api, contextHolder] = notification.useNotification();
   const options = [];
@@ -64,6 +72,25 @@ function GioHangThanhToan() {
       })
     );
   }
+  async function handleChonPhuongThucGiao(e) {
+    setPhuongThucVanChuyen(
+      duLieuThanhToan.data.phuongThucVanChuyenDTOList.find((item) => {
+        return item.id == e.target.value;
+      })
+    );
+    if (e.target.value == 1) {
+      const giaShip = await useGHN.actions.layGia({
+        gia: soTienPhaiTra,
+        denXa: diaChiChon.xaId,
+        denHuyen: diaChiChon.huyenId,
+      })
+      setPhiVanChuyen(giaShip.data.data.total);
+    }
+    if (e.target.value == 2) {
+
+      setPhiVanChuyen(0);
+    }
+  }
   function handleSetSoTienPhaiTra() {
     var chuaTinhChiPhi = duLieuThanhToan.data.sanPhamList.reduce((pre, cur) => {
       return pre + cur.sanPhamChiTiet.sanPham.giaBan * cur.soLuong;
@@ -82,7 +109,12 @@ function GioHangThanhToan() {
       setDuLieuThanhToan(data.data);
       setPhuongThucThanhToanChon(data.data.data.phuongThucThanhToanDTOList[0]);
     }
+    async function handleLayTinh() {
+      const data = await useGHN.actions.layTinh()
+      setTinh(data.data.data)
+    }
     handleLayGioHang();
+    handleLayTinh();
   }, []);
   async function handleCapNhatSoLuongSanPhamGioHang(gioHangId, soLuongMoi) {
     const data = await useGioHangStore.actions.capNhatSoLuongSanPhamGioHang({
@@ -151,17 +183,17 @@ function GioHangThanhToan() {
                   <div className="sanpham-list">
                     {duLieuThanhToan
                       ? duLieuThanhToan.data.sanPhamList.map((item, index) => {
-                          return (
-                            <SanPhamItem
-                              key={index}
-                              item={item}
-                              handleCapNhatSoLuongSanPhamGioHang={
-                                handleCapNhatSoLuongSanPhamGioHang
-                              }
-                            />
-                          );
-                        })
-                      : ""}
+                        return (
+                          <SanPhamItem
+                            key={index}
+                            item={item}
+                            handleCapNhatSoLuongSanPhamGioHang={
+                              handleCapNhatSoLuongSanPhamGioHang
+                            }
+                          />
+                        );
+                      })
+                      : <Empty />}
                   </div>
                   <div
                     style={{
@@ -200,20 +232,20 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.diaChiDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.nguoiDung.ho +
-                                        " " +
-                                        item.nguoiDung.ten +
-                                        "," +
-                                        item.soDienThoai +
-                                        " " +
-                                        item.chiTietDiaChi}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.nguoiDung.ho +
+                                      " " +
+                                      item.nguoiDung.ten +
+                                      "," +
+                                      item.soDienThoai +
+                                      " " +
+                                      item.chiTietDiaChi}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -231,10 +263,32 @@ function GioHangThanhToan() {
                       >
                         <Select
                           size={size}
-                          defaultValue="a1"
+                          labelInValue
+                          optionLabelProp="children"
                           style={{
                             width: "100%",
                           }}
+                          value={diaChiChon ? diaChiChon.tinh : "Chưa chọn"}
+                        >
+                          {tinh ? tinh.map((option) => (
+                            <Option key={option.code} value={option.ProvinceName}>
+                              {option.name}
+                            </Option>
+                          )) : ""}
+                        </Select>
+                      </Col>
+                      <Col
+                        span={8}
+                        style={{
+                          padding: "4px 4px",
+                        }}
+                      >
+                        <Select
+                          size={size}
+                          style={{
+                            width: "100%",
+                          }}
+                          value={diaChiChon ? diaChiChon.huyen : "Chưa chọn"}
                           options={options}
                         />
                       </Col>
@@ -249,22 +303,7 @@ function GioHangThanhToan() {
                           style={{
                             width: "100%",
                           }}
-                          defaultValue="a1"
-                          options={options}
-                        />
-                      </Col>
-                      <Col
-                        span={8}
-                        style={{
-                          padding: "4px 4px",
-                        }}
-                      >
-                        <Select
-                          size={size}
-                          style={{
-                            width: "100%",
-                          }}
-                          defaultValue="a1"
+                          value={diaChiChon ? diaChiChon.xa : "Chưa chọn"}
                           options={options}
                         />
                       </Col>
@@ -472,7 +511,7 @@ function GioHangThanhToan() {
                               textAlign: "right",
                             }}
                           >
-                            {fixMoney(0)}
+                            {fixMoney(phiVanChuyen)}
                           </p>
                         </div>
                       </div>
@@ -530,18 +569,24 @@ function GioHangThanhToan() {
                         style={{
                           marginLeft: "14px",
                         }}
+                        value={
+                          phuongThucVanChuyen
+                            ? phuongThucVanChuyen.id
+                            : 0
+                        }
+                        onChange={handleChonPhuongThucGiao}
                       >
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucVanChuyenDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.tenPhuongThuc}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.tenPhuongThuc}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -574,14 +619,14 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucThanhToanDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.tenPhuongThuc}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.tenPhuongThuc}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -607,7 +652,7 @@ function GioHangThanhToan() {
                           marginLeft: "4px",
                         }}
                       >
-                        {" " + fixMoney(soTienPhaiTra)}
+                        {" " + fixMoney(soTienPhaiTra + phiVanChuyen)}
                       </span>
                     </Button>
                   </div>

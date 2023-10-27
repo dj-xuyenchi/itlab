@@ -1,12 +1,10 @@
 package it.lab.controller;
 
+import it.lab.entity.SanPham;
 import it.lab.iservice.ISanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -42,5 +40,15 @@ public class SanPhamController {
     public ResponseEntity<?> layDuLieuSanPhamYeuThich(
             @RequestParam Long sanPhamId) {
         return ResponseEntity.ok(_sanPhamService.chiTietSanPham(sanPhamId));
+    }
+
+    @RequestMapping(value = "/laythuoctinh", method = RequestMethod.GET)
+    public ResponseEntity<?> layDuLieuThuocTinh() {
+        return ResponseEntity.ok(_sanPhamService.layHetThuocTinh());
+    }
+
+    @RequestMapping(value = "/themsanpham", method = RequestMethod.POST)
+    public ResponseEntity<?> themSanPham(@RequestBody SanPham sanPham) {
+        return ResponseEntity.ok(_sanPhamService.themSanPham(sanPham));
     }
 }
