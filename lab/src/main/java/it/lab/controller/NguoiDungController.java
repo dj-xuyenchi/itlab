@@ -2,6 +2,7 @@ package it.lab.controller;
 
 import it.lab.dto.NguoiDungDTO;
 import it.lab.iservice.INguoiDungService;
+import it.lab.modelcustom.request.DoiMatKhau;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,5 +25,11 @@ public class NguoiDungController {
             @RequestBody NguoiDungDTO nguoiDungDTO
     ) {
         return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(nguoiDungDTO));
+    }
+    @RequestMapping(value = "/doimatkhau", method = RequestMethod.POST)
+    public ResponseEntity<?> doiMatKhau(
+            @RequestBody DoiMatKhau matKhau
+    ) {
+        return ResponseEntity.ok(_nguoiDungService.doiMatKhau(matKhau));
     }
 }

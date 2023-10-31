@@ -1,7 +1,10 @@
 import { useSelector } from "react-redux";
 import "./style.css";
 import { selectLanguage } from "../../../../language/selectLanguage";
-import { BsFillBoxSeamFill } from "react-icons/bs";
+import { BsFillBoxSeamFill, BsShopWindow } from "react-icons/bs";
+import { RiBillLine } from "react-icons/ri";
+import { FaUserFriends } from "react-icons/fa";
+import { TbLayoutDashboard } from "react-icons/tb";
 import { useState } from "react";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -15,6 +18,11 @@ function getItem(label, key, icon, children, type) {
   };
 }
 const items = [
+  getItem(
+    <Link to={"/admin/sanpham"}>Dashboard</Link>,
+    "6",
+    <TbLayoutDashboard />
+  ),
   getItem("Quản lý sản phẩm", "sub1", <BsFillBoxSeamFill />, [
     getItem(
       <Link to={"/admin/sanpham"}>Sản phẩm</Link>,
@@ -27,6 +35,21 @@ const items = [
       getItem("Nhóm sản phẩm", "5"),
     ]),
   ]),
+  getItem(
+    <Link to={"/admin/sanpham"}>Quản lý hóa đơn</Link>,
+    "6",
+    <RiBillLine />
+  ),
+  getItem(
+    <Link to={"/admin/sanpham"}>Quản lý người dùng</Link>,
+    "6",
+    <FaUserFriends />
+  ),
+  getItem(
+    <Link to={"/admin/sanpham"}>Bán hàng tại quầy</Link>,
+    "6",
+    <BsShopWindow />
+  ),
 ];
 
 const rootSubmenuKeys = ["sub1", "sub2", "sub4"];
