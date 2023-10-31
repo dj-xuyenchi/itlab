@@ -15,14 +15,7 @@ import java.util.Optional;
 @RequestMapping("/api/admin")
 public class AdminController {
     @Autowired
-    private TestService _nguoiDungService;
-    @Autowired
     private IMauSacService _mauSacService;
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<?> layDuLieu() {
-        return ResponseEntity.ok(_nguoiDungService.layNguoiDung());
-    }
 
     @RequestMapping(value = "/laymausac", method = RequestMethod.GET)
     public ResponseEntity<?> layMauSac(Integer page,

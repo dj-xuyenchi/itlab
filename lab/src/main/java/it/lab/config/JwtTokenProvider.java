@@ -13,7 +13,7 @@ import java.util.Date;
 @Slf4j
 public class JwtTokenProvider {
     private String JWT_SECRET = "lab97";
-    private int JWT_EXPIRATION=8400000;
+    private int JWT_EXPIRATION=84000000;
     // tạo jwt từ thông tin người dùng
     public String taoToken(NguoiDungUserDetails nguoiDung){
         Date now = new Date();

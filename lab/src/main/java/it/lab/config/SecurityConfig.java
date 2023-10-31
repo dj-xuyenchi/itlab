@@ -51,7 +51,9 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/api/employee/**",
                         "api/giohang/**",
-                        "api/thanhtoan/**").hasAnyRole(
+                        "api/thanhtoan/**",
+                        "api/nguoidung/**"
+                        ).hasAnyRole(
                         "ADMIN",
                         "EMPLOYEE",
                         "CUSTOMER")

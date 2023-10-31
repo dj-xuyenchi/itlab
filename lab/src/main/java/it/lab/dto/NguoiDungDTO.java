@@ -42,7 +42,10 @@ public class NguoiDungDTO {
     private List<SanPhamYeuThich> sanPhamYeuThichList;
 
     public static NguoiDungDTO fromEntity(NguoiDung ng) {
-        return new NguoiDungDTO(ng.getId(), ng.getMaNguoiDung(), ng.getEmail(), null, ng.getTen(), ng.getHo(), ng.getAnhDaiDien(), ng.getSoDienThoai(), ng.getGioiTinh(), ng.getDiem(), ng.getTrangThai(), ng.getNgayTao(), ng.getNgayCapNhat(), ng.getRankKhachHang(), null, null, null, null, null, null, null, null);
+        if(ng==null){
+            return null;
+        }
+        return new NguoiDungDTO(ng.getId(), ng.getMaNguoiDung(), ng.getEmail(), null, ng.getTen(), ng.getHo(), ng.getAnhDaiDien(), ng.getSoDienThoai(), ng.getGioiTinh(), ng.getDiem(), ng.getTrangThai(), ng.getNgayTao(), ng.getNgayCapNhat(), ng.getRankKhachHang(), null, ng.getDiaChiList(), null, null, null, null, null, null);
     }
 
     public static List<NguoiDungDTO> fromCollection(List<NguoiDung> collection) {

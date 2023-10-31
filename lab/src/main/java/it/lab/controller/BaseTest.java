@@ -17,16 +17,5 @@ import java.io.InputStream;
 @RestController
 @RequestMapping("/api/home")
 public class BaseTest {
-    @Autowired
-    private TestService _nguoiDungService;
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<?> layDuLieu() throws IOException {
-        return ResponseEntity.ok(_nguoiDungService.layNguoiDung());
-    }
-
-    @RequestMapping(value = "/test3", method = RequestMethod.GET)
-    public ResponseEntity<?> layDuLieu3() {
-        return ResponseEntity.ok("éc éc éc :3:3");
-    }
 }
