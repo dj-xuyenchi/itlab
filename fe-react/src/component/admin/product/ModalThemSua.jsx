@@ -1,14 +1,11 @@
-import { Button, Cascader, Checkbox, DatePicker, Form, Input, InputNumber, Modal, Radio, Select, Switch, TreeSelect, Upload, notification } from "antd";
+import { Button, Cascader, Checkbox, DatePicker, Form, Input, InputNumber, Modal, Radio, Select, Switch, message, Upload, notification } from "antd";
 import "./style.css"; import { PlusOutlined } from '@ant-design/icons';
-import React, { useEffect, useRef, useState } from "react";
-import { BsFillPencilFill } from "react-icons/bs";
+import React, { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
 import { useSanPhamStore } from "./useSanPhamStore";
 function ModalThemSua({ type, thuocTinh, fetchData }) {
-
     const [api, contextHolder] = notification.useNotification();
-
     const openNotification = (type, title, des, placement) => {
         if (type === "error") {
             api.error({
@@ -25,6 +22,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
         }
     };
     const normFile = (e) => {
+        console.log(e);
         if (Array.isArray(e)) {
             return e;
         }
@@ -42,9 +40,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     };
     const [sanPham, setSanPham] = useState({
         tenSanPham: "",
-        giaBan: "",
-        giaNhap: ""
+        giaBan: 0,
+        giaNhap: 0,
+        soLuong: 0
     })
+    const [hinhAnh, setHinhAnh] = useState(undefined)
     function handleSetTenSP(e) {
         setSanPham({
             ...sanPham,
@@ -52,46 +52,61 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
         })
     }
     function handleSetGiaBan(e) {
-        console.log(e);
         setSanPham({
             ...sanPham,
-            giaBan: e.target.value
+            giaBan: e
         })
     }
     function handleSetGiaNhap(e) {
         setSanPham({
             ...sanPham,
-            giaNhap: e.target.value
+            giaNhap: e
+        })
+    }
+    function handleSetSoLuong(e) {
+        setSanPham({
+            ...sanPham,
+            soLuong: e
         })
     }
     function handleSetThietKe(e) {
         setSanPham({
             ...sanPham,
-            thietKe: {
-                id: e.label,
-            }
-        })
-    }
-    function handleSetBrand(e) {
-        setSanPham({
-            ...sanPham,
-            brand: { id: e.label }
+            thietKeId: e.value
         })
     }
     function handleSetNhom(e) {
         setSanPham({
             ...sanPham,
-            nhomSanPham: { id: e.label }
+            nhomSanPhamId: e.value
         })
     }
     function handleSetChatLieu(e) {
         setSanPham({
             ...sanPham,
-            chatLieu: { id: e.label }
+            chatLieuId: e.value
         })
     }
+    const props = {
+        beforeUpload: (file) => {
+            const isPNG = file.type === 'image/png';
+            if (!isPNG) {
+                message.error(`${file.name} is not a png file`);
+            }
+            return false;
+        },
+        onChange: (e) => {
+            setHinhAnh([e.fileList[0].originFileObj, e.fileList[1].originFileObj]);
+        },
+    };
+
     async function handleThemSanPham() {
-        const data = await useSanPhamStore.actions.themSanPham(sanPham)
+        var form = new FormData()
+        form.append("file1", hinhAnh[0])
+        form.append("file2", hinhAnh[1])
+        form.append("data", JSON.stringify(sanPham))
+        console.log(form);
+        const data = await useSanPhamStore.actions.themSanPham(form)
         if (data.data.status == 'THANHCONG') {
             openNotification(
                 "success",
@@ -136,22 +151,25 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                         </Radio.Group>
                     </Form.Item> */}
                     <Form.Item label="Tên sản phẩm">
-                        <Input onChange={handleSetTenSP} />
+                        <Input value={sanPham.tenSanPham} onChange={handleSetTenSP} />
                     </Form.Item>
                     <Form.Item label="Giá bán">
                         <InputNumber style={{
                             width: "100%",
                         }}
-                            // onChange={handleSetGiaBan}
-                             />
+                            value={sanPham.giaBan}
+                            min={0}
+                            onChange={handleSetGiaBan}
+                        />
                     </Form.Item>
                     <Form.Item label="Giá nhập">
                         <InputNumber style={{
                             width: "100%",
                         }}
-                            // value={sanPham.giaNhap}
-                            // onChange={handleSetGiaNhap}
-                             />
+                            min={0}
+                            value={sanPham.giaNhap}
+                            onChange={handleSetGiaNhap}
+                        />
                     </Form.Item>
                     <Form.Item label="Thiết kế">
                         <Select
@@ -164,9 +182,9 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                             onChange={handleSetThietKe}
                         >
                             {thuocTinh ? thuocTinh.thietKeList.map((option) => (
-                                <Option key={option.id} value={option.id}>
+                                <Select.Option key={option.id} value={option.id}>
                                     {option.tenThietKe}
-                                </Option>
+                                </Select.Option>
                             )) : ""}
                         </Select>
                     </Form.Item>
@@ -181,9 +199,9 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                             onChange={handleSetChatLieu}
                         >
                             {thuocTinh ? thuocTinh.chatLieuList.map((option) => (
-                                <Option key={option.id} value={option.id}>
+                                <Select.Option key={option.id} value={option.id}>
                                     {option.tenChatLieu}
-                                </Option>
+                                </Select.Option>
                             )) : ""}
                         </Select>
                     </Form.Item>
@@ -198,38 +216,29 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                             onChange={handleSetNhom}
                         >
                             {thuocTinh ? thuocTinh.nhomSanPhamList.map((option) => (
-                                <Option key={option.id} value={option.tenNhom}>
+                                <Select.Option key={option.id} value={option.id}>
                                     {option.tenNhom}
-                                </Option>
-                            )) : ""}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label="Nhãn hiệu" >
-                        <Select
-                            onChange={handleSetBrand}
-                            labelInValue
-                            optionLabelProp="children"
-                            style={{
-                                width: "100%",
-                            }} 
-                            // value={sanPham.brand}
-                        >
-                            {thuocTinh ? thuocTinh.nhanHieuList.map((option) => (
-                                <Option key={option.id} value={option.tenBrand}>
-                                    {option.tenBrand}
-                                </Option>
+                                </Select.Option>
                             )) : ""}
                         </Select>
                     </Form.Item>
                     <Form.Item label="Số lượng">
                         <InputNumber style={{
                             width: "100%",
-                        }} />
+                        }}
+                            value={sanPham.soLuong}
+                            min={0}
+                            onChange={handleSetSoLuong}
+                        />
                     </Form.Item>
                     <Form.Item label="Đã bán">
                         <InputNumber style={{
                             width: "100%",
-                        }} />
+                        }}
+                            value={sanPham.soLuong}
+                            min={0}
+                            onChange={handleSetSoLuong}
+                        />
                     </Form.Item>
                     <Form.Item label="Thông tin chi tiết">
                         <TextArea rows={4} />
@@ -237,8 +246,14 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                     <Form.Item label="Active sản phẩm" valuePropName="checked">
                         <Switch />
                     </Form.Item>
-                    <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
-                        <Upload action="/upload.do" listType="picture-card">
+                    <Form.Item label="Upload">
+                      
+                        <Upload listType="picture-card"
+                            multiple
+                            customRequest={() => { }}
+                            {...props}
+                            maxCount={4}
+                        >
                             <div>
                                 <PlusOutlined />
                                 <div

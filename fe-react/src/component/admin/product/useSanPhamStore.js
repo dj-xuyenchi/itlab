@@ -52,7 +52,11 @@ export const useSanPhamStore = {
             })
         },
         async themSanPham(payload) {
-            return axiosIns.post('/api/sanpham/themsanpham',payload)
+            return axiosIns.post('/api/sanpham/themsanpham', payload, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
         },
     },
 }

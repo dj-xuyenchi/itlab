@@ -128,7 +128,6 @@ function Product() {
       ),
   });
   const [filter, setFilter] = useState({
-    brand: [],
     thietKe: [],
     nhomSanPham: [],
     chatLieu: []
@@ -139,9 +138,7 @@ function Product() {
       maSanPham: "ABC",
       hinhAnh1: "",
       soLuongTon: 32,
-      brand: {
-        tenBrand: "abc",
-      },
+     
       chatLieu: {
         tenChatLieu: "abc",
       },
@@ -185,16 +182,6 @@ function Product() {
       width: "5%",
       sorter: (a, b) => a.soLuongTon - b.soLuongTon,
       sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Nhãn hiệu",
-      dataIndex: "brand",
-      key: "address",
-      width: "7.5%",
-      render: (brand) => <span>{brand.tenBrand}</span>,
-      filters: filter.brand,
-      filteredValue: filteredInfo.address || null,
-      onFilter: (value, record) => record.brand.tenBrand.includes(value),
     },
     {
       title: "Chất liệu",
@@ -244,22 +231,10 @@ function Product() {
     },
   ];
   function handleSetFilter(source) {
-    const brand = [];
     const thietKe = [];
     const nhomSanPham = []
     const chatLieu = []
     for (var item of source) {
-      if (
-        !brand.some((item2) => {
-          return item2.id == item.brand.id;
-        })
-      ) {
-        brand.push({
-          id: item.brand.id,
-          text: item.brand.tenBrand,
-          value: item.brand.tenBrand,
-        });
-      }
       if (
         !thietKe.some((item2) => {
           return item2.id == item.thietKe.id;
@@ -295,7 +270,6 @@ function Product() {
       });
     }
     setFilter({
-      brand: brand,
       thietKe: thietKe,
       nhomSanPham: nhomSanPham,
       chatLieu: chatLieu

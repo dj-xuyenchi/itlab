@@ -4,6 +4,7 @@ import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +29,25 @@ public class CloudinaryUpload {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("No file selected.");
         }
-        File tmpFile = new File(UUID.randomUUID().toString() + "." + getFileExtension(file));
-        file.transferTo(tmpFile);
-
         try {
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(tmpFile, ObjectUtils.emptyMap());
-
+            //
+            String uploadDir = "";
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                uploadDir="D:/itfile";
+            } else {
+               uploadDir="/Users/quanganhdo/itfile";
+            }
+            if (!new File(uploadDir).exists()) {
+                new File(uploadDir).mkdirs(); // Tạo thư mục nếu nó không tồn tại
+            }
+            String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+            String filePath = uploadDir + File.separator + fileName;
+            try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                fos.write(file.getBytes());
+            }
+            File file1 = new File(filePath);
+            Map uploadResult = cloudinary.uploader().upload(file1, ObjectUtils.emptyMap());
             if (uploadResult.containsKey("error")) {
                 // Xử lý lỗi tải lên
                 throw new Exception(uploadResult.get("error").toString());
@@ -45,11 +59,10 @@ public class CloudinaryUpload {
             // Tiếp tục xử lý hoặc lưu thông tin về tệp trong cơ sở dữ liệu
 
             return imageUrl;
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error uploading file: " + e.getMessage());
-        } finally {
-            tmpFile.delete(); // Xóa tệp tạm sau khi tải lên
         }
     }
 

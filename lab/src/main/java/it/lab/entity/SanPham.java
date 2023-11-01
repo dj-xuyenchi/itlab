@@ -49,10 +49,7 @@ public class SanPham {
     private Integer soLuongTraHang;
     @Column(name = "soluongloi")
     private Integer soLuongLoi;
-    @JoinColumn(name = "brandid")
-    @JsonIgnore
-    @ManyToOne
-    private Brand brand;
+
     @JoinColumn(name = "thietkeid")
     @ManyToOne
     @JsonIgnore

@@ -33,7 +33,6 @@ public class SanPhamDTO {
     private Integer soLuongDaBan;
     private Integer soLuongTraHang;
     private Integer soLuongLoi;
-    private Brand brand;
     private ThietKe thietKe;
     private NhomSanPham nhomSanPham;
     private ChatLieu chatLieu;
@@ -58,7 +57,6 @@ public class SanPhamDTO {
                 entity.getSoLuongDaBan(),
                 entity.getSoLuongTraHang(),
                 entity.getSoLuongLoi(),
-                entity.getBrand(),
                 entity.getThietKe(),
                 entity.getNhomSanPham(),
                 entity.getChatLieu(),

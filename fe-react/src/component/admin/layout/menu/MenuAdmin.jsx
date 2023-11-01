@@ -37,17 +37,17 @@ const items = [
   ]),
   getItem(
     <Link to={"/admin/sanpham"}>Quản lý hóa đơn</Link>,
-    "6",
+    "64",
     <RiBillLine />
   ),
   getItem(
     <Link to={"/admin/sanpham"}>Quản lý người dùng</Link>,
-    "6",
+    "63",
     <FaUserFriends />
   ),
   getItem(
     <Link to={"/admin/sanpham"}>Bán hàng tại quầy</Link>,
-    "6",
+    "62",
     <BsShopWindow />
   ),
 ];
