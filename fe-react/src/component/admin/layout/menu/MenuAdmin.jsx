@@ -3,7 +3,11 @@ import "./style.css";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { BsFillBoxSeamFill, BsShopWindow } from "react-icons/bs";
 import { RiBillLine } from "react-icons/ri";
-import { FaUserFriends } from "react-icons/fa";
+import { FaBuffer, FaUserFriends } from "react-icons/fa";
+import { SiZerodha } from "react-icons/si";
+import { AiOutlineBgColors } from "react-icons/ai";
+import { SiSteelseries } from "react-icons/si";
+import { MdGroupWork, MdArchitecture } from "react-icons/md";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { useState } from "react";
 import { Menu } from "antd";
@@ -20,24 +24,26 @@ function getItem(label, key, icon, children, type) {
 const items = [
   getItem(
     <Link to={"/admin/sanpham"}>Dashboard</Link>,
-    "6",
+    "1",
     <TbLayoutDashboard />
   ),
   getItem("Quản lý sản phẩm", "sub1", <BsFillBoxSeamFill />, [
     getItem(
       <Link to={"/admin/sanpham"}>Sản phẩm</Link>,
-      "1",
+      "2",
       <BsFillBoxSeamFill />
     ),
-    getItem("Thuộc tính", "2", null, [
-      getItem("Màu sắc", "3"),
-      getItem("Kích thước", "4"),
-      getItem("Nhóm sản phẩm", "5"),
+    getItem("Thuộc tính", "3", <FaBuffer />, [
+      getItem("Chất liệu", "4", <SiSteelseries />),
+      getItem("Nhóm sản phẩm", "5", <MdGroupWork />),
+      getItem("Thiết kế", "6", <MdArchitecture />),
+      getItem("Màu săc", "7", <AiOutlineBgColors />),
+      getItem("Kích thước", "8", <SiZerodha />),
     ]),
   ]),
   getItem(
-    <Link to={"/admin/sanpham"}>Quản lý hóa đơn</Link>,
-    "64",
+    <Link to={"/admin/hoadon"}>Quản lý hóa đơn</Link>,
+    "9",
     <RiBillLine />
   ),
   getItem(

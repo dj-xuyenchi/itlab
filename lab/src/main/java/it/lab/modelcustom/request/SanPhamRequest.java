@@ -23,7 +23,6 @@ public class SanPhamRequest {
     private Long nhomSanPhamId;
     private Long thietKeId;
     private Long chatLieuId;
-    private TrangThaiSanPham trangThai;
     private Integer soLuongTon;
     private Integer soLuongDaBan;
     private Integer soLuongTraHang;

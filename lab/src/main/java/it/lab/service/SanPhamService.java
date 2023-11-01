@@ -8,6 +8,7 @@ import it.lab.dto.SanPhamDTO;
 import it.lab.entity.MauSac;
 import it.lab.entity.SanPham;
 import it.lab.enums.APIStatus;
+import it.lab.enums.TrangThaiSanPham;
 import it.lab.iservice.ISanPhamService;
 import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
@@ -53,6 +54,7 @@ public class SanPhamService implements ISanPhamService {
         if (list.size() > 0) {
             list.sort(Comparator.comparing(SanPham::getNgayTao).reversed());
         }
+        list =  list.stream().filter(x -> x.getTrangThai()==TrangThaiSanPham.DANGBAN).toList();
         if (thietKeId != null) {
             list = list.stream().filter(x -> x.getThietKe().getId() == thietKeId).toList();
         }
@@ -90,6 +92,9 @@ public class SanPhamService implements ISanPhamService {
         SanPham sanPham = new SanPham();
         sanPham.setNgayTao(LocalDate.now());
         sanPham.setGiaBan(sanPhamRequest.getGiaBan());
+        sanPham.setSoLuongTon(sanPhamRequest.getSoLuongTon());
+        sanPham.setTrangThai(TrangThaiSanPham.DANGBAN);
+        sanPham.setTenSanPham(sanPhamRequest.getTenSanPham());
         sanPham.setGiaNhap(sanPhamRequest.getGiaNhap());
         sanPham.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId()).get());
         sanPham.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId()).get());
