@@ -284,6 +284,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               }}
               min={0}
               value={sanPham.giaNhap}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               onChange={handleSetGiaNhap}
             />
           </Form.Item>
@@ -294,6 +299,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               }}
               value={sanPham.giaBan}
               min={0}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               onChange={handleSetGiaBan}
             />
           </Form.Item>
@@ -304,7 +314,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               style={{
                 width: "100%",
               }}
-              // value={sanPham.thietKe}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               onChange={handleSetThietKe}
             >
               {thuocTinh
@@ -323,7 +337,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               style={{
                 width: "100%",
               }}
-              // value={sanPham.chatLieu}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               onChange={handleSetChatLieu}
             >
               {thuocTinh
@@ -342,7 +360,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               style={{
                 width: "100%",
               }}
-              // value={sanPham.nhomSanPham}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               onChange={handleSetNhom}
             >
               {thuocTinh
@@ -361,6 +383,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               }}
               value={sanPham.soLuong}
               min={0}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               onChange={handleSetSoLuong}
             />
           </Form.Item>

@@ -18,6 +18,7 @@ import java.util.Optional;
 public class SanPhamController {
     @Autowired
     private ISanPhamService _sanPhamService;
+
     @RequestMapping(value = "/phantrangsanpham", method = RequestMethod.GET)
     public ResponseEntity<?> layDuLieuSanPhamYeuThich(
             Integer page,
@@ -51,9 +52,14 @@ public class SanPhamController {
         return ResponseEntity.ok(_sanPhamService.layHetThuocTinh());
     }
 
+    @RequestMapping(value = "/laychatlieu", method = RequestMethod.GET)
+    public ResponseEntity<?> layChatLieu() {
+        return ResponseEntity.ok(_sanPhamService.layHetChatLieu());
+    }
+
     @RequestMapping(value = "/themsanpham", method = RequestMethod.POST)
     public ResponseEntity<?> themSanPham(@RequestPart("file1") MultipartFile data1, @RequestPart("file2") MultipartFile data2, @RequestPart("data") String sanPham) throws IOException {
-       Gson gson = new Gson();
-        return ResponseEntity.ok(_sanPhamService.themSanPham(gson.fromJson(sanPham,SanPhamRequest.class), data1, data2));
+        Gson gson = new Gson();
+        return ResponseEntity.ok(_sanPhamService.themSanPham(gson.fromJson(sanPham, SanPhamRequest.class), data1, data2));
     }
 }

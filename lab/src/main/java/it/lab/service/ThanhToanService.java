@@ -68,7 +68,7 @@ public class ThanhToanService implements IThanhToan {
         hd.setNguoiMua(nguoiMua);
         hd.setPhuongThucThanhToan(pttt.get());
         hd.setPhuongThucVanChuyen(ptvc.get());
-        hd.setTrangThai(TrangThaiHoaDon.CHOXACNHAN);
+        hd.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
         List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(nguoiMua);
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList));
         _hoaDonRepo.save(hd);

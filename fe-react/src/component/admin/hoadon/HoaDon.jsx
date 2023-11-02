@@ -3,14 +3,13 @@ import "./style.css";
 import Header from "../layout/header/Header";
 import MenuAdmin from "../layout/menu/MenuAdmin";
 import { selectLanguage } from "../../../language/selectLanguage";
-import React, { useEffect, useRef, useState } from "react";
-import { MailOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
 import { Menu } from "antd";
 import { CgSandClock } from "react-icons/cg";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { SiClockify } from "react-icons/si";
 import { FaShippingFast } from "react-icons/fa";
-import { MdDoneOutline, MdPayment } from "react-icons/md";
+import { MdDoneOutline } from "react-icons/md";
 import ChoXacNhan from "./choxacnhan/ChoXacNhan";
 import ChoGiaoHang from "./chogiaohang/ChoGiaoHang";
 import HoaDonHuy from "./hoadonhuy/HoaDonHuy";
@@ -34,11 +33,6 @@ const items = [
     label: "Hoàn thành",
     key: "hoanthanh",
     icon: <MdDoneOutline />,
-  },
-  {
-    label: "Chờ thanh toán",
-    key: "chothanhtoan",
-    icon: <MdPayment />,
   },
   {
     label: "Hóa đơn hủy",

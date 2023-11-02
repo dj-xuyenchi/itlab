@@ -34,11 +34,31 @@ const items = [
       <BsFillBoxSeamFill />
     ),
     getItem("Thuộc tính", "3", <FaBuffer />, [
-      getItem("Chất liệu", "4", <SiSteelseries />),
-      getItem("Nhóm sản phẩm", "5", <MdGroupWork />),
-      getItem("Thiết kế", "6", <MdArchitecture />),
-      getItem("Màu săc", "7", <AiOutlineBgColors />),
-      getItem("Kích thước", "8", <SiZerodha />),
+      getItem(
+        <Link to={"/admin/sanpham/chatlieu"}>Chất liệu</Link>,
+        "4",
+        <SiSteelseries />
+      ),
+      getItem(
+        <Link to={"/admin/sanpham/nhomsanpham"}>Nhóm sản phẩm</Link>,
+        "5",
+        <MdGroupWork />
+      ),
+      getItem(
+        <Link to={"/admin/sanpham/thietke"}>Thiết kế</Link>,
+        "6",
+        <MdArchitecture />
+      ),
+      getItem(
+        <Link to={"/admin/sanpham/mausac"}>Màu sắc</Link>,
+        "7",
+        <AiOutlineBgColors />
+      ),
+      getItem(
+        <Link to={"/admin/sanpham/kichthuoc"}>Kích thước</Link>,
+        "8",
+        <SiZerodha />
+      ),
     ]),
   ]),
   getItem(

@@ -16,6 +16,7 @@ import Product from "./component/admin/product/Product";
 import HuyDon from "./component/home/giohangthanhtoan/HuyDon";
 import Profile from "./component/home/profile/Profile";
 import HoaDon from "./component/admin/hoadon/HoaDon";
+import ChatLieu from "./component/admin/product/chatlieu/ChatLieu";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -54,6 +55,7 @@ function App() {
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/admin/hoadon" element={<HoaDon />} />
         <Route path="/admin/dashboard" element={<DashBoard />} />
+        <Route path="/admin/sanpham/chatlieu" element={<ChatLieu />} />
       </Routes>
     </>
   );

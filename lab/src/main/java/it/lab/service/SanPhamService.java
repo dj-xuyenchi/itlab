@@ -3,6 +3,7 @@ package it.lab.service;
 import it.lab.common.CloudinaryUpload;
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
+import it.lab.dto.ChatLieuDTO;
 import it.lab.dto.SanPhamChiTietDTO;
 import it.lab.dto.SanPhamDTO;
 import it.lab.entity.HinhAnhSanPham;
@@ -82,6 +83,11 @@ public class SanPhamService implements ISanPhamService {
             return null;
         }
         return new SanPhamChiTiet(SanPhamDTO.fromEntity(sp.get()), SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findSanPhamChiTietsBySanPham(sp.get())));
+    }
+
+    @Override
+    public Page<ChatLieuDTO> layHetChatLieu() {
+        return new Page<ChatLieuDTO>(ChatLieuDTO.fromCollection(_chatLieuRepo.findAll()), 0, 10000);
     }
 
     @Override
