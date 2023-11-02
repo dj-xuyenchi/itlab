@@ -58,4 +58,8 @@ public class HoaDon {
     private List<DanhGiaSao> danhGiaSaoList;
     @OneToMany(mappedBy = "hoaDon")
     private List<HoaDonChiTiet> hoaDonChiTietList;
+
+
+    @Column(name = "giatrihd")
+    private Float giaTriHd;
 }
