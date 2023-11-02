@@ -7,10 +7,9 @@ import { selectLanguage } from "../../../../language/selectLanguage";
 import { fixMoney } from "../../../../extensions/fixMoney";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
-import { useHoaDonChoStore } from "./useHoaDonChoStore";
-import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
+import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
 
-function ChoGiaoHang() {
+function HoaDonHuy() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -24,14 +23,14 @@ function ChoGiaoHang() {
   };
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const showModal2 = () => {
-    setIsModalOpen2(true);
+    setIsModalOpen(true);
   };
   const handleOk2 = () => {
     handleHuy();
-    setIsModalOpen2(false);
+    setIsModalOpen(false);
   };
   const handleCancel2 = () => {
-    setIsModalOpen2(false);
+    setIsModalOpen(false);
   };
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
@@ -215,16 +214,16 @@ function ChoGiaoHang() {
     },
     {
       title: "",
-      dataIndex: "key",
+      dataIndex: "thaoTac",
       width: "10%",
       align: "center",
-      render: (item) => <ChiTietHoaDon hoaDonId={item} />,
+      render: (item) => <PiMagnifyingGlassBold />,
     },
   ];
   const [data, setData] = useState([
   ])
   async function layDuLieu() {
-    const ketQua = await useHoaDonChoStore.actions.fetchHoaDonCho();
+    const ketQua = await useHoaDonHuyStore.actions.fetchHoaDonHuy();
     setData(ketQua.data.data)
   }
   useEffect(() => {
@@ -240,7 +239,7 @@ function ChoGiaoHang() {
       );
       return
     }
-    const ketQua = await useHoaDonChoStore.actions.xacNhanHoaDon(selectedRowKeys)
+    const ketQua = await useHoaDonHuyStore.actions.xacNhanHoaDon(selectedRowKeys)
     if (ketQua.data.status == "THANHCONG") {
       for (var item of ketQua.data.data) {
         openNotification(
@@ -267,33 +266,7 @@ function ChoGiaoHang() {
     }
     setSelectedRowKeys([])
   }
-  async function handleHuy() {
-    if (selectedRowKeys.length == 0) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Chưa chọn hóa đơn",
-        "bottomRight"
-      );
-      return
-    }
-    const ketQua = await useHoaDonChoStore.actions.huyHoaDon(selectedRowKeys)
-    if (ketQua.data.status == "THANHCONG") {
-      openNotification(
-        "success",
-        "Hệ thống",
-        "Hủy thành công",
-        "bottomRight"
-      );
-      layDuLieu()
-    } else {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Lỗi",
-        "bottomRight"
-      );
-    }
+  function handleHuy() {
     setSelectedRowKeys([])
   }
   return (
@@ -334,4 +307,4 @@ function ChoGiaoHang() {
   );
 }
 
-export default ChoGiaoHang;
+export default HoaDonHuy;

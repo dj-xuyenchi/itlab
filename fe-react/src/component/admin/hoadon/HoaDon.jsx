@@ -7,10 +7,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { MailOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import { CgSandClock } from "react-icons/cg";
+import { AiFillCloseCircle } from "react-icons/ai";
 import { SiClockify } from "react-icons/si";
 import { FaShippingFast } from "react-icons/fa";
 import { MdDoneOutline, MdPayment } from "react-icons/md";
 import ChoXacNhan from "./choxacnhan/ChoXacNhan";
+import ChoGiaoHang from "./chogiaohang/ChoGiaoHang";
+import HoaDonHuy from "./hoadonhuy/HoaDonHuy";
 const items = [
   {
     label: "Chờ xác nhận",
@@ -37,6 +40,11 @@ const items = [
     key: "chothanhtoan",
     icon: <MdPayment />,
   },
+  {
+    label: "Hóa đơn hủy",
+    key: "hoadonhuy",
+    icon: <AiFillCloseCircle />,
+  },
 ];
 function HoaDon() {
   const language = useSelector(selectLanguage);
@@ -59,7 +67,9 @@ function HoaDon() {
               items={items}
             />
             <div className="content-hoadon">
-              {current == "choxacnhan" ? <ChoXacNhan /> : ""}
+              {current === "choxacnhan" ? <ChoXacNhan /> : ""}
+              {current === "chogiaohang" ? <ChoGiaoHang /> : ""}
+              {current === "hoadonhuy" ? <HoaDonHuy /> : ""}
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -42,11 +43,13 @@ public class HoaDon {
     @Column(name = "ghichu",columnDefinition = "nvarchar(max)")
     private String ghiChu;
     @Column(name = "ngaytao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayCapNhat;
     @Column(name = "ngaygiao")
     private LocalDate ngayGiao;
+    @Column(name = "giatrihd")
+    private Double giaTriHd;
     @Column(name = "trangthai")
     private TrangThaiHoaDon trangThai;
     @JoinColumn(name = "vouchergiaohangid")

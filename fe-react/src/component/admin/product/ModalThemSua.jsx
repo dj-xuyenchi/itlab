@@ -113,7 +113,6 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
         file.file.type === "image/jpg" ||
         file.file.type === "image/jpeg";
       if (!isPNG) {
-        console.log(file);
         message.error(`${file.file.name} không phải file hình ảnh`);
         return;
       }
@@ -209,7 +208,6 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     form.append("file1", hinhAnh[0]);
     form.append("file2", hinhAnh[1]);
     form.append("data", JSON.stringify(sanPham));
-    console.log(form);
     const data = await useSanPhamStore.actions.themSanPham(form);
     if (data.data.status == "THANHCONG") {
       openNotification(

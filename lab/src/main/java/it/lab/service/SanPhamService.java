@@ -5,6 +5,7 @@ import it.lab.common.Page;
 import it.lab.common.ResponObject;
 import it.lab.dto.SanPhamChiTietDTO;
 import it.lab.dto.SanPhamDTO;
+import it.lab.entity.HinhAnhSanPham;
 import it.lab.entity.MauSac;
 import it.lab.entity.SanPham;
 import it.lab.enums.APIStatus;
@@ -39,7 +40,8 @@ public class SanPhamService implements ISanPhamService {
     private ChatLieuRepository _chatLieuRepo;
     @Autowired
     private NhomSanPhamRepository _nhomSanPhamRepo;
-
+    @Autowired
+    private HinhAnhSanPhamRepository _hinhAnhSanPhamRepo;
 
     @Override
     public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page,
@@ -54,7 +56,7 @@ public class SanPhamService implements ISanPhamService {
         if (list.size() > 0) {
             list.sort(Comparator.comparing(SanPham::getNgayTao).reversed());
         }
-        list =  list.stream().filter(x -> x.getTrangThai()==TrangThaiSanPham.DANGBAN).toList();
+        list = list.stream().filter(x -> x.getTrangThai() == TrangThaiSanPham.DANGBAN).toList();
         if (thietKeId != null) {
             list = list.stream().filter(x -> x.getThietKe().getId() == thietKeId).toList();
         }
@@ -101,7 +103,17 @@ public class SanPhamService implements ISanPhamService {
         sanPham.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId()).get());
         sanPham.setHinhAnh1(CloudinaryUpload.uploadFile(hinh1));
         sanPham.setHinhAnh2(CloudinaryUpload.uploadFile(hinh2));
+        HinhAnhSanPham hinhAnh1 = new HinhAnhSanPham();
+        hinhAnh1.setLinkHinhAnh(sanPham.getHinhAnh1());
+        hinhAnh1.setSanPham(sanPham);
+        hinhAnh1.setNgayTao(LocalDate.now());
+        HinhAnhSanPham hinhAnh2 = new HinhAnhSanPham();
+        hinhAnh2.setLinkHinhAnh(sanPham.getHinhAnh2());
+        hinhAnh2.setSanPham(sanPham);
+        hinhAnh2.setNgayTao(LocalDate.now());
         _sanPhamRepository.save(sanPham);
+        _hinhAnhSanPhamRepo.save(hinhAnh1);
+        _hinhAnhSanPhamRepo.save(hinhAnh2);
         sanPham.setMaSanPham("SP" + sanPham.getId());
         _sanPhamRepository.save(sanPham);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");

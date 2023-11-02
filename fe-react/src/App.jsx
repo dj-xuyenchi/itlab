@@ -47,13 +47,13 @@ function App() {
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/sanpham/:id" element={<ProductDetail />} />
         <Route path="/thanhtoan" element={<GioHangThanhToan />} />
         <Route path="/admin/sanpham" element={<Product />} />
         <Route path="/vnpay/ketqua" element={<HuyDon />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/admin/hoadon" element={<HoaDon />} />
+        <Route path="/admin/dashboard" element={<DashBoard />} />
       </Routes>
     </>
   );

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public class ThanhToanService implements IThanhToan {
         HoaDon hd = new HoaDon();
         hd.setDiaChiGiao(dc.get());
         hd.setGhiChu(yeuCau.getGhiChu());
-        hd.setNgayTao(LocalDate.now());
+        hd.setNgayTao(LocalDateTime.now());
         hd.setNguoiMua(nguoiMua);
         hd.setPhuongThucThanhToan(pttt.get());
         hd.setPhuongThucVanChuyen(ptvc.get());
@@ -87,14 +88,21 @@ public class ThanhToanService implements IThanhToan {
         HoaDon hd = new HoaDon();
         hd.setDiaChiGiao(dc.get());
         hd.setGhiChu(yeuCau.getGhiChu());
-        hd.setNgayTao(LocalDate.now());
+        hd.setNgayTao(LocalDateTime.now());
         hd.setNguoiMua(nguoiMua);
         hd.setPhuongThucThanhToan(pttt.get());
         hd.setPhuongThucVanChuyen(ptvc.get());
         hd.setTrangThai(TrangThaiHoaDon.CHOTHANHTOANBANKING);
-        hd.setMaHoaDon("HD"+ UUID.randomUUID().toString());
         List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(nguoiMua);
+        Double giaTri=0d;
+        for(GioHang gh : ghList){
+            SanPhamChiTiet sp = _sanPhamChiTietRepo.findById(gh.getSanPhamChiTiet().getId()).get();
+            giaTri+=sp.getGiaBan()*gh.getSoLuong();
+        }
+        hd.setGiaTriHd(giaTri);
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList));
+        _hoaDonRepo.save(hd);
+        hd.setMaHoaDon("HD"+hd.getId());
         _hoaDonRepo.save(hd);
         _gioHangRepo.deleteAll(ghList);
         return hd.getMaHoaDon();

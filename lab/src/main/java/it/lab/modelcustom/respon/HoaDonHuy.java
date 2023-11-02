@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HoaDonCho {
+public class HoaDonHuy {
     private Long key;
     private String maHoaDon;
     private String tenKhachHang;
@@ -26,24 +26,24 @@ public class HoaDonCho {
     private LocalDateTime ngayTao;
     private String trangThai;
 
-    public static HoaDonCho fromEntity(HoaDon entity) {
-        return new HoaDonCho(
+    public static HoaDonHuy fromEntity(HoaDon entity) {
+        return new HoaDonHuy(
                 entity.getId(),
                 entity.getMaHoaDon(),
                 entity.getNguoiMua().getHo() + entity.getNguoiMua().getTen(),
                 entity.getNguoiMua().getSoDienThoai(),
                 entity.getGiaTriHd(),
                 entity.getNgayTao(),
-                "Chờ xác nhận"
+                "Đã hủy"
         );
     }
 
-    public static List<HoaDonCho> fromCollection(List<HoaDon> collection) {
-        List<HoaDonCho> to = new ArrayList<>();
+    public static List<HoaDonHuy> fromCollection(List<HoaDon> collection) {
+        List<HoaDonHuy> to = new ArrayList<>();
         collection.forEach(x -> {
-           if(x.getTrangThai()== TrangThaiHoaDon.CHOXACNHAN||x.getTrangThai()== TrangThaiHoaDon.CHOTHANHTOANBANKING){
-               to.add(fromEntity(x));
-           }
+            if (x.getTrangThai() == TrangThaiHoaDon.CUAHANGHUY) {
+                to.add(fromEntity(x));
+            }
         });
         return to;
     }

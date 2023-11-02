@@ -23,7 +23,7 @@ function getItem(label, key, icon, children, type) {
 }
 const items = [
   getItem(
-    <Link to={"/admin/sanpham"}>Dashboard</Link>,
+    <Link to={"/admin/dashboard"}>Dashboard</Link>,
     "1",
     <TbLayoutDashboard />
   ),
