@@ -3,17 +3,23 @@ import { selectLanguage } from "../../../../language/selectLanguage";
 import "./style.css";
 import Header from "../../layout/header/Header";
 import MenuAdmin from "../../layout/menu/MenuAdmin";
-import { Form, Modal, Row, Table } from "antd";
+import { Form, Modal, Row, Table, Tag, notification } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { Button, Input, Space } from "antd";
 import { useChatLieuStore } from "./useChatLieuStore";
+import ModalCapNhat from "./ModalCapNhat";
+import ModalXoa from "./ModalXoa";
+import ModalView from "./ModalView";
 function ChatLieu() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [chatLieu, setChatLieu] = useState({
+    tenChatLieu: ""
+  })
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -131,14 +137,17 @@ function ChatLieu() {
       title: "Mã chất liệu",
       dataIndex: "maChatLieu",
       key: "maChatLieu",
-      width: "10%",
+      width: "15%",
       ...getColumnSearchProps("maChatLieu"),
+      render: (maChatLieu) => (
+        <>< Tag color="success" > {maChatLieu}</Tag ></>
+      ),
     },
     {
       title: "Tên chất liệu",
       dataIndex: "tenChatLieu",
       key: "tenChatLieu",
-      width: "35%",
+      width: "30%",
       ...getColumnSearchProps("tenChatLieu"),
     },
     {
@@ -152,12 +161,26 @@ function ChatLieu() {
       dataIndex: "ngayCapNhat",
       key: "ngayCapNhat",
       width: "20%",
+      render: (ngayCapNhat) => (
+        <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Mới</Tag>}</>
+      ),
     },
     {
-      title: "",
-      dataIndex: "maChatLieu",
+      title: "Thao tác",
+      dataIndex: "id",
       key: "maChatLieu",
+      align: "center",
       width: "15%",
+      render: (id) => (
+        <div style={{
+          display: 'flex',
+          justifyContent: "space-between"
+        }}>
+          <ModalView id={id} />
+          <ModalCapNhat id={id} setData={setData} />
+          <ModalXoa id={id} setData={setData} />
+        </div>
+      ),
     },
   ];
 
@@ -180,8 +203,45 @@ function ChatLieu() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (type, title, des, placement) => {
+    if (type === "error") {
+      api.error({
+        message: title,
+        description: des,
+        placement,
+      });
+    } else {
+      api.success({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+  };
+  async function handleThemChatLieu() {
+    if (chatLieu.tenChatLieu == '') {
+      return
+    }
+    const data = await useChatLieuStore.actions.themChatLieu(chatLieu)
+    openNotification(
+      "success",
+      "Hệ thống",
+      "Thêm thành công",
+      "bottomRight"
+    );
+    setData(data.data.data);
+    setChatLieu({
+      ...chatLieu,
+      tenChatLieu: ''
+    })
+    setIsModalOpen(false)
+  }
   return (
     <>
+      {contextHolder}
       <div>
         <Header />
         <MenuAdmin />
@@ -228,17 +288,24 @@ function ChatLieu() {
                 >
                   <Form.Item
                     label="Tên chất liệu"
-                    name="username"
+                    name="Tên chất liệu"
                     rules={[
                       {
                         required: true,
                       },
                     ]}
+
                   >
-                    <Input />
+                    <Input onChange={(e) => {
+                      setChatLieu({
+                        ...chatLieu,
+                        tenChatLieu: e.target.value
+                      })
+                    }}
+                      value={chatLieu.tenChatLieu} />
                   </Form.Item>
                   <Form.Item label=" ">
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" onClick={handleThemChatLieu}>
                       Thêm mới
                     </Button>
                   </Form.Item>

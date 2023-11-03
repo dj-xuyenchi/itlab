@@ -6,6 +6,7 @@ import it.lab.common.ResponObject;
 import it.lab.dto.ChatLieuDTO;
 import it.lab.dto.SanPhamChiTietDTO;
 import it.lab.dto.SanPhamDTO;
+import it.lab.entity.ChatLieu;
 import it.lab.entity.HinhAnhSanPham;
 import it.lab.entity.MauSac;
 import it.lab.entity.SanPham;
@@ -91,8 +92,37 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public Page<ChatLieuDTO> xoaChatLieu(Long chatLieuId) {
+        _chatLieuRepo.deleteById(chatLieuId);
+        return layHetChatLieu();
+    }
+
+    @Override
+    public Page<ChatLieuDTO> suaChatLieu(ChatLieu chatLieu) {
+        ChatLieu chatLieuGoc = _chatLieuRepo.findById(chatLieu.getId()).get();
+        chatLieuGoc.setTenChatLieu(chatLieu.getTenChatLieu());
+        chatLieuGoc.setNgayCapNhat(LocalDate.now());
+        _chatLieuRepo.save(chatLieuGoc);
+        return layHetChatLieu();
+    }
+
+    @Override
+    public Page<ChatLieuDTO> themChatLieu(ChatLieu chatLieu) {
+        chatLieu.setNgayTao(LocalDate.now());
+        _chatLieuRepo.save(chatLieu);
+        chatLieu.setMaChatLieu("CL" + chatLieu.getId());
+        _chatLieuRepo.save(chatLieu);
+        return layHetChatLieu();
+    }
+
+    @Override
     public FullThuocTinh layHetThuocTinh() {
         return new FullThuocTinh(_mauSacRepo.findAll(), _nhomSanPhamRepo.findAll(), _chatLieuRepo.findAll(), _thietKeRepo.findAll());
+    }
+
+    @Override
+    public ChatLieuDTO layChatLieuById(Long chatLieuId) {
+        return ChatLieuDTO.fromEntity(_chatLieuRepo.findById(chatLieuId).get());
     }
 
     @Override

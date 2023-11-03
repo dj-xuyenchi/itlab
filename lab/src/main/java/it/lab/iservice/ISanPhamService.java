@@ -22,7 +22,15 @@ public interface ISanPhamService {
 
     public Page<ChatLieuDTO> layHetChatLieu();
 
+    public Page<ChatLieuDTO> xoaChatLieu(Long chatLieuId);
+
+    public Page<ChatLieuDTO> suaChatLieu(ChatLieu chatLieu);
+
+    public Page<ChatLieuDTO> themChatLieu(ChatLieu chatLieu);
+
     public FullThuocTinh layHetThuocTinh();
+
+    public ChatLieuDTO layChatLieuById(Long chatLieuId);
 
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException;
 }

@@ -1,6 +1,7 @@
 package it.lab.controller;
 
 import com.google.gson.Gson;
+import it.lab.entity.ChatLieu;
 import it.lab.entity.SanPham;
 import it.lab.iservice.ISanPhamService;
 import it.lab.modelcustom.request.SanPhamRequest;
@@ -55,6 +56,26 @@ public class SanPhamController {
     @RequestMapping(value = "/laychatlieu", method = RequestMethod.GET)
     public ResponseEntity<?> layChatLieu() {
         return ResponseEntity.ok(_sanPhamService.layHetChatLieu());
+    }
+
+    @RequestMapping(value = "/themchatlieu", method = RequestMethod.POST)
+    public ResponseEntity<?> themChatLieu(@RequestBody ChatLieu chatLieu) {
+        return ResponseEntity.ok(_sanPhamService.themChatLieu(chatLieu));
+    }
+
+    @RequestMapping(value = "/xoachatlieu", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaChatLieu(@RequestParam Long chatLieuId) {
+        return ResponseEntity.ok(_sanPhamService.xoaChatLieu(chatLieuId));
+    }
+
+    @RequestMapping(value = "/suachatlieu", method = RequestMethod.POST)
+    public ResponseEntity<?> suaChatLieu(@RequestBody ChatLieu chatLieu) {
+        return ResponseEntity.ok(_sanPhamService.suaChatLieu(chatLieu));
+    }
+
+    @RequestMapping(value = "/laychatlieubyid", method = RequestMethod.GET)
+    public ResponseEntity<?> laySanPhamById(@RequestParam Long chatLieuId) {
+        return ResponseEntity.ok(_sanPhamService.layChatLieuById(chatLieuId));
     }
 
     @RequestMapping(value = "/themsanpham", method = RequestMethod.POST)
