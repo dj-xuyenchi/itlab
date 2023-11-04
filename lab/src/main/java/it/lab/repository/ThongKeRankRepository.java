@@ -17,4 +17,5 @@ public interface ThongKeRankRepository extends JpaRepository<RankKhachHang,Integ
     List<Object[]> findTotalRevenueByUser();
 
 
+
 }
