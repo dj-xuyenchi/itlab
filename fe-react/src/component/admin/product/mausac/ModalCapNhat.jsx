@@ -11,14 +11,14 @@ import {
   notification,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useChatLieuStore } from "./useChatLieuStore";
+import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import { useSelector } from "react-redux";
 import { FaRegPenToSquare } from "react-icons/fa6";
 function ModalCapNhat({ id, setData }) {
   const language = useSelector(selectLanguage);
   const [chatLieu, setChatLieu] = useState({
     id: id,
-    tenChatLieu: "",
+    tenNhom: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -47,14 +47,15 @@ function ModalCapNhat({ id, setData }) {
     }
   };
   async function handleSuaChatLieu() {
-    if (chatLieu.tenChatLieu == "") {
+    if (chatLieu.tenMau == "" || chatLieu.maMauCss == "") {
       return;
     }
-    const data = await useChatLieuStore.actions.suaChatLieu(chatLieu);
+    const data = await useNhomSanPhamStore.actions.suaChatLieu(chatLieu);
     openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
     setChatLieu({
       ...chatLieu,
-      tenChatLieu: "",
+      tenMau: "",
+      maMauCss: "",
     });
     setData(data.data.data);
     setIsModalOpen(false);
@@ -80,7 +81,7 @@ function ModalCapNhat({ id, setData }) {
         <Modal
           okButtonProps={{ style: { display: "none" } }}
           cancelButtonProps={{ style: { display: "none" } }}
-          title="Sửa chất liệu"
+          title="Sửa màu sắc"
           open={isModalOpen}
           onCancel={handleCancel}
           centered
@@ -101,8 +102,8 @@ function ModalCapNhat({ id, setData }) {
             }}
           >
             <Form.Item
-              label="Tên chất liệu"
-              name="Tên chất liệu"
+              label="Tên màu"
+              name="Tên màu"
               rules={[
                 {
                   required: true,
@@ -113,10 +114,29 @@ function ModalCapNhat({ id, setData }) {
                 onChange={(e) => {
                   setChatLieu({
                     ...chatLieu,
-                    tenChatLieu: e.target.value,
+                    tenMau: e.target.value,
                   });
                 }}
-                value={chatLieu.tenChatLieu}
+                value={chatLieu.tenMau}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Mã màu Css"
+              name="Mã màu Css"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input
+                onChange={(e) => {
+                  setChatLieu({
+                    ...chatLieu,
+                    maMauCss: e.target.value,
+                  });
+                }}
+                value={chatLieu.maMauCss}
               />
             </Form.Item>
             <Form.Item label=" ">

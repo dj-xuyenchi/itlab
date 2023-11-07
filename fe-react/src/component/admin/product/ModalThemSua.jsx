@@ -254,6 +254,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        centered
       >
         <Form
           labelCol={{

@@ -6,7 +6,7 @@ import { selectLanguage } from "../../../language/selectLanguage";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Image, Input, Space, Table } from "antd";
+import { Button, Image, Input, Space, Table, Tag } from "antd";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
 import ModalThemSua from "./ModalThemSua";
@@ -130,7 +130,7 @@ function Product() {
   const [filter, setFilter] = useState({
     thietKe: [],
     nhomSanPham: [],
-    chatLieu: []
+    chatLieu: [],
   });
   const [sanPham, setSanPham] = useState([
     {
@@ -138,7 +138,7 @@ function Product() {
       maSanPham: "ABC",
       hinhAnh1: "",
       soLuongTon: 32,
-     
+
       chatLieu: {
         tenChatLieu: "abc",
       },
@@ -158,6 +158,11 @@ function Product() {
       key: "name",
       width: "15%",
       ...getColumnSearchProps("maSanPham"),
+      render: (maSanPham) => (
+        <>
+          <Tag color="success"> {maSanPham}</Tag>
+        </>
+      ),
     },
     {
       title: "Hình ảnh",
@@ -218,6 +223,7 @@ function Product() {
       dataIndex: "id",
       key: "address",
       width: "10%",
+      align: "center",
       render: (thietKe) => (
         <div className="btn-gruop">
           <div className="btn-sua">
@@ -232,8 +238,8 @@ function Product() {
   ];
   function handleSetFilter(source) {
     const thietKe = [];
-    const nhomSanPham = []
-    const chatLieu = []
+    const nhomSanPham = [];
+    const chatLieu = [];
     for (var item of source) {
       if (
         !thietKe.some((item2) => {
@@ -272,10 +278,10 @@ function Product() {
     setFilter({
       thietKe: thietKe,
       nhomSanPham: nhomSanPham,
-      chatLieu: chatLieu
+      chatLieu: chatLieu,
     });
   }
-  const [thuocTinh, setThuocTinh] = useState(undefined)
+  const [thuocTinh, setThuocTinh] = useState(undefined);
   const fetchData = async () => {
     const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
     setSanPham(data.data.data);
@@ -287,10 +293,10 @@ function Product() {
     // dispath(productSlice.actions.setIsLoading(true));
     const fetchThuocTinh = async () => {
       const data = await useSanPhamStore.actions.fetchThuocTinh();
-      setThuocTinh(data.data)
-    }
+      setThuocTinh(data.data);
+    };
     fetchData();
-    fetchThuocTinh()
+    fetchThuocTinh();
   }, []);
   const onChange = (pagination, filters, sorter, extra) => {
     setFilteredInfo(filters);
@@ -304,7 +310,11 @@ function Product() {
         <div className="body-container">
           <div className="content">
             <div className="header-status background-color">
-              <ModalThemSua type={1} thuocTinh={thuocTinh} fetchData={fetchData} />
+              <ModalThemSua
+                type={1}
+                thuocTinh={thuocTinh}
+                fetchData={fetchData}
+              />
             </div>
             <div className="table-sanpham background-color">
               <Table
@@ -322,6 +332,5 @@ function Product() {
     </>
   );
 }
-
 
 export default Product;

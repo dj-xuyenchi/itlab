@@ -1,9 +1,9 @@
 package it.lab.controller;
 
 import com.google.gson.Gson;
-import it.lab.entity.ChatLieu;
-import it.lab.entity.SanPham;
+import it.lab.entity.*;
 import it.lab.iservice.ISanPhamService;
+import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -73,9 +73,136 @@ public class SanPhamController {
         return ResponseEntity.ok(_sanPhamService.suaChatLieu(chatLieu));
     }
 
+
+    @RequestMapping(value = "/laynhomsanpham", method = RequestMethod.GET)
+    public ResponseEntity<?> layNhomSp() {
+        return ResponseEntity.ok(_sanPhamService.layHetNhomSanPham());
+    }
+
+    @RequestMapping(value = "/themnhomsanpham", method = RequestMethod.POST)
+    public ResponseEntity<?> themNhomSanPham(@RequestBody NhomSanPham nhomSanPham) {
+        return ResponseEntity.ok(_sanPhamService.themNhomSanPham(nhomSanPham));
+    }
+
+    @RequestMapping(value = "/xoanhomsanpham", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaNhomSanPham(@RequestParam Long nhomSanPhamId) {
+        return ResponseEntity.ok(_sanPhamService.xoaNhomSanPham(nhomSanPhamId));
+    }
+
+    @RequestMapping(value = "/suanhomsanpham", method = RequestMethod.POST)
+    public ResponseEntity<?> suaNhomSanPham(@RequestBody NhomSanPham nhomSanPham) {
+        return ResponseEntity.ok(_sanPhamService.suaNhomSanPham(nhomSanPham));
+    }
+
     @RequestMapping(value = "/laychatlieubyid", method = RequestMethod.GET)
     public ResponseEntity<?> laySanPhamById(@RequestParam Long chatLieuId) {
         return ResponseEntity.ok(_sanPhamService.layChatLieuById(chatLieuId));
+    }
+
+    @RequestMapping(value = "/laynhomsanphambyid", method = RequestMethod.GET)
+    public ResponseEntity<?> layNhomSanPhamById(@RequestParam Long nhomSanPhamId) {
+        return ResponseEntity.ok(_sanPhamService.layNhomSanPhamById(nhomSanPhamId));
+    }
+
+
+    @RequestMapping(value = "/laythietke", method = RequestMethod.GET)
+    public ResponseEntity<?> layThietKe() {
+        return ResponseEntity.ok(_sanPhamService.layHetThietKe());
+    }
+
+    @RequestMapping(value = "/themthietke", method = RequestMethod.POST)
+    public ResponseEntity<?> themThietKe(@RequestBody ThietKe thietKe) {
+        return ResponseEntity.ok(_sanPhamService.themThietKe(thietKe));
+    }
+
+    @RequestMapping(value = "/xoathietke", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaThietKe(@RequestParam Long thietKeId) {
+        return ResponseEntity.ok(_sanPhamService.xoaThietKe(thietKeId));
+    }
+
+    @RequestMapping(value = "/suathietke", method = RequestMethod.POST)
+    public ResponseEntity<?> suaThietKe(@RequestBody ThietKe thietKe) {
+        return ResponseEntity.ok(_sanPhamService.suaThietKe(thietKe));
+    }
+
+    @RequestMapping(value = "/laythietkebyid", method = RequestMethod.GET)
+    public ResponseEntity<?> layThietKeById(@RequestParam Long thietKeId) {
+        return ResponseEntity.ok(_sanPhamService.layThietKeById(thietKeId));
+    }
+
+    @RequestMapping(value = "/laymausac", method = RequestMethod.GET)
+    public ResponseEntity<?> layMauSac() {
+        return ResponseEntity.ok(_sanPhamService.layHetMauSac());
+    }
+
+    @RequestMapping(value = "/themmausac", method = RequestMethod.POST)
+    public ResponseEntity<?> themMauSac(@RequestBody MauSac mauSac) {
+        return ResponseEntity.ok(_sanPhamService.themMauSac(mauSac));
+    }
+
+    @RequestMapping(value = "/xoamausac", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaMauSac(@RequestParam Long mauSacId) {
+        return ResponseEntity.ok(_sanPhamService.xoaMauSac(mauSacId));
+    }
+
+    @RequestMapping(value = "/suamausac", method = RequestMethod.POST)
+    public ResponseEntity<?> suaMauSac(@RequestBody MauSac mauSac) {
+        return ResponseEntity.ok(_sanPhamService.suaMauSac(mauSac));
+    }
+
+    @RequestMapping(value = "/laymausacbyid", method = RequestMethod.GET)
+    public ResponseEntity<?> layMauSacById(@RequestParam Long mauSacId) {
+        return ResponseEntity.ok(_sanPhamService.layMauSacById(mauSacId));
+    }
+
+    @RequestMapping(value = "/laykichthuoc", method = RequestMethod.GET)
+    public ResponseEntity<?> layKichThuoc() {
+        return ResponseEntity.ok(_sanPhamService.layHetKichThuoc());
+    }
+
+    @RequestMapping(value = "/themkichthuoc", method = RequestMethod.POST)
+    public ResponseEntity<?> themKichThuoc(@RequestBody KichThuoc kichThuoc) {
+        return ResponseEntity.ok(_sanPhamService.themKichThuoc(kichThuoc));
+    }
+
+    @RequestMapping(value = "/xoakichthuoc", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaKichThuoc(@RequestParam Long kichThuocId) {
+        return ResponseEntity.ok(_sanPhamService.xoaKichThuoc(kichThuocId));
+    }
+
+    @RequestMapping(value = "/suakichthuoc", method = RequestMethod.POST)
+    public ResponseEntity<?> suaKichThuoc(@RequestBody KichThuoc kichThuoc) {
+        return ResponseEntity.ok(_sanPhamService.suaKichThuoc(kichThuoc));
+    }
+
+    @RequestMapping(value = "/laykichthuocbyid", method = RequestMethod.GET)
+    public ResponseEntity<?> layKichThuocById(@RequestParam Long kichThuocId) {
+        return ResponseEntity.ok(_sanPhamService.layKichThuocById(kichThuocId));
+    }
+
+    @RequestMapping(value = "/laysanphamchitiet", method = RequestMethod.GET)
+    public ResponseEntity<?> laySanPhamChiTiet() {
+        return ResponseEntity.ok(_sanPhamService.layHetSanPhamChiTiet());
+    }
+
+    @RequestMapping(value = "/themsanphamchitiet", method = RequestMethod.POST)
+    public ResponseEntity<?> themSanPhamChiTiet(@RequestBody SanPhamChiTietRequest sanPhamChiTietRequest) {
+        return ResponseEntity.ok(_sanPhamService.themSanPhamChiTiet(sanPhamChiTietRequest));
+    }
+
+    @RequestMapping(value = "/xoasanphamchitiet", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaSanPhamChiTiet(@RequestParam Long sanPhamChiTietId) {
+        return ResponseEntity.ok(_sanPhamService.xoaSanPhamChiTiet(sanPhamChiTietId));
+    }
+
+    @RequestMapping(value = "/suasanphamchitiet", method = RequestMethod.POST)
+    public ResponseEntity<?> suaSanPhamChiTiet(@RequestBody SanPhamChiTietRequest sanPhamChiTietRequest) {
+        return ResponseEntity.ok(_sanPhamService.suaSanPhamChiTiet(sanPhamChiTietRequest));
+    }
+
+    @RequestMapping(value = "/laysanphamchitietbyid", method = RequestMethod.GET)
+    public ResponseEntity<?> laySanPhamChiTietById(@RequestParam Long sanPhamChiTietId) {
+        return ResponseEntity.ok(_sanPhamService.laySanPhamChiTietById(sanPhamChiTietId));
     }
 
     @RequestMapping(value = "/themsanpham", method = RequestMethod.POST)

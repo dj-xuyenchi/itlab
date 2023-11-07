@@ -3,16 +3,12 @@ package it.lab.service;
 import it.lab.common.CloudinaryUpload;
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
-import it.lab.dto.ChatLieuDTO;
-import it.lab.dto.SanPhamChiTietDTO;
-import it.lab.dto.SanPhamDTO;
-import it.lab.entity.ChatLieu;
-import it.lab.entity.HinhAnhSanPham;
-import it.lab.entity.MauSac;
-import it.lab.entity.SanPham;
+import it.lab.dto.*;
+import it.lab.entity.*;
 import it.lab.enums.APIStatus;
 import it.lab.enums.TrangThaiSanPham;
 import it.lab.iservice.ISanPhamService;
+import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
 import it.lab.modelcustom.respon.SanPhamChiTiet;
@@ -42,6 +38,8 @@ public class SanPhamService implements ISanPhamService {
     private ChatLieuRepository _chatLieuRepo;
     @Autowired
     private NhomSanPhamRepository _nhomSanPhamRepo;
+    @Autowired
+    private KichThuocRepo _kichThuocRepo;
     @Autowired
     private HinhAnhSanPhamRepository _hinhAnhSanPhamRepo;
 
@@ -116,6 +114,40 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public Page<NhomSanPhamDTO> layHetNhomSanPham() {
+        return new Page<NhomSanPhamDTO>(NhomSanPhamDTO.fromCollection(_nhomSanPhamRepo.findAll()), 0, 10000);
+    }
+
+    @Override
+    public Page<NhomSanPhamDTO> xoaNhomSanPham(Long nhomSanPhamId) {
+        _nhomSanPhamRepo.deleteById(nhomSanPhamId);
+        return layHetNhomSanPham();
+    }
+
+    @Override
+    public Page<NhomSanPhamDTO> suaNhomSanPham(NhomSanPham nhomSanPham) {
+        NhomSanPham nhomSanPhamGoc = _nhomSanPhamRepo.findById(nhomSanPham.getId()).get();
+        nhomSanPhamGoc.setTenNhom(nhomSanPham.getTenNhom());
+        nhomSanPhamGoc.setNgayCapNhat(LocalDate.now());
+        _nhomSanPhamRepo.save(nhomSanPhamGoc);
+        return layHetNhomSanPham();
+    }
+
+    @Override
+    public Page<NhomSanPhamDTO> themNhomSanPham(NhomSanPham nhomSanPham) {
+        nhomSanPham.setNgayTao(LocalDate.now());
+        _nhomSanPhamRepo.save(nhomSanPham);
+        nhomSanPham.setMaNhom("NSP" + nhomSanPham.getId());
+        _nhomSanPhamRepo.save(nhomSanPham);
+        return layHetNhomSanPham();
+    }
+
+    @Override
+    public NhomSanPhamDTO layNhomSanPhamById(Long nhomSanPhamId) {
+        return NhomSanPhamDTO.fromEntity(_nhomSanPhamRepo.findById(nhomSanPhamId).get());
+    }
+
+    @Override
     public FullThuocTinh layHetThuocTinh() {
         return new FullThuocTinh(_mauSacRepo.findAll(), _nhomSanPhamRepo.findAll(), _chatLieuRepo.findAll(), _thietKeRepo.findAll());
     }
@@ -123,6 +155,176 @@ public class SanPhamService implements ISanPhamService {
     @Override
     public ChatLieuDTO layChatLieuById(Long chatLieuId) {
         return ChatLieuDTO.fromEntity(_chatLieuRepo.findById(chatLieuId).get());
+    }
+
+    @Override
+    public Page<ThietKeDTO> layHetThietKe() {
+        return new Page<ThietKeDTO>(ThietKeDTO.fromCollection(_thietKeRepo.findAll()), 0, 10000);
+    }
+
+    @Override
+    public Page<ThietKeDTO> xoaThietKe(Long thietKeId) {
+        _thietKeRepo.deleteById(thietKeId);
+        return layHetThietKe();
+    }
+
+    @Override
+    public Page<ThietKeDTO> suaThietKe(ThietKe thietKe) {
+        ThietKe thietKeGoc = _thietKeRepo.findById(thietKe.getId()).get();
+        thietKeGoc.setTenThietKe(thietKe.getTenThietKe());
+        thietKeGoc.setNgayCapNhat(LocalDate.now());
+        _thietKeRepo.save(thietKeGoc);
+        return layHetThietKe();
+    }
+
+    @Override
+    public Page<ThietKeDTO> themThietKe(ThietKe thietKe) {
+        thietKe.setNgayTao(LocalDate.now());
+        _thietKeRepo.save(thietKe);
+        thietKe.setMaThietKe("TK" + thietKe.getId());
+        _thietKeRepo.save(thietKe);
+        return layHetThietKe();
+    }
+
+    @Override
+    public ThietKeDTO layThietKeById(Long thietKeId) {
+        return ThietKeDTO.fromEntity(_thietKeRepo.findById(thietKeId).get());
+    }
+
+    @Override
+    public Page<MauSacDTO> layHetMauSac() {
+        return new Page<MauSacDTO>(MauSacDTO.fromCollection(_mauSacRepo.findAll()), 0, 10000);
+    }
+
+    @Override
+    public Page<MauSacDTO> xoaMauSac(Long mauSacId) {
+        _mauSacRepo.deleteById(mauSacId);
+        return layHetMauSac();
+    }
+
+    @Override
+    public Page<MauSacDTO> suaMauSac(MauSac mauSac) {
+        MauSac mauSacGoc = _mauSacRepo.findById(mauSac.getId()).get();
+        mauSacGoc.setTenMau(mauSac.getTenMau());
+        mauSacGoc.setMaMauCss(mauSac.getMaMauCss());
+        mauSacGoc.setNgayCapNhat(LocalDate.now());
+        _mauSacRepo.save(mauSacGoc);
+        return layHetMauSac();
+    }
+
+    @Override
+    public Page<MauSacDTO> themMauSac(MauSac mauSac) {
+        mauSac.setNgayTao(LocalDate.now());
+        _mauSacRepo.save(mauSac);
+        mauSac.setMaMau("MS" + mauSac.getId());
+        _mauSacRepo.save(mauSac);
+        return layHetMauSac();
+    }
+
+    @Override
+    public MauSacDTO layMauSacById(Long mauSacId) {
+        return MauSacDTO.fromEntity(_mauSacRepo.findById(mauSacId).get());
+    }
+
+    @Override
+    public Page<KichThuocDTO> layHetKichThuoc() {
+        return new Page<KichThuocDTO>(KichThuocDTO.fromCollection(_kichThuocRepo.findAll()), 0, 10000);
+    }
+
+    @Override
+    public Page<KichThuocDTO> xoaKichThuoc(Long kichThuocId) {
+        _kichThuocRepo.deleteById(kichThuocId);
+        return layHetKichThuoc();
+    }
+
+    @Override
+    public Page<KichThuocDTO> suaKichThuoc(KichThuoc kichThuoc) {
+        KichThuoc kichThuocGoc = _kichThuocRepo.findById(kichThuoc.getId()).get();
+        kichThuocGoc.setTenKichThuoc(kichThuoc.getTenKichThuoc());
+        kichThuocGoc.setNgayCapNhat(LocalDate.now());
+        _kichThuocRepo.save(kichThuocGoc);
+        return layHetKichThuoc();
+    }
+
+    @Override
+    public Page<KichThuocDTO> themKichThuoc(KichThuoc kichThuoc) {
+        kichThuoc.setNgayTao(LocalDate.now());
+        _kichThuocRepo.save(kichThuoc);
+        kichThuoc.setMaKichThuoc("MKT" + kichThuoc.getId());
+        _kichThuocRepo.save(kichThuoc);
+        return layHetKichThuoc();
+    }
+
+    @Override
+    public KichThuocDTO layKichThuocById(Long kichThuocId) {
+        return KichThuocDTO.fromEntity(_kichThuocRepo.findById(kichThuocId).get());
+    }
+
+    @Override
+    public Page<SanPhamChiTietDTO> layHetSanPhamChiTiet() {
+        return new Page<SanPhamChiTietDTO>(SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findAll()), 0, 10000);
+    }
+
+    @Override
+    public Page<SanPhamChiTietDTO> xoaSanPhamChiTiet(Long sanPhamChiTietId) {
+        try {
+            _sanPhamChiTietRepository.deleteById(sanPhamChiTietId);
+            return layHetSanPhamChiTiet();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Page<SanPhamChiTietDTO> suaSanPhamChiTiet(SanPhamChiTietRequest sanPhamChiTiet) {
+        if (isSanPhamChiTietDaTonTai(sanPhamChiTiet).size() > 1) {
+            return new Page<SanPhamChiTietDTO>(null, 0, 10000);
+        }
+        it.lab.entity.SanPhamChiTiet sanPhamThayDoi = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
+        sanPhamThayDoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPhamThayDoi.setGiaNhap(sanPhamChiTiet.getGiaNhap());
+        sanPhamThayDoi.setGiaBan(sanPhamThayDoi.getGiaBan());
+        sanPhamThayDoi.setTrangThai(sanPhamChiTiet.getTrangThai());
+        sanPhamThayDoi.setNgayCapNhat(LocalDate.now());
+        sanPhamThayDoi.setSoLuongDaBan(sanPhamChiTiet.getSoLuongDaBan());
+        sanPhamThayDoi.setSoLuongLoi(sanPhamChiTiet.getSoLuongLoi());
+        sanPhamThayDoi.setSoLuongTraHang(sanPhamChiTiet.getSoLuongTraHang());
+        sanPhamThayDoi.setKichThuoc(_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get());
+        sanPhamThayDoi.setMauSac(_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get());
+        _sanPhamChiTietRepository.save(sanPhamThayDoi);
+        return layHetSanPhamChiTiet();
+    }
+
+    private List<it.lab.entity.SanPhamChiTiet> isSanPhamChiTietDaTonTai(SanPhamChiTietRequest sanPhamChiTiet) {
+        MauSac mauSac = _mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get();
+        KichThuoc kichThuoc = _kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get();
+        SanPham sanPham = _sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get();
+        List<it.lab.entity.SanPhamChiTiet> sanPhamChiTietGoc = _sanPhamChiTietRepository.findSanPhamChiTietsByMauSacAndKichThuocAndSanPham(mauSac, kichThuoc, sanPham);
+        return sanPhamChiTietGoc;
+    }
+
+    @Override
+    public Page<SanPhamChiTietDTO> themSanPhamChiTiet(SanPhamChiTietRequest sanPhamChiTiet) {
+        if (isSanPhamChiTietDaTonTai(sanPhamChiTiet).size() > 0) {
+            return new Page<SanPhamChiTietDTO>(null, 0, 10000);
+        }
+        it.lab.entity.SanPhamChiTiet sanPhamMoi = new it.lab.entity.SanPhamChiTiet();
+        sanPhamMoi.setSanPham(_sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get());
+        sanPhamMoi.setMauSac(_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get());
+        sanPhamMoi.setKichThuoc(_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get());
+        sanPhamMoi.setGiaBan(sanPhamChiTiet.getGiaBan());
+        sanPhamMoi.setGiaNhap(sanPhamChiTiet.getGiaNhap());
+        sanPhamMoi.setTrangThai(sanPhamChiTiet.getTrangThai());
+        sanPhamMoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPhamMoi.setHinhAnh(_sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get().getHinhAnh1());
+        sanPhamMoi.setNgayTao(LocalDate.now());
+        _sanPhamChiTietRepository.save(sanPhamMoi);
+        return layHetSanPhamChiTiet();
+    }
+
+    @Override
+    public SanPhamChiTietDTO laySanPhamChiTietById(Long sanPhamChiTietId) {
+        return SanPhamChiTietDTO.fromEntity(_sanPhamChiTietRepository.findById(sanPhamChiTietId).get());
     }
 
     @Override

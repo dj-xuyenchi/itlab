@@ -11,14 +11,14 @@ import {
   notification,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useChatLieuStore } from "./useChatLieuStore";
+import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import { useSelector } from "react-redux";
 import { FaRegPenToSquare } from "react-icons/fa6";
 function ModalCapNhat({ id, setData }) {
   const language = useSelector(selectLanguage);
   const [chatLieu, setChatLieu] = useState({
     id: id,
-    tenChatLieu: "",
+    tenNhom: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -47,14 +47,14 @@ function ModalCapNhat({ id, setData }) {
     }
   };
   async function handleSuaChatLieu() {
-    if (chatLieu.tenChatLieu == "") {
+    if (chatLieu.tenNhom == "") {
       return;
     }
-    const data = await useChatLieuStore.actions.suaChatLieu(chatLieu);
+    const data = await useNhomSanPhamStore.actions.suaChatLieu(chatLieu);
     openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
     setChatLieu({
       ...chatLieu,
-      tenChatLieu: "",
+      tenNhom: "",
     });
     setData(data.data.data);
     setIsModalOpen(false);
@@ -80,7 +80,7 @@ function ModalCapNhat({ id, setData }) {
         <Modal
           okButtonProps={{ style: { display: "none" } }}
           cancelButtonProps={{ style: { display: "none" } }}
-          title="Sửa chất liệu"
+          title="Sửa nhóm sản phẩm"
           open={isModalOpen}
           onCancel={handleCancel}
           centered
@@ -101,8 +101,8 @@ function ModalCapNhat({ id, setData }) {
             }}
           >
             <Form.Item
-              label="Tên chất liệu"
-              name="Tên chất liệu"
+              label="Tên nhóm"
+              name="Tên nhóm"
               rules={[
                 {
                   required: true,
@@ -113,10 +113,10 @@ function ModalCapNhat({ id, setData }) {
                 onChange={(e) => {
                   setChatLieu({
                     ...chatLieu,
-                    tenChatLieu: e.target.value,
+                    tenNhom: e.target.value,
                   });
                 }}
-                value={chatLieu.tenChatLieu}
+                value={chatLieu.tenNhom}
               />
             </Form.Item>
             <Form.Item label=" ">

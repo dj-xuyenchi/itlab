@@ -8,7 +8,7 @@ import { SiZerodha } from "react-icons/si";
 import { AiOutlineBgColors } from "react-icons/ai";
 import { SiSteelseries } from "react-icons/si";
 import { MdGroupWork, MdArchitecture } from "react-icons/md";
-import { TbLayoutDashboard } from "react-icons/tb";
+import { TbLayoutDashboard, TbPackages } from "react-icons/tb";
 import { useState } from "react";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -33,7 +33,12 @@ const items = [
       "2",
       <BsFillBoxSeamFill />
     ),
-    getItem("Thuộc tính", "3", <FaBuffer />, [
+    getItem(
+      <Link to={"/admin/sanpham/sanphamchitiet"}>Sản phẩm chi tiết</Link>,
+      "3",
+      <TbPackages />
+    ),
+    getItem("Thuộc tính", "10", <FaBuffer />, [
       getItem(
         <Link to={"/admin/sanpham/chatlieu"}>Chất liệu</Link>,
         "4",

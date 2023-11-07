@@ -11,7 +11,7 @@ import {
   notification,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useChatLieuStore } from "./useChatLieuStore";
+import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import { useSelector } from "react-redux";
 import { AiOutlineDelete } from "react-icons/ai";
 function ModalXoa({ id, setData }) {
@@ -45,7 +45,7 @@ function ModalXoa({ id, setData }) {
     }
   };
   async function handleXoaChatLieu() {
-    const data = await useChatLieuStore.actions.xoaChatLieuById(id);
+    const data = await useNhomSanPhamStore.actions.xoaChatLieuById(id);
     openNotification("success", "Hệ thống", "Xóa thành công", "bottomRight");
     setData(data.data.data);
     setIsModalOpen(false);
@@ -57,7 +57,7 @@ function ModalXoa({ id, setData }) {
         <Button danger shape="circle" icon={<AiOutlineDelete />} />
       </Tooltip>
       <Modal
-        title="Xóa chất liệu"
+        title="Xóa nhóm sản phẩm"
         open={isModalOpen}
         onCancel={handleCancel}
         onOk={handleOk}

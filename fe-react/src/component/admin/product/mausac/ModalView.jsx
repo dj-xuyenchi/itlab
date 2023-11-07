@@ -11,14 +11,16 @@ import {
   notification,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useChatLieuStore } from "./useChatLieuStore";
+import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import { useSelector } from "react-redux";
 import { IoEyeSharp } from "react-icons/io5";
 function ModalView({ id }) {
   const language = useSelector(selectLanguage);
   const [chatLieu, setChatLieu] = useState({
     id: id,
-    tenChatLieu: "",
+    tenMau: "",
+    maMau: "",
+    maMauCss: "",
     ngayTao: "",
     ngayCapNhat: "",
   });
@@ -31,7 +33,7 @@ function ModalView({ id }) {
   };
   useEffect(() => {
     async function layDuLieu() {
-      const data = await useChatLieuStore.actions.layChatLieuById(id);
+      const data = await useNhomSanPhamStore.actions.layChatLieuById(id);
       setChatLieu(data.data);
     }
     if (isModalOpen) {
@@ -40,7 +42,7 @@ function ModalView({ id }) {
   }, [isModalOpen]);
   return (
     <>
-      <Tooltip title="Cập nhật" onClick={showModal}>
+      <Tooltip title="Xem" onClick={showModal}>
         <Button
           style={{
             color: "blue",
@@ -51,7 +53,7 @@ function ModalView({ id }) {
       </Tooltip>
       <Modal
         cancelButtonProps={{ style: { display: "none" } }}
-        title="Chất liệu"
+        title="Màu sắc"
         open={isModalOpen}
         onCancel={handleCancel}
         centered
@@ -72,24 +74,34 @@ function ModalView({ id }) {
           }}
         >
           <Form.Item
-            label="Mã chất liệu"
+            label="Mã màu"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={chatLieu.maChatLieu} />
+            <Input disabled value={chatLieu.maMau} />
           </Form.Item>
           <Form.Item
-            label="Tên chất liệu"
+            label="Tên màu"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={chatLieu.tenChatLieu} />
+            <Input disabled value={chatLieu.tenMau} />
+          </Form.Item>
+          <Form.Item
+            label="Mã màu Css"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input disabled value={chatLieu.maMauCss} />
           </Form.Item>
           <Form.Item
             label="Ngày tạo"

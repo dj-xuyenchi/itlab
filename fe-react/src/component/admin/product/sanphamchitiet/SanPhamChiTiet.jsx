@@ -8,17 +8,17 @@ import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { Button, Input, Space } from "antd";
-import { useChatLieuStore } from "./useChatLieuStore";
+import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
-function ChatLieu() {
+function SanPhamChiTiet() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [chatLieu, setChatLieu] = useState({
-    tenChatLieu: "",
+    tenThietKe: "",
   });
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -134,23 +134,23 @@ function ChatLieu() {
   });
   const columns = [
     {
-      title: "Mã chất liệu",
-      dataIndex: "maChatLieu",
-      key: "maChatLieu",
+      title: "Tên sản phẩm",
+      dataIndex: "sanPham",
+      key: "sanPham",
       width: "15%",
-      ...getColumnSearchProps("maChatLieu"),
-      render: (maChatLieu) => (
+      ...getColumnSearchProps("sanPham.tenSanPham"),
+      render: (sanPham) => (
         <>
-          <Tag color="success"> {maChatLieu}</Tag>
+          <Tag color="success"> {sanPham.tenSanPham}</Tag>
         </>
       ),
     },
     {
-      title: "Tên chất liệu",
-      dataIndex: "tenChatLieu",
-      key: "tenChatLieu",
+      title: "Tên thiết kế",
+      dataIndex: "tenThietKe",
+      key: "tenThietKe",
       width: "30%",
-      ...getColumnSearchProps("tenChatLieu"),
+      ...getColumnSearchProps("tenThietKe"),
     },
     {
       title: "Ngày tạo",
@@ -170,7 +170,7 @@ function ChatLieu() {
     {
       title: "Thao tác",
       dataIndex: "id",
-      key: "maChatLieu",
+      key: "maThietKe",
       align: "center",
       width: "15%",
       render: (id) => (
@@ -190,7 +190,7 @@ function ChatLieu() {
 
   const [data, setData] = useState([]);
   async function layDuLieu() {
-    const data = await useChatLieuStore.actions.fetchChatLieu();
+    const data = await useNhomSanPhamStore.actions.fetchChatLieu();
     setData(data.data.data);
   }
 
@@ -228,12 +228,12 @@ function ChatLieu() {
     if (chatLieu.tenChatLieu == "") {
       return;
     }
-    const data = await useChatLieuStore.actions.themChatLieu(chatLieu);
+    const data = await useNhomSanPhamStore.actions.themChatLieu(chatLieu);
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setData(data.data.data);
     setChatLieu({
       ...chatLieu,
-      tenChatLieu: "",
+      tenNhom: "",
     });
     setIsModalOpen(false);
   }
@@ -265,7 +265,7 @@ function ChatLieu() {
               <Modal
                 okButtonProps={{ style: { display: "none" } }}
                 cancelButtonProps={{ style: { display: "none" } }}
-                title="Thêm chất liệu"
+                title="Thêm thiết kế"
                 open={isModalOpen}
                 onCancel={handleCancel}
                 centered
@@ -286,8 +286,8 @@ function ChatLieu() {
                   }}
                 >
                   <Form.Item
-                    label="Tên chất liệu"
-                    name="Tên chất liệu"
+                    label="Tên thiết kế"
+                    name="Tên thiết kế"
                     rules={[
                       {
                         required: true,
@@ -298,10 +298,10 @@ function ChatLieu() {
                       onChange={(e) => {
                         setChatLieu({
                           ...chatLieu,
-                          tenChatLieu: e.target.value,
+                          tenThietKe: e.target.value,
                         });
                       }}
-                      value={chatLieu.tenChatLieu}
+                      value={chatLieu.tenThietKe}
                     />
                   </Form.Item>
                   <Form.Item label=" ">
@@ -328,4 +328,4 @@ function ChatLieu() {
   );
 }
 
-export default ChatLieu;
+export default SanPhamChiTiet;

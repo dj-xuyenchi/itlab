@@ -11,14 +11,14 @@ import {
   notification,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useChatLieuStore } from "./useChatLieuStore";
+import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import { useSelector } from "react-redux";
 import { IoEyeSharp } from "react-icons/io5";
 function ModalView({ id }) {
   const language = useSelector(selectLanguage);
   const [chatLieu, setChatLieu] = useState({
     id: id,
-    tenChatLieu: "",
+    tenNhom: "",
     ngayTao: "",
     ngayCapNhat: "",
   });
@@ -31,7 +31,7 @@ function ModalView({ id }) {
   };
   useEffect(() => {
     async function layDuLieu() {
-      const data = await useChatLieuStore.actions.layChatLieuById(id);
+      const data = await useNhomSanPhamStore.actions.layChatLieuById(id);
       setChatLieu(data.data);
     }
     if (isModalOpen) {
@@ -51,7 +51,7 @@ function ModalView({ id }) {
       </Tooltip>
       <Modal
         cancelButtonProps={{ style: { display: "none" } }}
-        title="Chất liệu"
+        title="Thiết kế"
         open={isModalOpen}
         onCancel={handleCancel}
         centered
@@ -72,24 +72,24 @@ function ModalView({ id }) {
           }}
         >
           <Form.Item
-            label="Mã chất liệu"
+            label="Mã thiết kế"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={chatLieu.maChatLieu} />
+            <Input disabled value={chatLieu.maThietKe} />
           </Form.Item>
           <Form.Item
-            label="Tên chất liệu"
+            label="Tên thiết kế"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={chatLieu.tenChatLieu} />
+            <Input disabled value={chatLieu.tenThietKe} />
           </Form.Item>
           <Form.Item
             label="Ngày tạo"
