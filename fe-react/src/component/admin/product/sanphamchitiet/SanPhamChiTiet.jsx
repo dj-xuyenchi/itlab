@@ -3,7 +3,17 @@ import { selectLanguage } from "../../../../language/selectLanguage";
 import "./style.css";
 import Header from "../../layout/header/Header";
 import MenuAdmin from "../../layout/menu/MenuAdmin";
-import { Col, Form, Modal, Row, Select, Spin, Table, Tag, notification } from "antd";
+import {
+  Col,
+  Form,
+  Modal,
+  Row,
+  Select,
+  Spin,
+  Table,
+  Tag,
+  notification,
+} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -134,35 +144,54 @@ function SanPhamChiTiet() {
   });
   const columns = [
     {
-      title: "Tên sản phẩm",
-      dataIndex: "sanPham",
-      key: "sanPham",
-      width: "15%",
-      ...getColumnSearchProps(""),
-      render: (sanPham) => (
-        <>
-          <Tag color="success"> {sanPham.tenSanPham}</Tag>
-        </>
-      ),
+      title: "Kích thước",
+      dataIndex: "kichThuoc",
+      key: "kichThuoc",
+      width: "12.5%",
+      render: (kichThuoc) => <>{kichThuoc.tenKichThuoc}</>,
     },
     {
-      title: "Tên thiết kế",
-      dataIndex: "tenThietKe",
-      key: "tenThietKe",
-      width: "30%",
-      ...getColumnSearchProps("tenThietKe"),
+      title: "Màu sắc",
+      dataIndex: "mauSac",
+      key: "mauSac",
+      width: "12.5%",
+      render: (mauSac) => <>{mauSac.tenMau}</>,
+    },
+    {
+      title: "Số lượng tồn",
+      dataIndex: "soLuongTon",
+      key: "soLuongTon",
+      width: "10%",
+    },
+    {
+      title: "Đã bán",
+      dataIndex: "soLuongDaBan",
+      key: "soLuongDaBan",
+      width: "10%",
+    },
+    {
+      title: "Số lượng lỗi",
+      dataIndex: "soLuongLoi",
+      key: "soLuongLoi",
+      width: "10%",
+    },
+    {
+      title: "Số lượng trả hàng",
+      dataIndex: "soLuongTraHang",
+      key: "soLuongTraHang",
+      width: "10%",
     },
     {
       title: "Ngày tạo",
       dataIndex: "ngayTao",
       key: "ngayTao",
-      width: "20%",
+      width: "10%",
     },
     {
       title: "Ngày cập nhật",
       dataIndex: "ngayCapNhat",
       key: "ngayCapNhat",
-      width: "20%",
+      width: "10%",
       render: (ngayCapNhat) => (
         <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Mới</Tag>}</>
       ),
@@ -189,7 +218,7 @@ function SanPhamChiTiet() {
   ];
 
   const [data, setData] = useState(undefined);
-  const [dataChiTiet, setDataChiTiet] = useState(undefined)
+  const [dataChiTiet, setDataChiTiet] = useState(undefined);
   async function layDuLieu() {
     const data = await useNhomSanPhamStore.actions.fetchChatLieu();
     setData(data.data.data);
@@ -239,8 +268,9 @@ function SanPhamChiTiet() {
     setIsModalOpen(false);
   }
   async function handleSearchSelect(e) {
-    const data = await useNhomSanPhamStore.actions.fetchSanPhamChiTietCuaSanPham(e.value)
-    setDataChiTiet(data.data.data)
+    const data =
+      await useNhomSanPhamStore.actions.fetchSanPhamChiTietCuaSanPham(e.value);
+    setDataChiTiet(data.data.data);
   }
   return (
     <>
@@ -265,37 +295,42 @@ function SanPhamChiTiet() {
                 <Col span={12}>
                   <Select
                     style={{
-                      width: "100%"
+                      width: "100%",
                     }}
                     showSearch
                     labelInValue
                     onChange={handleSearchSelect}
                     filterOption={(input, option) =>
-                      option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      option.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
                     }
                   >
                     {data
                       ? data.map((option) => (
-                        <Select.Option key={option.id} value={option.id}>
-                          {option.tenSanPham}
-                        </Select.Option>
-                      ))
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenSanPham}
+                          </Select.Option>
+                        ))
                       : ""}
                   </Select>
                 </Col>
-                <Col span={12} style={{
-                  display: "flex",
-                  justifyContent: "flex-end"
-                }}>
+                <Col
+                  span={12}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
                   <Button type="primary" size="large" onClick={showModal}>
-                    Thêm dữ liệu
+                    Thêm chi tiết
                   </Button>
                 </Col>
               </Row>
               <Modal
                 okButtonProps={{ style: { display: "none" } }}
                 cancelButtonProps={{ style: { display: "none" } }}
-                title="Thêm thiết kế"
+                title="Thêm chi tiết"
                 open={isModalOpen}
                 onCancel={handleCancel}
                 centered
@@ -316,8 +351,68 @@ function SanPhamChiTiet() {
                   }}
                 >
                   <Form.Item
-                    label="Tên thiết kế"
-                    name="Tên thiết kế"
+                    label="Màu sắc"
+                    name="Màu sắc"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      labelInValue
+                      optionLabelProp="children"
+                      style={{
+                        width: "100%",
+                      }}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
+                    >
+                      {/* {thuocTinh
+                        ? thuocTinh.thietKeList.map((option) => (
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenThietKe}
+                            </Select.Option>
+                          ))
+                        : ""} */}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    label="Kích thước"
+                    name="Kích thước"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      labelInValue
+                      optionLabelProp="children"
+                      style={{
+                        width: "100%",
+                      }}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
+                    >
+                      {/* {thuocTinh
+                        ? thuocTinh.thietKeList.map((option) => (
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenThietKe}
+                            </Select.Option>
+                          ))
+                        : ""} */}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    label="Số lượng tồn"
+                    name="Số lượng tồn"
                     rules={[
                       {
                         required: true,
