@@ -204,10 +204,19 @@ public class SanPhamController {
     public ResponseEntity<?> laySanPhamChiTietById(@RequestParam Long sanPhamChiTietId) {
         return ResponseEntity.ok(_sanPhamService.laySanPhamChiTietById(sanPhamChiTietId));
     }
-
+    @RequestMapping(value = "/laysanphamchitietcuasanpham", method = RequestMethod.GET)
+    public ResponseEntity<?> laySanPhamChiTietCuaSanPham(@RequestParam Long sanPhamId) {
+        return ResponseEntity.ok(_sanPhamService.laySanPhamChiTietCuaSanPham(sanPhamId));
+    }
     @RequestMapping(value = "/themsanpham", method = RequestMethod.POST)
     public ResponseEntity<?> themSanPham(@RequestPart("file1") MultipartFile data1, @RequestPart("file2") MultipartFile data2, @RequestPart("data") String sanPham) throws IOException {
         Gson gson = new Gson();
         return ResponseEntity.ok(_sanPhamService.themSanPham(gson.fromJson(sanPham, SanPhamRequest.class), data1, data2));
     }
+
+    @RequestMapping(value = "/laysanphamadmin", method = RequestMethod.GET)
+    public ResponseEntity<?> laySanPham() {
+        return ResponseEntity.ok(_sanPhamService.layHetSanPham());
+    }
+
 }

@@ -323,8 +323,19 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public Page<SanPhamDTO> layHetSanPham() {
+        return new Page<SanPhamDTO>(SanPhamDTO.fromCollection(_sanPhamRepository.findAll()), 0, 10000);
+    }
+
+    @Override
     public SanPhamChiTietDTO laySanPhamChiTietById(Long sanPhamChiTietId) {
         return SanPhamChiTietDTO.fromEntity(_sanPhamChiTietRepository.findById(sanPhamChiTietId).get());
+    }
+
+    @Override
+    public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId) {
+        return new Page<SanPhamChiTietDTO>(SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findAll().stream().filter(x -> x.getSanPham().getId() == sanPhamId).toList()), 0, 1000);
+
     }
 
     @Override

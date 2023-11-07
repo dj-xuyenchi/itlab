@@ -79,9 +79,11 @@ public interface ISanPhamService {
 
     public Page<SanPhamChiTietDTO> themSanPhamChiTiet(SanPhamChiTietRequest sanPhamChiTiet);
 
+    public Page<SanPhamDTO> layHetSanPham();
+
     public SanPhamChiTietDTO laySanPhamChiTietById(Long sanPhamChiTietId);
 
-
+    public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId);
 
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException;
 }

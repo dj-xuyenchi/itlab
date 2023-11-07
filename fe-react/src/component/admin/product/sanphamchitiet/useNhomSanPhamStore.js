@@ -3,8 +3,11 @@ import axiosIns from "../../../../plugins/axios"
 export const useNhomSanPhamStore = {
     actions: {
         async fetchChatLieu() {
-            return axiosIns.get('/api/sanpham/laysanphamchitiet'
+            return axiosIns.get('/api/sanpham/laysanphamadmin'
             )
+        },
+        async fetchSanPhamChiTietCuaSanPham(payload) {
+            return axiosIns.get('/api/sanpham/laysanphamchitietcuasanpham?sanPhamId=' + payload)
         },
         async themChatLieu(payload) {
             return axiosIns.post('/api/sanpham/themthietke', payload
