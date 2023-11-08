@@ -17,4 +17,5 @@ public class FullThuocTinh {
     private List<NhomSanPham> nhomSanPhamList;
     private List<ChatLieu> chatLieuList;
     private List<ThietKe> thietKeList;
+    private List<KichThuoc> kichThuocList;
 }

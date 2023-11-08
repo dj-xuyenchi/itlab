@@ -31,5 +31,4 @@ public class SanPhamChiTietRequest {
     private Long mauSacId;
     private Long kichThuocId;
     private Long sanPhamId;
-
 }

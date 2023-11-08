@@ -6,6 +6,7 @@ import MenuAdmin from "../../layout/menu/MenuAdmin";
 import {
   Col,
   Form,
+  InputNumber,
   Modal,
   Row,
   Select,
@@ -27,8 +28,11 @@ function SanPhamChiTiet() {
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [chatLieu, setChatLieu] = useState({
-    tenThietKe: "",
+  const [sanPhamChiTiet, setSanPhamChiTiet] = useState({
+    mauSacId: null,
+    kichThuocId: null,
+    sanPhamId: null,
+    soLuongTon: 0
   });
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -144,6 +148,12 @@ function SanPhamChiTiet() {
   });
   const columns = [
     {
+      title: "Màu sắc",
+      dataIndex: "mauSac",
+      key: "mauSac",
+      width: "12.5%",
+      render: (mauSac) => <>{mauSac.tenMau}</>,
+    }, {
       title: "Kích thước",
       dataIndex: "kichThuoc",
       key: "kichThuoc",
@@ -151,29 +161,25 @@ function SanPhamChiTiet() {
       render: (kichThuoc) => <>{kichThuoc.tenKichThuoc}</>,
     },
     {
-      title: "Màu sắc",
-      dataIndex: "mauSac",
-      key: "mauSac",
-      width: "12.5%",
-      render: (mauSac) => <>{mauSac.tenMau}</>,
-    },
-    {
       title: "Số lượng tồn",
       dataIndex: "soLuongTon",
       key: "soLuongTon",
       width: "10%",
+      render: (soLuongTon) => <>{soLuongTon ? soLuongTon : 0}</>,
     },
     {
       title: "Đã bán",
       dataIndex: "soLuongDaBan",
       key: "soLuongDaBan",
       width: "10%",
+      render: (soLuongDaBan) => <>{soLuongDaBan ? soLuongDaBan : 0}</>,
     },
     {
       title: "Số lượng lỗi",
       dataIndex: "soLuongLoi",
       key: "soLuongLoi",
       width: "10%",
+      render: (soLuongLoi) => <>{soLuongLoi ? soLuongLoi : 0}</>,
     },
     {
       title: "Số lượng trả hàng",
@@ -210,8 +216,8 @@ function SanPhamChiTiet() {
           }}
         >
           <ModalView id={id} />
-          <ModalCapNhat id={id} setData={setData} />
-          <ModalXoa id={id} setData={setData} />
+          <ModalCapNhat id={id} setData={setDataChiTiet} />
+          <ModalXoa id={id} setData={setDataChiTiet} />
         </div>
       ),
     },
@@ -219,13 +225,19 @@ function SanPhamChiTiet() {
 
   const [data, setData] = useState(undefined);
   const [dataChiTiet, setDataChiTiet] = useState(undefined);
+  const [thuocTinh, setThuocTinh] = useState()
   async function layDuLieu() {
     const data = await useNhomSanPhamStore.actions.fetchChatLieu();
     setData(data.data.data);
   }
+  async function layDuLieu2() {
+    const data = await useNhomSanPhamStore.actions.fetchThuocTinh();
+    setThuocTinh(data.data);
+  }
 
   useEffect(() => {
     layDuLieu();
+    layDuLieu2()
   }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -255,14 +267,28 @@ function SanPhamChiTiet() {
     }
   };
   async function handleThemChatLieu() {
-    if (chatLieu.tenChatLieu == "") {
+    if (sanPhamChiTiet.mauSacId == null) {
+      openNotification("error", "Hệ thống", "Chưa chọn màu sắc", "bottomRight");
       return;
     }
-    const data = await useNhomSanPhamStore.actions.themChatLieu(chatLieu);
+    if (sanPhamChiTiet.kichThuocId == null) {
+      openNotification("error", "Hệ thống", "Chưa chọn kích thước", "bottomRight");
+      return;
+    }
+    if (sanPhamChiTiet.soLuongTon < 1) {
+      openNotification("error", "Hệ thống", "Chưa nhập số lượng", "bottomRight");
+      return;
+    }
+    const data = await useNhomSanPhamStore.actions.themChatLieu(sanPhamChiTiet);
+    if (!data.data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại", "bottomRight");
+      setIsModalOpen(false);
+      return
+    }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-    setData(data.data.data);
-    setChatLieu({
-      ...chatLieu,
+    setDataChiTiet(data.data.data);
+    setSanPhamChiTiet({
+      ...sanPhamChiTiet,
       tenNhom: "",
     });
     setIsModalOpen(false);
@@ -271,6 +297,10 @@ function SanPhamChiTiet() {
     const data =
       await useNhomSanPhamStore.actions.fetchSanPhamChiTietCuaSanPham(e.value);
     setDataChiTiet(data.data.data);
+    setSanPhamChiTiet({
+      ...sanPhamChiTiet,
+      sanPhamId: e.value
+    })
   }
   return (
     <>
@@ -299,6 +329,7 @@ function SanPhamChiTiet() {
                     }}
                     showSearch
                     labelInValue
+                    defaultValue={"Chọn sản phẩm"}
                     onChange={handleSearchSelect}
                     filterOption={(input, option) =>
                       option.children
@@ -308,10 +339,10 @@ function SanPhamChiTiet() {
                   >
                     {data
                       ? data.map((option) => (
-                          <Select.Option key={option.id} value={option.id}>
-                            {option.tenSanPham}
-                          </Select.Option>
-                        ))
+                        <Select.Option key={option.id} value={option.id}>
+                          {option.tenSanPham}
+                        </Select.Option>
+                      ))
                       : ""}
                   </Select>
                 </Col>
@@ -358,6 +389,7 @@ function SanPhamChiTiet() {
                         required: true,
                       },
                     ]}
+
                   >
                     <Select
                       labelInValue
@@ -370,14 +402,20 @@ function SanPhamChiTiet() {
                           required: true,
                         },
                       ]}
+                      onChange={(e) => {
+                        setSanPhamChiTiet({
+                          ...sanPhamChiTiet,
+                          mauSacId: e.value
+                        })
+                      }}
                     >
-                      {/* {thuocTinh
-                        ? thuocTinh.thietKeList.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenThietKe}
-                            </Select.Option>
-                          ))
-                        : ""} */}
+                      {thuocTinh
+                        ? thuocTinh.mauSacList.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenMau}
+                          </Select.Option>
+                        ))
+                        : ""}
                     </Select>
                   </Form.Item>
                   <Form.Item
@@ -388,6 +426,7 @@ function SanPhamChiTiet() {
                         required: true,
                       },
                     ]}
+
                   >
                     <Select
                       labelInValue
@@ -400,14 +439,20 @@ function SanPhamChiTiet() {
                           required: true,
                         },
                       ]}
+                      onChange={(e) => {
+                        setSanPhamChiTiet({
+                          ...sanPhamChiTiet,
+                          kichThuocId: e.value
+                        })
+                      }}
                     >
-                      {/* {thuocTinh
-                        ? thuocTinh.thietKeList.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenThietKe}
-                            </Select.Option>
-                          ))
-                        : ""} */}
+                      {thuocTinh
+                        ? thuocTinh.kichThuocList.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenKichThuoc}
+                          </Select.Option>
+                        ))
+                        : ""}
                     </Select>
                   </Form.Item>
                   <Form.Item
@@ -419,14 +464,18 @@ function SanPhamChiTiet() {
                       },
                     ]}
                   >
-                    <Input
+                    <InputNumber
                       onChange={(e) => {
-                        setChatLieu({
-                          ...chatLieu,
-                          tenThietKe: e.target.value,
+                        setSanPhamChiTiet({
+                          ...sanPhamChiTiet,
+                          soLuongTon: e,
                         });
                       }}
-                      value={chatLieu.tenThietKe}
+                      value={sanPhamChiTiet.soLuongTon}
+                      style={{
+                        width: "100%"
+                      }}
+                      min={1}
                     />
                   </Form.Item>
                   <Form.Item label=" ">

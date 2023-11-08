@@ -57,7 +57,7 @@ function ModalXoa({ id, setData }) {
         <Button danger shape="circle" icon={<AiOutlineDelete />} />
       </Tooltip>
       <Modal
-        title="Xóa thiết kế"
+        title="Xóa sản phẩm chi tiết"
         open={isModalOpen}
         onCancel={handleCancel}
         onOk={handleOk}

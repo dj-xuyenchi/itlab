@@ -18,8 +18,8 @@ function ModalView({ id }) {
   const language = useSelector(selectLanguage);
   const [chatLieu, setChatLieu] = useState({
     id: id,
-    tenNhom: "",
-    ngayTao: "",
+    mauSac: {},
+    kichThuoc: {},
     ngayCapNhat: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,7 +40,7 @@ function ModalView({ id }) {
   }, [isModalOpen]);
   return (
     <>
-      <Tooltip title="Cập nhật" onClick={showModal}>
+      <Tooltip title="Chi tiết" onClick={showModal}>
         <Button
           style={{
             color: "blue",
@@ -72,24 +72,54 @@ function ModalView({ id }) {
           }}
         >
           <Form.Item
-            label="Mã thiết kế"
+            label="Màu sắc"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={chatLieu.maThietKe} />
+            <Input disabled value={chatLieu.mauSac.tenMau} />
           </Form.Item>
           <Form.Item
-            label="Tên thiết kế"
+            label="Kích thước"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={chatLieu.tenThietKe} />
+            <Input disabled value={chatLieu.kichThuoc.tenKichThuoc} />
+          </Form.Item>
+          <Form.Item
+            label="Số lượng tồn"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input disabled value={chatLieu.soLuongTon} />
+          </Form.Item>
+          <Form.Item
+            label="Số lượng lỗi"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input disabled value={chatLieu.soLuongLoi} />
+          </Form.Item>
+          <Form.Item
+            label="Số lượng trả hàng"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input disabled value={chatLieu.soLuongTraHang} />
           </Form.Item>
           <Form.Item
             label="Ngày tạo"
@@ -102,7 +132,7 @@ function ModalView({ id }) {
             <Input disabled value={chatLieu.ngayTao} />
           </Form.Item>
           <Form.Item label="Ngày cập nhật">
-            <Input disabled value={chatLieu.ngayCapNhat} />
+            <Input disabled value={chatLieu.ngayCapNhat ? chatLieu.ngayCapNhat : "Mới"} />
           </Form.Item>
         </Form>
       </Modal>

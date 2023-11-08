@@ -6,11 +6,15 @@ export const useNhomSanPhamStore = {
             return axiosIns.get('/api/sanpham/laysanphamadmin'
             )
         },
+        async fetchThuocTinh() {
+            return axiosIns.get('/api/sanpham/laythuoctinh'
+            )
+        },
         async fetchSanPhamChiTietCuaSanPham(payload) {
             return axiosIns.get('/api/sanpham/laysanphamchitietcuasanpham?sanPhamId=' + payload)
         },
         async themChatLieu(payload) {
-            return axiosIns.post('/api/sanpham/themthietke', payload
+            return axiosIns.post('/api/sanpham/themsanphamchitiet', payload
             )
         },
         async suaChatLieu(payload) {
@@ -18,11 +22,11 @@ export const useNhomSanPhamStore = {
             )
         },
         async layChatLieuById(payload) {
-            return axiosIns.get('/api/sanpham/laythietkebyid?thietKeId=' + payload
+            return axiosIns.get('/api/sanpham/laysanphamchitietbyid?sanPhamChiTietId=' + payload
             )
         },
         async xoaChatLieuById(payload) {
-            return axiosIns.get('/api/sanpham/xoathietke?thietKeId=' + payload
+            return axiosIns.get('/api/sanpham/xoasanphamchitiet?sanPhamChiTietId=' + payload
             )
         },
     },

@@ -6,6 +6,7 @@ import {
   Input,
   Modal,
   Row,
+  Select,
   Table,
   Tooltip,
   notification,
@@ -15,11 +16,8 @@ import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import { useSelector } from "react-redux";
 import { FaRegPenToSquare } from "react-icons/fa6";
 function ModalCapNhat({ id, setData }) {
-  const language = useSelector(selectLanguage);
-  const [chatLieu, setChatLieu] = useState({
-    id: id,
-    tenThietKe: "",
-  });
+  const language = useSelector(selectLanguage); const [thuocTinh, setThuocTinh] = useState()
+  const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -28,6 +26,7 @@ function ModalCapNhat({ id, setData }) {
     setIsModalOpen(false);
   };
   const handleCancel = () => {
+    console.log(sanPhamChiTiet.mauSac.tenMau);
     setIsModalOpen(false);
   };
   const [api, contextHolder] = notification.useNotification();
@@ -46,14 +45,28 @@ function ModalCapNhat({ id, setData }) {
       });
     }
   };
+  async function layDuLieu2() {
+    const data = await useNhomSanPhamStore.actions.fetchThuocTinh();
+    setThuocTinh(data.data);
+  }
+  useEffect(() => {
+    async function layDuLieu() {
+      const data = await useNhomSanPhamStore.actions.layChatLieuById(id);
+      setSanPhamChiTiet(data.data);
+    }
+    if (isModalOpen) {
+      layDuLieu();
+      layDuLieu2();
+    }
+  }, [isModalOpen]);
   async function handleSuaChatLieu() {
-    if (chatLieu.tenThietKe == "") {
+    if (sanPhamChiTiet.tenThietKe == "") {
       return;
     }
-    const data = await useNhomSanPhamStore.actions.suaChatLieu(chatLieu);
+    const data = await useNhomSanPhamStore.actions.suaChatLieu(sanPhamChiTiet);
     openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
-    setChatLieu({
-      ...chatLieu,
+    setSanPhamChiTiet({
+      ...sanPhamChiTiet,
       tenThietKe: "",
     });
     setData(data.data.data);
@@ -78,14 +91,13 @@ function ModalCapNhat({ id, setData }) {
           />
         </Tooltip>
         <Modal
-          okButtonProps={{ style: { display: "none" } }}
           cancelButtonProps={{ style: { display: "none" } }}
-          title="Sửa thiết kế"
+          title="Cập nhật sản phẩm chi tiết"
           open={isModalOpen}
           onCancel={handleCancel}
           centered
         >
-          <Form
+          {sanPhamChiTiet ? <Form
             name="wrap"
             labelCol={{
               flex: "110px",
@@ -101,34 +113,91 @@ function ModalCapNhat({ id, setData }) {
             }}
           >
             <Form.Item
-              label="Tên thiết kế"
-              name="Tên thiết kế"
+              label="Màu sắc"
+              name="Màu sắc"
+            >
+              <Select
+                labelInValue
+                optionLabelProp="children"
+                style={{
+                  width: "100%",
+                }}
+                defaultValue={sanPhamChiTiet.mauSac.tenMau}
+                onChange={(e) => {
+                  setSanPhamChiTiet({
+                    ...sanPhamChiTiet,
+                    mauSacId: e.value
+                  })
+                }}
+              >
+                {thuocTinh
+                  ? thuocTinh.mauSacList.map((option) => (
+                    <Select.Option key={option.id} value={option.id}>
+                      {option.tenMau}
+                    </Select.Option>
+                  ))
+                  : ""}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Kích thước"
+              name="Kích thước"
+            >
+              <Select
+                labelInValue
+                optionLabelProp="children"
+                style={{
+                  width: "100%",
+                }}
+                defaultValue={sanPhamChiTiet.kichThuoc.tenKichThuoc}
+                onChange={(e) => {
+                  setSanPhamChiTiet({
+                    ...sanPhamChiTiet,
+                    kichThuocId: e.value
+                  })
+                }}
+              >
+                {thuocTinh
+                  ? thuocTinh.kichThuocList.map((option) => (
+                    <Select.Option key={option.id} value={option.id}>
+                      {option.tenKichThuoc}
+                    </Select.Option>
+                  ))
+                  : ""}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Số lượng tồn"
               rules={[
                 {
                   required: true,
                 },
               ]}
             >
-              <Input
-                onChange={(e) => {
-                  setChatLieu({
-                    ...chatLieu,
-                    tenThietKe: e.target.value,
-                  });
-                }}
-                value={chatLieu.tenThietKe}
-              />
+              <Input value={sanPhamChiTiet.soLuongTon} />
             </Form.Item>
-            <Form.Item label=" ">
-              <Button
-                type="primary"
-                htmlType="submit"
-                onClick={handleSuaChatLieu}
-              >
-                Sửa
-              </Button>
+            <Form.Item
+              label="Số lượng lỗi"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input value={sanPhamChiTiet.soLuongLoi} />
             </Form.Item>
-          </Form>
+            <Form.Item
+              label="Số lượng trả hàng"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input value={sanPhamChiTiet.soLuongTraHang} />
+            </Form.Item>
+
+          </Form> : ""}
         </Modal>
       </div>
     </>

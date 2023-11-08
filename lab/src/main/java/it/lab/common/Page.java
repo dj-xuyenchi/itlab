@@ -31,18 +31,19 @@ public class Page<T> {
         }
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
-        if (source.size() % pageSize > 1) {
-            this.pageTotal = (source.size() / pageSize) + 1;
-        } else {
-            this.pageTotal = source.size() / pageSize;
+        if (source != null) {
+            if (source.size() % pageSize > 1) {
+                this.pageTotal = (source.size() / pageSize) + 1;
+            } else {
+                this.pageTotal = source.size() / pageSize;
+            }
+            if (source.size() < pageSize) {
+                this.data = source;
+                this.pageTotal = 1;
+            } else {
+                this.data = source.subList((pageNumber - 1) * pageSize, (pageNumber - 1) * pageSize + pageSize);
+            }
+            this.pageItem = this.data.size();
         }
-        if (source.size() < pageSize) {
-            this.data = source;
-            this.pageTotal = 1;
-        } else {
-            this.data = source.subList((pageNumber - 1) * pageSize, (pageNumber - 1) * pageSize + pageSize);
-        }
-        this.pageItem = this.data.size();
-
     }
 }
