@@ -278,8 +278,13 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<SanPhamChiTietDTO> suaSanPhamChiTiet(SanPhamChiTietRequest sanPhamChiTiet) {
-        if (isSanPhamChiTietDaTonTai(sanPhamChiTiet) != null) {
-            return new Page<SanPhamChiTietDTO>(null, 0, 10000);
+        it.lab.entity.SanPhamChiTiet spct = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
+        if (spct.getKichThuoc().getId() == sanPhamChiTiet.getKichThuocId() && spct.getMauSac().getId() == sanPhamChiTiet.getMauSacId()) {
+
+        } else {
+            if (isSanPhamChiTietDaTonTai(sanPhamChiTiet).size() == 1) {
+                return new Page<SanPhamChiTietDTO>(null, 0, 10000);
+            }
         }
         it.lab.entity.SanPhamChiTiet sanPhamThayDoi = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
         sanPhamThayDoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
@@ -293,7 +298,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamThayDoi.setKichThuoc(_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get());
         sanPhamThayDoi.setMauSac(_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get());
         _sanPhamChiTietRepository.save(sanPhamThayDoi);
-        return layHetSanPhamChiTiet();
+        return laySanPhamChiTietCuaSanPham(sanPhamChiTiet.getSanPhamId());
     }
 
     private List<it.lab.entity.SanPhamChiTiet> isSanPhamChiTietDaTonTai(SanPhamChiTietRequest sanPhamChiTiet) {
@@ -324,7 +329,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamMoi.setHinhAnh(sanPham.getHinhAnh1());
         sanPhamMoi.setNgayTao(LocalDate.now());
         _sanPhamChiTietRepository.save(sanPhamMoi);
-        return layHetSanPhamChiTiet();
+        return laySanPhamChiTietCuaSanPham(sanPham.getId());
     }
 
     @Override

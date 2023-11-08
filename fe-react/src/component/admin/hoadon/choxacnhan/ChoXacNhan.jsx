@@ -1,7 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, Menu, Modal, Row, Space, Table, notification } from "antd";
+import {
+  Button,
+  Input,
+  Menu,
+  Modal,
+  Row,
+  Space,
+  Table,
+  notification,
+} from "antd";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { fixMoney } from "../../../../extensions/fixMoney";
@@ -16,7 +25,7 @@ function ChoGiaoHang() {
     setIsModalOpen(true);
   };
   const handleOk = () => {
-    handleXacNhanHoaDon()
+    handleXacNhanHoaDon();
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -221,27 +230,22 @@ function ChoGiaoHang() {
       render: (item) => <ChiTietHoaDon hoaDonId={item} />,
     },
   ];
-  const [data, setData] = useState([
-  ])
+  const [data, setData] = useState([]);
   async function layDuLieu() {
     const ketQua = await useHoaDonChoStore.actions.fetchHoaDonCho();
-    setData(ketQua.data.data)
+    setData(ketQua.data.data);
   }
   useEffect(() => {
-    layDuLieu()
-  }, [])
+    layDuLieu();
+  }, []);
   async function handleXacNhanHoaDon() {
-   
     if (selectedRowKeys.length == 0) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Chưa chọn hóa đơn",
-        "bottomRight"
-      );
-      return
+      openNotification("error", "Hệ thống", "Chưa chọn hóa đơn", "bottomRight");
+      return;
     }
-    const ketQua = await useHoaDonChoStore.actions.xacNhanHoaDon(selectedRowKeys)
+    const ketQua = await useHoaDonChoStore.actions.xacNhanHoaDon(
+      selectedRowKeys
+    );
     if (ketQua.data.status == "THANHCONG") {
       for (var item of ketQua.data.data) {
         openNotification(
@@ -257,48 +261,29 @@ function ChoGiaoHang() {
         "Xác nhận thành công",
         "bottomRight"
       );
-      layDuLieu()
+      layDuLieu();
     } else {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Lỗi",
-        "bottomRight"
-      );
+      openNotification("error", "Hệ thống", "Lỗi", "bottomRight");
     }
-    setSelectedRowKeys([])
+    setSelectedRowKeys([]);
   }
   async function handleHuy() {
     if (selectedRowKeys.length == 0) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Chưa chọn hóa đơn",
-        "bottomRight"
-      );
-      return
+      openNotification("error", "Hệ thống", "Chưa chọn hóa đơn", "bottomRight");
+      return;
     }
-    const ketQua = await useHoaDonChoStore.actions.huyHoaDon(selectedRowKeys)
+    const ketQua = await useHoaDonChoStore.actions.huyHoaDon(selectedRowKeys);
     if (ketQua.data.status == "THANHCONG") {
-      openNotification(
-        "success",
-        "Hệ thống",
-        "Hủy thành công",
-        "bottomRight"
-      );
-      layDuLieu()
+      openNotification("success", "Hệ thống", "Hủy thành công", "bottomRight");
+      layDuLieu();
     } else {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Lỗi",
-        "bottomRight"
-      );
+      openNotification("error", "Hệ thống", "Lỗi", "bottomRight");
     }
-    setSelectedRowKeys([])
+    setSelectedRowKeys([]);
   }
   return (
-    <>{contextHolder}
+    <>
+      {contextHolder}
       <div className="choxacnhan">
         <Table
           rowSelection={rowSelection}
@@ -323,10 +308,22 @@ function ChoGiaoHang() {
           >
             Xác nhận
           </Button>
-          <Modal title="Xác nhận hóa đơn" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Modal
+            title="Xác nhận hóa đơn"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            centered
+          >
             <p>Bạn có chắc muốn xác nhận hóa đơn</p>
           </Modal>
-          <Modal title="Xác nhận hủy hóa đơn" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2}>
+          <Modal
+            title="Xác nhận hủy hóa đơn"
+            open={isModalOpen2}
+            onOk={handleOk2}
+            onCancel={handleCancel2}
+            centered
+          >
             <p>Bạn có chắc muốn hủy hóa đơn</p>
           </Modal>
         </Row>

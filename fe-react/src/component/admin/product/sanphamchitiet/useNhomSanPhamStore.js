@@ -18,7 +18,7 @@ export const useNhomSanPhamStore = {
             )
         },
         async suaChatLieu(payload) {
-            return axiosIns.post('/api/sanpham/suathietke', payload
+            return axiosIns.post('/api/sanpham/suasanphamchitiet', payload
             )
         },
         async layChatLieuById(payload) {

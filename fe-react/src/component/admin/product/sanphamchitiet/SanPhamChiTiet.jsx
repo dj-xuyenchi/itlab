@@ -32,7 +32,7 @@ function SanPhamChiTiet() {
     mauSacId: null,
     kichThuocId: null,
     sanPhamId: null,
-    soLuongTon: 0
+    soLuongTon: 0,
   });
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -153,7 +153,8 @@ function SanPhamChiTiet() {
       key: "mauSac",
       width: "12.5%",
       render: (mauSac) => <>{mauSac.tenMau}</>,
-    }, {
+    },
+    {
       title: "Kích thước",
       dataIndex: "kichThuoc",
       key: "kichThuoc",
@@ -225,7 +226,7 @@ function SanPhamChiTiet() {
 
   const [data, setData] = useState(undefined);
   const [dataChiTiet, setDataChiTiet] = useState(undefined);
-  const [thuocTinh, setThuocTinh] = useState()
+  const [thuocTinh, setThuocTinh] = useState();
   async function layDuLieu() {
     const data = await useNhomSanPhamStore.actions.fetchChatLieu();
     setData(data.data.data);
@@ -237,7 +238,7 @@ function SanPhamChiTiet() {
 
   useEffect(() => {
     layDuLieu();
-    layDuLieu2()
+    layDuLieu2();
   }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -272,18 +273,37 @@ function SanPhamChiTiet() {
       return;
     }
     if (sanPhamChiTiet.kichThuocId == null) {
-      openNotification("error", "Hệ thống", "Chưa chọn kích thước", "bottomRight");
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chưa chọn kích thước",
+        "bottomRight"
+      );
       return;
     }
     if (sanPhamChiTiet.soLuongTon < 1) {
-      openNotification("error", "Hệ thống", "Chưa nhập số lượng", "bottomRight");
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chưa nhập số lượng",
+        "bottomRight"
+      );
+      return;
+    }
+    if (!sanPhamChiTiet.sanPhamId) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chưa chọn sản phẩm",
+        "bottomRight"
+      );
       return;
     }
     const data = await useNhomSanPhamStore.actions.themChatLieu(sanPhamChiTiet);
     if (!data.data.data) {
       openNotification("error", "Hệ thống", "Đã tồn tại", "bottomRight");
       setIsModalOpen(false);
-      return
+      return;
     }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setDataChiTiet(data.data.data);
@@ -299,8 +319,8 @@ function SanPhamChiTiet() {
     setDataChiTiet(data.data.data);
     setSanPhamChiTiet({
       ...sanPhamChiTiet,
-      sanPhamId: e.value
-    })
+      sanPhamId: e.value,
+    });
   }
   return (
     <>
@@ -339,10 +359,10 @@ function SanPhamChiTiet() {
                   >
                     {data
                       ? data.map((option) => (
-                        <Select.Option key={option.id} value={option.id}>
-                          {option.tenSanPham}
-                        </Select.Option>
-                      ))
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenSanPham}
+                          </Select.Option>
+                        ))
                       : ""}
                   </Select>
                 </Col>
@@ -389,7 +409,6 @@ function SanPhamChiTiet() {
                         required: true,
                       },
                     ]}
-
                   >
                     <Select
                       labelInValue
@@ -405,16 +424,16 @@ function SanPhamChiTiet() {
                       onChange={(e) => {
                         setSanPhamChiTiet({
                           ...sanPhamChiTiet,
-                          mauSacId: e.value
-                        })
+                          mauSacId: e.value,
+                        });
                       }}
                     >
                       {thuocTinh
                         ? thuocTinh.mauSacList.map((option) => (
-                          <Select.Option key={option.id} value={option.id}>
-                            {option.tenMau}
-                          </Select.Option>
-                        ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenMau}
+                            </Select.Option>
+                          ))
                         : ""}
                     </Select>
                   </Form.Item>
@@ -426,7 +445,6 @@ function SanPhamChiTiet() {
                         required: true,
                       },
                     ]}
-
                   >
                     <Select
                       labelInValue
@@ -442,16 +460,16 @@ function SanPhamChiTiet() {
                       onChange={(e) => {
                         setSanPhamChiTiet({
                           ...sanPhamChiTiet,
-                          kichThuocId: e.value
-                        })
+                          kichThuocId: e.value,
+                        });
                       }}
                     >
                       {thuocTinh
                         ? thuocTinh.kichThuocList.map((option) => (
-                          <Select.Option key={option.id} value={option.id}>
-                            {option.tenKichThuoc}
-                          </Select.Option>
-                        ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenKichThuoc}
+                            </Select.Option>
+                          ))
                         : ""}
                     </Select>
                   </Form.Item>
@@ -473,7 +491,7 @@ function SanPhamChiTiet() {
                       }}
                       value={sanPhamChiTiet.soLuongTon}
                       style={{
-                        width: "100%"
+                        width: "100%",
                       }}
                       min={1}
                     />

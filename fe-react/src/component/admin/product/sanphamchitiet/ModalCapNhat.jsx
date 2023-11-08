@@ -4,6 +4,7 @@ import {
   Button,
   Form,
   Input,
+  InputNumber,
   Modal,
   Row,
   Select,
@@ -16,7 +17,8 @@ import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import { useSelector } from "react-redux";
 import { FaRegPenToSquare } from "react-icons/fa6";
 function ModalCapNhat({ id, setData }) {
-  const language = useSelector(selectLanguage); const [thuocTinh, setThuocTinh] = useState()
+  const language = useSelector(selectLanguage);
+  const [thuocTinh, setThuocTinh] = useState();
   const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -26,7 +28,6 @@ function ModalCapNhat({ id, setData }) {
     setIsModalOpen(false);
   };
   const handleCancel = () => {
-    console.log(sanPhamChiTiet.mauSac.tenMau);
     setIsModalOpen(false);
   };
   const [api, contextHolder] = notification.useNotification();
@@ -52,7 +53,13 @@ function ModalCapNhat({ id, setData }) {
   useEffect(() => {
     async function layDuLieu() {
       const data = await useNhomSanPhamStore.actions.layChatLieuById(id);
-      setSanPhamChiTiet(data.data);
+      setSanPhamChiTiet({
+        ...data.data,
+        mauSacId: data.data.mauSac.id,
+        sanPhamId: data.data.sanPham.id,
+        kichThuocId: data.data.kichThuoc.id,
+        id: data.data.id,
+      });
     }
     if (isModalOpen) {
       layDuLieu();
@@ -60,10 +67,34 @@ function ModalCapNhat({ id, setData }) {
     }
   }, [isModalOpen]);
   async function handleSuaChatLieu() {
-    if (sanPhamChiTiet.tenThietKe == "") {
+    if (sanPhamChiTiet.soLuongTon < 1) {
+      openNotification("error", "Hệ thống", "Nhập số lượng tồn", "bottomRight");
+      return;
+    }
+    if (sanPhamChiTiet.soLuongLoi < 0 || !sanPhamChiTiet.soLuongLoi) {
+      openNotification("error", "Hệ thống", "Nhập số lượng lỗi", "bottomRight");
+      return;
+    }
+    if (sanPhamChiTiet.soLuongTraHang < 0 || !sanPhamChiTiet.soLuongTraHang) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Nhập số lượng trả hàng",
+        "bottomRight"
+      );
       return;
     }
     const data = await useNhomSanPhamStore.actions.suaChatLieu(sanPhamChiTiet);
+    if (!data.data.data) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Đã tồn tại 1 chi tiết cùng thuộc tính",
+        "bottomRight"
+      );
+      setIsModalOpen(false);
+      return;
+    }
     openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
     setSanPhamChiTiet({
       ...sanPhamChiTiet,
@@ -91,113 +122,153 @@ function ModalCapNhat({ id, setData }) {
           />
         </Tooltip>
         <Modal
+          okButtonProps={{ style: { display: "none" } }}
           cancelButtonProps={{ style: { display: "none" } }}
           title="Cập nhật sản phẩm chi tiết"
           open={isModalOpen}
           onCancel={handleCancel}
           centered
         >
-          {sanPhamChiTiet ? <Form
-            name="wrap"
-            labelCol={{
-              flex: "110px",
-            }}
-            labelAlign="left"
-            labelWrap
-            wrapperCol={{
-              flex: 1,
-            }}
-            colon={false}
-            style={{
-              maxWidth: 600,
-            }}
-          >
-            <Form.Item
-              label="Màu sắc"
-              name="Màu sắc"
+          {sanPhamChiTiet ? (
+            <Form
+              name="wrap"
+              labelCol={{
+                flex: "110px",
+              }}
+              labelAlign="left"
+              labelWrap
+              wrapperCol={{
+                flex: 1,
+              }}
+              colon={false}
+              style={{
+                maxWidth: 600,
+              }}
             >
-              <Select
-                labelInValue
-                optionLabelProp="children"
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={sanPhamChiTiet.mauSac.tenMau}
-                onChange={(e) => {
-                  setSanPhamChiTiet({
-                    ...sanPhamChiTiet,
-                    mauSacId: e.value
-                  })
-                }}
+              <Form.Item label="Màu sắc" name="Màu sắc">
+                <Select
+                  labelInValue
+                  optionLabelProp="children"
+                  style={{
+                    width: "100%",
+                  }}
+                  defaultValue={sanPhamChiTiet.mauSac.tenMau}
+                  onChange={(e) => {
+                    setSanPhamChiTiet({
+                      ...sanPhamChiTiet,
+                      mauSacId: e.value,
+                    });
+                  }}
+                >
+                  {thuocTinh
+                    ? thuocTinh.mauSacList.map((option) => (
+                        <Select.Option key={option.id} value={option.id}>
+                          {option.tenMau}
+                        </Select.Option>
+                      ))
+                    : ""}
+                </Select>
+              </Form.Item>
+              <Form.Item label="Kích thước" name="Kích thước">
+                <Select
+                  labelInValue
+                  optionLabelProp="children"
+                  style={{
+                    width: "100%",
+                  }}
+                  defaultValue={sanPhamChiTiet.kichThuoc.tenKichThuoc}
+                  onChange={(e) => {
+                    setSanPhamChiTiet({
+                      ...sanPhamChiTiet,
+                      kichThuocId: e.value,
+                    });
+                  }}
+                >
+                  {thuocTinh
+                    ? thuocTinh.kichThuocList.map((option) => (
+                        <Select.Option key={option.id} value={option.id}>
+                          {option.tenKichThuoc}
+                        </Select.Option>
+                      ))
+                    : ""}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Số lượng tồn"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
               >
-                {thuocTinh
-                  ? thuocTinh.mauSacList.map((option) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.tenMau}
-                    </Select.Option>
-                  ))
-                  : ""}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Kích thước"
-              name="Kích thước"
-            >
-              <Select
-                labelInValue
-                optionLabelProp="children"
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={sanPhamChiTiet.kichThuoc.tenKichThuoc}
-                onChange={(e) => {
-                  setSanPhamChiTiet({
-                    ...sanPhamChiTiet,
-                    kichThuocId: e.value
-                  })
-                }}
+                <InputNumber
+                  style={{
+                    width: "100%",
+                  }}
+                  value={sanPhamChiTiet.soLuongTon}
+                  onChange={(e) => {
+                    setSanPhamChiTiet({
+                      ...sanPhamChiTiet,
+                      soLuongTon: e,
+                    });
+                  }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Số lượng lỗi"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
               >
-                {thuocTinh
-                  ? thuocTinh.kichThuocList.map((option) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.tenKichThuoc}
-                    </Select.Option>
-                  ))
-                  : ""}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Số lượng tồn"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input value={sanPhamChiTiet.soLuongTon} />
-            </Form.Item>
-            <Form.Item
-              label="Số lượng lỗi"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input value={sanPhamChiTiet.soLuongLoi} />
-            </Form.Item>
-            <Form.Item
-              label="Số lượng trả hàng"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input value={sanPhamChiTiet.soLuongTraHang} />
-            </Form.Item>
-
-          </Form> : ""}
+                <InputNumber
+                  style={{
+                    width: "100%",
+                  }}
+                  value={sanPhamChiTiet.soLuongLoi}
+                  onChange={(e) => {
+                    setSanPhamChiTiet({
+                      ...sanPhamChiTiet,
+                      soLuongLoi: e,
+                    });
+                  }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Số lượng trả hàng"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{
+                    width: "100%",
+                  }}
+                  value={sanPhamChiTiet.soLuongTraHang}
+                  onChange={(e) => {
+                    setSanPhamChiTiet({
+                      ...sanPhamChiTiet,
+                      soLuongTraHang: e,
+                    });
+                  }}
+                />
+              </Form.Item>
+              <Form.Item label=" ">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  onClick={handleSuaChatLieu}
+                >
+                  Cập nhật
+                </Button>
+              </Form.Item>
+            </Form>
+          ) : (
+            ""
+          )}
         </Modal>
       </div>
     </>
