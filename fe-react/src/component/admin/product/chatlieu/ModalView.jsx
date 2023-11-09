@@ -40,7 +40,7 @@ function ModalView({ id }) {
   }, [isModalOpen]);
   return (
     <>
-      <Tooltip title="Cập nhật" onClick={showModal}>
+      <Tooltip title="Xem" onClick={showModal}>
         <Button
           style={{
             color: "blue",

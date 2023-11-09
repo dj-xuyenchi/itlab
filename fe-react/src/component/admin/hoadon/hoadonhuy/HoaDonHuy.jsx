@@ -8,6 +8,7 @@ import { fixMoney } from "../../../../extensions/fixMoney";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
+import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 
 function HoaDonHuy() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -213,11 +214,11 @@ function HoaDonHuy() {
       width: "10%",
     },
     {
-      title: "",
-      dataIndex: "thaoTac",
+      title: "Thao tác",
+      dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (item) => <PiMagnifyingGlassBold />,
+      render: (id) => <ChiTietHoaDon hoaDonId={id} />,
     },
   ];
   const [data, setData] = useState([
@@ -283,9 +284,9 @@ function HoaDonHuy() {
             justifyContent: "flex-end",
           }}
         >
-          <Button type="primary" danger onClick={showModal2}>
+          {/* <Button type="primary" danger onClick={showModal2}>
             Hủy
-          </Button>
+          </Button> */}
           <Button
             style={{
               marginLeft: "12px",

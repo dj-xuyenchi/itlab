@@ -20,7 +20,9 @@ import React, { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
 import { useSanPhamStore } from "./useSanPhamStore";
+import { useForm } from "antd/es/form/Form";
 function ModalThemSua({ type, thuocTinh, fetchData }) {
+  const [form] = useForm()
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -210,12 +212,14 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     form.append("data", JSON.stringify(sanPham));
     const data = await useSanPhamStore.actions.themSanPham(form);
     if (data.data.status == "THANHCONG") {
+      form.resetFields();
       openNotification(
         "success",
         "Hệ thống",
         "Thêm sản phẩm thành công",
         "bottomRight"
       );
+
       fetchData();
       setSanPham({
         tenSanPham: "",
@@ -245,10 +249,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     <>
       {contextHolder}
       <Button type="primary" onClick={showModal}>
-        {type == 1 ? " Thêm sản phẩm" : "Sửa sản phẩm"}
+        Thêm sản phẩm
       </Button>
       <Modal
         okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
         width={768}
         title={type == 1 ? " Thêm sản phẩm" : "Sửa sản phẩm"}
         open={isModalOpen}
@@ -257,6 +262,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
         centered
       >
         <Form
+          form={form}
           labelCol={{
             span: 4,
           }}
@@ -268,12 +274,6 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
             maxWidth: 768,
           }}
         >
-          {/* <Form.Item label="Radio">
-                        <Radio.Group>
-                            <Radio value="apple"> Apple </Radio>
-                            <Radio value="pear"> Pear </Radio>
-                        </Radio.Group>
-                    </Form.Item> */}
           <Form.Item label="Tên sản phẩm">
             <Input value={sanPham.tenSanPham} onChange={handleSetTenSP} />
           </Form.Item>
@@ -324,10 +324,10 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
             >
               {thuocTinh
                 ? thuocTinh.thietKeList.map((option) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.tenThietKe}
-                    </Select.Option>
-                  ))
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.tenThietKe}
+                  </Select.Option>
+                ))
                 : ""}
             </Select>
           </Form.Item>
@@ -347,10 +347,10 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
             >
               {thuocTinh
                 ? thuocTinh.chatLieuList.map((option) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.tenChatLieu}
-                    </Select.Option>
-                  ))
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.tenChatLieu}
+                  </Select.Option>
+                ))
                 : ""}
             </Select>
           </Form.Item>
@@ -370,10 +370,10 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
             >
               {thuocTinh
                 ? thuocTinh.nhomSanPhamList.map((option) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.tenNhom}
-                    </Select.Option>
-                  ))
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.tenNhom}
+                  </Select.Option>
+                ))
                 : ""}
             </Select>
           </Form.Item>
@@ -399,7 +399,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
             <Upload
               listType="picture-card"
               multiple
-              customRequest={() => {}}
+              customRequest={() => { }}
               {...props}
               maxCount={4}
               fileList={fileList}

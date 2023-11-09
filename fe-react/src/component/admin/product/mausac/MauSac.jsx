@@ -12,7 +12,9 @@ import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
+import { useForm } from "antd/es/form/Form";
 function MauSac() {
+  const [form] = useForm()
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
@@ -243,6 +245,7 @@ function MauSac() {
       tenMau: "",
       maMauCss: "",
     });
+    form.resetFields()
     setIsModalOpen(false);
   }
   return (
@@ -288,6 +291,7 @@ function MauSac() {
                   wrapperCol={{
                     flex: 1,
                   }}
+                  form={form}
                   colon={false}
                   style={{
                     maxWidth: 600,

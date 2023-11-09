@@ -13,6 +13,8 @@ import { MdDoneOutline } from "react-icons/md";
 import ChoXacNhan from "./choxacnhan/ChoXacNhan";
 import ChoGiaoHang from "./chogiaohang/ChoGiaoHang";
 import HoaDonHuy from "./hoadonhuy/HoaDonHuy";
+import DangGiao from "./hoadondanggiao/DangGiao";
+import HoanThanh from "./hoanthanh/HoanThanh";
 const items = [
   {
     label: "Chờ xác nhận",
@@ -26,7 +28,7 @@ const items = [
   },
   {
     label: "Đang giao hàng",
-    key: "dangiaohang",
+    key: "danggiao",
     icon: <FaShippingFast />,
   },
   {
@@ -64,6 +66,8 @@ function HoaDon() {
               {current === "choxacnhan" ? <ChoXacNhan /> : ""}
               {current === "chogiaohang" ? <ChoGiaoHang /> : ""}
               {current === "hoadonhuy" ? <HoaDonHuy /> : ""}
+              {current === "danggiao" ? <DangGiao /> : ""}
+              {current === "hoanthanh" ? <HoanThanh /> : ""}
             </div>
           </div>
         </div>

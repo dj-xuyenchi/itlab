@@ -23,17 +23,13 @@ import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
+import { useForm } from "antd/es/form/Form";
 function SanPhamChiTiet() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [sanPhamChiTiet, setSanPhamChiTiet] = useState({
-    mauSacId: null,
-    kichThuocId: null,
-    sanPhamId: null,
-    soLuongTon: 0,
-  });
+  const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined);
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -235,12 +231,12 @@ function SanPhamChiTiet() {
     const data = await useNhomSanPhamStore.actions.fetchThuocTinh();
     setThuocTinh(data.data);
   }
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     layDuLieu();
     layDuLieu2();
   }, []);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -281,7 +277,7 @@ function SanPhamChiTiet() {
       );
       return;
     }
-    if (sanPhamChiTiet.soLuongTon < 1) {
+    if (sanPhamChiTiet.soLuongTon < 1 || sanPhamChiTiet.soLuongTon == null) {
       openNotification(
         "error",
         "Hệ thống",
@@ -307,10 +303,8 @@ function SanPhamChiTiet() {
     }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setDataChiTiet(data.data.data);
-    setSanPhamChiTiet({
-      ...sanPhamChiTiet,
-      tenNhom: "",
-    });
+    setSanPhamChiTiet(null);
+    form.resetFields();
     setIsModalOpen(false);
   }
   async function handleSearchSelect(e) {
@@ -322,6 +316,7 @@ function SanPhamChiTiet() {
       sanPhamId: e.value,
     });
   }
+  const [form] = useForm()
   return (
     <>
       {contextHolder}
@@ -359,10 +354,10 @@ function SanPhamChiTiet() {
                   >
                     {data
                       ? data.map((option) => (
-                          <Select.Option key={option.id} value={option.id}>
-                            {option.tenSanPham}
-                          </Select.Option>
-                        ))
+                        <Select.Option key={option.id} value={option.id}>
+                          {option.tenSanPham}
+                        </Select.Option>
+                      ))
                       : ""}
                   </Select>
                 </Col>
@@ -387,6 +382,7 @@ function SanPhamChiTiet() {
                 centered
               >
                 <Form
+                  form={form}
                   name="wrap"
                   labelCol={{
                     flex: "110px",
@@ -430,10 +426,10 @@ function SanPhamChiTiet() {
                     >
                       {thuocTinh
                         ? thuocTinh.mauSacList.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenMau}
-                            </Select.Option>
-                          ))
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenMau}
+                          </Select.Option>
+                        ))
                         : ""}
                     </Select>
                   </Form.Item>
@@ -466,10 +462,10 @@ function SanPhamChiTiet() {
                     >
                       {thuocTinh
                         ? thuocTinh.kichThuocList.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenKichThuoc}
-                            </Select.Option>
-                          ))
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenKichThuoc}
+                          </Select.Option>
+                        ))
                         : ""}
                     </Select>
                   </Form.Item>
@@ -489,7 +485,7 @@ function SanPhamChiTiet() {
                           soLuongTon: e,
                         });
                       }}
-                      value={sanPhamChiTiet.soLuongTon}
+                      value={sanPhamChiTiet ? sanPhamChiTiet.soLuongTon : null}
                       style={{
                         width: "100%",
                       }}

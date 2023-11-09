@@ -71,11 +71,11 @@ function ModalCapNhat({ id, setData }) {
       openNotification("error", "Hệ thống", "Nhập số lượng tồn", "bottomRight");
       return;
     }
-    if (sanPhamChiTiet.soLuongLoi < 0 || !sanPhamChiTiet.soLuongLoi) {
+    if (sanPhamChiTiet.soLuongLoi < 0 || sanPhamChiTiet.soLuongLoi == null) {
       openNotification("error", "Hệ thống", "Nhập số lượng lỗi", "bottomRight");
       return;
     }
-    if (sanPhamChiTiet.soLuongTraHang < 0 || !sanPhamChiTiet.soLuongTraHang) {
+    if (sanPhamChiTiet.soLuongTraHang < 0 || sanPhamChiTiet.soLuongTraHang == null) {
       openNotification(
         "error",
         "Hệ thống",
@@ -162,10 +162,10 @@ function ModalCapNhat({ id, setData }) {
                 >
                   {thuocTinh
                     ? thuocTinh.mauSacList.map((option) => (
-                        <Select.Option key={option.id} value={option.id}>
-                          {option.tenMau}
-                        </Select.Option>
-                      ))
+                      <Select.Option key={option.id} value={option.id}>
+                        {option.tenMau}
+                      </Select.Option>
+                    ))
                     : ""}
                 </Select>
               </Form.Item>
@@ -186,10 +186,10 @@ function ModalCapNhat({ id, setData }) {
                 >
                   {thuocTinh
                     ? thuocTinh.kichThuocList.map((option) => (
-                        <Select.Option key={option.id} value={option.id}>
-                          {option.tenKichThuoc}
-                        </Select.Option>
-                      ))
+                      <Select.Option key={option.id} value={option.id}>
+                        {option.tenKichThuoc}
+                      </Select.Option>
+                    ))
                     : ""}
                 </Select>
               </Form.Item>

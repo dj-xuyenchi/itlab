@@ -21,10 +21,27 @@ public class HoaDonController {
     public ResponseEntity<?> xacNhanHoaDon(@RequestBody Long[] hoaDonId) {
         return ResponseEntity.ok(_hoaDonService.xacNhanHoaDon(hoaDonId));
     }
-
+    @RequestMapping(value = "/xacnhandanggiao", method = RequestMethod.POST)
+    public ResponseEntity<?> xacNhanDangGiao(@RequestBody Long[] hoaDonId) {
+        return ResponseEntity.ok(_hoaDonService.chuyenSangDangGiao(hoaDonId));
+    }
+    @RequestMapping(value = "/xacnhanhoanthanh", method = RequestMethod.POST)
+    public ResponseEntity<?> xacNhanHoanThanh(@RequestBody Long[] hoaDonId) {
+        return ResponseEntity.ok(_hoaDonService.chuyenSangHoanThanh(hoaDonId));
+    }
     @RequestMapping(value = "/layhoadonchogiao", method = RequestMethod.GET)
     public ResponseEntity<?> layHoaDonChoGiao() {
         return ResponseEntity.ok(_hoaDonService.layHetHoaDonChoGiao());
+    }
+
+    @RequestMapping(value = "/layhoadondanggiao", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonDangGiao() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonDangGiao());
+    }
+
+    @RequestMapping(value = "/layhoadonhoanthanh", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonHoanThanh() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonHoanThanh());
     }
 
     @RequestMapping(value = "/layhoadonhuy", method = RequestMethod.GET)

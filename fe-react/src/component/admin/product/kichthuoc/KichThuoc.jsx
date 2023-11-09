@@ -12,7 +12,9 @@ import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
+import { useForm } from "antd/es/form/Form";
 function KichThuoc() {
+  const [form] = useForm()
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
@@ -235,6 +237,7 @@ function KichThuoc() {
       ...chatLieu,
       tenKichThuoc: "",
     });
+    form.resetFields()
     setIsModalOpen(false);
   }
   return (
@@ -271,6 +274,7 @@ function KichThuoc() {
                 centered
               >
                 <Form
+                  form={form}
                   name="wrap"
                   labelCol={{
                     flex: "110px",

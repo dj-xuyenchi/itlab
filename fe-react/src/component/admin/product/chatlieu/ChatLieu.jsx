@@ -12,7 +12,9 @@ import { useChatLieuStore } from "./useChatLieuStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
+import { useForm } from "antd/es/form/Form";
 function ChatLieu() {
+  const [form] = useForm()
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
@@ -235,6 +237,7 @@ function ChatLieu() {
       ...chatLieu,
       tenChatLieu: "",
     });
+    form.resetFields()
     setIsModalOpen(false);
   }
   return (
@@ -275,6 +278,7 @@ function ChatLieu() {
                   labelCol={{
                     flex: "110px",
                   }}
+                  form={form}
                   labelAlign="left"
                   labelWrap
                   wrapperCol={{

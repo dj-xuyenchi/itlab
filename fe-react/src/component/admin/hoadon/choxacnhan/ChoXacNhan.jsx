@@ -223,11 +223,11 @@ function ChoGiaoHang() {
       width: "10%",
     },
     {
-      title: "",
+      title: "Thao tác",
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (item) => <ChiTietHoaDon hoaDonId={item} />,
+      render: (id) => <ChiTietHoaDon hoaDonId={id} />,
     },
   ];
   const [data, setData] = useState([]);

@@ -12,6 +12,7 @@ import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
+import { useForm } from "antd/es/form/Form";
 function NhomSanPham() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -187,7 +188,7 @@ function NhomSanPham() {
       ),
     },
   ];
-
+  const [form] = useForm()
   const [data, setData] = useState([]);
   async function layDuLieu() {
     const data = await useNhomSanPhamStore.actions.fetchChatLieu();
@@ -235,6 +236,7 @@ function NhomSanPham() {
       ...chatLieu,
       tenNhom: "",
     });
+    form.resetFields()
     setIsModalOpen(false);
   }
   return (
@@ -271,6 +273,7 @@ function NhomSanPham() {
                 centered
               >
                 <Form
+                  form={form}
                   name="wrap"
                   labelCol={{
                     flex: "110px",

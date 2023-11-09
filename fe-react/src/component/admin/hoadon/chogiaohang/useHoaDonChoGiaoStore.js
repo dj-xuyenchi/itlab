@@ -6,7 +6,7 @@ export const useHoaDonChoGiaoStore = {
             return axiosIns.get('/api/admin/layhoadonchogiao')
         },
         async xacNhanHoaDon(payload) {
-            return axiosIns.post('/api/admin/xacnhanhoadon',payload)
+            return axiosIns.post('/api/admin/xacnhandanggiao',payload)
         },
     },
 }
