@@ -30,4 +30,4 @@ const postCreateCL = (maChatLieu, tenChatLieu,ngayTao,ngayCapNhat) =>{
 
 
 
-export {getAllMauSac, postCreateMS,putUpdateMS,deleteMauSac};
+export {getAllChatLieu, postCreateCL,putUpdateCL,deleteChatLieu};

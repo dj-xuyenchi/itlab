@@ -1,12 +1,12 @@
 import {Modal, Button} from 'react-bootstrap';
-import { deleteChatLieuSac, getAllChatLieuSac } from '../../service/ChatLieuSacService';
+import { deleteChatLieu, getAllChatLieu } from '../../service/ChatLieuService';
 import { toast } from 'react-toastify';
 
 const ModalDeleteCL = (props) =>{
-    const {show, handleClose,dataChatLieuSacDelete,handleDeleteSuccess} = props;
+    const {show, handleClose,dataChatLieuDelete,handleDeleteSuccess} = props;
 
-    const confirmDelete = async(id) => { 
-      let res = await deleteChatLieuSac(id)
+    const confirmDeleteCL = async(id) => { 
+      let res = await deleteChatLieu(id)
       if(res){
         handleDeleteSuccess();
         handleClose();
@@ -30,14 +30,14 @@ const ModalDeleteCL = (props) =>{
             <div className='body-add-new'>
                 Bạn chắc chắn muốn xóa ?
                 <br/>
-               <b> Mã màu: {dataChatLieuSacDelete.maChatLieu} </b>
+               {/* <b> Mã màu: {dataChatLieuSacDelete.maChatLieu} </b> */}
             </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => confirmDelete(dataChatLieuSacDelete.id)}>
+          <Button variant="primary" onClick={() => confirmDeleteCL(dataChatLieuDelete.id)}>
             Confirm
           </Button>
         </Modal.Footer>

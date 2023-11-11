@@ -11,8 +11,8 @@ import ModalDeleteMS from '../delete/ModalDeleteMS';
 const TableMauSac = (props) => {
 
     const [listMauSac, setListMauSac] = useState([]);
-    // const[totalMauSac, setTotalMauSac] = useState(0); 
-    // const[totalPages, setTotalPages] = useState(0); 
+    const[totalMauSac, setTotalMauSac] = useState(0); 
+    const[totalPages, setTotalPages] = useState(0); 
 
     // lấy dữ liệu
     const [isShowMoDalAddNew, setIsShowMoDalAddNew ] = useState(false);
@@ -33,27 +33,30 @@ const TableMauSac = (props) => {
 
 
 
-     
-
     useEffect(() =>{
         //call api
-        getMauSac();
+        getMauSac(0);
         
     }, [])
 
-    const getMauSac = async () => {
-        let res = await getAllMauSac();
-        //Dung if de neu data loi
-        if(res && res.data){  
-            setListMauSac(res.data)
-            // setTotalMauSac(res.total)
-            // setTotalPages(res.total)
-        } 
-      }
-    // const handlePageClick = (event) => {
-    //   getMauSac(+event.selected + 1)
+    const getMauSac = async (page) => {
+        let res = await getAllMauSac(page);
 
-    // }
+        //Dung if de neu data loi
+         if( res && res.data){  
+           console.log("check 1",res)
+           setListMauSac(res.data.content)
+             setTotalMauSac(res.totalElements)
+             setTotalPages(res.data.totalPages)
+            // setTotalPages(res.total)
+         } 
+      }
+      console.log("check 2", listMauSac)
+
+    const handlePageClick = (event) => {
+      getMauSac(+event.selected )
+
+    }
 
 
 
@@ -120,7 +123,7 @@ const TableMauSac = (props) => {
         
       </tbody>
     </Table>
-    {/* <ReactPaginate
+    <ReactPaginate
         breakLabel="..."
         nextLabel="Sau >"
         onPageChange={handlePageClick}
@@ -139,7 +142,7 @@ const TableMauSac = (props) => {
         containerClassName='pagination'
         activeClassName='active'
         
-      /> */}
+      />
 
        <ModalAddNewMauSac
           show = {isShowMoDalAddNew}

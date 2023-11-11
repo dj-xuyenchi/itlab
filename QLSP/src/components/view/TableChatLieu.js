@@ -54,8 +54,8 @@ const TableChatLieu = (props) => {
 
 
 
-    const handleDeleteChatLieu = (CL) =>{
-      setDataChatLieuDelete(CL);
+    const handleDeleteChatLieu = (cl) =>{
+      setDataChatLieuDelete(cl);
       setIsShowMoDalDelete(true)
    
     }

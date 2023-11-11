@@ -43,7 +43,7 @@ useEffect(() =>{
           keyboard={false}
         >
         <Modal.Header closeButton>
-          <Modal.Title>Edit màu sắc</Modal.Title>
+          <Modal.Title>Edit chất liệu</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <div className='body-add-new'>

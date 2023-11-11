@@ -1,15 +1,22 @@
 import './App.scss';
-import TableSP from './components/view/TableMauSac';
+import TableMauSac from './components/view/TableMauSac';
+import TableChatLieu from './components/view/TableChatLieu';
 import Container from 'react-bootstrap/Container';
 import {Row} from 'react-bootstrap';
-import ModalAddNew from './components/add/ModalAddMauSac';
+import ModalAddNewMauSac from './components/add/ModalAddMauSac';
+import ModalAddNewChatLieu from './components/add/ModalAddChatLieu';
+// import ModalAddNewChatLieu from './components/add/ModalAddNewChatLieu';
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 function App() {
 
-  const [isShowMoDalAddNew,setIsShowMoDalAddNew] = useState(false)
+  const [isShowMoDalAddNewMauSac,setIsShowMoDalAddNewMauSac] = useState(false)
+  const [isShowMoDalAddNewChatLieu,setIsShowMoDalAddNewChatLieu] = useState(false)
+
   const handleClose = () =>{
-    setIsShowMoDalAddNew(false)
+    setIsShowMoDalAddNewMauSac(false)
+    setIsShowMoDalAddNewChatLieu(false)
+
   }
 
   return (
@@ -17,17 +24,24 @@ function App() {
     <div className='app-container'>
         <Container>
           <div className='my-3 add-new'>
-            <span><b>Danh sách màu sắc</b></span>
-            <button className='btn btn-success' onClick={() => setIsShowMoDalAddNew(true) }>Add màu sắc</button>
+            <span><b>Danh sách thông tin</b></span>
+            <button className='btn btn-success' onClick={() => setIsShowMoDalAddNewMauSac(true) }>Thêm mới</button>
           </div>
-          <TableSP />
+          {/* <TableChatLieu /> */}
+          <TableMauSac />
         </Container>
 
-        <ModalAddNew
-        show={isShowMoDalAddNew}
+        <ModalAddNewMauSac
+        show={isShowMoDalAddNewMauSac}
         handleClose={handleClose}
-        
         /> 
+
+        <ModalAddNewChatLieu
+        show={isShowMoDalAddNewChatLieu}
+        handleClose={handleClose}
+        /> 
+
+
     </div>
 
     <ToastContainer

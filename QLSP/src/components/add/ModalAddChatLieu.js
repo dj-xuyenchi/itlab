@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
 import {Modal, Button} from 'react-bootstrap';
-import { postCreateMS } from '../../service/MauSacService';
+import {postCreateCL} from '../../service/ChatLieuService'
 import {  toast } from 'react-toastify';
 
 
 const ModalAddNewChatLieu = (props) =>{
     const {show, handleClose} = props;
-    const [maMau,setMaMau] = useState("");
-    const [tenMau,setTenMau] = useState("");
+    const [maChatLieu,setmaChatLieu] = useState("");
+    const [tenChatLieu,setTenChatLieu] = useState("");
     const [ngayTao,setNgayTao] = useState("");
     const [ngayCapNhat,setNgayCapNhat] = useState("");
 
 
 
-    const handleSaveMauSac = async () =>{
-        let res = await postCreateMS(maMau,tenMau,ngayTao,ngayCapNhat);
+    const handleSaveChatLieu = async () =>{
+        let res = await postCreateCL(maChatLieu,tenChatLieu,ngayTao,ngayCapNhat);
         if(res ){
             handleClose();
-            setMaMau('');
-            setTenMau('');
+            setmaChatLieu('');
+            setTenChatLieu('');
             setNgayTao('');
             setNgayCapNhat('');
             toast.success("Succes!")
@@ -44,12 +44,12 @@ const ModalAddNewChatLieu = (props) =>{
                 <div className="mb-3">
 
                     <div className="mb-3">
-                        <label className="form-label">Mã màu</label>
-                        <input type="text" className="form-control" value={maMau} onChange={(event) => setMaMau(event.target.value)} />
+                        <label className="form-label">Mã chất liệu</label>
+                        <input type="text" className="form-control" value={maChatLieu} onChange={(event) => setmaChatLieu(event.target.value)} />
                     </div>
                     <div class="mb-3">
-                        <label className="form-label">Tên màu</label>
-                        <input type="text" className="form-control" value={tenMau} onChange={(event) => setTenMau(event.target.value)}  />
+                        <label className="form-label">Tên chất liệu</label>
+                        <input type="text" className="form-control" value={tenChatLieu} onChange={(event) => setTenChatLieu(event.target.value)}  />
                     </div>
                     <div class="mb-3">
                         <label className="form-label">Ngày tạo</label>
@@ -66,7 +66,7 @@ const ModalAddNewChatLieu = (props) =>{
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => handleSaveMauSac()}>
+          <Button variant="primary" onClick={() => handleSaveChatLieu()}>
             Save
           </Button>
         </Modal.Footer>
