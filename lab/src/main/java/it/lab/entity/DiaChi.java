@@ -31,6 +31,8 @@ public class DiaChi {
     private String huyenId;
     @Column(name = "tinhid")
     private String tinhId;
+    @Column(name = "tinh")
+    private String tinh;
     @Column(name = "chitietdiachi",columnDefinition = "nvarchar(max)")
     private String chiTietDiaChi;
     @Column(name = "ngaytao")

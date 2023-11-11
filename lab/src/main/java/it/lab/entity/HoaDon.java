@@ -68,4 +68,8 @@ public class HoaDon {
     @OneToMany(mappedBy = "hoaDon")
     @JsonIgnore
     private List<HoaDonChiTiet> hoaDonChiTietList;
+
+
+    @Column(name = "giatrihd")
+    private Float giaTriHd;
 }
