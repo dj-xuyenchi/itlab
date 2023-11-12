@@ -31,6 +31,7 @@ public class DiaChi {
     private String huyenId;
     @Column(name = "tinhid")
     private String tinhId;
+<<<<<<< HEAD
     @Column(name = "xa")
     private String xa;
     @Column(name = "huyen")
@@ -38,6 +39,11 @@ public class DiaChi {
     @Column(name = "tinh")
     private String tinh;
     @Column(name = "chitietdiachi", columnDefinition = "nvarchar(max)")
+=======
+    @Column(name = "tinh")
+    private String tinh;
+    @Column(name = "chitietdiachi",columnDefinition = "nvarchar(max)")
+>>>>>>> dev
     private String chiTietDiaChi;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;
