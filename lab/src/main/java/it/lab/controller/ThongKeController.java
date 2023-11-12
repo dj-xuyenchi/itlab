@@ -1,21 +1,35 @@
 package it.lab.controller;
 
 
+<<<<<<< HEAD
 import it.lab.repository.ThongKeNguoiDungRepository;
+=======
+>>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 import it.lab.repository.ThongKeRankRepository;
 import it.lab.repository.ThongKeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+<<<<<<< HEAD
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+=======
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
+>>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+<<<<<<< HEAD
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +38,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+=======
+import java.time.LocalDate;
+import java.util.List;
+>>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 
 @RestController
 @RequestMapping("/api/thong-ke")
@@ -35,9 +53,12 @@ public class ThongKeController {
     @Autowired
     private ThongKeRepository repositoryThongKe;
 
+<<<<<<< HEAD
     @Autowired
     private ThongKeNguoiDungRepository repositoryNguoiDung;
 
+=======
+>>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
     //thong ke tai khoan c rank
     @GetMapping("/rank")
     public List<Object[]> getTotalRevenueByUser() {
@@ -55,9 +76,17 @@ public class ThongKeController {
     @GetMapping("/tai-khoan-doanh-thu-thap")
     public List<Object[]> getTop5DoanhThuThap() {
         PageRequest pageRequest = PageRequest.of(0, 5); // Get the first 5 results
+<<<<<<< HEAD
         return repositoryThongKe.taiKhoanDoanhThuThap(pageRequest);
     }
 
+=======
+        return repositoryThongKe.taiKhoanDoanhThuCaoNhat(pageRequest);
+    }
+
+
+
+>>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
     //Thong ke thanh pho mua nhieu
     @GetMapping("/thanh-pho-mua-nhieu-nhat")
     public List<Object[]> getTopThanhPhoMuaNhieu() {
@@ -73,6 +102,7 @@ public class ThongKeController {
     }
 
 
+<<<<<<< HEAD
     //Thong ke tai khoan moi trong 1 thang
     @GetMapping("/tai-khoan-moi")
     public List<Object[]> thongKeTaiKhoanMoiTrongThang() {
@@ -129,5 +159,7 @@ public List<BigDecimal> getBieuDoData() {
 
 
 
+=======
+>>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 
 }
