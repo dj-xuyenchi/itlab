@@ -25,7 +25,6 @@ public class HoaDonChiTiet {
     private HoaDon hoaDon;
     @JoinColumn(name = "sanphamchitietid")
     @ManyToOne
-    @JsonIgnore
     private SanPhamChiTiet sanPhamChiTiet;
     @Column(name = "soluong")
     private Integer soLuong;

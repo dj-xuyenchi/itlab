@@ -8,5 +8,6 @@ public enum TrangThaiHoaDon {
     DATHANHTOAN,
     CHOXACNHAN,
     CHOTHANHTOANBANKING,
-    CHOGIAOHANG
+    CHOGIAOHANG,
+    HOADONCHO
 }

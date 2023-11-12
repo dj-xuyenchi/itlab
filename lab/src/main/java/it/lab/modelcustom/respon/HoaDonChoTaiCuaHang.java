@@ -1,13 +1,9 @@
-package it.lab.dto;
+package it.lab.modelcustom.respon;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.entity.*;
 import it.lab.enums.TrangThaiHoaDon;
-import it.lab.modelcustom.respon.HoaDonHuy;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,15 +14,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HoaDonDTO {
+public class HoaDonChoTaiCuaHang {
     private Long id;
     private NguoiDung nguoiMua;
     private DiaChi diaChiGiao;
-    private String maHoaDon;
+    private String key;
     private PhuongThucThanhToan phuongThucThanhToan;
     private PhuongThucVanChuyen phuongThucVanChuyen;
     private String ghiChu;
@@ -34,17 +30,19 @@ public class HoaDonDTO {
     private LocalDateTime ngayCapNhat;
     private LocalDate ngayGiao;
     private Double giaTriHd;
-    private Double phiVanChuyen;
-    private TrangThaiHoaDon trangThai;
+    private String trangThai;
     private NguoiDungVoucher voucherGiaoHang;
     private SanPhamSuKien sanPhamSuKien;
     private NguoiDungVoucher voucherGiam;
     private NguoiDung nhanVien;
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
     private List<HoaDonChiTiet> hoaDonChiTietList;
+    private Double phiGiaoHang;
+    private String label;
 
-    public static HoaDonDTO fromEntity(HoaDon entity) {
-        return new HoaDonDTO(
+    public static HoaDonChoTaiCuaHang fromEntity(HoaDon entity) {
+        String label = "Hóa đơn " + entity.getId();
+        return new HoaDonChoTaiCuaHang(
                 entity.getId(),
                 entity.getNguoiMua(),
                 entity.getDiaChiGiao(),
@@ -56,21 +54,24 @@ public class HoaDonDTO {
                 entity.getNgayCapNhat(),
                 entity.getNgayGiao(),
                 entity.getGiaTriHd(),
-                entity.getPhiGiaoHang(),
-                entity.getTrangThai(),
+                "Chờ",
                 entity.getVoucherGiaoHang(),
                 entity.getSanPhamSuKien(),
                 entity.getVoucherGiam(),
                 entity.getNhanVien(),
-                entity.getBinhLuanDanhGiaList(),
-                entity.getHoaDonChiTietList()
+                null,
+                entity.getHoaDonChiTietList(),
+                entity.getPhiGiaoHang(),
+                label
         );
     }
 
-    public static List<HoaDonDTO> fromCollection(List<HoaDon> collection) {
-        List<HoaDonDTO> to = new ArrayList<>();
+    public static List<HoaDonChoTaiCuaHang> fromCollection(List<HoaDon> collection) {
+        List<HoaDonChoTaiCuaHang> to = new ArrayList<>();
         collection.forEach(x -> {
-            to.add(fromEntity(x));
+            if (x.getTrangThai() == TrangThaiHoaDon.HOADONCHO) {
+                to.add(fromEntity(x));
+            }
         });
         return to;
     }

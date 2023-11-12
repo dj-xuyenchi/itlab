@@ -21,6 +21,7 @@ import it.lab.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -168,4 +169,69 @@ public class HoaDonService implements IHoaDonService {
         }
         return new ResponObject<>(HoaDonDTO.fromEntity(hd.get()), APIStatus.THATBAI, "Thất bại");
     }
+
+    @Override
+    public Boolean thayDoiSoLuongSPHoaDon(Long chiTietId, Integer soLuongMoi) {
+        HoaDonChiTiet hdct = _hoaDonChiTietRepo.findById(chiTietId).get();
+        HoaDon hd = _hoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+        Double giaTriCu = hdct.getDonGia() * hdct.getSoLuong();
+        hdct.setSoLuong(soLuongMoi);
+        Double giaTriMoi = hdct.getDonGia() * hdct.getSoLuong();
+        hd.setGiaTriHd(hd.getGiaTriHd() - giaTriCu + giaTriMoi);
+        _hoaDonChiTietRepo.save(hdct);
+        _hoaDonRepo.save(hd);
+        return true;
+    }
+
+    @Override
+    public Boolean xoaSanPhamHoaDon(Long chiTietId) {
+        HoaDonChiTiet hdct = _hoaDonChiTietRepo.findById(chiTietId).get();
+        Double giaTri = hdct.getDonGia() * hdct.getSoLuong();
+        HoaDon hd = _hoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+        hd.setGiaTriHd(hd.getGiaTriHd() - giaTri);
+        _hoaDonChiTietRepo.delete(hdct);
+        _hoaDonRepo.save(hd);
+        return true;
+    }
+
+    @Override
+    public Boolean themSPChoHoaDon(Long hoaDonId, Long spChiTietId, Integer soLuong) {
+        HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
+        SanPhamChiTiet spct = _sanPhamChiTietRepo.findById(spChiTietId).get();
+        Optional<HoaDonChiTiet> hoaDonChiTietCheck = _hoaDonChiTietRepo.findHoaDonChiTietByHoaDonAndSanPhamChiTiet(hoaDon, spct);
+        if (hoaDonChiTietCheck.isEmpty()) {
+            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+            hoaDonChiTiet.setHoaDon(hoaDon);
+            hoaDonChiTiet.setSanPhamChiTiet(spct);
+            hoaDonChiTiet.setSoLuong(soLuong);
+            hoaDonChiTiet.setNgayTao(LocalDate.now());
+            Double giaTri = spct.getGiaBan() * soLuong;
+            hoaDonChiTiet.setDonGia(spct.getGiaBan());
+            hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + giaTri);
+            _hoaDonRepo.save(hoaDon);
+            _hoaDonChiTietRepo.save(hoaDonChiTiet);
+            _sanPhamChiTietRepo.save(spct);
+            return true;
+        }
+        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietCheck.get();
+        Double giaTri = hoaDonChiTiet.getDonGia() * soLuong;
+        hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + soLuong);
+        hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + giaTri);
+        if(hoaDonChiTiet.getSoLuong()>spct.getSoLuongTon()){
+            hoaDonChiTiet.setSoLuong(spct.getSoLuongTon());
+        }
+        _hoaDonRepo.save(hoaDon);
+        _hoaDonChiTietRepo.save(hoaDonChiTiet);
+        _sanPhamChiTietRepo.save(spct);
+        return true;
+    }
+
+    @Override
+    public Boolean thayDoiPhiVanChuyen(Long hoaDonId, Double phiVanChuyenMoi) {
+        HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
+        hoaDon.setPhiGiaoHang(phiVanChuyenMoi);
+        _hoaDonRepo.save(hoaDon);
+        return true;
+    }
+
 }

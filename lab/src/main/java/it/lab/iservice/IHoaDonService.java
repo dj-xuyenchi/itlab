@@ -30,4 +30,11 @@ public interface IHoaDonService {
 
     public ResponObject<HoaDonDTO, APIStatus> layHoaDonById(Long hoaDonId);
 
+    public Boolean thayDoiSoLuongSPHoaDon(Long chiTietId, Integer soLuongMoi);
+
+    public Boolean xoaSanPhamHoaDon(Long chiTietId);
+
+    public Boolean themSPChoHoaDon(Long hoaDonId, Long spChiTietId, Integer soLuong);
+
+    public Boolean thayDoiPhiVanChuyen(Long hoaDonId, Double phiVanChuyenMoi);
 }
