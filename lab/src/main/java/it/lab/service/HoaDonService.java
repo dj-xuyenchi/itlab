@@ -31,11 +31,6 @@ public class HoaDonService implements IHoaDonService {
     }
 
     @Override
-    public void deleteById(long id) {
-        hoaDonRepo.deleteById(id);
-    }
-
-    @Override
     public HoaDon update(HoaDon hoaDon, Long id) {
         hoaDon=hoaDonRepo.findById(id).orElse(null);
         hoaDonRepo.save(hoaDon);

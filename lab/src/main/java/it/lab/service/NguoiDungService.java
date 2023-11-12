@@ -36,11 +36,6 @@ public class NguoiDungService implements TestService {
     }
 
     @Override
-    public void deleteById(long id) {
-        _nguoiDungRepo.deleteById(id);
-    }
-
-    @Override
     public NguoiDung update(NguoiDung nguoiDung) {
         return _nguoiDungRepo.save(nguoiDung);
     }

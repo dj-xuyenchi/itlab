@@ -32,28 +32,20 @@ public class NguoiDungController {
     public ResponseEntity<?> save(@RequestBody NguoiDung nguoiDung) {
         return ResponseEntity.ok(nguoiDungService.save(nguoiDung));
     }
-
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable long id){
-        nguoiDungService.deleteById(id);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@RequestBody NguoiDung nguoiDung,@PathVariable(name = "id") Long id){
+        return ResponseEntity.ok( nguoiDungService.update(nguoiDung));
     }
 //    @PutMapping("/update/{id}")
-//    public ResponseEntity<?> update(@RequestBody NguoiDung nguoiDung,@PathVariable(name = "id") Long id){
-//        nguoiDung=nguoiDungService.findById(id);
-//        nguoiDungService.update(nguoiDung);
-//        return ResponseEntity.ok(nguoiDung);
-//
+//    public ResponseEntity<?> update(@RequestBody NguoiDung updatedNguoiDung, @PathVariable(name = "id") Long id) {
+//        NguoiDung nguoiDung = nguoiDungService.findById(id);
+//        if (nguoiDung != null) {
+//           nguoiDung=updatedNguoiDung;
+//            nguoiDungService.update(nguoiDung);
+//            return ResponseEntity.ok(nguoiDung);
+//        } else {
+//            // Xử lý trường hợp người dùng không tồn tại
+//            return ResponseEntity.notFound().build();
+//        }
 //    }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody NguoiDung updatedNguoiDung, @PathVariable(name = "id") Long id) {
-        NguoiDung nguoiDung = nguoiDungService.findById(id);
-        if (nguoiDung != null) {
-           nguoiDung=updatedNguoiDung;
-            nguoiDungService.update(nguoiDung);
-            return ResponseEntity.ok(nguoiDung);
-        } else {
-            // Xử lý trường hợp người dùng không tồn tại
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

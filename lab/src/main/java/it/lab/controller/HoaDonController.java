@@ -25,17 +25,18 @@ public class HoaDonController {
         Pageable pageable = PageRequest.of(page, 20);
         return ResponseEntity.ok(hoaDonService.getPage(pageable));
     }
+
+
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody HoaDon hoaDon) {
         return ResponseEntity.ok(hoaDonService.save(hoaDon));
     }
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable long id){
-        hoaDonService.deleteById(id);
-    }
+
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody HoaDon hoaDon,@PathVariable(name = "id") Long id){
+    public ResponseEntity<?> update(@RequestBody HoaDon hoaDon, @PathVariable(name = "id") Long id) {
         hoaDonService.save(hoaDon);
         return ResponseEntity.ok(hoaDon);
     }
 }
+//mang dấu yêu bấy lâu hóa thành niềm đau

@@ -13,7 +13,6 @@ public interface TestService {
     List<NguoiDung> getAll();
 
     public NguoiDung save(NguoiDung nguoiDung);
-    public void deleteById(long id);
     public NguoiDung update(NguoiDung nguoiDung);
     public NguoiDung findById(long id);
 }

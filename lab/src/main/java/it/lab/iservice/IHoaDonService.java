@@ -14,7 +14,7 @@ public interface IHoaDonService {
     List<HoaDon> getAll();
 
     public HoaDon save(HoaDon hoaDon);
-    public void deleteById(long id);
+    public HoaDon save2(HoaDon hoaDon);
     public HoaDon update(HoaDon hoaDon,Long id);
     public HoaDon findById(long id);
 }
