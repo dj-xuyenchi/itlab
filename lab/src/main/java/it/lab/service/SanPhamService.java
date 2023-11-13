@@ -315,10 +315,13 @@ public class SanPhamService implements ISanPhamService {
             return new Page<SanPhamChiTietDTO>(null, 0, 10000);
         }
         SanPham sanPham = _sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get();
+        MauSac mauSac =_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get();
+        KichThuoc kichThuoc=_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get();
         it.lab.entity.SanPhamChiTiet sanPhamMoi = new it.lab.entity.SanPhamChiTiet();
         sanPhamMoi.setSanPham(_sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get());
-        sanPhamMoi.setMauSac(_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get());
-        sanPhamMoi.setKichThuoc(_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get());
+        sanPhamMoi.setMauSac(mauSac);
+        sanPhamMoi.setTenSanPham(sanPham.getTenSanPham()+" "+mauSac.getTenMau()+" "+kichThuoc.getTenKichThuoc());
+        sanPhamMoi.setKichThuoc(kichThuoc);
         sanPhamMoi.setGiaBan(sanPham.getGiaBan());
         sanPhamMoi.setGiaNhap(sanPham.getGiaNhap());
         sanPhamMoi.setTrangThai(TrangThaiSanPhamChiTiet.CONHANG);

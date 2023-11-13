@@ -21,15 +21,12 @@ import {
 import { SearchOutlined } from "@ant-design/icons";
 import { useRef } from "react";
 import Highlighter from "react-highlight-words";
-import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import { useChiTietHoaDonStore } from "./useChiTietHoaDonStore";
 import { IoEyeSharp } from "react-icons/io5";
 import TextArea from "antd/es/input/TextArea";
 import { AiOutlineDelete } from "react-icons/ai";
 import { MdOutlinePostAdd } from "react-icons/md";
 import ModalView from "../../product/sanphamchitiet/ModalView";
-import ModalCapNhat from "../../product/sanphamchitiet/ModalCapNhat";
-import ModalXoa from "../../product/sanphamchitiet/ModalXoa";
 import AddSanPham from "./AddSanPham";
 import { useGHN } from "../../../../plugins/ghnapi";
 

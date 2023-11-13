@@ -8,5 +8,14 @@ export const useBanTaiQuayStore = {
         async taoHoaDon(payload) {
             return axiosIns.get('/api/admin/taohoadontaiquay?nhanVienId=' + payload)
         },
+        async fetSanPhamChiTiet() {
+            return axiosIns.get('/api/admin/layhetchitiet')
+        },
+        async fetHoaDonChiTiet(payload) {
+            return axiosIns.get('/api/admin/layhoadonchitietcuahoadon?hoaDonId=' + payload)
+        },
+        async themSanPhamVaoHoaDonQuay(payload) {
+            return axiosIns.get('/api/admin/themsanphamvaohoadonquay?hoaDonId=' + payload.hoaDonId + '&sanPhamId=' + payload.sanPhamId)
+        },
     },
 }

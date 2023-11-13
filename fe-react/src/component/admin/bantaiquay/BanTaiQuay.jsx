@@ -1,12 +1,78 @@
-import { Button, Col, Menu, Row, notification } from "antd";
+import { Button, Col, Image, InputNumber, Menu, Row, Select, Space, Table, Tag, notification } from "antd";
 import Header from "../layout/header/Header";
 import MenuAdmin from "../layout/menu/MenuAdmin";
 import "./style.css";
 import React, { useEffect, useState } from "react";
-import { GrChapterAdd } from "react-icons/gr";
+import { GrChapterAdd, GrScan } from "react-icons/gr";
 import { RiBillLine } from "react-icons/ri";
 import { useBanTaiQuayStore } from "./useBanTaiQuayStore";
-
+import { fixMoney } from "../../../extensions/fixMoney";
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+    tags: ['nice', 'developer'],
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+    tags: ['loser'],
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sydney No. 1 Lake Park',
+    tags: ['cool', 'teacher'],
+  },
+];
+const columns = [
+  {
+    title: 'Ảnh sản phẩm',
+    dataIndex: 'sanPhamChiTiet',
+    key: 'name',
+    render: (sanPhamChiTiet) => (
+      <Image src={sanPhamChiTiet.sanPham.hinhAnh1} style={{ width: "120px", height: "180px" }} />
+    ),
+  },
+  {
+    title: 'Tên sản phẩm',
+    dataIndex: 'sanPhamChiTiet',
+    key: 'name',
+    render: (sanPhamChiTiet) => (
+      <span>
+        {sanPhamChiTiet.sanPham.tenSanPham}
+        <Tag color="success">{sanPhamChiTiet.mauSac.tenMau}</Tag>
+        <Tag color="processing">{sanPhamChiTiet.kichThuoc.tenKichThuoc}</Tag>
+      </span>
+    ),
+  },
+  {
+    title: 'Số lượng',
+    dataIndex: 'soLuong',
+    key: 'age',
+    render: (soLuong) => (
+      <InputNumber value={soLuong} />
+    ),
+  },
+  {
+    title: 'Đơn giá',
+    dataIndex: 'donGia',
+    key: 'age',
+    render: (donGia) => (
+      <>{fixMoney(donGia)}</>
+    ),
+  },
+  {
+    title: 'Thao tác',
+    dataIndex: 'address',
+    key: 'address',
+  }
+];
 function BanTaiQuay() {
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
@@ -35,13 +101,14 @@ function BanTaiQuay() {
   const [danhSachHoaDon, setDanhSachHoaDon] = useState(undefined);
   const [current, setCurrent] = useState(undefined);
   const [hoaDonHienTai, setHoaDonHienTai] = useState(undefined);
+  const [gioHangHienTai, setGioHangHienTai] = useState(undefined)
   const onClick = (e) => {
     setCurrent(e.key);
     setHoaDonHienTai(
       danhSachHoaDon
         ? danhSachHoaDon.find((item) => {
-            return item.key == e.key;
-          })
+          return item.key == e.key;
+        })
         : undefined
     );
   };
@@ -56,8 +123,23 @@ function BanTaiQuay() {
       })
     );
   }
+  async function layDanhSachChiTiet() {
+    const data = await useBanTaiQuayStore.actions.fetHoaDonChiTiet(hoaDonHienTai.id);
+    setGioHangHienTai(data.data)
+  }
+  async function layDuLieuSanPham() {
+    const data =
+      await useBanTaiQuayStore.actions.fetSanPhamChiTiet();
+    setSanPhamChiTiet(data.data)
+  }
+  useEffect(() => {
+    layDuLieuSanPham()
+  }, [])
   useEffect(() => {
     handleLayHoaDon();
+    if (current) {
+      layDanhSachChiTiet()
+    }
   }, [current]);
   async function handleTaoMoiHoaDon() {
     if (danhSachHoaDon.length > 9) {
@@ -74,7 +156,44 @@ function BanTaiQuay() {
       nguoiDung.nguoiDung.id
     );
     handleLayHoaDon();
-  
+  }
+  const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined)
+  async function handleChonSanPham(e) {
+    const sanPhamChon = sanPhamChiTiet.find((item) => {
+      return item.id == e.key
+    })
+    if (sanPhamChon.soLuongTon <= 0) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Sản phẩm hết hàng",
+        "bottomRight"
+      );
+      return
+    }
+    console.log(e.key);
+    if (!gioHangHienTai.every((item) => {
+      return item.sanPhamChiTiet.id === e.key
+    })) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Sản phẩm đã có trong giỏ",
+        "bottomRight"
+      );
+      return;
+    }
+    const data = await useBanTaiQuayStore.actions.themSanPhamVaoHoaDonQuay({
+      hoaDonId: hoaDonHienTai.id,
+      sanPhamId: e.key
+    })
+    setGioHangHienTai(data.data)
+    openNotification(
+      "success",
+      "Hệ thống",
+      "Thêm thành công",
+      "bottomRight"
+    );
   }
   return (
     <>
@@ -125,14 +244,70 @@ function BanTaiQuay() {
                 />
               </Col>
             </Row>
-            <Row
+            {current && <Row
               style={{
                 backgroundColor: "#ffffff",
                 padding: "12px 12px",
               }}
             >
-              <Col span={24}>ss</Col>
-            </Row>
+              <Col span={10}>
+
+
+              </Col>
+              <Col span={14} >
+                <Row>
+                  <Col span={4}>
+                    <Button
+                      icon={<GrScan />}
+                      onClick={handleTaoMoiHoaDon}
+                    >
+                      Quét mã
+                    </Button>
+                  </Col>
+                  <Col span={19} offset={1}>
+                    <Select
+                      style={{
+                        width: "100%",
+                      }}
+                      showSearch
+                      labelInValue
+                      defaultValue={"Chọn sản phẩm"}
+                      onChange={handleChonSanPham}
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {sanPhamChiTiet
+                        ? sanPhamChiTiet.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenSanPham}
+                            <Tag color="success" style={{
+                              marginLeft: "4px"
+                            }}>{option.mauSac.tenMau}</Tag>
+                            <Tag color="processing">{option.kichThuoc.tenKichThuoc}</Tag>
+                            <span style={{
+                              fontWeight: "700",
+                              marginLeft: "12px"
+                            }}>Số lượng còn: {option.soLuongTon}</span>
+                          </Select.Option>
+                        ))
+                        : ""}
+                    </Select>
+                  </Col>
+                </Row>
+                <Row style={{
+                  marginTop: "12px"
+                }}>
+                  <Col span={24} style={{
+                    height: "100vh",
+                    overflow: "scroll"
+                  }}>
+                    <Table pagination={{ pageSize: 50, position: ['none'] }} columns={columns} dataSource={gioHangHienTai} /></Col>
+                </Row>
+              </Col>
+            </Row>}
           </div>
         </div>
       </div>

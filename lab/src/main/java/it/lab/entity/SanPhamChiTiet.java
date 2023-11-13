@@ -21,6 +21,8 @@ public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "tensanpham")
+    private String tenSanPham;
     @Column(name = "gianhap")
     private Double giaNhap;
     @Column(name = "giaban")
