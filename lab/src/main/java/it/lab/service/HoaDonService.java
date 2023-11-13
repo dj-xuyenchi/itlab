@@ -31,6 +31,11 @@ public class HoaDonService implements IHoaDonService {
     }
 
     @Override
+    public HoaDon save2(HoaDon hoaDon) {
+        return null;
+    }
+
+    @Override
     public HoaDon update(HoaDon hoaDon, Long id) {
         hoaDon=hoaDonRepo.findById(id).orElse(null);
         hoaDonRepo.save(hoaDon);
