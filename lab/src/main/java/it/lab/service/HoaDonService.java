@@ -174,6 +174,12 @@ public class HoaDonService implements IHoaDonService {
     public Boolean thayDoiSoLuongSPHoaDon(Long chiTietId, Integer soLuongMoi) {
         HoaDonChiTiet hdct = _hoaDonChiTietRepo.findById(chiTietId).get();
         HoaDon hd = _hoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+        if (soLuongMoi <= 0) {
+            _hoaDonChiTietRepo.delete(hdct);
+            hd.setGiaTriHd(hd.getGiaTriHd() - hdct.getDonGia() * hdct.getSoLuong());
+            _hoaDonRepo.save(hd);
+            return true;
+        }
         Double giaTriCu = hdct.getDonGia() * hdct.getSoLuong();
         hdct.setSoLuong(soLuongMoi);
         Double giaTriMoi = hdct.getDonGia() * hdct.getSoLuong();
@@ -217,7 +223,7 @@ public class HoaDonService implements IHoaDonService {
         Double giaTri = hoaDonChiTiet.getDonGia() * soLuong;
         hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + soLuong);
         hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + giaTri);
-        if(hoaDonChiTiet.getSoLuong()>spct.getSoLuongTon()){
+        if (hoaDonChiTiet.getSoLuong() > spct.getSoLuongTon()) {
             hoaDonChiTiet.setSoLuong(spct.getSoLuongTon());
         }
         _hoaDonRepo.save(hoaDon);

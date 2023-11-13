@@ -17,5 +17,11 @@ export const useBanTaiQuayStore = {
         async themSanPhamVaoHoaDonQuay(payload) {
             return axiosIns.get('/api/admin/themsanphamvaohoadonquay?hoaDonId=' + payload.hoaDonId + '&sanPhamId=' + payload.sanPhamId)
         },
+        async thayDoiSoLuong(payload) {
+            return axiosIns.get('/api/admin/thaydoisoluongspchitiet?chiTietId=' + payload.chiTietId + '&soLuongMoi=' + payload.soLuongMoi)
+        },
+         async xoaHoaDonChiTiet(payload) {
+            return axiosIns.get('/api/admin/xoaspchitiet?chiTietId=' + payload)
+        },
     },
 }
