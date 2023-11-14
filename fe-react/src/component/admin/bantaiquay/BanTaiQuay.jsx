@@ -6,6 +6,7 @@ import {
   InputNumber,
   Menu,
   Modal,
+  Radio,
   Row,
   Select,
   Space,
@@ -23,8 +24,8 @@ import { GrChapterAdd, GrScan } from "react-icons/gr";
 import { RiBillLine } from "react-icons/ri";
 import { useBanTaiQuayStore } from "./useBanTaiQuayStore";
 import { fixMoney } from "../../../extensions/fixMoney";
-import { AiOutlineDelete } from "react-icons/ai";
 import TextArea from "antd/es/input/TextArea";
+import { useGHN } from "../../../plugins/ghnapi";
 
 function BanTaiQuay() {
   const [api, contextHolder] = notification.useNotification();
@@ -55,6 +56,7 @@ function BanTaiQuay() {
   const [current, setCurrent] = useState(undefined);
   const [hoaDonHienTai, setHoaDonHienTai] = useState(undefined);
   const [gioHangHienTai, setGioHangHienTai] = useState(undefined);
+  // const [hoaDon]
   async function handleCapNhatSoLuong(chiTietId, soLuongMoi) {
     await useBanTaiQuayStore.actions.thayDoiSoLuong({
       chiTietId: chiTietId,
@@ -62,17 +64,50 @@ function BanTaiQuay() {
     });
     layDanhSachChiTiet();
   }
-  const [isModalOpen, setIsModalOpen] = useState(false);
   async function handleXoaSpHoaDon(e) {
     await useBanTaiQuayStore.actions.xoaHoaDonChiTiet(e);
     layDanhSachChiTiet();
+  }
+  const [selectDiaChi, setSelectDiaChi] = useState(-1);
+  const [diaChiMoi, setDiaChiMoi] = useState({
+    tinh: "Chọn tỉnh",
+    huyen: "Chọn huyện",
+    xa: "Chọn xã",
+  });
+  const [diaChiChon, setDiaChiChon] = useState(undefined);
+  const [danhSachDiaChi, setDanhSachDiaChi] = useState(undefined);
+  const [danhSachTinh, setDanhSachTinh] = useState(undefined);
+  const [danhSachHuyen, setDanhSachHuyen] = useState(undefined);
+  const [danhSachXa, setDanhSachXa] = useState(undefined);
+  async function layDiaChiNguoiDung(e) {
+    const data = await useBanTaiQuayStore.actions.layDiaChiKhachHang(e.value);
+    setDanhSachDiaChi(data.data);
+  }
+  async function handleLayTinh() {
+    const data = await useGHN.actions.layTinh();
+    setDanhSachTinh(data.data.data);
+  }
+  async function handleChonHuyen(e) {
+    const data = await useGHN.actions.layHuyen(e.value);
+    setDanhSachHuyen(data.data.data);
+    setDiaChiMoi({
+      ...diaChiMoi,
+      tinh: e,
+    });
+  }
+  async function handleChonXa(e) {
+    if (!e) {
+      return;
+    }
+    const data = await useGHN.actions.layXa(e.value);
+    setDanhSachXa(data.data.data);
   }
   const columns = [
     {
       title: "Ảnh sản phẩm",
       dataIndex: "sanPhamChiTiet",
       key: "name",
-      width: '15%',
+      width: "15%",
       render: (sanPhamChiTiet) => (
         <Image
           src={sanPhamChiTiet.sanPham.hinhAnh1}
@@ -84,7 +119,7 @@ function BanTaiQuay() {
       title: "Tên sản phẩm",
       dataIndex: "sanPhamChiTiet",
       key: "name",
-      width: '50%',
+      width: "50%",
       render: (sanPhamChiTiet) => (
         <span>
           {sanPhamChiTiet.sanPham.tenSanPham}
@@ -97,7 +132,7 @@ function BanTaiQuay() {
       title: "Số lượng",
       dataIndex: "soLuong",
       key: "age",
-      width: '10%',
+      width: "10%",
       render: (soLuong, record) => (
         <InputNumber
           defaultValue={soLuong}
@@ -111,14 +146,14 @@ function BanTaiQuay() {
       title: "Đơn giá",
       dataIndex: "donGia",
       key: "age",
-      width: '10%',
+      width: "10%",
       render: (donGia) => <>{fixMoney(donGia)}</>,
     },
     {
       title: "Thành tiền",
       dataIndex: "donGia",
       key: "age",
-      width: '15%',
+      width: "15%",
       render: (donGia, record) => <>{fixMoney(donGia * record.soLuong)}</>,
     },
     // {
@@ -159,8 +194,8 @@ function BanTaiQuay() {
     setHoaDonHienTai(
       danhSachHoaDon
         ? danhSachHoaDon.find((item) => {
-          return item.key == e.key;
-        })
+            return item.key == e.key;
+          })
         : undefined
     );
   };
@@ -185,8 +220,15 @@ function BanTaiQuay() {
     const data = await useBanTaiQuayStore.actions.fetSanPhamChiTiet();
     setSanPhamChiTiet(data.data);
   }
+  const [danhSachKhachHang, setDanhSachKhachHang] = useState(undefined);
+  async function layDanhSachKhachHang() {
+    const data = await useBanTaiQuayStore.actions.layDanhSachKhachHang();
+    setDanhSachKhachHang(data.data);
+  }
   useEffect(() => {
     layDuLieuSanPham();
+    handleLayTinh();
+    layDanhSachKhachHang();
   }, []);
   useEffect(() => {
     handleLayHoaDon();
@@ -298,14 +340,103 @@ function BanTaiQuay() {
                 <Col span={12}>
                   <Row>
                     <Col>
-                      <h6>Thông tin khách hàng</h6></Col>
+                      <h6>Thông tin hóa đơn</h6>
+                    </Col>
                   </Row>
-                  <Row style={{
-                    marginTop: "28px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={23} >
+                  <Row
+                    style={{
+                      marginTop: "28px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={11}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Mã HĐ:</Col>
+                        <Col span={23}>
+                          <Input
+                            value={hoaDonHienTai ? hoaDonHienTai.key : ""}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col span={11} offset={1}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={24}>Ngày tạo:</Col>
+                        <Col span={24}>
+                          <Input
+                            value={hoaDonHienTai ? hoaDonHienTai.ngayTao : ""}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={11}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Nhân viên:</Col>
+                        <Col span={23}>
+                          <Input
+                            value={
+                              hoaDonHienTai
+                                ? hoaDonHienTai.nhanVien.ho +
+                                  " " +
+                                  hoaDonHienTai.nhanVien.ten
+                                : ""
+                            }
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col span={11} offset={1}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={24}>Mã NV:</Col>
+                        <Col span={24}>
+                          <Input
+                            value={
+                              hoaDonHienTai
+                                ? hoaDonHienTai.nhanVien.maNguoiDung
+                                : ""
+                            }
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>{" "}
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={23}>
                       <Select
                         style={{
                           width: "100%",
@@ -313,127 +444,172 @@ function BanTaiQuay() {
                         showSearch
                         labelInValue
                         defaultValue={"Chọn khách hàng"}
-                        onChange={handleChonSanPham}
+                        onChange={layDiaChiNguoiDung}
                         filterOption={(input, option) =>
                           option.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                         }
                       >
-                        {sanPhamChiTiet
-                          ? sanPhamChiTiet.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenSanPham}
-                              <Tag
-                                color="success"
-                                style={{
-                                  marginLeft: "4px",
-                                }}
-                              >
-                                {option.mauSac.tenMau}
-                              </Tag>
-                              <Tag color="processing">
-                                {option.kichThuoc.tenKichThuoc}
-                              </Tag>
-                              <span
-                                style={{
-                                  fontWeight: "700",
-                                  marginLeft: "12px",
-                                }}
-                              >
-                                Số lượng còn: {option.soLuongTon}
-                              </span>
-                            </Select.Option>
-                          ))
+                        {danhSachKhachHang
+                          ? danhSachKhachHang.map((option) => (
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.ho + " " + option.ten}
+                              </Select.Option>
+                            ))
                           : ""}
                       </Select>
                     </Col>
                   </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={11} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Mã HĐ:
-                        </Col>
-                        <Col span={23}>
-                          <Input />
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col span={11} offset={1} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Ngày tạo:
-                        </Col>
-                        <Col span={23}>
-                          <Input />
-                        </Col>
-                      </Row>
-                    </Col>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {" "}
+                    <Radio.Group
+                      onChange={(e) => {
+                        setSelectDiaChi(e.target.value);
+                        setDiaChiChon(
+                          danhSachDiaChi.find((item) => {
+                            return item.id == e.target.value;
+                          })
+                        );
+                      }}
+                      value={selectDiaChi}
+                    >
+                      <Space direction="vertical">
+                        {danhSachDiaChi
+                          ? danhSachDiaChi.map((item) => {
+                              return (
+                                <Radio value={item.id}>
+                                  {item.xa + " " + item.huyen + " " + item.tinh}
+                                </Radio>
+                              );
+                            })
+                          : ""}
+                        <Radio value={-1}>Chọn mới</Radio>
+                      </Space>{" "}
+                    </Radio.Group>
                   </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={11} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Nhân viên:
-                        </Col>
-                        <Col span={23}>
-                          <Input />
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col span={11} offset={1} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Mã NV:
-                        </Col>
-                        <Col span={23}>
-                          <Input />
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={11} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Tỉnh/TP:
-                        </Col>
-                        <Col span={23}>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={11}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={24}>Tỉnh/TP:</Col>
+                        <Col span={24}>
                           <Select
+                            disabled={!(selectDiaChi == -1)}
                             style={{
                               width: "100%",
                             }}
                             showSearch
                             labelInValue
-                            defaultValue={"Chọn khách hàng"}
+                            value={
+                              selectDiaChi != -1
+                                ? diaChiChon.tinh
+                                : diaChiMoi.tinh
+                            }
+                            onChange={handleChonHuyen}
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                          >
+                            {danhSachTinh
+                              ? danhSachTinh.map((option) => (
+                                  <Select.Option
+                                    key={option.ProvinceID}
+                                    value={option.ProvinceID}
+                                  >
+                                    {option.NameExtension[0]}
+                                  </Select.Option>
+                                ))
+                              : ""}
+                          </Select>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col span={11} offset={1}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Huyện:</Col>
+                        <Col span={23}>
+                          <Select
+                            disabled={!(selectDiaChi == -1)}
+                            style={{
+                              width: "100%",
+                            }}
+                            showSearch
+                            labelInValue
+                            value={
+                              selectDiaChi != -1
+                                ? diaChiChon.tinh
+                                : diaChiMoi.tinh
+                            }
+                            onChange={handleChonXa}
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                          >
+                            {danhSachHuyen
+                              ? danhSachHuyen.map((option) => (
+                                  <Select.Option
+                                    key={option.DistrictID}
+                                    value={option.DistrictID}
+                                  >
+                                    {option.DistrictName}
+                                  </Select.Option>
+                                ))
+                              : ""}
+                          </Select>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={11}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Xã:</Col>
+                        <Col span={23}>
+                          <Select
+                            disabled={!(selectDiaChi == -1)}
+                            style={{
+                              width: "100%",
+                            }}
+                            showSearch
+                            labelInValue
+                            defaultValue={"Chọn xã"}
                             onChange={handleChonSanPham}
                             filterOption={(input, option) =>
                               option.children
@@ -441,190 +617,72 @@ function BanTaiQuay() {
                                 .indexOf(input.toLowerCase()) >= 0
                             }
                           >
-                            {sanPhamChiTiet
-                              ? sanPhamChiTiet.map((option) => (
-                                <Select.Option key={option.id} value={option.id}>
-                                  {option.tenSanPham}
-                                  <Tag
-                                    color="success"
-                                    style={{
-                                      marginLeft: "4px",
-                                    }}
+                            {danhSachXa
+                              ? danhSachXa.map((option) => (
+                                  <Select.Option
+                                    key={option.WardCode}
+                                    value={option.WardCode}
                                   >
-                                    {option.mauSac.tenMau}
-                                  </Tag>
-                                  <Tag color="processing">
-                                    {option.kichThuoc.tenKichThuoc}
-                                  </Tag>
-                                  <span
-                                    style={{
-                                      fontWeight: "700",
-                                      marginLeft: "12px",
-                                    }}
-                                  >
-                                    Số lượng còn: {option.soLuongTon}
-                                  </span>
-                                </Select.Option>
-                              ))
-                              : ""}
-                          </Select>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col span={11} offset={1} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Huyện:
-                        </Col>
-                        <Col span={23}>
-                          <Select
-                            style={{
-                              width: "100%",
-                            }}
-                            showSearch
-                            labelInValue
-                            defaultValue={"Chọn khách hàng"}
-                            onChange={handleChonSanPham}
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                          >
-                            {sanPhamChiTiet
-                              ? sanPhamChiTiet.map((option) => (
-                                <Select.Option key={option.id} value={option.id}>
-                                  {option.tenSanPham}
-                                  <Tag
-                                    color="success"
-                                    style={{
-                                      marginLeft: "4px",
-                                    }}
-                                  >
-                                    {option.mauSac.tenMau}
-                                  </Tag>
-                                  <Tag color="processing">
-                                    {option.kichThuoc.tenKichThuoc}
-                                  </Tag>
-                                  <span
-                                    style={{
-                                      fontWeight: "700",
-                                      marginLeft: "12px",
-                                    }}
-                                  >
-                                    Số lượng còn: {option.soLuongTon}
-                                  </span>
-                                </Select.Option>
-                              ))
+                                    {option.NameExtension[0]}
+                                  </Select.Option>
+                                ))
                               : ""}
                           </Select>
                         </Col>
                       </Row>
                     </Col>
                   </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={11} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Xã:
-                        </Col>
-                        <Col span={23}>
-                          <Select
-                            style={{
-                              width: "100%",
-                            }}
-                            showSearch
-                            labelInValue
-                            defaultValue={"Chọn khách hàng"}
-                            onChange={handleChonSanPham}
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                          >
-                            {sanPhamChiTiet
-                              ? sanPhamChiTiet.map((option) => (
-                                <Select.Option key={option.id} value={option.id}>
-                                  {option.tenSanPham}
-                                  <Tag
-                                    color="success"
-                                    style={{
-                                      marginLeft: "4px",
-                                    }}
-                                  >
-                                    {option.mauSac.tenMau}
-                                  </Tag>
-                                  <Tag color="processing">
-                                    {option.kichThuoc.tenKichThuoc}
-                                  </Tag>
-                                  <span
-                                    style={{
-                                      fontWeight: "700",
-                                      marginLeft: "12px",
-                                    }}
-                                  >
-                                    Số lượng còn: {option.soLuongTon}
-                                  </span>
-                                </Select.Option>
-                              ))
-                              : ""}
-                          </Select>
-                        </Col>
-                      </Row>
-
-                    </Col>
-                  </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={24} style={{
-                      marginBottom: "8px"
-                    }}>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col
+                      span={24}
+                      style={{
+                        marginBottom: "8px",
+                      }}
+                    >
                       Chi tiết địa chỉ:
                     </Col>
-                    <Col span={23} >
-                      <TextArea rows={4} />
+                    <Col span={23}>
+                      <TextArea
+                        disabled={!(selectDiaChi == -1)}
+                        rows={4}
+                        placeholder={"Chi tiết địa chỉ"}
+                      />
                     </Col>
                   </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={11} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Phương thức mua hàng:
-                        </Col>
-                        <Col span={23}>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={11}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={24}>Phương thức mua hàng:</Col>
+                        <Col span={24}>
                           <Input value={"Mua tại cửa hàng"} />
                         </Col>
                       </Row>
                     </Col>
-                    <Col span={11} offset={1} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Phương thức vận chuyển:
-                        </Col>
+                    <Col span={11} offset={1}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Phương thức vận chuyển:</Col>
                         <Col span={23}>
                           <Select
                             style={{
@@ -642,110 +700,135 @@ function BanTaiQuay() {
                           >
                             {sanPhamChiTiet
                               ? sanPhamChiTiet.map((option) => (
-                                <Select.Option key={option.id} value={option.id}>
-                                  {option.tenSanPham}
-                                  <Tag
-                                    color="success"
-                                    style={{
-                                      marginLeft: "4px",
-                                    }}
+                                  <Select.Option
+                                    key={option.id}
+                                    value={option.id}
                                   >
-                                    {option.mauSac.tenMau}
-                                  </Tag>
-                                  <Tag color="processing">
-                                    {option.kichThuoc.tenKichThuoc}
-                                  </Tag>
-                                  <span
-                                    style={{
-                                      fontWeight: "700",
-                                      marginLeft: "12px",
-                                    }}
-                                  >
-                                    Số lượng còn: {option.soLuongTon}
-                                  </span>
-                                </Select.Option>
-                              ))
+                                    {option.tenSanPham}
+                                    <Tag
+                                      color="success"
+                                      style={{
+                                        marginLeft: "4px",
+                                      }}
+                                    >
+                                      {option.mauSac.tenMau}
+                                    </Tag>
+                                    <Tag color="processing">
+                                      {option.kichThuoc.tenKichThuoc}
+                                    </Tag>
+                                    <span
+                                      style={{
+                                        fontWeight: "700",
+                                        marginLeft: "12px",
+                                      }}
+                                    >
+                                      Số lượng còn: {option.soLuongTon}
+                                    </span>
+                                  </Select.Option>
+                                ))
                               : ""}
                           </Select>
                         </Col>
                       </Row>
                     </Col>
                   </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={11} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23}>
-                          Voucher:
-                        </Col>
-                        <Col span={23}>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={11}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Voucher:</Col>
+                        <Col span={24}>
                           <Input value={"CMD"} />
                         </Col>
                       </Row>
                     </Col>
-                    <Col span={11} offset={1} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
+                    <Col span={11} offset={1}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Tổng tiền sản phẩm:</Col>
                         <Col span={23}>
-                          Tổng tiền sản phẩm:
-                        </Col>
-                        <Col span={23}>
-                          <Input addonAfter={<FcMoneyTransfer />} value={fixMoney(200000)} />
+                          <Input
+                            addonAfter={<FcMoneyTransfer />}
+                            value={fixMoney(
+                              gioHangHienTai
+                                ? gioHangHienTai.reduce((a, b) => {
+                                    return a + b.soLuong * b.donGia;
+                                  }, 0)
+                                : 0
+                            )}
+                          />
                         </Col>
                       </Row>
                     </Col>
                   </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={24} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={24}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={23}>Ghi chú:</Col>
                         <Col span={23}>
-                          Ghi chú:
-                        </Col>
-                        <Col span={23}>
-                          <TextArea rows={4} />
+                          <TextArea rows={4} placeholder="Ghi chú" />
                         </Col>
                       </Row>
                     </Col>
-
                   </Row>
-                  <Row style={{
-                    marginTop: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}>
-                    <Col span={24} >
-                      <Row style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}>
-                        <Col span={23} style={{
-                          display: 'flex',
-                          justifyContent: "flex-end"
-                        }}>
-                          <Button style={{
-                            width: "120px"
-                          }} type="primary" block>
+                  <Row
+                    style={{
+                      marginTop: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col span={24}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col
+                          span={23}
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <Button
+                            style={{
+                              width: "120px",
+                            }}
+                            type="primary"
+                            block
+                          >
                             Tạo hóa đơn
                           </Button>
                         </Col>
                       </Row>
                     </Col>
-
                   </Row>
                 </Col>
                 <Col span={12}>
@@ -772,29 +855,29 @@ function BanTaiQuay() {
                       >
                         {sanPhamChiTiet
                           ? sanPhamChiTiet.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenSanPham}
-                              <Tag
-                                color="success"
-                                style={{
-                                  marginLeft: "4px",
-                                }}
-                              >
-                                {option.mauSac.tenMau}
-                              </Tag>
-                              <Tag color="processing">
-                                {option.kichThuoc.tenKichThuoc}
-                              </Tag>
-                              <span
-                                style={{
-                                  fontWeight: "700",
-                                  marginLeft: "12px",
-                                }}
-                              >
-                                Số lượng còn: {option.soLuongTon}
-                              </span>
-                            </Select.Option>
-                          ))
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.tenSanPham}
+                                <Tag
+                                  color="success"
+                                  style={{
+                                    marginLeft: "4px",
+                                  }}
+                                >
+                                  {option.mauSac.tenMau}
+                                </Tag>
+                                <Tag color="processing">
+                                  {option.kichThuoc.tenKichThuoc}
+                                </Tag>
+                                <span
+                                  style={{
+                                    fontWeight: "700",
+                                    marginLeft: "12px",
+                                  }}
+                                >
+                                  Số lượng còn: {option.soLuongTon}
+                                </span>
+                              </Select.Option>
+                            ))
                           : ""}
                       </Select>
                     </Col>
@@ -802,7 +885,7 @@ function BanTaiQuay() {
                   <Row
                     style={{
                       marginTop: "12px",
-                      width: "100%"
+                      width: "100%",
                     }}
                   >
                     <Col

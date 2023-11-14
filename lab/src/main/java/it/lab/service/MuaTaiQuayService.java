@@ -1,17 +1,13 @@
 package it.lab.service;
 
-import it.lab.dto.HoaDonChiTietDTO;
-import it.lab.dto.SanPhamChiTietDTO;
+import it.lab.dto.*;
 import it.lab.entity.HoaDon;
 import it.lab.entity.HoaDonChiTiet;
 import it.lab.entity.SanPhamChiTiet;
 import it.lab.enums.TrangThaiHoaDon;
 import it.lab.iservice.IMuaTaiQuayService;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
-import it.lab.repository.HoaDonChiTietRepo;
-import it.lab.repository.HoaDonRepo;
-import it.lab.repository.NguoiDungRepo;
-import it.lab.repository.SanPhamChiTietRepo;
+import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +26,8 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     private SanPhamChiTietRepo _sanPhamChiTietRepo;
     @Autowired
     private HoaDonChiTietRepo _hoaDonChiTietRepo;
+    @Autowired
+    private DiaChiRepo _diaChiRepo;
 
     @Override
     public List<HoaDonChoTaiCuaHang> layDanhSachTaiCuaHang() {
@@ -76,5 +74,20 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         _hoaDonChiTietRepo.save(hoaDonNew);
         _hoaDonRepo.save(hoaDon);
         return gioHangCuaHoaDon(hoaDonId);
+    }
+
+    @Override
+    public HoaDonDTO layHoaDon(Long hoaDonId) {
+        return HoaDonDTO.fromEntity(_hoaDonRepo.findById(hoaDonId).get());
+    }
+
+    @Override
+    public List<NguoiDungDTO> layDanhSachKhachHang() {
+        return NguoiDungDTO.fromCollection(_nguoiDungRepo.findAll());
+    }
+
+    @Override
+    public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId) {
+        return DiaChiDTO.fromCollection(_diaChiRepo.findDiaChisByNguoiDung(_nguoiDungRepo.findById(nguoiDungId).get()));
     }
 }

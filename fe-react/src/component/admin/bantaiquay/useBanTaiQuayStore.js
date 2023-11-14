@@ -23,5 +23,11 @@ export const useBanTaiQuayStore = {
         async xoaHoaDonChiTiet(payload) {
             return axiosIns.get('/api/admin/xoaspchitiet?chiTietId=' + payload)
         },
+        async layDanhSachKhachHang() {
+            return axiosIns.get('/api/admin/laydanhsachkhachhangtaiquay')
+        },
+        async layDiaChiKhachHang(payload) {
+            return axiosIns.get('/api/admin/laydanhsachdiachinhanhang?nguoiDungId=' + payload)
+        },
     },
 }

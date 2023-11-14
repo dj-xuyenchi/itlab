@@ -39,4 +39,19 @@ public class BanTaiQuayController {
     public ResponseEntity<?> themSanPhamVaoHoaDonQuay(@RequestParam Long hoaDonId, @RequestParam Long sanPhamId) {
         return ResponseEntity.ok(_muaTaiQuay.themSanPhamVaoHoaDon(hoaDonId, sanPhamId));
     }
+
+    @RequestMapping(value = "/laythongtinhoadontaiquay", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonTaiQuay(@RequestParam Long hoaDonId) {
+        return ResponseEntity.ok(_muaTaiQuay.layHoaDon(hoaDonId));
+    }
+
+    @RequestMapping(value = "/laydanhsachkhachhangtaiquay", method = RequestMethod.GET)
+    public ResponseEntity<?> layDanhSachKhachHangTaiQuay() {
+        return ResponseEntity.ok(_muaTaiQuay.layDanhSachKhachHang());
+    }
+
+    @RequestMapping(value = "/laydanhsachdiachinhanhang", method = RequestMethod.GET)
+    public ResponseEntity<?> layDanhSachDiaChiNhanHang(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_muaTaiQuay.layDiaChiNguoiDung(nguoiDungId));
+    }
 }
