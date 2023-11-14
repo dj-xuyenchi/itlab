@@ -20,7 +20,7 @@ export const useBanTaiQuayStore = {
         async thayDoiSoLuong(payload) {
             return axiosIns.get('/api/admin/thaydoisoluongspchitiet?chiTietId=' + payload.chiTietId + '&soLuongMoi=' + payload.soLuongMoi)
         },
-         async xoaHoaDonChiTiet(payload) {
+        async xoaHoaDonChiTiet(payload) {
             return axiosIns.get('/api/admin/xoaspchitiet?chiTietId=' + payload)
         },
     },
