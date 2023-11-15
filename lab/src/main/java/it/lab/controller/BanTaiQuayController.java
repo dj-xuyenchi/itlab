@@ -2,12 +2,10 @@ package it.lab.controller;
 
 import it.lab.iservice.IHoaDonService;
 import it.lab.iservice.IMuaTaiQuayService;
+import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -53,5 +51,15 @@ public class BanTaiQuayController {
     @RequestMapping(value = "/laydanhsachdiachinhanhang", method = RequestMethod.GET)
     public ResponseEntity<?> layDanhSachDiaChiNhanHang(@RequestParam Long nguoiDungId) {
         return ResponseEntity.ok(_muaTaiQuay.layDiaChiNguoiDung(nguoiDungId));
+    }
+
+    @RequestMapping(value = "/taohoadontaiquayrequest", method = RequestMethod.GET)
+    public ResponseEntity<?> layDanhSachDiaChiNhanHang(@RequestBody MuaTaiQuayRequest muaTaiQuayRequest) {
+        return ResponseEntity.ok(_muaTaiQuay.taoHoaDonTaiQuay(muaTaiQuayRequest));
+    }
+
+    @RequestMapping(value = "/quetmasanpham", method = RequestMethod.GET)
+    public ResponseEntity<?> quetMaSanPham(@RequestParam String maSp, @RequestParam Long hoaDonId) {
+        return ResponseEntity.ok(_muaTaiQuay.quetMa(maSp, hoaDonId));
     }
 }

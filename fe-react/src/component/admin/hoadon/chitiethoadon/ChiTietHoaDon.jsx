@@ -51,7 +51,13 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState({});
+  function setModalSanPhamHienThi(id, value) {
+    setIsModalOpen2({
+      ...isModalOpen2,
+      [id]: value,
+    })
+  }
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -363,32 +369,32 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
       dataIndex: "id",
       key: "id",
       width: "10%",
-      render: (id) => (
+      render: (id, record) => (
         <>
           {type ? (
             <>
-              {" "}
-              <Tooltip title="Xóa" onClick={showModal}>
-                <Button
-                  danger
-                  shape="circle"
-                  icon={<AiOutlineDelete />}
-                  onClick={setIsModalOpen2}
-                />
-              </Tooltip>
+              <Button
+                danger
+                shape="circle"
+                icon={<AiOutlineDelete />}
+                onClick={() => {
+                  setModalSanPhamHienThi(id, true)
+                }}
+              ></Button>
               <Modal
+                key={id}
                 title="Xóa sản phẩm khỏi hóa đơn"
-                open={isModalOpen2}
+                open={isModalOpen2[id]}
                 onOk={() => {
                   handleXoaSpHoaDon(id);
-                  setIsModalOpen2(false);
+                  setModalSanPhamHienThi(id, false)
                 }}
                 onCancel={() => {
-                  setIsModalOpen2(false);
+                  setModalSanPhamHienThi(id, false)
                 }}
                 centered
               >
-                <p>Bạn có chắc muốn xóa sản phẩm này</p>
+                <p>Bạn có chắc muốn xóa sản phẩm này {id}</p>
               </Modal>
             </>
           ) : (
@@ -722,9 +728,9 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                 disabled
                 value={fixMoney(
                   hoaDonChiTiet.giaTriHd -
-                    (hoaDonChiTiet.phiVanChuyen
-                      ? hoaDonChiTiet.phiVanChuyen
-                      : 0)
+                  (hoaDonChiTiet.phiVanChuyen
+                    ? hoaDonChiTiet.phiVanChuyen
+                    : 0)
                 )}
               />
             </Col>
@@ -779,10 +785,10 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                       >
                         {data
                           ? data.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.tenSanPham}
-                              </Select.Option>
-                            ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenSanPham}
+                            </Select.Option>
+                          ))
                           : ""}
                       </Select>
                     </Col>

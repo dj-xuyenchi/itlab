@@ -23,6 +23,8 @@ public class SanPhamChiTiet {
     private Long id;
     @Column(name = "tensanpham")
     private String tenSanPham;
+    @Column(name = "masanpham")
+    private String maSanPham;
     @Column(name = "gianhap")
     private Double giaNhap;
     @Column(name = "giaban")

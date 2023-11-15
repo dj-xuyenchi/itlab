@@ -14,5 +14,7 @@ import java.util.Optional;
 public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Long> {
     public List<SanPhamChiTiet> findSanPhamChiTietsBySanPham(SanPham sanPham);
 
+    public Optional<SanPhamChiTiet> findSanPhamChiTietByMaSanPham(String maSanPham);
+
     public List<SanPhamChiTiet> findSanPhamChiTietsByMauSacAndKichThuocAndSanPham(MauSac mauSac, KichThuoc kichThuoc, SanPham sanPham);
 }

@@ -28,6 +28,10 @@ export const useBanTaiQuayStore = {
         },
         async layDiaChiKhachHang(payload) {
             return axiosIns.get('/api/admin/laydanhsachdiachinhanhang?nguoiDungId=' + payload)
+        }, 
+        async taoHoaDonTaiQuay(payload) {
+            return axiosIns.post('/api/admin/taohoadontaiquayrequest', payload
+            )
         },
     },
 }

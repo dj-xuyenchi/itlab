@@ -101,6 +101,16 @@ function BanTaiQuay() {
     }
     const data = await useGHN.actions.layXa(e.value);
     setDanhSachXa(data.data.data);
+    setDiaChiMoi({
+      ...diaChiMoi,
+      huyen: e,
+    });
+  }
+  async function handleChonDiaChiXa(e) {
+    setDiaChiMoi({
+      ...diaChiMoi,
+      xa: e,
+    });
   }
   const columns = [
     {
@@ -194,8 +204,8 @@ function BanTaiQuay() {
     setHoaDonHienTai(
       danhSachHoaDon
         ? danhSachHoaDon.find((item) => {
-            return item.key == e.key;
-          })
+          return item.key == e.key;
+        })
         : undefined
     );
   };
@@ -280,6 +290,14 @@ function BanTaiQuay() {
     });
     setGioHangHienTai(data.data);
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+  }
+  const [confirmDiaChiMoi, setConfirmDiaChiMoi] = useState(false);
+  async function handleTaoHoaDon() {
+
+    const data = await useBanTaiQuayStore.actions.taoHoaDonTaiQuay({
+
+    })
+    openNotification("success", "Hệ thống", "Tạo hóa đơn thành công", "bottomRight");
   }
   return (
     <>
@@ -401,8 +419,8 @@ function BanTaiQuay() {
                             value={
                               hoaDonHienTai
                                 ? hoaDonHienTai.nhanVien.ho +
-                                  " " +
-                                  hoaDonHienTai.nhanVien.ten
+                                " " +
+                                hoaDonHienTai.nhanVien.ten
                                 : ""
                             }
                           />
@@ -453,10 +471,10 @@ function BanTaiQuay() {
                       >
                         {danhSachKhachHang
                           ? danhSachKhachHang.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.ho + " " + option.ten}
-                              </Select.Option>
-                            ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.ho + " " + option.ten}
+                            </Select.Option>
+                          ))
                           : ""}
                       </Select>
                     </Col>
@@ -472,23 +490,28 @@ function BanTaiQuay() {
                     <Radio.Group
                       onChange={(e) => {
                         setSelectDiaChi(e.target.value);
-                        setDiaChiChon(
-                          danhSachDiaChi.find((item) => {
-                            return item.id == e.target.value;
-                          })
-                        );
+                        if (e.target.value == -1) {
+                          setDiaChiChon(undefined)
+                        }
+                        else {
+                          setDiaChiChon(
+                            danhSachDiaChi.find((item) => {
+                              return item.id == e.target.value;
+                            })
+                          );
+                        }
                       }}
                       value={selectDiaChi}
                     >
                       <Space direction="vertical">
                         {danhSachDiaChi
                           ? danhSachDiaChi.map((item) => {
-                              return (
-                                <Radio value={item.id}>
-                                  {item.xa + " " + item.huyen + " " + item.tinh}
-                                </Radio>
-                              );
-                            })
+                            return (
+                              <Radio value={item.id}>
+                                {item.xa + " " + item.huyen + " " + item.tinh}
+                              </Radio>
+                            );
+                          })
                           : ""}
                         <Radio value={-1}>Chọn mới</Radio>
                       </Space>{" "}
@@ -531,13 +554,13 @@ function BanTaiQuay() {
                           >
                             {danhSachTinh
                               ? danhSachTinh.map((option) => (
-                                  <Select.Option
-                                    key={option.ProvinceID}
-                                    value={option.ProvinceID}
-                                  >
-                                    {option.NameExtension[0]}
-                                  </Select.Option>
-                                ))
+                                <Select.Option
+                                  key={option.ProvinceID}
+                                  value={option.ProvinceID}
+                                >
+                                  {option.NameExtension[0]}
+                                </Select.Option>
+                              ))
                               : ""}
                           </Select>
                         </Col>
@@ -561,8 +584,8 @@ function BanTaiQuay() {
                             labelInValue
                             value={
                               selectDiaChi != -1
-                                ? diaChiChon.tinh
-                                : diaChiMoi.tinh
+                                ? diaChiChon.huyen
+                                : diaChiMoi.huyen
                             }
                             onChange={handleChonXa}
                             filterOption={(input, option) =>
@@ -573,13 +596,13 @@ function BanTaiQuay() {
                           >
                             {danhSachHuyen
                               ? danhSachHuyen.map((option) => (
-                                  <Select.Option
-                                    key={option.DistrictID}
-                                    value={option.DistrictID}
-                                  >
-                                    {option.DistrictName}
-                                  </Select.Option>
-                                ))
+                                <Select.Option
+                                  key={option.DistrictID}
+                                  value={option.DistrictID}
+                                >
+                                  {option.DistrictName}
+                                </Select.Option>
+                              ))
                               : ""}
                           </Select>
                         </Col>
@@ -600,8 +623,8 @@ function BanTaiQuay() {
                           alignItems: "center",
                         }}
                       >
-                        <Col span={23}>Xã:</Col>
-                        <Col span={23}>
+                        <Col span={24}>Xã:</Col>
+                        <Col span={24}>
                           <Select
                             disabled={!(selectDiaChi == -1)}
                             style={{
@@ -609,8 +632,12 @@ function BanTaiQuay() {
                             }}
                             showSearch
                             labelInValue
-                            defaultValue={"Chọn xã"}
-                            onChange={handleChonSanPham}
+                            value={
+                              selectDiaChi != -1
+                                ? diaChiChon.xa
+                                : diaChiMoi.xa
+                            }
+                            onChange={handleChonDiaChiXa}
                             filterOption={(input, option) =>
                               option.children
                                 .toLowerCase()
@@ -619,13 +646,13 @@ function BanTaiQuay() {
                           >
                             {danhSachXa
                               ? danhSachXa.map((option) => (
-                                  <Select.Option
-                                    key={option.WardCode}
-                                    value={option.WardCode}
-                                  >
-                                    {option.NameExtension[0]}
-                                  </Select.Option>
-                                ))
+                                <Select.Option
+                                  key={option.WardCode}
+                                  value={option.WardCode}
+                                >
+                                  {option.NameExtension[0]}
+                                </Select.Option>
+                              ))
                               : ""}
                           </Select>
                         </Col>
@@ -700,32 +727,32 @@ function BanTaiQuay() {
                           >
                             {sanPhamChiTiet
                               ? sanPhamChiTiet.map((option) => (
-                                  <Select.Option
-                                    key={option.id}
-                                    value={option.id}
+                                <Select.Option
+                                  key={option.id}
+                                  value={option.id}
+                                >
+                                  {option.tenSanPham}
+                                  <Tag
+                                    color="success"
+                                    style={{
+                                      marginLeft: "4px",
+                                    }}
                                   >
-                                    {option.tenSanPham}
-                                    <Tag
-                                      color="success"
-                                      style={{
-                                        marginLeft: "4px",
-                                      }}
-                                    >
-                                      {option.mauSac.tenMau}
-                                    </Tag>
-                                    <Tag color="processing">
-                                      {option.kichThuoc.tenKichThuoc}
-                                    </Tag>
-                                    <span
-                                      style={{
-                                        fontWeight: "700",
-                                        marginLeft: "12px",
-                                      }}
-                                    >
-                                      Số lượng còn: {option.soLuongTon}
-                                    </span>
-                                  </Select.Option>
-                                ))
+                                    {option.mauSac.tenMau}
+                                  </Tag>
+                                  <Tag color="processing">
+                                    {option.kichThuoc.tenKichThuoc}
+                                  </Tag>
+                                  <span
+                                    style={{
+                                      fontWeight: "700",
+                                      marginLeft: "12px",
+                                    }}
+                                  >
+                                    Số lượng còn: {option.soLuongTon}
+                                  </span>
+                                </Select.Option>
+                              ))
                               : ""}
                           </Select>
                         </Col>
@@ -766,8 +793,8 @@ function BanTaiQuay() {
                             value={fixMoney(
                               gioHangHienTai
                                 ? gioHangHienTai.reduce((a, b) => {
-                                    return a + b.soLuong * b.donGia;
-                                  }, 0)
+                                  return a + b.soLuong * b.donGia;
+                                }, 0)
                                 : 0
                             )}
                           />
@@ -823,9 +850,23 @@ function BanTaiQuay() {
                             }}
                             type="primary"
                             block
+                            onClick={() => {
+                              if (selectDiaChi == -1) {
+                                setConfirmDiaChiMoi(true)
+                              } else {
+                                handleTaoHoaDon()
+                              }
+                            }}
                           >
                             Tạo hóa đơn
                           </Button>
+                          <Modal centered title="Tạo mới địa chỉ" open={confirmDiaChiMoi} onOk={() => {
+                          }} onCancel={() => {
+                            setConfirmDiaChiMoi(false)
+                          }}>
+                            <p>Tạo mới địa chỉ này?</p>
+
+                          </Modal>
                         </Col>
                       </Row>
                     </Col>
@@ -855,29 +896,29 @@ function BanTaiQuay() {
                       >
                         {sanPhamChiTiet
                           ? sanPhamChiTiet.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.tenSanPham}
-                                <Tag
-                                  color="success"
-                                  style={{
-                                    marginLeft: "4px",
-                                  }}
-                                >
-                                  {option.mauSac.tenMau}
-                                </Tag>
-                                <Tag color="processing">
-                                  {option.kichThuoc.tenKichThuoc}
-                                </Tag>
-                                <span
-                                  style={{
-                                    fontWeight: "700",
-                                    marginLeft: "12px",
-                                  }}
-                                >
-                                  Số lượng còn: {option.soLuongTon}
-                                </span>
-                              </Select.Option>
-                            ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenSanPham}
+                              <Tag
+                                color="success"
+                                style={{
+                                  marginLeft: "4px",
+                                }}
+                              >
+                                {option.mauSac.tenMau}
+                              </Tag>
+                              <Tag color="processing">
+                                {option.kichThuoc.tenKichThuoc}
+                              </Tag>
+                              <span
+                                style={{
+                                  fontWeight: "700",
+                                  marginLeft: "12px",
+                                }}
+                              >
+                                Số lượng còn: {option.soLuongTon}
+                              </span>
+                            </Select.Option>
+                          ))
                           : ""}
                       </Select>
                     </Col>

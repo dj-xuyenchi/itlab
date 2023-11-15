@@ -1,11 +1,11 @@
 package it.lab.service;
 
 import it.lab.dto.*;
-import it.lab.entity.HoaDon;
-import it.lab.entity.HoaDonChiTiet;
-import it.lab.entity.SanPhamChiTiet;
+import it.lab.entity.*;
+import it.lab.enums.TrangThaiDiaChi;
 import it.lab.enums.TrangThaiHoaDon;
 import it.lab.iservice.IMuaTaiQuayService;
+import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
 import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +89,59 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     @Override
     public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId) {
         return DiaChiDTO.fromCollection(_diaChiRepo.findDiaChisByNguoiDung(_nguoiDungRepo.findById(nguoiDungId).get()));
+    }
+
+    @Override
+    public Boolean taoHoaDonTaiQuay(MuaTaiQuayRequest muaTaiQuayRequest) {
+        HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuayRequest.getHoaDonId()).get();
+        NguoiDung nguoiDung = _nguoiDungRepo.findById(muaTaiQuayRequest.getKhachHangId()).get();
+        if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
+            DiaChi diaChi = new DiaChi();
+            if (nguoiDung == null) {
+                nguoiDung = _nguoiDungRepo.findById(11l).get();
+                diaChi.setNguoiDung(nguoiDung);
+            }
+            diaChi.setChiTietDiaChi(muaTaiQuayRequest.getChiTietDiaChi());
+            diaChi.setNgayTao(LocalDate.now());
+            diaChi.setHuyenId(muaTaiQuayRequest.getHuyenId());
+            diaChi.setHuyen(muaTaiQuayRequest.getHuyen());
+            diaChi.setTinh(muaTaiQuayRequest.getTinhId());
+            diaChi.setTinh(muaTaiQuayRequest.getTinh());
+            diaChi.setXaId(muaTaiQuayRequest.getXaId());
+            diaChi.setXa(muaTaiQuayRequest.getXa());
+            diaChi.setNguoiDung(nguoiDung);
+            diaChi.setLaDiaChiChinh(false);
+            diaChi.setTrangThai(TrangThaiDiaChi.HOATDONG);
+            diaChi.setSoDienThoai(muaTaiQuayRequest.getSoDienThoai());
+            _diaChiRepo.save(diaChi);
+            hoaDon.setDiaChiGiao(diaChi);
+        } else {
+            DiaChi diaChi = _diaChiRepo.findById(muaTaiQuayRequest.getDiaChiId()).get();
+            hoaDon.setDiaChiGiao(diaChi);
+            hoaDon.setNguoiMua(diaChi.getNguoiDung());
+        }
+        hoaDon.setTrangThai(TrangThaiHoaDon.CHOXACNHAN);
+        _hoaDonRepo.save(hoaDon);
+        return true;
+    }
+
+    @Override
+    public List<HoaDonChiTietDTO> quetMa(String maSp, Long hoaDonId) {
+        HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
+        Optional<SanPhamChiTiet> sanPhamChiTiet = _sanPhamChiTietRepo.findSanPhamChiTietByMaSanPham(maSp);
+        if (sanPhamChiTiet.isEmpty()) {
+            return gioHangCuaHoaDon(hoaDonId);
+        }
+        HoaDonChiTiet hoaDonNew = new HoaDonChiTiet();
+        hoaDonNew.setHoaDon(hoaDon);
+        hoaDonNew.setSoLuong(1);
+        hoaDonNew.setSanPhamChiTiet(sanPhamChiTiet.get());
+        hoaDonNew.setNgayTao(LocalDate.now());
+        hoaDonNew.setDonGia(sanPhamChiTiet.get().getGiaBan());
+        Double giaTri = 1 * sanPhamChiTiet.get().getGiaBan();
+        hoaDon.setGiaTriHd(giaTri + hoaDon.getGiaTriHd());
+        _hoaDonChiTietRepo.save(hoaDonNew);
+        _hoaDonRepo.save(hoaDon);
+        return gioHangCuaHoaDon(hoaDonId);
     }
 }
