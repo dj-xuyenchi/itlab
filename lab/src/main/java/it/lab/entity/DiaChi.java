@@ -25,6 +25,10 @@ public class DiaChi {
     @ManyToOne
     @JsonIgnore
     private NguoiDung nguoiDung;
+    @Column(name = "nguoinhan")
+    private String nguoiNhan;
+    @Column(name = "honguoinhan")
+    private String hoNguoiNhan;
     @Column(name = "xaid")
     private String xaId;
     @Column(name = "huyenid")

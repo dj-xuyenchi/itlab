@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MuaTaiQuayRequest {
     private Boolean isCoDiaChiMoi;
+    private Boolean koDungDiaChi;
     private String tinhId;
     private String huyenId;
     private String xaId;
@@ -25,4 +26,7 @@ public class MuaTaiQuayRequest {
     private String ghiChu;
     private Long khachHangId;
     private String soDienThoai;
+    private String email;
+    private String nguoiNhan;
+    private String hoNguoiNhan;
 }

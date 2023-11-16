@@ -56,7 +56,7 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
     setIsModalOpen2({
       ...isModalOpen2,
       [id]: value,
-    })
+    });
   }
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const showModal = () => {
@@ -344,9 +344,7 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
       dataIndex: "sanPhamChiTiet",
       key: "sanPhamChiTiet",
       width: "10%",
-      render: (sanPhamChiTiet) => (
-        <span>{sanPhamChiTiet.soLuongTon}</span>
-      ),
+      render: (sanPhamChiTiet) => <span>{sanPhamChiTiet.soLuongTon}</span>,
     },
     {
       title: "Giá nhập",
@@ -378,7 +376,7 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                 shape="circle"
                 icon={<AiOutlineDelete />}
                 onClick={() => {
-                  setModalSanPhamHienThi(id, true)
+                  setModalSanPhamHienThi(id, true);
                 }}
               ></Button>
               <Modal
@@ -387,10 +385,10 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                 open={isModalOpen2[id]}
                 onOk={() => {
                   handleXoaSpHoaDon(id);
-                  setModalSanPhamHienThi(id, false)
+                  setModalSanPhamHienThi(id, false);
                 }}
                 onCancel={() => {
-                  setModalSanPhamHienThi(id, false)
+                  setModalSanPhamHienThi(id, false);
                 }}
                 centered
               >
@@ -610,7 +608,7 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
             </Col>
           </Row>
           <Row>
-            <h6>Thông tin nhận hàng</h6>
+            <h6>Thông tin giao hàng</h6>
           </Row>
           <Row
             style={{
@@ -624,19 +622,32 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
               Xã:
             </Col>
             <Col span={4}>
-              <Input disabled value={hoaDonChiTiet.diaChiGiao.xa} />
+              <Input
+                disabled
+                value={hoaDonChiTiet.diaChiGiao && hoaDonChiTiet.diaChiGiao.xa}
+              />
             </Col>
             <Col span={2} offset={1}>
               Huyện:
             </Col>
             <Col span={4}>
-              <Input disabled value={hoaDonChiTiet.diaChiGiao.huyen} />
+              <Input
+                disabled
+                value={
+                  hoaDonChiTiet.diaChiGiao && hoaDonChiTiet.diaChiGiao.huyen
+                }
+              />
             </Col>
             <Col span={2} offset={1}>
               Tỉnh:
             </Col>
             <Col span={4}>
-              <Input disabled value={hoaDonChiTiet.diaChiGiao.tinh} />
+              <Input
+                disabled
+                value={
+                  hoaDonChiTiet.diaChiGiao && hoaDonChiTiet.diaChiGiao.tinh
+                }
+              />
             </Col>
           </Row>
           <Row
@@ -663,13 +674,16 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
               <TextArea
                 rows={4}
                 disabled
-                value={hoaDonChiTiet.diaChiGiao.chiTietDiaChi}
+                value={
+                  hoaDonChiTiet.diaChiGiao &&
+                  hoaDonChiTiet.diaChiGiao.chiTietDiaChi
+                }
                 maxLength={6}
               />
             </Col>
           </Row>
           <Row>
-            <h6>Thông tin giao hàng</h6>
+            <h6>Phương thức giao hàng</h6>
           </Row>
           <Row
             style={{
@@ -701,7 +715,7 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
             </Col>
           </Row>
           <Row>
-            <h6>Thông tin thanh toán</h6>
+            <h6>Phương thức thanh toán</h6>
           </Row>
           <Row
             style={{
@@ -728,9 +742,9 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                 disabled
                 value={fixMoney(
                   hoaDonChiTiet.giaTriHd -
-                  (hoaDonChiTiet.phiVanChuyen
-                    ? hoaDonChiTiet.phiVanChuyen
-                    : 0)
+                    (hoaDonChiTiet.phiVanChuyen
+                      ? hoaDonChiTiet.phiVanChuyen
+                      : 0)
                 )}
               />
             </Col>
@@ -785,10 +799,10 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                       >
                         {data
                           ? data.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenSanPham}
-                            </Select.Option>
-                          ))
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.tenSanPham}
+                              </Select.Option>
+                            ))
                           : ""}
                       </Select>
                     </Col>
