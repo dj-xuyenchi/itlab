@@ -1,42 +1,61 @@
 package it.lab.controller;
 
-import it.lab.entity.HoaDon;
-import it.lab.entity.NguoiDung;
 import it.lab.iservice.IHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("/hoa-don")
+@RequestMapping("/api/admin")
 public class HoaDonController {
     @Autowired
-    private IHoaDonService hoaDonService;
+    private IHoaDonService _hoaDonService;
 
-    @GetMapping("/get-all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(hoaDonService.getAll());
+    @RequestMapping(value = "/layhoadoncho", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonCho() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonCho());
     }
 
-    @GetMapping("/get-page")
-    public ResponseEntity<?> getPage(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        return ResponseEntity.ok(hoaDonService.getPage(pageable));
+    @RequestMapping(value = "/xacnhanhoadon", method = RequestMethod.POST)
+    public ResponseEntity<?> xacNhanHoaDon(@RequestBody Long[] hoaDonId) {
+        return ResponseEntity.ok(_hoaDonService.xacNhanHoaDon(hoaDonId));
+    }
+    @RequestMapping(value = "/xacnhandanggiao", method = RequestMethod.POST)
+    public ResponseEntity<?> xacNhanDangGiao(@RequestBody Long[] hoaDonId) {
+        return ResponseEntity.ok(_hoaDonService.chuyenSangDangGiao(hoaDonId));
+    }
+    @RequestMapping(value = "/xacnhanhoanthanh", method = RequestMethod.POST)
+    public ResponseEntity<?> xacNhanHoanThanh(@RequestBody Long[] hoaDonId) {
+        return ResponseEntity.ok(_hoaDonService.chuyenSangHoanThanh(hoaDonId));
+    }
+    @RequestMapping(value = "/layhoadonchogiao", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonChoGiao() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonChoGiao());
     }
 
-
-    @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody HoaDon hoaDon) {
-        return ResponseEntity.ok(hoaDonService.save(hoaDon));
+    @RequestMapping(value = "/layhoadondanggiao", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonDangGiao() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonDangGiao());
     }
 
+    @RequestMapping(value = "/layhoadonhoanthanh", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonHoanThanh() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonHoanThanh());
+    }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody HoaDon hoaDon, @PathVariable(name = "id") Long id) {
-        hoaDonService.save(hoaDon);
-        return ResponseEntity.ok(hoaDon);
+    @RequestMapping(value = "/layhoadonhuy", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonHuy() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonHuy());
+    }
+
+    @RequestMapping(value = "/huyhoadon", method = RequestMethod.POST)
+    public ResponseEntity<?> huyHoaDon(@RequestBody Long[] hoaDonId) {
+        return ResponseEntity.ok(_hoaDonService.huyHoaDon(hoaDonId));
+    }
+
+    @RequestMapping(value = "/layhoadonbyid", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonById(@RequestParam Long hoaDonId) {
+        return ResponseEntity.ok(_hoaDonService.layHoaDonById(hoaDonId));
     }
 }
-//mang dấu yêu bấy lâu hóa thành niềm đau

@@ -26,9 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig  {
-    private static final String DEV_BE = "http://localhost:8088/";
-    private static final String DEV_FE = "http://localhost:3000/";
+public class SecurityConfig {
     @Autowired
     private UserService _userService;
 
@@ -50,28 +48,29 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(req -> req
+                .requestMatchers(
+                        "/api/employee/**",
+                        "api/giohang/**",
+                        "api/thanhtoan/**",
+                        "api/nguoidung/**"
+                        ).hasAnyRole(
+                        "ADMIN",
+                        "EMPLOYEE",
+                        "CUSTOMER")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/member/**", "/api/crm/**").hasRole("MEMBER")
-                .requestMatchers("/api/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .requestMatchers("/api/nhanvien/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .requestMatchers("/api/crm/**").hasRole("CRM")
                 .anyRequest().permitAll()
         )
-//                .formLogin((formLogin) ->
-//                        formLogin
-//                                .usernameParameter("userName")
-//                                .passwordParameter("password")
-//                                .loginPage(DEV_FE + "login")
-//                                .failureUrl("/authentication/login?failed")
-//                                .loginProcessingUrl(DEV_BE + "api/auth/dangnhap")
-//                                .successForwardUrl("/home")
-//                )
                 .csrf((csrf) -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenFilter(), UsernamePasswordAuthenticationFilter.class)
         ;
         return http.build();
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(){
+    public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(_userService);
         authProvider.setPasswordEncoder(passwordEncoder());

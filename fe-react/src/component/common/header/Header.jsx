@@ -10,15 +10,52 @@ import { LuShoppingCart } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import Search from "../search/Search";
 import YeuThich from "../../home/yeuthich/YeuThich";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, notification } from "antd";
+import { Link } from "react-router-dom";
+import { selectUser } from "../../login/selectUser";
 function Header() {
   const language = useSelector(selectLanguage);
+  const user = useSelector(selectUser)
   const [openGioHang, setOpenGioHang] = useState(false);
   const [openYeuThich, setOpenYeuThich] = useState(false);
   const [openMenuLeft, setOpenMenuLeft] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
+
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (type, title, des, placement) => {
+    if (type === "error") {
+      api.error({
+        message: title,
+        description: des,
+        placement,
+      });
+    } else {
+      api.success({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+  };
+  function handleRedirect() {
+    if (user.nguoiDung.id == -1) {
+      openNotification(
+        "error",
+        language.systemNotification.system,
+        "Bạn chưa đăng nhập",
+        "bottomRight"
+      );
+      setTimeout(() => {
+        window.location.href = process.env.REACT_APP_FRONTEND_URL + "login"
+      }, 1000)
+      return
+    }
+    window.location.href = process.env.REACT_APP_FRONTEND_URL + "profile/" + user.nguoiDung.id
+  }
   return (
     <>
+      {contextHolder}
       <GioHang open={openGioHang} setOpen={setOpenGioHang} />
       <YeuThich open={openYeuThich} setOpen={setOpenYeuThich} />
       <MenuLeft open={openMenuLeft} setOpen={setOpenMenuLeft} />
@@ -67,7 +104,7 @@ function Header() {
               <span>{language.header.search.inputHolder}</span>
             </div>
             <div className="icon-right">
-              <div>
+              <div onClick={handleRedirect}>
                 <FaRegUser />
               </div>
               <div

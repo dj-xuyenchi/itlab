@@ -6,10 +6,10 @@ import Product from "./product/Product";
 import userSlice from "../../login/userSlice";
 function Body() {
   const language = useSelector(selectLanguage);
-  const disPath = useDispatch()
-  const user = JSON.parse(localStorage.getItem('user'));
+  const disPath = useDispatch();
+  const user = JSON.parse(localStorage.getItem("user"));
   if (user) {
-    disPath(userSlice.actions.dangNhap(user.data))
+    disPath(userSlice.actions.dangNhap(user.data));
   }
   return (
     <>
@@ -22,7 +22,7 @@ function Body() {
       <div className="header-title">
         <h3>{language.header.title}</h3>
       </div>
-      <div className="body-container">
+      <div className="body-home-container">
         {/* <Fillter /> */}
         <Product />
       </div>

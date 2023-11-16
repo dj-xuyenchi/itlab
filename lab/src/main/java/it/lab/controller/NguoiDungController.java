@@ -1,51 +1,35 @@
 package it.lab.controller;
 
-import it.lab.entity.NguoiDung;
-import it.lab.repository.NguoiDungRepo;
-import it.lab.service.NguoiDungService;
+import it.lab.dto.NguoiDungDTO;
+import it.lab.iservice.INguoiDungService;
+import it.lab.modelcustom.request.DoiMatKhau;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/nguoi-dung")
+@RequestMapping("/api/nguoidung")
 public class NguoiDungController {
     @Autowired
-    NguoiDungService nguoiDungService;
-    @Autowired
-    NguoiDungRepo nguoiDungRepo;
+    private INguoiDungService _nguoiDungService;
 
-    @GetMapping("/get-all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(nguoiDungService.getAll());
-    }
-
-    @GetMapping("/get-page")
-    public ResponseEntity<?> getPage(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        return ResponseEntity.ok(nguoiDungService.getPage(pageable));
+    @RequestMapping(value = "/laythongtinnguoidung", method = RequestMethod.GET)
+    public ResponseEntity<?> layThongTinNguoiDung(
+            @RequestParam Long nguoiDungId
+    ) {
+        return ResponseEntity.ok(_nguoiDungService.layThongTinTaiKhoanById(nguoiDungId));
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody NguoiDung nguoiDung) {
-        return ResponseEntity.ok(nguoiDungService.save(nguoiDung));
+    @RequestMapping(value = "/capnhatnguoidung", method = RequestMethod.POST)
+    public ResponseEntity<?> capNhatNguoiDung(
+            @RequestBody NguoiDungDTO nguoiDungDTO
+    ) {
+        return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(nguoiDungDTO));
     }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody NguoiDung nguoiDung,@PathVariable(name = "id") Long id){
-        return ResponseEntity.ok( nguoiDungService.update(nguoiDung));
+    @RequestMapping(value = "/doimatkhau", method = RequestMethod.POST)
+    public ResponseEntity<?> doiMatKhau(
+            @RequestBody DoiMatKhau matKhau
+    ) {
+        return ResponseEntity.ok(_nguoiDungService.doiMatKhau(matKhau));
     }
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<?> update(@RequestBody NguoiDung updatedNguoiDung, @PathVariable(name = "id") Long id) {
-//        NguoiDung nguoiDung = nguoiDungService.findById(id);
-//        if (nguoiDung != null) {
-//           nguoiDung=updatedNguoiDung;
-//            nguoiDungService.update(nguoiDung);
-//            return ResponseEntity.ok(nguoiDung);
-//        } else {
-//            // Xử lý trường hợp người dùng không tồn tại
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 }

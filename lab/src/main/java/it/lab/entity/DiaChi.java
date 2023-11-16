@@ -31,7 +31,13 @@ public class DiaChi {
     private String huyenId;
     @Column(name = "tinhid")
     private String tinhId;
-    @Column(name = "chitietdiachi",columnDefinition = "nvarchar(max)")
+    @Column(name = "xa")
+    private String xa;
+    @Column(name = "huyen")
+    private String huyen;
+    @Column(name = "tinh")
+    private String tinh;
+    @Column(name = "chitietdiachi", columnDefinition = "nvarchar(max)")
     private String chiTietDiaChi;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;

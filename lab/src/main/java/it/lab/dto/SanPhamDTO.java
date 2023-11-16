@@ -33,12 +33,12 @@ public class SanPhamDTO {
     private Integer soLuongDaBan;
     private Integer soLuongTraHang;
     private Integer soLuongLoi;
-    private Brand brand;
     private ThietKe thietKe;
     private NhomSanPham nhomSanPham;
     private ChatLieu chatLieu;
     private List<SanPhamSuKien> sanPhamSuKienList;
     private List<HinhAnhSanPham> hinhAnhSanPhamList;
+    private List<SanPhamChiTiet> sanPhamChiTietList;
 
     public static SanPhamDTO fromEntity(SanPham entity) {
         return new SanPhamDTO(
@@ -57,9 +57,12 @@ public class SanPhamDTO {
                 entity.getSoLuongDaBan(),
                 entity.getSoLuongTraHang(),
                 entity.getSoLuongLoi(),
-                entity.getBrand(),
-                entity.getThietKe(), entity.getNhomSanPham(),
-                entity.getChatLieu(), null, entity.getHinhAnhSanPhamList()
+                entity.getThietKe(),
+                entity.getNhomSanPham(),
+                entity.getChatLieu(),
+                entity.getSanPhamSuKienList(),
+                entity.getHinhAnhSanPhamList(),
+                entity.getSanPhamChiTietList()
         );
     }
 

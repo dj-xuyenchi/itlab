@@ -13,6 +13,7 @@ import it.lab.repository.GioHangRepo;
 import it.lab.repository.NguoiDungRepo;
 import it.lab.repository.SanPhamChiTietRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

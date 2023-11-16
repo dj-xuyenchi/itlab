@@ -70,5 +70,14 @@ export const vi = {
     },
     wish: {
         title: "Yêu thích"
+    },
+    chiTietSanPham: {
+        chuaDangNhap: "Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!",
+        vuiLongChonMau: "Vui lòng chọn màu sản phẩm",
+        vuiLongChonKichThuoc: "Vui lòng chọn kích thước sản phẩm",
+        thanhCong: "Thêm sản phẩm vào giỏ hàng thành công!",
+        chonSanPham: "Vui lòng chọn sản phẩm",
+        khongDuSoLuong: "Số lượng sản phẩm còn lại không đủ",
+        chonSoLuong: "Vui lòng chọn số lượng thích hợp!"
     }
 }

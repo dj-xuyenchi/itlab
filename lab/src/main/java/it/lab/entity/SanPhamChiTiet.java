@@ -34,21 +34,21 @@ public class SanPhamChiTiet {
     @Column(name = "soluongtrahang")
     private Integer soLuongTraHang;
     @Column(name = "trangthai")
-    private TrangThaiSanPhamChiTiet trangThai; @Column(name = "ngaytao")
+    private TrangThaiSanPhamChiTiet trangThai;
+    @Column(name = "hinhanh")
+    private String hinhAnh;
+    @Column(name = "ngaytao")
     private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDate ngayCapNhat;
     @JoinColumn(name = "mausacid")
     @ManyToOne
-    @JsonIgnore
     private MauSac mauSac;
     @JoinColumn(name = "kichthuocid")
     @ManyToOne
-    @JsonIgnore
     private KichThuoc kichThuoc;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
-    @JsonIgnore
     private SanPham sanPham;
     @OneToMany(mappedBy = "sanPhamChiTiet")
     @JsonIgnore
