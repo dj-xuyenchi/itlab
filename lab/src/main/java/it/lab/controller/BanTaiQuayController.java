@@ -53,7 +53,7 @@ public class BanTaiQuayController {
         return ResponseEntity.ok(_muaTaiQuay.layDiaChiNguoiDung(nguoiDungId));
     }
 
-    @RequestMapping(value = "/taohoadontaiquayrequest", method = RequestMethod.GET)
+    @RequestMapping(value = "/taohoadontaiquayrequest", method = RequestMethod.POST)
     public ResponseEntity<?> layDanhSachDiaChiNhanHang(@RequestBody MuaTaiQuayRequest muaTaiQuayRequest) {
         return ResponseEntity.ok(_muaTaiQuay.taoHoaDonTaiQuay(muaTaiQuayRequest));
     }

@@ -28,6 +28,10 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     private HoaDonChiTietRepo _hoaDonChiTietRepo;
     @Autowired
     private DiaChiRepo _diaChiRepo;
+    @Autowired
+    private PhuongThucThanhToanRepo _phuongThucThanhToanRepo;
+    @Autowired
+    private PhuongThucVanChuyenRepo _phuongThucVanChuyenRepo;
 
     @Override
     public List<HoaDonChoTaiCuaHang> layDanhSachTaiCuaHang() {
@@ -95,6 +99,10 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     public Boolean taoHoaDonTaiQuay(MuaTaiQuayRequest muaTaiQuayRequest) {
         HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuayRequest.getHoaDonId()).get();
         NguoiDung nguoiDung = _nguoiDungRepo.findById(muaTaiQuayRequest.getKhachHangId()).get();
+        PhuongThucThanhToan phuongThucThanhToan = _phuongThucThanhToanRepo.findById(muaTaiQuayRequest.getPhuongThucThanhToan()).get();
+        hoaDon.setPhuongThucThanhToan(phuongThucThanhToan);
+        PhuongThucVanChuyen phuongThucVanChuyen = _phuongThucVanChuyenRepo.findById(muaTaiQuayRequest.getPhuongThucVanChuyen()).get();
+        hoaDon.setPhuongThucVanChuyen(phuongThucVanChuyen);
         if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
             DiaChi diaChi = new DiaChi();
             if (nguoiDung == null) {

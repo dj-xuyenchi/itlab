@@ -52,6 +52,7 @@ function BanTaiQuay() {
       });
     }
   };
+  const [hoaDonRequest, setHoaDonRequest] = useState(undefined)
   const [danhSachHoaDon, setDanhSachHoaDon] = useState(undefined);
   const [current, setCurrent] = useState(undefined);
   const [hoaDonHienTai, setHoaDonHienTai] = useState(undefined);
@@ -82,6 +83,10 @@ function BanTaiQuay() {
   async function layDiaChiNguoiDung(e) {
     const data = await useBanTaiQuayStore.actions.layDiaChiKhachHang(e.value);
     setDanhSachDiaChi(data.data);
+    setHoaDonRequest({
+      ...hoaDonRequest,
+      khachHangId: e.value
+    })
   }
   async function handleLayTinh() {
     const data = await useGHN.actions.layTinh();
@@ -94,6 +99,11 @@ function BanTaiQuay() {
       ...diaChiMoi,
       tinh: e,
     });
+    setHoaDonRequest({
+      ...hoaDonRequest,
+      tinhId: e.value,
+      tinh: e.label
+    })
   }
   async function handleChonXa(e) {
     if (!e) {
@@ -105,12 +115,22 @@ function BanTaiQuay() {
       ...diaChiMoi,
       huyen: e,
     });
+    setHoaDonRequest({
+      ...hoaDonRequest,
+      huyenId: e.value,
+      huyen: e.label
+    })
   }
   async function handleChonDiaChiXa(e) {
     setDiaChiMoi({
       ...diaChiMoi,
       xa: e,
     });
+    setHoaDonRequest({
+      ...hoaDonRequest,
+      xaId: e.value,
+      xa: e.label
+    })
   }
   const columns = [
     {
@@ -242,6 +262,11 @@ function BanTaiQuay() {
   }, []);
   useEffect(() => {
     handleLayHoaDon();
+    setHoaDonRequest({
+      ...hoaDonRequest,
+      isCoDiaChiMoi: true,
+      hoaDonId: hoaDonHienTai ? hoaDonHienTai.id : null
+    })
     if (current) {
       layDanhSachChiTiet();
     }
@@ -292,12 +317,22 @@ function BanTaiQuay() {
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
   }
   const [confirmDiaChiMoi, setConfirmDiaChiMoi] = useState(false);
+  const [taoHoaDon, setTaoHoaDon] = useState(false);
   async function handleTaoHoaDon() {
-
     const data = await useBanTaiQuayStore.actions.taoHoaDonTaiQuay({
-
     })
     openNotification("success", "Hệ thống", "Tạo hóa đơn thành công", "bottomRight");
+  }
+  async function taoHoaDonTaiQuayRequest() {
+    const data = await useBanTaiQuayStore.actions.taoHoaDonTaiQuay(hoaDonRequest);
+    if (data.data) {
+      openNotification("success", "Hệ thống", "Tạo hóa đơn thành công", "bottomRight");
+    }
+    handleLayHoaDon()
+    setConfirmDiaChiMoi(false)
+    setTaoHoaDon(false)
+    setCurrent(undefined)
+
   }
   return (
     <>
@@ -489,16 +524,26 @@ function BanTaiQuay() {
                     {" "}
                     <Radio.Group
                       onChange={(e) => {
+
                         setSelectDiaChi(e.target.value);
-                        if (e.target.value == -1) {
-                          setDiaChiChon(undefined)
-                        }
-                        else {
+                        if (e.target.value != -1) {
                           setDiaChiChon(
                             danhSachDiaChi.find((item) => {
                               return item.id == e.target.value;
                             })
                           );
+                          setHoaDonRequest({
+                            ...hoaDonRequest,
+                            diaChiId: e.target.value,
+                            isCoDiaChiMoi: false
+                          })
+                        }
+                        else {
+                          setHoaDonRequest({
+                            ...hoaDonRequest,
+                            diaChiId: e.target.value,
+                            isCoDiaChiMoi: true
+                          })
                         }
                       }}
                       value={selectDiaChi}
@@ -573,8 +618,8 @@ function BanTaiQuay() {
                           alignItems: "center",
                         }}
                       >
-                        <Col span={23}>Huyện:</Col>
-                        <Col span={23}>
+                        <Col span={24}>Huyện:</Col>
+                        <Col span={24}>
                           <Select
                             disabled={!(selectDiaChi == -1)}
                             style={{
@@ -658,6 +703,27 @@ function BanTaiQuay() {
                         </Col>
                       </Row>
                     </Col>
+                    <Col span={11} offset={1}>
+                      <Row
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Col span={24}>Số điện thoại:</Col>
+                        <Col span={24}>
+                          <Input
+                            onChange={(e) => {
+                              setHoaDonRequest({
+                                ...hoaDonRequest,
+                                soDienThoai: e.target.value
+                              })
+                            }}
+                            value={hoaDonHienTai ? hoaDonHienTai.soDienThoai : ""}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
                   </Row>
                   <Row
                     style={{
@@ -676,6 +742,12 @@ function BanTaiQuay() {
                     </Col>
                     <Col span={23}>
                       <TextArea
+                        onChange={(e) => {
+                          setHoaDonRequest({
+                            ...hoaDonRequest,
+                            chiTietDiaChi: e.target.value
+                          })
+                        }}
                         disabled={!(selectDiaChi == -1)}
                         rows={4}
                         placeholder={"Chi tiết địa chỉ"}
@@ -696,9 +768,40 @@ function BanTaiQuay() {
                           alignItems: "center",
                         }}
                       >
-                        <Col span={24}>Phương thức mua hàng:</Col>
+                        <Col span={24}>Phương thức thanh toán:</Col>
                         <Col span={24}>
-                          <Input value={"Mua tại cửa hàng"} />
+                          <Select
+                            style={{
+                              width: "100%",
+                            }}
+                            showSearch
+                            labelInValue
+                            defaultValue={"Phương thức thanh toán"}
+                            onChange={(e) => {
+                              setHoaDonRequest({
+                                ...hoaDonRequest,
+                                phuongThucThanhToan: e.key
+                              })
+                            }}
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                          >
+                            <Select.Option
+                              key={1}
+                              value={1}
+                            >
+                              VN Pay
+                            </Select.Option>
+                            <Select.Option
+                              key={3}
+                              value={3}
+                            >
+                              Mua tại quầy
+                            </Select.Option>
+                          </Select>
                         </Col>
                       </Row>
                     </Col>
@@ -709,51 +812,39 @@ function BanTaiQuay() {
                           alignItems: "center",
                         }}
                       >
-                        <Col span={23}>Phương thức vận chuyển:</Col>
-                        <Col span={23}>
+                        <Col span={24}>Phương thức vận chuyển:</Col>
+                        <Col span={24}>
                           <Select
                             style={{
                               width: "100%",
                             }}
                             showSearch
                             labelInValue
-                            defaultValue={"Chọn khách hàng"}
-                            onChange={handleChonSanPham}
+                            defaultValue={"Vận chuyển"}
+                            onChange={(e) => {
+                              setHoaDonRequest({
+                                ...hoaDonRequest,
+                                phuongThucVanChuyen: e.key
+                              })
+                            }}
                             filterOption={(input, option) =>
                               option.children
                                 .toLowerCase()
                                 .indexOf(input.toLowerCase()) >= 0
                             }
                           >
-                            {sanPhamChiTiet
-                              ? sanPhamChiTiet.map((option) => (
-                                <Select.Option
-                                  key={option.id}
-                                  value={option.id}
-                                >
-                                  {option.tenSanPham}
-                                  <Tag
-                                    color="success"
-                                    style={{
-                                      marginLeft: "4px",
-                                    }}
-                                  >
-                                    {option.mauSac.tenMau}
-                                  </Tag>
-                                  <Tag color="processing">
-                                    {option.kichThuoc.tenKichThuoc}
-                                  </Tag>
-                                  <span
-                                    style={{
-                                      fontWeight: "700",
-                                      marginLeft: "12px",
-                                    }}
-                                  >
-                                    Số lượng còn: {option.soLuongTon}
-                                  </span>
-                                </Select.Option>
-                              ))
-                              : ""}
+                            <Select.Option
+                              key={1}
+                              value={1}
+                            >
+                              Giao hàng nhanh
+                            </Select.Option>
+                            <Select.Option
+                              key={3}
+                              value={3}
+                            >
+                              Lấy tại cửa hàng
+                            </Select.Option>
                           </Select>
                         </Col>
                       </Row>
@@ -786,8 +877,8 @@ function BanTaiQuay() {
                           alignItems: "center",
                         }}
                       >
-                        <Col span={23}>Tổng tiền sản phẩm:</Col>
-                        <Col span={23}>
+                        <Col span={24}>Tổng tiền sản phẩm:</Col>
+                        <Col span={24}>
                           <Input
                             addonAfter={<FcMoneyTransfer />}
                             value={fixMoney(
@@ -818,7 +909,12 @@ function BanTaiQuay() {
                       >
                         <Col span={23}>Ghi chú:</Col>
                         <Col span={23}>
-                          <TextArea rows={4} placeholder="Ghi chú" />
+                          <TextArea onChange={(e) => {
+                            setHoaDonRequest({
+                              ...hoaDonRequest,
+                              ghiChu: e.target.value
+                            })
+                          }} rows={4} placeholder="Ghi chú" />
                         </Col>
                       </Row>
                     </Col>
@@ -851,20 +947,87 @@ function BanTaiQuay() {
                             type="primary"
                             block
                             onClick={() => {
+                              if (hoaDonRequest) {
+                                if (!hoaDonRequest.khachHangId) {
+                                  openNotification(
+                                    "error",
+                                    "Hệ thống",
+                                    "Chưa chọn khách hàng",
+                                    "bottomRight"
+                                  );
+                                  return
+                                }
+                                if (!hoaDonRequest.phuongThucThanhToan) {
+                                  openNotification(
+                                    "error",
+                                    "Hệ thống",
+                                    "Vui lòng chọn phương thức thanh toán",
+                                    "bottomRight"
+                                  );
+                                  return
+                                }
+                                if (!hoaDonRequest.phuongThucVanChuyen) {
+                                  openNotification(
+                                    "error",
+                                    "Hệ thống",
+                                    "Vui lòng chọn phương thức vận chuyển",
+                                    "bottomRight"
+                                  );
+                                  return
+                                }
+                              }
                               if (selectDiaChi == -1) {
+                                if (!hoaDonRequest.tinhId) {
+                                  openNotification(
+                                    "error",
+                                    "Hệ thống",
+                                    "Vui lòng chọn tỉnh",
+                                    "bottomRight"
+                                  );
+                                  return
+                                }
+                                if (!hoaDonRequest.huyenId) {
+                                  openNotification(
+                                    "error",
+                                    "Hệ thống",
+                                    "Vui lòng chọn huyện",
+                                    "bottomRight"
+                                  );
+                                  return
+                                }
+                                if (!hoaDonRequest.xaId) {
+                                  openNotification(
+                                    "error",
+                                    "Hệ thống",
+                                    "Vui lòng chọn xã",
+                                    "bottomRight"
+                                  );
+                                  return
+                                }
                                 setConfirmDiaChiMoi(true)
                               } else {
-                                handleTaoHoaDon()
+                                setTaoHoaDon(true)
                               }
                             }}
                           >
                             Tạo hóa đơn
                           </Button>
                           <Modal centered title="Tạo mới địa chỉ" open={confirmDiaChiMoi} onOk={() => {
-                          }} onCancel={() => {
-                            setConfirmDiaChiMoi(false)
-                          }}>
-                            <p>Tạo mới địa chỉ này?</p>
+                            taoHoaDonTaiQuayRequest()
+                          }}
+                            onCancel={() => {
+                              setConfirmDiaChiMoi(false)
+                            }}>
+                            <p>Địa chỉ này chưa tồn tại cần tạo mới?</p>
+
+                          </Modal>
+                          <Modal centered title="Xác nhận tạo hóa đơn" open={taoHoaDon} onOk={() => {
+                            taoHoaDonTaiQuayRequest()
+                          }}
+                            onCancel={() => {
+                              setTaoHoaDon(false)
+                            }}>
+                            <p>Tạo hóa đơn</p>
 
                           </Modal>
                         </Col>
