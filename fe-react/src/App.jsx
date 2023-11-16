@@ -23,6 +23,7 @@ import MauSac from "./component/admin/product/mausac/MauSac";
 import KichThuoc from "./component/admin/product/kichthuoc/KichThuoc";
 import SanPhamChiTiet from "./component/admin/product/sanphamchitiet/SanPhamChiTiet";
 import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
+import { QRCode } from "antd";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -51,6 +52,7 @@ function App() {
   return (
     <>
       <Routes>
+
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />

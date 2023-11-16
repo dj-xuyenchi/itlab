@@ -26,6 +26,7 @@ import { useBanTaiQuayStore } from "./useBanTaiQuayStore";
 import { fixMoney } from "../../../extensions/fixMoney";
 import TextArea from "antd/es/input/TextArea";
 import { useGHN } from "../../../plugins/ghnapi";
+import QRCode from "./QRCode";
 
 function BanTaiQuay() {
   const [api, contextHolder] = notification.useNotification();
@@ -288,6 +289,7 @@ function BanTaiQuay() {
     handleLayHoaDon();
   }
   const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined);
+  const [isOpen, setIsOpen] = useState(false)
   async function handleChonSanPham(e) {
     const sanPhamChon = sanPhamChiTiet.find((item) => {
       return item.id == e.key;
@@ -1038,9 +1040,14 @@ function BanTaiQuay() {
                 <Col span={12}>
                   <Row>
                     <Col span={4}>
-                      <Button icon={<GrScan />} onClick={handleTaoMoiHoaDon}>
+                      <Button icon={<GrScan />} onClick={() => {
+                        setIsOpen(true)
+                      }}>
                         Quét mã
                       </Button>
+                      {
+                        isOpen && <QRCode setOpen={setIsOpen} />
+                      }
                     </Col>
                     <Col span={19} offset={1}>
                       <Select
