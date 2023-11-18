@@ -115,10 +115,6 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         if (!muaTaiQuayRequest.getKoDungDiaChi()) {
             if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
                 DiaChi diaChi = new DiaChi();
-                if (nguoiDung == null) {
-                    nguoiDung = _nguoiDungRepo.findById(11l).get();
-                    diaChi.setNguoiDung(nguoiDung);
-                }
                 diaChi.setChiTietDiaChi(muaTaiQuayRequest.getChiTietDiaChi());
                 diaChi.setNgayTao(LocalDate.now());
                 diaChi.setHuyenId(muaTaiQuayRequest.getHuyenId());

@@ -21,7 +21,7 @@ public class SuKienGiamGia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "tensukien")
+    @Column(name = "tensukien",columnDefinition = "nvarchar(max)")
     private String tenSuKien;
     @Column(name = "ngaybatdau")
     private LocalDate ngayBatDau;

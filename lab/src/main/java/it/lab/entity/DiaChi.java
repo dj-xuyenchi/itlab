@@ -25,9 +25,9 @@ public class DiaChi {
     @ManyToOne
     @JsonIgnore
     private NguoiDung nguoiDung;
-    @Column(name = "nguoinhan")
+    @Column(name = "nguoinhan",columnDefinition = "nvarchar(max)")
     private String nguoiNhan;
-    @Column(name = "honguoinhan")
+    @Column(name = "honguoinhan",columnDefinition = "nvarchar(max)")
     private String hoNguoiNhan;
     @Column(name = "xaid")
     private String xaId;
@@ -35,11 +35,11 @@ public class DiaChi {
     private String huyenId;
     @Column(name = "tinhid")
     private String tinhId;
-    @Column(name = "xa")
+    @Column(name = "xa",columnDefinition = "nvarchar(max)")
     private String xa;
-    @Column(name = "huyen")
+    @Column(name = "huyen",columnDefinition = "nvarchar(max)")
     private String huyen;
-    @Column(name = "tinh")
+    @Column(name = "tinh",columnDefinition = "nvarchar(max)")
     private String tinh;
     @Column(name = "chitietdiachi", columnDefinition = "nvarchar(max)")
     private String chiTietDiaChi;

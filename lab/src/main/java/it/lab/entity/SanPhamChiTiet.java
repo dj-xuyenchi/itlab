@@ -21,7 +21,7 @@ public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "tensanpham")
+    @Column(name = "tensanpham",columnDefinition = "nvarchar(max)")
     private String tenSanPham;
     @Column(name = "masanpham")
     private String maSanPham;
