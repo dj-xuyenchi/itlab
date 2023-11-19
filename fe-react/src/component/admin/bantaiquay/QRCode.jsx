@@ -1,60 +1,108 @@
-
 // import MyComponent from './Example/MyComponent';
-import { useEffect, useState } from 'react';
-import { Quagga } from 'quagga';
-function QRCode({ }) {
-    const [barcodeData, setBarcodeData] = useState(null);
+import { Modal, notification } from "antd";
+import { useEffect, useState } from "react";
+import QrScanner from "react-qr-scanner";
+import { useBanTaiQuayStore } from "./useBanTaiQuayStore";
+function QRCode({ setOpen, open, hoaDonId, setData }) {
+  const [api, contextHolder] = notification.useNotification();
+  const [i, setI] = useState(false);
+  const handleScan = (data) => {
+    if (i) {
+      return;
+    }
+    if (data) {
+      quetMa(data.text);
+      setI(true);
+    }
+  };
 
-    useEffect(() => {
-            Quagga.init(
-                {
-                    inputStream: {
-                        name: 'Live',
-                        type: 'LiveStream',
-                        target: document.querySelector('#barcode-scanner'),
-                        constraints: {
-                            width: 640,
-                            height: 480,
-                            facingMode: 'environment',
-                        },
-                    },
-                    decoder: {
-                        readers: ['ean_reader', 'upc_reader', 'code_128_reader'],
-                    },
-                },
-                function (err) {
-                    if (err) {
-                        console.error('Error initializing Quagga:', err);
-                        return;
-                    }
-                    Quagga.start();
-                }
-            );
+  const handleError = (err) => {
+    console.error(err);
+  };
+  async function quetMa(result) {
+    const data = await useBanTaiQuayStore.actions.quetMa({
+      maSp: result,
+      hoaDonId: hoaDonId,
+    });
+    if (data.data === "HETHANG") {
+      openNotification(
+        "warning",
+        "Hệ thống",
+        "Sản phẩm đã hết hàng",
+        "bottomRight"
+      );
+    }
+    if (data.data === "THANHCONG") {
+      openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+      setData();
+    }
+    if (data.data === "DACO") {
+      openNotification(
+        "warning",
+        "Hệ thống",
+        "Đã có sản phẩm trong giỏ",
+        "bottomRight"
+      );
+    }
+    if (data.data === "KHONGTONTAI") {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Mã QR không hợp lệ",
+        "bottomRight"
+      );
+    }
+    setTimeout(() => {
+      setOpen(false);
+    }, 1500);
+  }
 
-            Quagga.onDetected((data) => {
-                setBarcodeData(data.codeResult.code);
-            });
-
-        return () => {
-            Quagga.stop();
-        };
-    }, []);
-
-    return (
-
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', zIndex: 10 }}>
-            <div id="barcode-scanner"></div>
-            <p>Barcode data: {barcodeData}</p>
-            <style>
-                {`
-          #barcode-scanner video {
-            width: 100%;
-            max-width: 640px;
-          }
-        `}
-            </style>
-        </div>
-    );
+  const openNotification = (type, title, des, placement) => {
+    if (type === "error") {
+      api.error({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+    if (type === "warning") {
+      api.warning({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+    if (type === "success") {
+      api.success({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+  };
+  return (
+    <>
+      {contextHolder}
+      <Modal
+        cancelButtonProps={{ style: { display: "none" } }}
+        title="Quét mã QR"
+        open={open}
+        onOk={() => {
+          setOpen(false);
+        }}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        width={640}
+      >
+        <QrScanner
+          onScan={handleScan}
+          onError={handleError}
+          style={{ width: "100%" }}
+        />
+      </Modal>
+    </>
+  );
 }
 
 export default QRCode;

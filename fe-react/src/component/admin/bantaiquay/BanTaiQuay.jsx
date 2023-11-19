@@ -82,28 +82,21 @@ function BanTaiQuay() {
   const [danhSachTinh, setDanhSachTinh] = useState(undefined);
   const [danhSachHuyen, setDanhSachHuyen] = useState(undefined);
   const [danhSachXa, setDanhSachXa] = useState(undefined);
-  const [yeuCauDiaChiChi, setYeuCauDiaChi] = useState(false)
+  const [yeuCauDiaChiChi, setYeuCauDiaChi] = useState(false);
   async function layDiaChiNguoiDung(e) {
-    if (e.value !== -1) {
-      setYeuCauDiaChi(false);
-      setSelectDiaChi(-1)
-    }
-    else {
-      setYeuCauDiaChi(true)
-    }
-    if (e.value === -1 || e.value === 11) {
-      setDanhSachDiaChi(undefined);
-      setSelectDiaChi(-1);
-      setSuDungDiaChi(true);
-      return;
-    }
-
-    const data = await useBanTaiQuayStore.actions.layDiaChiKhachHang(e.value);
-    setDanhSachDiaChi(data.data);
     setHoaDonRequest({
       ...hoaDonRequest,
       khachHangId: e.value,
     });
+
+    if (e.value === 11) {
+      setDanhSachDiaChi(undefined);
+      return;
+    }
+    setSelectDiaChi(-1);
+    setSuDungDiaChi(true);
+    const data = await useBanTaiQuayStore.actions.layDiaChiKhachHang(e.value);
+    setDanhSachDiaChi(data.data);
   }
   async function handleLayTinh() {
     const data = await useGHN.actions.layTinh();
@@ -145,7 +138,7 @@ function BanTaiQuay() {
     });
     setHoaDonRequest({
       ...hoaDonRequest,
-      xaId: e.value,
+      xaId: e.key,
       xa: e.label,
     });
   }
@@ -241,8 +234,8 @@ function BanTaiQuay() {
     setHoaDonHienTai(
       danhSachHoaDon
         ? danhSachHoaDon.find((item) => {
-          return item.key == e.key;
-        })
+            return item.key == e.key;
+          })
         : undefined
     );
   };
@@ -263,6 +256,7 @@ function BanTaiQuay() {
     );
     setGioHangHienTai(data.data);
   }
+
   async function layDuLieuSanPham() {
     const data = await useBanTaiQuayStore.actions.fetSanPhamChiTiet();
     setSanPhamChiTiet(data.data);
@@ -277,6 +271,7 @@ function BanTaiQuay() {
     handleLayTinh();
     layDanhSachKhachHang();
   }, []);
+
   useEffect(() => {
     handleLayHoaDon();
     setHoaDonRequest({
@@ -284,11 +279,13 @@ function BanTaiQuay() {
       isCoDiaChiMoi: true,
       hoaDonId: hoaDonHienTai ? hoaDonHienTai.id : null,
       koDungDiaChi: true,
+      phuongThucVanChuyen: 3,
     });
     if (current) {
       layDanhSachChiTiet();
     }
   }, [current]);
+
   async function handleTaoMoiHoaDon() {
     if (danhSachHoaDon.length > 9) {
       openNotification(
@@ -333,6 +330,7 @@ function BanTaiQuay() {
       sanPhamId: e.key,
     });
     setGioHangHienTai(data.data);
+    handleTinhGiaVanChuyen();
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
   }
   const [confirmDiaChiMoi, setConfirmDiaChiMoi] = useState(false);
@@ -347,6 +345,12 @@ function BanTaiQuay() {
     );
   }
   async function taoHoaDonTaiQuayRequest() {
+    if (hoaDonRequest.phuongThucThanhToan == 1) {
+      const data = await useBanTaiQuayStore.actions.thanhToanTaiQuayVNPay(
+        hoaDonRequest
+      );
+      window.location = data.data;
+    }
     const data = await useBanTaiQuayStore.actions.taoHoaDonTaiQuay(
       hoaDonRequest
     );
@@ -364,6 +368,21 @@ function BanTaiQuay() {
     setCurrent(undefined);
   }
   const [isSuDungDiaChi, setSuDungDiaChi] = useState(false);
+  const [phiVanChuyen, setPhiVanChuyen] = useState(0);
+  async function handleTinhGiaVanChuyen() {
+      const data = await useGHN.actions.layGia({
+        denHuyen: hoaDonRequest.huyenId,
+        denXa: hoaDonRequest.xaId,
+        gia: gioHangHienTai.reduce((pre, cur) => {
+          return pre + cur.soLuong * cur.donGia;
+        }, 0),
+      });
+      setPhiVanChuyen(data.data.data.total);
+      setHoaDonRequest({
+        ...hoaDonRequest,
+        phiVanChuyen: data.data.data.total,
+      });
+  }
   return (
     <>
       {contextHolder}
@@ -488,8 +507,8 @@ function BanTaiQuay() {
                             value={
                               hoaDonHienTai
                                 ? hoaDonHienTai.nhanVien.ho +
-                                " " +
-                                hoaDonHienTai.nhanVien.ten
+                                  " " +
+                                  hoaDonHienTai.nhanVien.ten
                                 : ""
                             }
                           />
@@ -523,10 +542,17 @@ function BanTaiQuay() {
                       alignItems: "center",
                     }}
                   >
-                    <Col span={23}><span style={{
-                      color: "red",
-                      marginRight: "4px"
-                    }}>*</span>Khách hàng:</Col>
+                    <Col span={23}>
+                      <span
+                        style={{
+                          color: "red",
+                          marginRight: "4px",
+                        }}
+                      >
+                        *
+                      </span>
+                      Khách hàng:
+                    </Col>
                     <Col span={23}>
                       <Select
                         style={{
@@ -544,14 +570,11 @@ function BanTaiQuay() {
                       >
                         {danhSachKhachHang
                           ? danhSachKhachHang.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.ho + " " + option.ten}
-                            </Select.Option>
-                          ))
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.ho + " " + option.ten}
+                              </Select.Option>
+                            ))
                           : ""}
-                        <Select.Option key={-1} value={-1}>
-                          Tạo mới khách hàng
-                        </Select.Option>
                       </Select>
                     </Col>
                   </Row>
@@ -562,7 +585,14 @@ function BanTaiQuay() {
                       alignItems: "center",
                     }}
                   >
-                    <Col span={23}>Thông tin địa chỉ:</Col>
+                    <Col
+                      style={{
+                        marginBottom: "4px",
+                      }}
+                      span={23}
+                    >
+                      Thông tin vận chuyển:
+                    </Col>
                     <Radio.Group
                       onChange={(e) => {
                         setSelectDiaChi(e.target.value);
@@ -570,6 +600,8 @@ function BanTaiQuay() {
                           setHoaDonRequest({
                             ...hoaDonRequest,
                             koDungDiaChi: true,
+                            phuongThucVanChuyen: 3,
+                            phiVanChuyen: 0,
                           });
                           setSuDungDiaChi(false);
                           return;
@@ -577,15 +609,15 @@ function BanTaiQuay() {
                           setHoaDonRequest({
                             ...hoaDonRequest,
                             koDungDiaChi: false,
+                            phuongThucVanChuyen: 1,
                           });
                           setSuDungDiaChi(true);
                         }
                         if (e.target.value != -1) {
-                          setDiaChiChon(
-                            danhSachDiaChi.find((item) => {
-                              return item.id == e.target.value;
-                            })
-                          );
+                          const diaChi = danhSachDiaChi.find((item) => {
+                            return item.id == e.target.value;
+                          });
+                          setDiaChiChon(diaChi);
                           setHoaDonRequest({
                             ...hoaDonRequest,
                             diaChiId: e.target.value,
@@ -604,17 +636,17 @@ function BanTaiQuay() {
                       <Space direction="vertical">
                         {danhSachDiaChi
                           ? danhSachDiaChi.map((item) => {
-                            return (
-                              <Radio value={item.id}>
-                                {item.xa + " " + item.huyen + " " + item.tinh}
-                              </Radio>
-                            );
-                          })
+                              return (
+                                <Radio value={item.id}>
+                                  {item.xa + " " + item.huyen + " " + item.tinh}
+                                </Radio>
+                              );
+                            })
                           : ""}
                         <Radio value={-1}>Tạo mới</Radio>
-                        {
-                          !yeuCauDiaChiChi && <Radio value={-2}>Không dùng</Radio>
-                        }
+                        {!yeuCauDiaChiChi && (
+                          <Radio value={-2}>Không dùng</Radio>
+                        )}
                       </Space>{" "}
                     </Radio.Group>
                   </Row>
@@ -641,10 +673,17 @@ function BanTaiQuay() {
                                   alignItems: "center",
                                 }}
                               >
-                                <Col span={24}><span style={{
-                                  color: "red",
-                                  marginRight: "4px"
-                                }}>*</span>Họ:</Col>
+                                <Col span={24}>
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      marginRight: "4px",
+                                    }}
+                                  >
+                                    *
+                                  </span>
+                                  Họ:
+                                </Col>
                                 <Col span={24}>
                                   <Input
                                     disabled={!(selectDiaChi == -1)}
@@ -671,10 +710,17 @@ function BanTaiQuay() {
                                   alignItems: "center",
                                 }}
                               >
-                                <Col span={24}><span style={{
-                                  color: "red",
-                                  marginRight: "4px"
-                                }}>*</span>Tên:</Col>
+                                <Col span={24}>
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      marginRight: "4px",
+                                    }}
+                                  >
+                                    *
+                                  </span>
+                                  Tên:
+                                </Col>
                                 <Col span={24}>
                                   <Input
                                     placeholder="Tên"
@@ -711,13 +757,19 @@ function BanTaiQuay() {
                               alignItems: "center",
                             }}
                           >
-                            <Col span={24}><span style={{
-                              color: "red",
-                              marginRight: "4px"
-                            }}>*</span>Tỉnh/TP:</Col>
+                            <Col span={24}>
+                              <span
+                                style={{
+                                  color: "red",
+                                  marginRight: "4px",
+                                }}
+                              >
+                                *
+                              </span>
+                              Tỉnh/TP:
+                            </Col>
                             <Col span={24}>
                               <Select
-
                                 disabled={!(selectDiaChi == -1)}
                                 style={{
                                   width: "100%",
@@ -738,13 +790,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachTinh
                                   ? danhSachTinh.map((option) => (
-                                    <Select.Option
-                                      key={option.ProvinceID}
-                                      value={option.ProvinceID}
-                                    >
-                                      {option.NameExtension[0]}
-                                    </Select.Option>
-                                  ))
+                                      <Select.Option
+                                        key={option.ProvinceID}
+                                        value={option.ProvinceID}
+                                      >
+                                        {option.NameExtension[0]}
+                                      </Select.Option>
+                                    ))
                                   : ""}
                               </Select>
                             </Col>
@@ -757,10 +809,17 @@ function BanTaiQuay() {
                               alignItems: "center",
                             }}
                           >
-                            <Col span={24}><span style={{
-                              color: "red",
-                              marginRight: "4px"
-                            }}>*</span>Huyện:</Col>
+                            <Col span={24}>
+                              <span
+                                style={{
+                                  color: "red",
+                                  marginRight: "4px",
+                                }}
+                              >
+                                *
+                              </span>
+                              Huyện:
+                            </Col>
                             <Col span={24}>
                               <Select
                                 disabled={!(selectDiaChi == -1)}
@@ -783,13 +842,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachHuyen
                                   ? danhSachHuyen.map((option) => (
-                                    <Select.Option
-                                      key={option.DistrictID}
-                                      value={option.DistrictID}
-                                    >
-                                      {option.DistrictName}
-                                    </Select.Option>
-                                  ))
+                                      <Select.Option
+                                        key={option.DistrictID}
+                                        value={option.DistrictID}
+                                      >
+                                        {option.DistrictName}
+                                      </Select.Option>
+                                    ))
                                   : ""}
                               </Select>
                             </Col>
@@ -810,10 +869,17 @@ function BanTaiQuay() {
                               alignItems: "center",
                             }}
                           >
-                            <Col span={24}><span style={{
-                              color: "red",
-                              marginRight: "4px"
-                            }}>*</span>Xã:</Col>
+                            <Col span={24}>
+                              <span
+                                style={{
+                                  color: "red",
+                                  marginRight: "4px",
+                                }}
+                              >
+                                *
+                              </span>
+                              Xã:
+                            </Col>
                             <Col span={24}>
                               <Select
                                 disabled={!(selectDiaChi == -1)}
@@ -836,13 +902,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachXa
                                   ? danhSachXa.map((option) => (
-                                    <Select.Option
-                                      key={option.WardCode}
-                                      value={option.WardCode}
-                                    >
-                                      {option.NameExtension[0]}
-                                    </Select.Option>
-                                  ))
+                                      <Select.Option
+                                        key={option.WardCode}
+                                        value={option.WardCode}
+                                      >
+                                        {option.NameExtension[0]}
+                                      </Select.Option>
+                                    ))
                                   : ""}
                               </Select>
                             </Col>
@@ -855,10 +921,17 @@ function BanTaiQuay() {
                               alignItems: "center",
                             }}
                           >
-                            <Col span={24}><span style={{
-                              color: "red",
-                              marginRight: "4px"
-                            }}>*</span>Số điện thoại:</Col>
+                            <Col span={24}>
+                              <span
+                                style={{
+                                  color: "red",
+                                  marginRight: "4px",
+                                }}
+                              >
+                                *
+                              </span>
+                              Số điện thoại:
+                            </Col>
                             <Col span={24}>
                               <Input
                                 placeholder="Số điện thoại"
@@ -931,10 +1004,17 @@ function BanTaiQuay() {
                           alignItems: "center",
                         }}
                       >
-                        <Col span={24}><span style={{
-                          color: "red",
-                          marginRight: "4px"
-                        }}>*</span>Phương thức thanh toán:</Col>
+                        <Col span={24}>
+                          <span
+                            style={{
+                              color: "red",
+                              marginRight: "4px",
+                            }}
+                          >
+                            *
+                          </span>
+                          Phương thức thanh toán:
+                        </Col>
                         <Col span={24}>
                           <Select
                             style={{
@@ -972,49 +1052,54 @@ function BanTaiQuay() {
                           alignItems: "center",
                         }}
                       >
-                        <Col span={24}><span style={{
-                          color: "red",
-                          marginRight: "4px"
-                        }}>*</span>Phương thức vận chuyển:</Col>
                         <Col span={24}>
-                          <Select
+                          <span
                             style={{
-                              width: "100%",
+                              color: "red",
+                              marginRight: "4px",
                             }}
-                            showSearch
-                            labelInValue
-                            defaultValue={"Vận chuyển"}
-                            onChange={(e) => {
-                              setHoaDonRequest({
-                                ...hoaDonRequest,
-                                phuongThucVanChuyen: e.key,
-                              });
-                            }}
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
                           >
-                            {isSuDungDiaChi ? (
-                              <Select.Option key={1} value={1}>
-                                Giao hàng nhanh
-                              </Select.Option>
-                            ) : (
-                              ""
-                            )}
-                            {!isSuDungDiaChi ? (
-                              <Select.Option key={3} value={3}>
-                                Lấy tại cửa hàng
-                              </Select.Option>
-                            ) : (
-                              ""
-                            )}
-                          </Select>
+                            *
+                          </span>
+                          Phương thức vận chuyển:
+                        </Col>
+                        <Col span={24}>
+                          <Input
+                            value={
+                              isSuDungDiaChi
+                                ? "Giao hàng nhanh"
+                                : "Lấy tại cửa hàng"
+                            }
+                          />
                         </Col>
                       </Row>
                     </Col>
                   </Row>
+                  {isSuDungDiaChi ? (
+                    <Row
+                      style={{
+                        marginTop: "14px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Col span={23}>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Col span={24}>Phí vận chuyển:</Col>
+                          <Col span={24}>
+                            <Input value={fixMoney(phiVanChuyen)} />
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
                   <Row
                     style={{
                       marginTop: "14px",
@@ -1049,8 +1134,8 @@ function BanTaiQuay() {
                             value={fixMoney(
                               gioHangHienTai
                                 ? gioHangHienTai.reduce((a, b) => {
-                                  return a + b.soLuong * b.donGia;
-                                }, 0)
+                                    return a + b.soLuong * b.donGia;
+                                  }, 0)
                                 : 0
                             )}
                           />
@@ -1058,56 +1143,58 @@ function BanTaiQuay() {
                       </Row>
                     </Col>
                   </Row>
-                  <Row
-                    style={{
-                      marginTop: "14px",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Col span={11}>
-                      <Row
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Col span={23}>Tiền khách đưa:</Col>
-                        <Col span={24}>
-                          <Input
-                            value={fixMoney(
-                              gioHangHienTai
-                                ? gioHangHienTai.reduce((a, b) => {
-                                  return a + b.soLuong * b.donGia;
-                                }, 0)
-                                : 0
-                            )}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col span={11} offset={1}>
-                      <Row
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Col span={24}>Tiền thừa:</Col>
-                        <Col span={24}>
-                          <Input
-                            value={fixMoney(
-                              gioHangHienTai
-                                ? gioHangHienTai.reduce((a, b) => {
-                                  return a + b.soLuong * b.donGia;
-                                }, 0)
-                                : 0
-                            )}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
+                  {hoaDonRequest.phuongThucThanhToan == 3 && (
+                    <Row
+                      style={{
+                        marginTop: "14px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Col span={11}>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Col span={23}>Tiền khách đưa:</Col>
+                          <Col span={24}>
+                            <Input
+                              value={fixMoney(
+                                gioHangHienTai
+                                  ? gioHangHienTai.reduce((a, b) => {
+                                      return a + b.soLuong * b.donGia;
+                                    }, 0)
+                                  : 0
+                              )}
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col span={11} offset={1}>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Col span={24}>Tiền thừa:</Col>
+                          <Col span={24}>
+                            <Input
+                              value={fixMoney(
+                                gioHangHienTai
+                                  ? gioHangHienTai.reduce((a, b) => {
+                                      return a + b.soLuong * b.donGia;
+                                    }, 0)
+                                  : 0
+                              )}
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  )}
                   <Row
                     style={{
                       marginTop: "14px",
@@ -1185,6 +1272,83 @@ function BanTaiQuay() {
                                   );
                                   return;
                                 }
+                                if (selectDiaChi === -1) {
+                                  if (!hoaDonRequest.tinhId) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng chọn tỉnh",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+                                  if (!hoaDonRequest.huyenId) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng chọn huyện",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+                                  if (!hoaDonRequest.xaId) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng chọn xã1",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+
+                                  if (!hoaDonRequest.hoNguoiNhan) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng nhập họ",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+                                  if (!hoaDonRequest.nguoiNhan) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng nhập tên",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+                                  if (!hoaDonRequest.soDienThoai) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng nhập số điện thoại",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+                                  if (!hoaDonRequest.phuongThucThanhToan) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng chọn phương thức thanh toán",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+                                  if (!hoaDonRequest.phuongThucVanChuyen) {
+                                    openNotification(
+                                      "error",
+                                      "Hệ thống",
+                                      "Vui lòng chọn phương thức vận chuyển",
+                                      "bottomRight"
+                                    );
+                                    return;
+                                  }
+                                  setConfirmDiaChiMoi(true);
+                                  return;
+                                }
                                 if (!hoaDonRequest.phuongThucThanhToan) {
                                   openNotification(
                                     "error",
@@ -1203,37 +1367,6 @@ function BanTaiQuay() {
                                   );
                                   return;
                                 }
-                              }
-                              if (selectDiaChi == -1) {
-                                if (!hoaDonRequest.tinhId) {
-                                  openNotification(
-                                    "error",
-                                    "Hệ thống",
-                                    "Vui lòng chọn tỉnh",
-                                    "bottomRight"
-                                  );
-                                  return;
-                                }
-                                if (!hoaDonRequest.huyenId) {
-                                  openNotification(
-                                    "error",
-                                    "Hệ thống",
-                                    "Vui lòng chọn huyện",
-                                    "bottomRight"
-                                  );
-                                  return;
-                                }
-                                if (!hoaDonRequest.xaId) {
-                                  openNotification(
-                                    "error",
-                                    "Hệ thống",
-                                    "Vui lòng chọn xã",
-                                    "bottomRight"
-                                  );
-                                  return;
-                                }
-                                setConfirmDiaChiMoi(true);
-                              } else {
                                 setTaoHoaDon(true);
                               }
                             }}
@@ -1282,7 +1415,14 @@ function BanTaiQuay() {
                       >
                         Quét mã
                       </Button>
-                      {isOpen && <QRCode setOpen={setIsOpen} />}
+                      {isOpen && (
+                        <QRCode
+                          setOpen={setIsOpen}
+                          open={isOpen}
+                          hoaDonId={hoaDonRequest.hoaDonId}
+                          setData={layDanhSachChiTiet}
+                        />
+                      )}
                     </Col>
                     <Col span={19} offset={1}>
                       <Select
@@ -1301,29 +1441,29 @@ function BanTaiQuay() {
                       >
                         {sanPhamChiTiet
                           ? sanPhamChiTiet.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenSanPham}
-                              <Tag
-                                color="success"
-                                style={{
-                                  marginLeft: "4px",
-                                }}
-                              >
-                                {option.mauSac.tenMau}
-                              </Tag>
-                              <Tag color="processing">
-                                {option.kichThuoc.tenKichThuoc}
-                              </Tag>
-                              <span
-                                style={{
-                                  fontWeight: "700",
-                                  marginLeft: "12px",
-                                }}
-                              >
-                                Số lượng còn: {option.soLuongTon}
-                              </span>
-                            </Select.Option>
-                          ))
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.tenSanPham}
+                                <Tag
+                                  color="success"
+                                  style={{
+                                    marginLeft: "4px",
+                                  }}
+                                >
+                                  {option.mauSac.tenMau}
+                                </Tag>
+                                <Tag color="processing">
+                                  {option.kichThuoc.tenKichThuoc}
+                                </Tag>
+                                <span
+                                  style={{
+                                    fontWeight: "700",
+                                    marginLeft: "12px",
+                                  }}
+                                >
+                                  Số lượng còn: {option.soLuongTon}
+                                </span>
+                              </Select.Option>
+                            ))
                           : ""}
                       </Select>
                     </Col>

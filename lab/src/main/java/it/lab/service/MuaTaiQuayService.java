@@ -5,6 +5,7 @@ import it.lab.entity.*;
 import it.lab.enums.TrangThaiDiaChi;
 import it.lab.enums.TrangThaiHoaDon;
 import it.lab.enums.TrangThaiNguoiDung;
+import it.lab.enums.TrangThaiQuetMa;
 import it.lab.iservice.IMuaTaiQuayService;
 import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
@@ -102,12 +103,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     @Override
     public Boolean taoHoaDonTaiQuay(MuaTaiQuayRequest muaTaiQuayRequest) {
         HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuayRequest.getHoaDonId()).get();
-        NguoiDung nguoiDung = null;
-        if (muaTaiQuayRequest.getKhachHangId() == -1) {
-            nguoiDung = _nguoiDungRepo.findById(taoMoiNguoiDung(muaTaiQuayRequest)).get();
-        } else {
-            nguoiDung = _nguoiDungRepo.findById(muaTaiQuayRequest.getKhachHangId()).get();
-        }
+        NguoiDung nguoiDung = _nguoiDungRepo.findById(muaTaiQuayRequest.getKhachHangId()).get();
         PhuongThucThanhToan phuongThucThanhToan = _phuongThucThanhToanRepo.findById(muaTaiQuayRequest.getPhuongThucThanhToan()).get();
         hoaDon.setPhuongThucThanhToan(phuongThucThanhToan);
         PhuongThucVanChuyen phuongThucVanChuyen = _phuongThucVanChuyenRepo.findById(muaTaiQuayRequest.getPhuongThucVanChuyen()).get();
@@ -138,6 +134,8 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         hoaDon.setNguoiMua(nguoiDung);
         if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 1) {
             hoaDon.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+            hoaDon.setPhiGiaoHang(muaTaiQuayRequest.getPhiVanChuyen());
+            hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + muaTaiQuayRequest.getPhiVanChuyen());
         }
         if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 3) {
             hoaDon.setNgayGiao(LocalDate.now());
@@ -145,6 +143,54 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         }
         _hoaDonRepo.save(hoaDon);
         return true;
+    }
+
+    @Override
+    public String[] taoHoaDonTaiQuayThanhToanVNPAY(MuaTaiQuayRequest muaTaiQuayRequest) {
+        String[] res = new String[2];
+        HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuayRequest.getHoaDonId()).get();
+        NguoiDung nguoiDung = _nguoiDungRepo.findById(muaTaiQuayRequest.getKhachHangId()).get();
+        PhuongThucThanhToan phuongThucThanhToan = _phuongThucThanhToanRepo.findById(muaTaiQuayRequest.getPhuongThucThanhToan()).get();
+        hoaDon.setPhuongThucThanhToan(phuongThucThanhToan);
+        PhuongThucVanChuyen phuongThucVanChuyen = _phuongThucVanChuyenRepo.findById(muaTaiQuayRequest.getPhuongThucVanChuyen()).get();
+        hoaDon.setPhuongThucVanChuyen(phuongThucVanChuyen);
+        if (!muaTaiQuayRequest.getKoDungDiaChi()) {
+            if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
+                DiaChi diaChi = new DiaChi();
+                diaChi.setChiTietDiaChi(muaTaiQuayRequest.getChiTietDiaChi());
+                diaChi.setNgayTao(LocalDate.now());
+                diaChi.setHuyenId(muaTaiQuayRequest.getHuyenId());
+                diaChi.setHuyen(muaTaiQuayRequest.getHuyen());
+                diaChi.setTinh(muaTaiQuayRequest.getTinhId());
+                diaChi.setTinh(muaTaiQuayRequest.getTinh());
+                diaChi.setXaId(muaTaiQuayRequest.getXaId());
+                diaChi.setXa(muaTaiQuayRequest.getXa());
+                diaChi.setNguoiDung(nguoiDung);
+                diaChi.setLaDiaChiChinh(false);
+                diaChi.setTrangThai(TrangThaiDiaChi.HOATDONG);
+                diaChi.setSoDienThoai(muaTaiQuayRequest.getSoDienThoai());
+                _diaChiRepo.save(diaChi);
+                hoaDon.setDiaChiGiao(diaChi);
+            } else {
+                DiaChi diaChi = _diaChiRepo.findById(muaTaiQuayRequest.getDiaChiId()).get();
+                hoaDon.setDiaChiGiao(diaChi);
+
+            }
+        }
+        hoaDon.setNguoiMua(nguoiDung);
+        if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 1) {
+            hoaDon.setPhiGiaoHang(muaTaiQuayRequest.getPhiVanChuyen());
+            hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + muaTaiQuayRequest.getPhiVanChuyen());
+            hoaDon.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+        }
+        if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 3) {
+            hoaDon.setNgayGiao(LocalDate.now());
+            hoaDon.setTrangThai(TrangThaiHoaDon.DAGIAO);
+        }
+        _hoaDonRepo.save(hoaDon);
+        res[0] = hoaDon.getMaHoaDon();
+        res[1] = String.valueOf(hoaDon.getGiaTriHd().intValue());
+        return res;
     }
 
     private Long taoMoiNguoiDung(MuaTaiQuayRequest mua) {
@@ -165,11 +211,18 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     }
 
     @Override
-    public List<HoaDonChiTietDTO> quetMa(String maSp, Long hoaDonId) {
+    public TrangThaiQuetMa quetMa(String maSp, Long hoaDonId) {
         HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
         Optional<SanPhamChiTiet> sanPhamChiTiet = _sanPhamChiTietRepo.findSanPhamChiTietByMaSanPham(maSp);
         if (sanPhamChiTiet.isEmpty()) {
-            return gioHangCuaHoaDon(hoaDonId);
+            return TrangThaiQuetMa.KHONGTONTAI;
+        }
+        if (sanPhamChiTiet.get().getSoLuongTon() == 0) {
+            return TrangThaiQuetMa.HETHANG;
+        }
+        Optional<HoaDonChiTiet> a = _hoaDonChiTietRepo.findHoaDonChiTietByHoaDonAndSanPhamChiTiet(hoaDon, sanPhamChiTiet.get());
+        if (!a.isEmpty()) {
+            return TrangThaiQuetMa.DACO;
         }
         HoaDonChiTiet hoaDonNew = new HoaDonChiTiet();
         hoaDonNew.setHoaDon(hoaDon);
@@ -181,6 +234,6 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         hoaDon.setGiaTriHd(giaTri + hoaDon.getGiaTriHd());
         _hoaDonChiTietRepo.save(hoaDonNew);
         _hoaDonRepo.save(hoaDon);
-        return gioHangCuaHoaDon(hoaDonId);
+        return TrangThaiQuetMa.THANHCONG;
     }
 }

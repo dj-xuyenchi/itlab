@@ -1,7 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, Menu, Modal, Row, Space, Table, notification } from "antd";
+import {
+  Button,
+  Input,
+  Menu,
+  Modal,
+  Row,
+  Space,
+  Table,
+  notification,
+} from "antd";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { fixMoney } from "../../../../extensions/fixMoney";
@@ -9,6 +18,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 
 function HoanThanh() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +26,7 @@ function HoanThanh() {
     setIsModalOpen(true);
   };
   const handleOk = () => {
-    handleXacNhanHoaDon()
+    handleXacNhanHoaDon();
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -207,6 +217,7 @@ function HoanThanh() {
       dataIndex: "ngayTao",
       width: "20%",
       sorter: (a, b) => a - b,
+      render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
       title: "Trạng thái",
@@ -221,26 +232,22 @@ function HoanThanh() {
       render: (id) => <ChiTietHoaDon hoaDonId={id} />,
     },
   ];
-  const [data, setData] = useState([
-  ])
+  const [data, setData] = useState([]);
   async function layDuLieu() {
     const ketQua = await useHoaDonHuyStore.actions.fetchHoaDonHuy();
-    setData(ketQua.data.data)
+    setData(ketQua.data.data);
   }
   useEffect(() => {
-    layDuLieu()
-  }, [])
+    layDuLieu();
+  }, []);
   async function handleXacNhanHoaDon() {
     if (selectedRowKeys.length == 0) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Chưa chọn hóa đơn",
-        "bottomRight"
-      );
-      return
+      openNotification("error", "Hệ thống", "Chưa chọn hóa đơn", "bottomRight");
+      return;
     }
-    const ketQua = await useHoaDonHuyStore.actions.xacNhanHoaDon(selectedRowKeys)
+    const ketQua = await useHoaDonHuyStore.actions.xacNhanHoaDon(
+      selectedRowKeys
+    );
     if (ketQua.data.status == "THANHCONG") {
       for (var item of ketQua.data.data) {
         openNotification(
@@ -256,22 +263,18 @@ function HoanThanh() {
         "Xác nhận thành công",
         "bottomRight"
       );
-      layDuLieu()
+      layDuLieu();
     } else {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Lỗi",
-        "bottomRight"
-      );
+      openNotification("error", "Hệ thống", "Lỗi", "bottomRight");
     }
-    setSelectedRowKeys([])
+    setSelectedRowKeys([]);
   }
   function handleHuy() {
-    setSelectedRowKeys([])
+    setSelectedRowKeys([]);
   }
   return (
-    <>{contextHolder}
+    <>
+      {contextHolder}
       <div className="choxacnhan">
         <Table
           rowSelection={rowSelection}
@@ -296,10 +299,20 @@ function HoanThanh() {
           >
             Xác nhận
           </Button> */}
-          <Modal title="Xác nhận hóa đơn" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Modal
+            title="Xác nhận hóa đơn"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
             <p>Bạn có chắc muốn xác nhận hóa đơn</p>
           </Modal>
-          <Modal title="Xác nhận hủy hóa đơn" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2}>
+          <Modal
+            title="Xác nhận hủy hóa đơn"
+            open={isModalOpen2}
+            onOk={handleOk2}
+            onCancel={handleCancel2}
+          >
             <p>Bạn có chắc muốn hủy hóa đơn</p>
           </Modal>
         </Row>

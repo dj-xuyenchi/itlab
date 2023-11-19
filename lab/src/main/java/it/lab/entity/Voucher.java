@@ -34,6 +34,10 @@ public class Voucher {
     private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDate ngayCapNhat;
+    @Column(name = "ngayketthuc")
+    private LocalDate ngayKetThuc;
+    @Column(name = "soluong")
+    private Integer soLuong;
     @Column(name = "trangthai")
     private TrangThaiVoucher trangThai;
     @OneToMany(mappedBy = "voucher")
