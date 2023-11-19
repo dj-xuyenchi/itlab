@@ -4,22 +4,15 @@ import it.lab.entity.HoaDon;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 import org.springframework.data.repository.query.Param;
 
 
 import java.math.BigDecimal;
-<<<<<<< HEAD
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-=======
 import java.time.LocalDate;
->>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 import java.util.List;
 
 public interface ThongKeRepository extends JpaRepository<HoaDon,Integer> {
@@ -39,10 +32,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon,Integer> {
     List<Object[]> taiKhoanDoanhThuThap(Pageable pageable);
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 //thong ve những thành phố mua sản phẩm nhiều nhất
 @Query("SELECT h.diaChiGiao.tinh, COUNT(h.id) AS TotalPurchases " +
         "FROM HoaDon h " +
@@ -59,7 +49,6 @@ List<Object[]> ThongKeThanhPhoMuaNhieu();
     BigDecimal tinhTongDoanhThuTrongNgay(@Param("selectedDate") LocalDate selectedDate);
 
 
-<<<<<<< HEAD
 //thong doanh thu 1 thang
 
     @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
@@ -87,8 +76,21 @@ List<Object[]> ThongKeThanhPhoMuaNhieu();
         "WHERE FUNCTION('YEAR', h.ngayTao) = :year " +
         "AND FUNCTION('MONTH', h.ngayTao) = :month")
 BigDecimal tinhTongDoanhThuTrongThangChar(@Param("year") int year, @Param("month") int month);
-=======
 
->>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
+//thong ke doanh thu của 12 tháng sau khi trừ hết chi phí
+
+
+
+// tháng và năm hịiện tại luôn
+
+
+    @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
+            "WHERE FUNCTION('YEAR', h.ngayTao) = FUNCTION('YEAR', CURRENT_DATE) " +
+            "AND FUNCTION('MONTH', h.ngayTao) = FUNCTION('MONTH', CURRENT_DATE) ")
+    BigDecimal tinhTongDoanhThuTrongThangHienTai();
+
+    @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
+            "WHERE FUNCTION('YEAR', h.ngayTao) = FUNCTION('YEAR', CURRENT_DATE) ")
+    BigDecimal tinhTongDoanhThuTrongNamHienTai();
 
 }

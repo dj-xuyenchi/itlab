@@ -75,7 +75,7 @@ public class HoaDon {
     @JsonIgnore
     private List<HoaDonChiTiet> hoaDonChiTietList;
 
-
-    @Column(name = "giatrihd")
-    private Float giaTriHd;
+//
+//    @Column(name = "giatrihd")
+//    private Float giaTriHd;
 }

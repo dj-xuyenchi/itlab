@@ -18,10 +18,5 @@ public interface ThongKeRankRepository extends JpaRepository<RankKhachHang,Integ
 
 
 
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> 5ad972f747640f3c31d571298a4c39876fecc404
 }
