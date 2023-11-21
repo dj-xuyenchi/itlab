@@ -21,6 +21,10 @@ public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "tensanpham",columnDefinition = "nvarchar(max)")
+    private String tenSanPham;
+    @Column(name = "masanpham")
+    private String maSanPham;
     @Column(name = "gianhap")
     private Double giaNhap;
     @Column(name = "giaban")

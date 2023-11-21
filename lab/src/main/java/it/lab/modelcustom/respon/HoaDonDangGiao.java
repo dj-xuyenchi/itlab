@@ -32,7 +32,7 @@ public class HoaDonDangGiao {
                 entity.getNguoiMua().getSoDienThoai(),
                 entity.getGiaTriHd(),
                 entity.getNgayTao(),
-                "Đã hủy"
+                "Đang giao"
         );
     }
 

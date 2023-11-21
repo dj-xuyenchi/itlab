@@ -34,6 +34,7 @@ public class HoaDonDTO {
     private LocalDateTime ngayCapNhat;
     private LocalDate ngayGiao;
     private Double giaTriHd;
+    private Double phiVanChuyen;
     private TrangThaiHoaDon trangThai;
     private NguoiDungVoucher voucherGiaoHang;
     private SanPhamSuKien sanPhamSuKien;
@@ -55,6 +56,7 @@ public class HoaDonDTO {
                 entity.getNgayCapNhat(),
                 entity.getNgayGiao(),
                 entity.getGiaTriHd(),
+                entity.getPhiGiaoHang(),
                 entity.getTrangThai(),
                 entity.getVoucherGiaoHang(),
                 entity.getSanPhamSuKien(),

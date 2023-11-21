@@ -77,7 +77,7 @@ const items = [
     <FaUserFriends />
   ),
   getItem(
-    <Link to={"/admin/sanpham"}>Bán hàng tại quầy</Link>,
+    <Link to={"/admin/bantaiquay"}>Bán hàng tại quầy</Link>,
     "62",
     <BsShopWindow />
   ),

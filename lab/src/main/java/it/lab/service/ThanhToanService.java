@@ -38,6 +38,8 @@ public class ThanhToanService implements IThanhToan {
     private PhuongThucVanChuyenRepo _phuongThucVanChuyenRepo;
     @Autowired
     private HoaDonRepo _hoaDonRepo;
+    @Autowired
+    private HoaDonChiTietRepo _hoaDonChiTietRepo;
 
     @Override
     public ResponObject<CheckOut, APIStatus> layDuLieuThanhToan(Long nguoiDungId) {
@@ -68,10 +70,17 @@ public class ThanhToanService implements IThanhToan {
         hd.setNguoiMua(nguoiMua);
         hd.setPhuongThucThanhToan(pttt.get());
         hd.setPhuongThucVanChuyen(ptvc.get());
+        hd.setPhiGiaoHang(yeuCau.getPhiVanChuyen());
         hd.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
         List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(nguoiMua);
-        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList));
+        Double giaTri = 0d;
+        for (GioHang gh : ghList) {
+            SanPhamChiTiet sp = _sanPhamChiTietRepo.findById(gh.getSanPhamChiTiet().getId()).get();
+            giaTri += sp.getGiaBan() * gh.getSoLuong();
+        }
+        hd.setGiaTriHd(giaTri + yeuCau.getPhiVanChuyen());
         _hoaDonRepo.save(hd);
+        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList,hd.getId()));
         _gioHangRepo.deleteAll(ghList);
         return null;
     }
@@ -92,31 +101,39 @@ public class ThanhToanService implements IThanhToan {
         hd.setNguoiMua(nguoiMua);
         hd.setPhuongThucThanhToan(pttt.get());
         hd.setPhuongThucVanChuyen(ptvc.get());
-        hd.setTrangThai(TrangThaiHoaDon.CHOTHANHTOANBANKING);
+        hd.setPhiGiaoHang(yeuCau.getPhiVanChuyen());
+        hd.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
         List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(nguoiMua);
-        Double giaTri=0d;
-        for(GioHang gh : ghList){
+        Double giaTri = 0d;
+        for (GioHang gh : ghList) {
             SanPhamChiTiet sp = _sanPhamChiTietRepo.findById(gh.getSanPhamChiTiet().getId()).get();
-            giaTri+=sp.getGiaBan()*gh.getSoLuong();
+            giaTri += sp.getGiaBan() * gh.getSoLuong();
         }
-        hd.setGiaTriHd(giaTri);
-        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList));
+        hd.setGiaTriHd(giaTri + yeuCau.getPhiVanChuyen());
+
         _hoaDonRepo.save(hd);
-        hd.setMaHoaDon("HD"+hd.getId());
+        hd.setMaHoaDon("HD" + hd.getId());
+        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList,hd.getId()));
         _hoaDonRepo.save(hd);
         _gioHangRepo.deleteAll(ghList);
         return hd.getMaHoaDon();
     }
 
-    private List<HoaDonChiTiet> taoHoaDonChiTiet(List<GioHang> gioHangList) {
+    private List<HoaDonChiTiet> taoHoaDonChiTiet(List<GioHang> gioHangList, Long hoaDonId) {
         List<HoaDonChiTiet> hoaDonChiTietList = new ArrayList<>();
+        HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
         for (GioHang gh : gioHangList) {
+            SanPhamChiTiet spct = _sanPhamChiTietRepo.findById(gh.getSanPhamChiTiet().getId()).get();
+            spct.setSoLuongTon(spct.getSoLuongTon() - gh.getSoLuong());
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setNgayTao(LocalDate.now());
-            hoaDonChiTiet.setSanPhamChiTiet(gh.getSanPhamChiTiet());
+            hoaDonChiTiet.setSanPhamChiTiet(spct);
             hoaDonChiTiet.setSoLuong(gh.getSoLuong());
             hoaDonChiTiet.setDonGia(gh.getSanPhamChiTiet().getGiaBan());
+            hoaDonChiTiet.setHoaDon(hoaDon);
+            _hoaDonChiTietRepo.save(hoaDonChiTiet);
             hoaDonChiTietList.add(hoaDonChiTiet);
+            _sanPhamChiTietRepo.save(spct);
         }
         return hoaDonChiTietList;
     }

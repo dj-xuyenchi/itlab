@@ -22,7 +22,7 @@ public class ChatLieu {
     private Long id;
     @Column(name = "machatlieu")
     private String maChatLieu;
-    @Column(name = "tenchatlieu")
+    @Column(name = "tenchatlieu",columnDefinition = "nvarchar(max)")
     private String tenChatLieu;
     @OneToMany(mappedBy = "chatLieu")
     @JsonIgnore

@@ -26,6 +26,8 @@ import java.util.List;
 public class DiaChiDTO {
     private Long id;
     private NguoiDung nguoiDung;
+    private String nguoiNhan;
+    private String hoNguoiNhan;
     private String xaId;
     private String huyenId;
     private String tinhId;
@@ -44,6 +46,8 @@ public class DiaChiDTO {
         return new DiaChiDTO(
                 entity.getId(),
                 entity.getNguoiDung(),
+                entity.getNguoiNhan(),
+                entity.getHoNguoiNhan(),
                 entity.getXaId(),
                 entity.getHuyenId(),
                 entity.getTinhId(),

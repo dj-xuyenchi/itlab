@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SanPhamChiTietDTO {
     private Long id;
+    private String tenSanPham;
     private Double giaNhap;
     private Double giaBan;
     private Integer soLuongTon;
@@ -38,6 +39,7 @@ public class SanPhamChiTietDTO {
     public static SanPhamChiTietDTO fromEntity(SanPhamChiTiet entity) {
         return new SanPhamChiTietDTO(
                 entity.getId(),
+                entity.getTenSanPham(),
                 entity.getGiaNhap(),
                 entity.getGiaBan(),
                 entity.getSoLuongTon(),

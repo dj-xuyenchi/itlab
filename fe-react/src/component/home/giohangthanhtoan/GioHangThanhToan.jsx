@@ -36,17 +36,60 @@ function GioHangThanhToan() {
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
   const [ghiChu, setGhiChu] = useState("");
   const [diaChiChon, setDiaChiChon] = useState(undefined);
-  const [tinh, setTinh] = useState(undefined)
-  const [huyen, setHuyen] = useState(undefined)
-  const [xa, setXa] = useState(undefined)
+  const [tinh, setTinh] = useState(undefined);
+  const [huyen, setHuyen] = useState(undefined);
+  const [xa, setXa] = useState(undefined);
   const [phuongThucThanhThoanChon, setPhuongThucThanhToanChon] =
     useState(undefined);
-  const [phuongThucVanChuyen, setPhuongThucVanChuyen] =
-    useState(undefined);
+  const [phuongThucVanChuyen, setPhuongThucVanChuyen] = useState(undefined);
   const [api, contextHolder] = notification.useNotification();
   const options = [];
   const size = "large";
+  const openNotification = (type, title, des, placement) => {
+    if (type === "error") {
+      api.error({
+        message: title,
+        description: des,
+        placement,
+      });
+    } else {
+      api.success({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+  };
   async function handleTaoRequest() {
+    if (duLieuThanhToan.data.sanPhamList.length == 0) {
+      openNotification("error", "Hệ thống", "Giỏ hàng trống", "bottomRight");
+      return;
+    }
+    if (!phuongThucVanChuyen) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chọn phương thức vận chuyển",
+        "bottomRight"
+      );
+      return;
+    }
+    for (var item of duLieuThanhToan.data.sanPhamList) {
+      if (item.soLuong > item.sanPhamChiTiet.soLuongTon) {
+        openNotification(
+          "error",
+          "Hệ thống",
+          "Sản phẩm " +
+            item.sanPhamChiTiet.sanPham.tenSanPham +
+            " còn lại " +
+            item.sanPhamChiTiet.soLuongTon +
+            " chiếc",
+          "bottomRight"
+        );
+        return;
+      }
+    }
+
     if (phuongThucThanhThoanChon.maPhuongThuc == "VNPAY") {
       const request = await useGioHangStore.actions.vnPay({
         ghiChu: ghiChu,
@@ -54,6 +97,7 @@ function GioHangThanhToan() {
         phuongThucThanhToanId: phuongThucThanhThoanChon.id,
         phuongThucVanChuyenId: 1,
         gia: soTienPhaiTra,
+        phiVanChuyen: phiVanChuyen,
       });
       window.location.href = request.data;
     }
@@ -83,11 +127,10 @@ function GioHangThanhToan() {
         gia: soTienPhaiTra,
         denXa: diaChiChon.xaId,
         denHuyen: diaChiChon.huyenId,
-      })
+      });
       setPhiVanChuyen(giaShip.data.data.total);
     }
     if (e.target.value == 2) {
-
       setPhiVanChuyen(0);
     }
   }
@@ -110,8 +153,8 @@ function GioHangThanhToan() {
       setPhuongThucThanhToanChon(data.data.data.phuongThucThanhToanDTOList[0]);
     }
     async function handleLayTinh() {
-      const data = await useGHN.actions.layTinh()
-      setTinh(data.data.data)
+      const data = await useGHN.actions.layTinh();
+      setTinh(data.data.data);
     }
     handleLayGioHang();
     handleLayTinh();
@@ -122,6 +165,16 @@ function GioHangThanhToan() {
       gioHangId: gioHangId,
       soLuongMoi: soLuongMoi,
     });
+    if (phuongThucVanChuyen) {
+      if (phuongThucVanChuyen.maPhuongThuc == "GHN") {
+        const giaShip = await useGHN.actions.layGia({
+          gia: soTienPhaiTra,
+          denXa: diaChiChon.xaId,
+          denHuyen: diaChiChon.huyenId,
+        });
+        setPhiVanChuyen(giaShip.data.data.total);
+      }
+    }
     setDuLieuThanhToan(data.data);
   }
   useEffect(() => {
@@ -181,8 +234,8 @@ function GioHangThanhToan() {
                 <div className="sanpham">
                   <p>{soLuong} sản phẩm</p>
                   <div className="sanpham-list">
-                    {duLieuThanhToan
-                      ? duLieuThanhToan.data.sanPhamList.map((item, index) => {
+                    {duLieuThanhToan ? (
+                      duLieuThanhToan.data.sanPhamList.map((item, index) => {
                         return (
                           <SanPhamItem
                             key={index}
@@ -190,10 +243,13 @@ function GioHangThanhToan() {
                             handleCapNhatSoLuongSanPhamGioHang={
                               handleCapNhatSoLuongSanPhamGioHang
                             }
+                            max={item.sanPhamChiTiet.soLuongTon}
                           />
                         );
                       })
-                      : <Empty />}
+                    ) : (
+                      <Empty />
+                    )}
                   </div>
                   <div
                     style={{
@@ -232,20 +288,20 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.diaChiDTOList.map(
-                              (item, index) => {
-                                return (
-                                  <Radio value={item.id} key={index}>
-                                    {item.nguoiDung.ho +
-                                      " " +
-                                      item.nguoiDung.ten +
-                                      "," +
-                                      item.soDienThoai +
-                                      " " +
-                                      item.chiTietDiaChi}
-                                  </Radio>
-                                );
-                              }
-                            )
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.nguoiDung.ho +
+                                        " " +
+                                        item.nguoiDung.ten +
+                                        "," +
+                                        item.soDienThoai +
+                                        " " +
+                                        item.chiTietDiaChi}
+                                    </Radio>
+                                  );
+                                }
+                              )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -268,13 +324,19 @@ function GioHangThanhToan() {
                           style={{
                             width: "100%",
                           }}
+                          disabled
                           value={diaChiChon ? diaChiChon.tinh : "Chưa chọn"}
                         >
-                          {tinh ? tinh.map((option) => (
-                            <Option key={option.code} value={option.ProvinceName}>
-                              {option.name}
-                            </Option>
-                          )) : ""}
+                          {tinh
+                            ? tinh.map((option) => (
+                                <Option
+                                  key={option.code}
+                                  value={option.ProvinceName}
+                                >
+                                  {option.name}
+                                </Option>
+                              ))
+                            : ""}
                         </Select>
                       </Col>
                       <Col
@@ -284,6 +346,7 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Select
+                          disabled
                           size={size}
                           style={{
                             width: "100%",
@@ -299,6 +362,7 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Select
+                          disabled
                           size={size}
                           style={{
                             width: "100%",
@@ -320,6 +384,7 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
+                          disabled
                           placeholder="Tên người nhận"
                           value={diaChiChon ? diaChiChon.nguoiDung.ten : ""}
                           size={size}
@@ -335,6 +400,7 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
+                          disabled
                           placeholder="Họ người nhận"
                           value={diaChiChon ? diaChiChon.nguoiDung.ho : ""}
                           size={size}
@@ -350,6 +416,7 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
+                          disabled
                           placeholder="SDT người nhận"
                           size={size}
                           value={diaChiChon ? diaChiChon.soDienThoai : ""}
@@ -371,6 +438,7 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Input
+                          disabled
                           placeholder="Số nhà, đường"
                           size={size}
                           value={diaChiChon ? diaChiChon.chiTietDiaChi : ""}
@@ -388,6 +456,7 @@ function GioHangThanhToan() {
                         <Input
                           placeholder="Email người nhận"
                           size={size}
+                          disabled
                           value={diaChiChon ? diaChiChon.nguoiDung.email : ""}
                           style={{
                             backgroundColor: "#F1F1F1",
@@ -569,24 +638,20 @@ function GioHangThanhToan() {
                         style={{
                           marginLeft: "14px",
                         }}
-                        value={
-                          phuongThucVanChuyen
-                            ? phuongThucVanChuyen.id
-                            : 0
-                        }
+                        value={phuongThucVanChuyen ? phuongThucVanChuyen.id : 0}
                         onChange={handleChonPhuongThucGiao}
                       >
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucVanChuyenDTOList.map(
-                              (item, index) => {
-                                return (
-                                  <Radio value={item.id} key={index}>
-                                    {item.tenPhuongThuc}
-                                  </Radio>
-                                );
-                              }
-                            )
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.tenPhuongThuc}
+                                    </Radio>
+                                  );
+                                }
+                              )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -619,14 +684,14 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.phuongThucThanhToanDTOList.map(
-                              (item, index) => {
-                                return (
-                                  <Radio value={item.id} key={index}>
-                                    {item.tenPhuongThuc}
-                                  </Radio>
-                                );
-                              }
-                            )
+                                (item, index) => {
+                                  return (
+                                    <Radio value={item.id} key={index}>
+                                      {item.tenPhuongThuc}
+                                    </Radio>
+                                  );
+                                }
+                              )
                             : ""}
                         </Space>
                       </Radio.Group>

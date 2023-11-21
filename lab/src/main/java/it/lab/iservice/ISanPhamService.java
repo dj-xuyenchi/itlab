@@ -18,7 +18,6 @@ public interface ISanPhamService {
     public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page, Integer pageSize, Long chatLieuId, Long thietKeId, Long thuongHieuId, Long mauSacId, Long loaiSanPhamId, Long kichThuocId);
 
     public SanPhamChiTiet chiTietSanPham(Long sanPhamId);
-    SanPham findById(long id);
 
     public Page<ChatLieuDTO> layHetChatLieu();
 
@@ -84,7 +83,11 @@ public interface ISanPhamService {
 
     public SanPhamChiTietDTO laySanPhamChiTietById(Long sanPhamChiTietId);
 
+    public SanPhamDTO laySanPhamById(Long sanPhamId);
+
     public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId);
 
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException;
-}
+
+//    public Page<SanPhamDTO> suaSanPham(SanPhamRequest sanPhamRequest);
+

@@ -74,4 +74,6 @@ public class HoaDon {
     @OneToMany(mappedBy = "hoaDon")
     @JsonIgnore
     private List<HoaDonChiTiet> hoaDonChiTietList;
+    @Column(name = "phigiaohang")
+    private Double phiGiaoHang;
 }
