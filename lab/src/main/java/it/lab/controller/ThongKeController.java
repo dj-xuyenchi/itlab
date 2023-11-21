@@ -223,4 +223,14 @@ public Map<String, Object> layDuLieuDoanhThuThangVaNamHienTai() {
     return result;
 }
 
+
+//top san pham ban chay thang
+@GetMapping("/san-pham-ban-chay")
+public List<Object[]> getSanPhamBanChayTrongThang(
+        @RequestParam("selectedMonth") int selectedMonth,
+        @RequestParam("selectedYear") int selectedYear) {
+    return repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
+}
+
+
 }

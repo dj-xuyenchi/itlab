@@ -36,6 +36,12 @@ public class Voucher {
     private LocalDate ngayCapNhat;
     @Column(name = "trangthai")
     private TrangThaiVoucher trangThai;
+
+    @Column(name = "soLuong")
+    private Integer soLuong;
+    @Column(name = "ngayketthuc")
+    private LocalDate ngayKetThuc;
+
     @OneToMany(mappedBy = "voucher")
     @JsonIgnore
     private List<NguoiDungVoucher> nguoiDungVoucherList;

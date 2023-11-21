@@ -3,6 +3,7 @@ package it.lab.controller;
 import it.lab.entity.Voucher;
 import it.lab.enums.TrangThaiVoucher;
 import it.lab.repository.VoucherRepo;
+import it.lab.service.VoucherNguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,9 @@ public class VoucherController {
 
     @Autowired
     private VoucherRepo voucherRepository;
+
+    @Autowired
+    private VoucherNguoiDungService voucherNguoiDungService;
 
     @GetMapping
     public Page<Voucher> getAllVouchers(@RequestParam(defaultValue = "0") int page,
@@ -124,6 +128,17 @@ public class VoucherController {
             }
         } else {
             return new ResponseEntity<>("Voucher not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //them voucher
+    @PostMapping("/themVoucherChoNguoiDung")
+    public ResponseEntity<?> themVoucherChoNguoiDung(@RequestParam Long nguoiDungId, @RequestParam Long voucherId) {
+        try {
+            voucherNguoiDungService.themVoucherChoNguoiDung(nguoiDungId, voucherId);
+            return new ResponseEntity<>("Voucher đã được thêm cho người dùng thành công.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Đã xảy ra lỗi: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
