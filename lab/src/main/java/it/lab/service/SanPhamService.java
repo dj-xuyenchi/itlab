@@ -86,6 +86,11 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public SanPham findById(long id) {
+        return _sanPhamRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Page<ChatLieuDTO> layHetChatLieu() {
         return new Page<ChatLieuDTO>(ChatLieuDTO.fromCollection(_chatLieuRepo.findAll()), 0, 10000);
     }

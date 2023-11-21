@@ -18,6 +18,7 @@ public interface ISanPhamService {
     public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page, Integer pageSize, Long chatLieuId, Long thietKeId, Long thuongHieuId, Long mauSacId, Long loaiSanPhamId, Long kichThuocId);
 
     public SanPhamChiTiet chiTietSanPham(Long sanPhamId);
+    SanPham findById(long id);
 
     public Page<ChatLieuDTO> layHetChatLieu();
 
