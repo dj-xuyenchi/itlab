@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class SanPhamService implements ISanPhamService {
@@ -348,6 +347,11 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public SanPhamDTO laySanPhamById(Long sanPhamId) {
+        return null;
+    }
+
+    @Override
     public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId) {
         return new Page<SanPhamChiTietDTO>(SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findAll().stream().filter(x -> x.getSanPham().getId() == sanPhamId).toList()), 0, 1000);
 
@@ -381,5 +385,10 @@ public class SanPhamService implements ISanPhamService {
         sanPham.setMaSanPham("SP" + sanPham.getId());
         _sanPhamRepository.save(sanPham);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
+    }
+
+    @Override
+    public SanPham findById(Long id) {
+        return _sanPhamRepository.findById(id).orElse(null);
     }
 }

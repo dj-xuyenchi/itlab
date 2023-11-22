@@ -22,8 +22,6 @@ import ThietKe from "./component/admin/product/thietke/ThietKe";
 import MauSac from "./component/admin/product/mausac/MauSac";
 import KichThuoc from "./component/admin/product/kichthuoc/KichThuoc";
 import SanPhamChiTiet from "./component/admin/product/sanphamchitiet/SanPhamChiTiet";
-import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
-import { QRCode } from "antd";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -52,7 +50,6 @@ function App() {
   return (
     <>
       <Routes>
-
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
@@ -68,11 +65,7 @@ function App() {
         <Route path="/admin/sanpham/thietke" element={<ThietKe />} />
         <Route path="/admin/sanpham/mausac" element={<MauSac />} />
         <Route path="/admin/sanpham/kichthuoc" element={<KichThuoc />} />
-        <Route
-          path="/admin/sanpham/sanphamchitiet"
-          element={<SanPhamChiTiet />}
-        />
-        <Route path="/admin/bantaiquay" element={<BanTaiQuay />} />
+        <Route path="/admin/sanpham/sanphamchitiet" element={<SanPhamChiTiet />} />
       </Routes>
     </>
   );

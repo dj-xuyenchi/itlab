@@ -3,8 +3,10 @@ package it.lab.controller;
 import it.lab.entity.HoaDon;
 import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamSuKien;
+import it.lab.entity.SuKienGiamGia;
 import it.lab.iservice.ISanPhamService;
 import it.lab.iservice.ISanPhamSuKienService;
+import it.lab.iservice.ISuKienGiamGiaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,8 @@ public class SanPhamSuKienController {
     ISanPhamSuKienService service;
     @Autowired
     ISanPhamService iSanPhamService;
+    @Autowired
+    ISuKienGiamGiaService suKienGiamGiaService;
 
     @GetMapping("/get-page")
     public ResponseEntity<?> getPage(@RequestParam(defaultValue = "0") int page) {
@@ -28,7 +32,7 @@ public class SanPhamSuKienController {
 
     @GetMapping("/sanphame")
     public ResponseEntity<?> getSanPhamE() {
-        return ResponseEntity.ok(service.getSanPhamE(11,2023));
+        return ResponseEntity.ok(service.getSanPhamE(11, 2023));
     }
 
     @PostMapping("/save")
@@ -37,10 +41,14 @@ public class SanPhamSuKienController {
     }
 
     @PostMapping("/add/{id}")
-    public ResponseEntity<?> saveTheoSanPhamE(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> saveTheoSanPhamE(@PathVariable(name = "id") Long id,
+                                              @RequestParam(name = "idSuKien") long idSK
+    ) {
         SanPham sanPham = iSanPhamService.findById(id);
+        SuKienGiamGia suKienGiamGia=suKienGiamGiaService.findById(idSK);
         SanPhamSuKien sanPhamSuKien = new SanPhamSuKien();
         sanPhamSuKien.setSanPham(sanPham);
+        sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
 

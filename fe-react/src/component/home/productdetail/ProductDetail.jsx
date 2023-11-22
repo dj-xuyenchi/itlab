@@ -5,12 +5,13 @@ import ProductImgSlider from "./ProductImgSlider";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { CiRuler } from "react-icons/ci";
 import { AiOutlineHeart } from "react-icons/ai";
-import {  useNumberInput } from "@chakra-ui/react";
+import { Button, HStack, Input, useNumberInput } from "@chakra-ui/react";
 import { Rate, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSanPhamChiTiet } from "./useSanPhamChiTiet";
 import { selectUser } from "../../login/selectUser";
+import { selectNotiApi } from "../../../redux/selectNoti";
 import { selectLanguage } from "../../../language/selectLanguage";
 import QuantityField from "./QuantityField";
 function ProductDetail() {

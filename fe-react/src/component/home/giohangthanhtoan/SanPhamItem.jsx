@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import QuantityField from "../productdetail/QuantityField";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { useState } from "react";
-function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
+function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang }) {
   const language = useSelector(selectLanguage);
   const [soLuong, setSoLuong] = useState(item.soLuong);
   return (
@@ -85,7 +85,6 @@ function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
               }}
             >
               <QuantityField
-                max={max}
                 quantity={soLuong}
                 setQuantity={setSoLuong}
                 gioHangId={item.id}

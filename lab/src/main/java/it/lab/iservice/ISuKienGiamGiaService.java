@@ -16,4 +16,5 @@ public interface ISuKienGiamGiaService {
     public Page<SuKienGiamGiaDTO> themSuKienGiamGia(SuKienGiamGia suKienGiamGia);
 
     public SuKienGiamGiaDTO laySuKienGiamGiaById(Long suKienGiamGiaId);
+    public SuKienGiamGia findById(Long suKienGiamGiaId);
 }

@@ -53,4 +53,9 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
     public SuKienGiamGiaDTO laySuKienGiamGiaById(Long sukienGiamGiaId) {
         return SuKienGiamGiaDTO.fromEntity(suKienGiamGiaRepo.findById(sukienGiamGiaId).get());
     }
+
+    @Override
+    public SuKienGiamGia findById(Long suKienGiamGiaId) {
+        return suKienGiamGiaRepo.findById(suKienGiamGiaId).orElse(null);
+    }
 }
