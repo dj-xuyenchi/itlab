@@ -80,10 +80,10 @@ function GioHangThanhToan() {
           "error",
           "Hệ thống",
           "Sản phẩm " +
-            item.sanPhamChiTiet.sanPham.tenSanPham +
-            " còn lại " +
-            item.sanPhamChiTiet.soLuongTon +
-            " chiếc",
+          item.sanPhamChiTiet.sanPham.tenSanPham +
+          " còn lại " +
+          item.sanPhamChiTiet.soLuongTon +
+          " chiếc",
           "bottomRight"
         );
         return;
@@ -288,20 +288,20 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.diaChiDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.nguoiDung.ho +
-                                        " " +
-                                        item.nguoiDung.ten +
-                                        "," +
-                                        item.soDienThoai +
-                                        " " +
-                                        item.chiTietDiaChi}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.nguoiDung.ho +
+                                      " " +
+                                      item.nguoiDung.ten +
+                                      "," +
+                                      item.soDienThoai +
+                                      " " +
+                                      item.chiTietDiaChi}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -329,13 +329,13 @@ function GioHangThanhToan() {
                         >
                           {tinh
                             ? tinh.map((option) => (
-                                <Option
-                                  key={option.code}
-                                  value={option.ProvinceName}
-                                >
-                                  {option.name}
-                                </Option>
-                              ))
+                              <Option
+                                key={option.code}
+                                value={option.ProvinceName}
+                              >
+                                {option.name}
+                              </Option>
+                            ))
                             : ""}
                         </Select>
                       </Col>
@@ -642,17 +642,10 @@ function GioHangThanhToan() {
                         onChange={handleChonPhuongThucGiao}
                       >
                         <Space direction="vertical">
-                          {duLieuThanhToan
-                            ? duLieuThanhToan.data.phuongThucVanChuyenDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.tenPhuongThuc}
-                                    </Radio>
-                                  );
-                                }
-                              )
-                            : ""}
+                          <Radio value={1} key={1}>
+                            Giao hàng nhanh
+                          </Radio>
+
                         </Space>
                       </Radio.Group>
                     </div>
@@ -682,17 +675,14 @@ function GioHangThanhToan() {
                         }}
                       >
                         <Space direction="vertical">
-                          {duLieuThanhToan
-                            ? duLieuThanhToan.data.phuongThucThanhToanDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.tenPhuongThuc}
-                                    </Radio>
-                                  );
-                                }
-                              )
-                            : ""}
+
+                          <Radio value={1} key={1}>
+                            Thanh toán qua VNPAY
+                          </Radio>
+                          <Radio value={2} key={2}>
+                            Thanh toán khi nhận hàng
+                          </Radio>
+
                         </Space>
                       </Radio.Group>
                     </div>

@@ -74,12 +74,10 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         SanPhamChiTiet sanPhamChiTiet = _sanPhamChiTietRepo.findById(sanPhamId).get();
         HoaDonChiTiet hoaDonNew = new HoaDonChiTiet();
         hoaDonNew.setHoaDon(hoaDon);
-        hoaDonNew.setSoLuong(1);
+        hoaDonNew.setSoLuong(0);
         hoaDonNew.setSanPhamChiTiet(sanPhamChiTiet);
         hoaDonNew.setNgayTao(LocalDate.now());
         hoaDonNew.setDonGia(sanPhamChiTiet.getGiaBan());
-        Double giaTri = 1 * sanPhamChiTiet.getGiaBan();
-        hoaDon.setGiaTriHd(giaTri + hoaDon.getGiaTriHd());
         _hoaDonChiTietRepo.save(hoaDonNew);
         _hoaDonRepo.save(hoaDon);
         return gioHangCuaHoaDon(hoaDonId);
@@ -226,12 +224,10 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         }
         HoaDonChiTiet hoaDonNew = new HoaDonChiTiet();
         hoaDonNew.setHoaDon(hoaDon);
-        hoaDonNew.setSoLuong(1);
+        hoaDonNew.setSoLuong(0);
         hoaDonNew.setSanPhamChiTiet(sanPhamChiTiet.get());
         hoaDonNew.setNgayTao(LocalDate.now());
         hoaDonNew.setDonGia(sanPhamChiTiet.get().getGiaBan());
-        Double giaTri = 1 * sanPhamChiTiet.get().getGiaBan();
-        hoaDon.setGiaTriHd(giaTri + hoaDon.getGiaTriHd());
         _hoaDonChiTietRepo.save(hoaDonNew);
         _hoaDonRepo.save(hoaDon);
         return TrangThaiQuetMa.THANHCONG;

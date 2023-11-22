@@ -144,17 +144,24 @@ function SanPhamChiTiet() {
   });
   const columns = [
     {
+      title: "Mã SP",
+      dataIndex: "maSanPham",
+      key: "maSanPham",
+      width: "7.5%",
+      render: (maSanPham) => <>{maSanPham}</>,
+    },
+    {
       title: "Màu sắc",
       dataIndex: "mauSac",
       key: "mauSac",
-      width: "12.5%",
+      width: "10%",
       render: (mauSac) => <>{mauSac.tenMau}</>,
     },
     {
       title: "Kích thước",
       dataIndex: "kichThuoc",
       key: "kichThuoc",
-      width: "12.5%",
+      width: "10%",
       render: (kichThuoc) => <>{kichThuoc.tenKichThuoc}</>,
     },
     {

@@ -29,7 +29,8 @@ public class GioHangService implements IGioHangService {
     @Autowired
     private SanPhamChiTietRepo _sanPhamChiTietRepo;
     @Autowired
-private IThanhToan _thanhToanService;
+    private IThanhToan _thanhToanService;
+
     @Override
     public ResponObject<String, APIStatus> themSanPhamChiTietVaoGioHang(Long nguoiDungId, Long sanPhamChiTietId, Integer soLuong) {
         Optional<NguoiDung> ng = _nguoiDungRepo.findById(nguoiDungId);

@@ -13,38 +13,24 @@ import {
 } from "@chakra-ui/react";
 import { Col, InputNumber, Radio, Row, Slider, Space, Tag } from "antd";
 import { Checkbox as ckr } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fixMoney } from "../../../../extensions/fixMoney";
 import Tag1 from "../../../common/tag/Tag1";
+import { useFilterStore } from "./useFilter";
 function Filter() {
   const language = useSelector(selectLanguage);
   const [value, setValue] = useState(undefined);
-  const [searchParam, setSearchParam] = useState({
-    isEmpty: false,
-    color: [
-      {
-        id: 1,
-        name: "vàng",
-      },
-    ],
-    type: [
-      {
-        id: 1,
-        name: "Áo ngắn tay",
-      },
-    ],
-    size: [
-      {
-        id: 2,
-        name: "Size XL",
-      },
-    ],
-    cost: {
-      isUse: false,
-      min: 0,
-      max: 100,
-    },
-  });
+  const [thuocTinh, setThuocTinh] = useState(undefined)
+  async function layThuocTinh() {
+    const data = await useFilterStore.actions.layThuocTinh();
+    setThuocTinh(data.data)
+  }
+
+  const [checkedList, setCheckedList] = useState([]);
+  useEffect(() => {
+    layThuocTinh()
+  }, [])
+  const [searchParam, setSearchParam] = useState([]);
   const onChange = (e) => {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
@@ -57,44 +43,8 @@ function Filter() {
   const onChangeSlider = (newValue) => {
     setInputValue(newValue);
   };
-  const options = [
-    {
-      label: "Apple",
-      value: "Apple",
-    },
-    {
-      label: "Pear",
-      value: "Pear",
-    },
-    {
-      label: "Orange",
-      value: "Orange",
-    },
-    {
-      label: "Apple",
-      value: "Apple",
-    },
-    {
-      label: "Pear",
-      value: "Pear",
-    },
-    {
-      label: "Orange",
-      value: "Orange",
-    },
-    {
-      label: "Apple",
-      value: "Apple",
-    },
-    {
-      label: "Pear",
-      value: "Pear",
-    },
-    {
-      label: "Orange",
-      value: "Orange",
-    },
-  ];
+  const [option, setOption] = useState(undefined)
+
   return (
     <>
       <div className="filter-container">
@@ -104,22 +54,25 @@ function Filter() {
             <FiFilter />
           </div>
         </div>
-        <div className="filter-item">
-          {!searchParam.isEmpty ? (
-            <div
-              style={{
-                marginBottom: "8px",
-              }}
-            >
-              <Space>
-                <Tag1 color="pink" content="giá" />
-                <Tag color="purple">Xóa tất cả</Tag>
-              </Space>
-            </div>
-          ) : (
-            ""
-          )}
-          <Accordion allowMultiple allowToggle>
+        <div className="filter-item" style={{
+          width: "100%"
+        }}>
+          <div
+            style={{
+              marginBottom: "8px",
+              width: "100%"
+            }}
+          >
+
+            {searchParam.map((item) => {
+              return <Tag className="tag" color={"pink"} >{item.ten}</Tag>
+            })}
+            <Tag className="tag" color="purple" onClick={() => {
+              setCheckedList([])
+              setSearchParam([])
+            }}>Xóa tất cả</Tag>
+          </div>
+          {thuocTinh && <Accordion allowMultiple allowToggle>
             <AccordionItem>
               <h2>
                 <AccordionButton>
@@ -137,9 +90,75 @@ function Filter() {
                     width: "90%",
                   }}
                 >
-                  <Stack spacing={[1, 5]} direction={["column", "row"]}>
-                 
-                  </Stack>
+                  <ckr.Group
+                    value={checkedList}
+
+                    options={thuocTinh.nhomSanPhamList.map((item) => {
+                      return {
+                        label: item.tenNhom,
+                        value: item.id
+                      }
+                    })}
+                    onChange={(e) => {
+                      setCheckedList(e);
+                      setOption({
+                        ...option,
+                        nhomSanPham: e
+                      })
+                      searchParam.push({
+                        id: thuocTinh.nhomSanPhamList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        })?.maLoai,
+                        ten: thuocTinh.nhomSanPhamList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        })?.tenNhom,
+                      })
+                      setSearchParam(searchParam)
+                    }}
+                  />
+                </div>
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    Chất liệu
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                <div
+                  style={{
+                    marginTop: "8px",
+                    marginLeft: "8px",
+                    width: "90%",
+                  }}
+                >
+                  <ckr.Group
+                    options={thuocTinh.chatLieuList.map((item) => {
+                      return {
+                        label: item.tenChatLieu,
+                        value: item.id
+                      }
+                    })}
+                    onChange={(e) => {
+                      setOption({
+                        ...option,
+                        chatLieu: e
+                      })
+                      searchParam.push({
+                        id: thuocTinh.chatLieuList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        }).maChatLieu,
+                        ten: thuocTinh.chatLieuList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        }).tenChatLieu,
+                      })
+                      setSearchParam(searchParam)
+                    }}
+                  />
                 </div>
               </AccordionPanel>
             </AccordionItem>
@@ -161,9 +180,27 @@ function Filter() {
                   }}
                 >
                   <ckr.Group
-                    options={options}
-                    defaultValue={["Pear"]}
-                    onChange={() => {}}
+                    options={thuocTinh.kichThuocList.map((item) => {
+                      return {
+                        label: item.tenKichThuoc,
+                        value: item.id
+                      }
+                    })}
+                    onChange={(e) => {
+                      setOption({
+                        ...option,
+                        kichThuoc: e
+                      })
+                      searchParam.push({
+                        id: thuocTinh.kichThuocList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        }).maKichThuoc,
+                        ten: thuocTinh.kichThuocList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        }).tenKichThuoc,
+                      })
+                      setSearchParam(searchParam)
+                    }}
                   />
                 </div>
               </AccordionPanel>
@@ -186,9 +223,27 @@ function Filter() {
                   }}
                 >
                   <ckr.Group
-                    options={options}
-                    defaultValue={["Pear"]}
-                    onChange={() => {}}
+                    options={thuocTinh.mauSacList.map((item) => {
+                      return {
+                        label: item.tenMau,
+                        value: item.id
+                      }
+                    })}
+                    onChange={(e) => {
+                      setOption({
+                        ...option,
+                        mauSac: e
+                      })
+                      searchParam.push({
+                        id: thuocTinh.mauSacList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        }).maMauSac,
+                        ten: thuocTinh.mauSacList.find((item) => {
+                          return item.id === e[e.length - 1]
+                        }).tenMau,
+                      })
+                      setSearchParam(searchParam)
+                    }}
                   />
                 </div>
               </AccordionPanel>
@@ -267,7 +322,7 @@ function Filter() {
                 </div>
               </AccordionPanel>
             </AccordionItem>
-          </Accordion>
+          </Accordion>}
         </div>
       </div>
     </>

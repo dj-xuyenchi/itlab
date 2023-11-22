@@ -332,6 +332,8 @@ public class SanPhamService implements ISanPhamService {
         sanPhamMoi.setHinhAnh(sanPham.getHinhAnh1());
         sanPhamMoi.setNgayTao(LocalDate.now());
         _sanPhamChiTietRepository.save(sanPhamMoi);
+        sanPhamMoi.setMaSanPham("SP"+sanPhamMoi.getId());
+        _sanPhamChiTietRepository.save(sanPhamMoi);
         return laySanPhamChiTietCuaSanPham(sanPham.getId());
     }
 

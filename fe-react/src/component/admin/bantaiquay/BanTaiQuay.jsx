@@ -31,6 +31,7 @@ import { fixNgayThang } from "../../../extensions/fixNgayThang";
 
 function BanTaiQuay() {
   const [api, contextHolder] = notification.useNotification();
+  const [xa, setXa] = useState(undefined)
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
       api.error({
@@ -132,15 +133,17 @@ function BanTaiQuay() {
     });
   }
   async function handleChonDiaChiXa(e) {
+    setXa(e.key)
     setDiaChiMoi({
       ...diaChiMoi,
       xa: e,
     });
-    setHoaDonRequest({
+    const diaChi = {
       ...hoaDonRequest,
       xaId: e.key,
       xa: e.label,
-    });
+    }
+    setHoaDonRequest(diaChi);
     handleTinhGiaVanChuyen({
       huyenId: hoaDonRequest.huyenId,
       xaId: e.key
@@ -341,12 +344,6 @@ function BanTaiQuay() {
       sanPhamId: e.key,
     });
     setGioHangHienTai(data.data);
-    if (hoaDonRequest.xaId) {
-      handleTinhGiaVanChuyen({
-        huyenId: hoaDonRequest.huyenId,
-        xaId: hoaDonRequest.xaId
-      })
-    }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
   }
   const [confirmDiaChiMoi, setConfirmDiaChiMoi] = useState(false);
@@ -613,7 +610,7 @@ function BanTaiQuay() {
                     <Radio.Group
                       onChange={(e) => {
                         setSelectDiaChi(e.target.value);
-                        if (e.target.value == -2) {
+                        if (e.target.value === -2) {
                           setHoaDonRequest({
                             ...hoaDonRequest,
                             koDungDiaChi: true,
@@ -649,6 +646,7 @@ function BanTaiQuay() {
                             ...hoaDonRequest,
                             diaChiId: e.target.value,
                             isCoDiaChiMoi: true,
+                             phuongThucVanChuyen: 1,
                           });
                         }
                       }}
@@ -1286,6 +1284,17 @@ function BanTaiQuay() {
                                 );
                                 return;
                               }
+                              for (var item of gioHangHienTai) {
+                                if (item.soLuong <= 0) {
+                                  openNotification(
+                                    "error",
+                                    "Hệ thống",
+                                    "Sản phẩm " + item.sanPhamChiTiet.tenSanPham + " số lượng không phù hợp",
+                                    "bottomRight"
+                                  );
+                                  return;
+                                }
+                              }
                               if (hoaDonRequest) {
                                 if (!hoaDonRequest.khachHangId) {
                                   openNotification(
@@ -1315,16 +1324,15 @@ function BanTaiQuay() {
                                     );
                                     return;
                                   }
-                                  if (!hoaDonRequest.xaId) {
+                                  if (!xa) {
                                     openNotification(
                                       "error",
                                       "Hệ thống",
-                                      "Vui lòng chọn xã1",
+                                      "Vui lòng chọn xã",
                                       "bottomRight"
                                     );
                                     return;
                                   }
-
                                   if (!hoaDonRequest.hoNguoiNhan) {
                                     openNotification(
                                       "error",
@@ -1516,8 +1524,8 @@ function BanTaiQuay() {
               </Row>
             )}
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 }

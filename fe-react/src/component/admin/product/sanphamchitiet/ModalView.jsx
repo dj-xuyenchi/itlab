@@ -70,7 +70,16 @@ function ModalView({ id }) {
           style={{
             maxWidth: 600,
           }}
+        >  <Form.Item
+          label="Mã SP"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
         >
+            <Input disabled value={chatLieu.maSanPham} />
+          </Form.Item>
           <Form.Item
             label="Màu sắc"
             rules={[
