@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -21,6 +22,9 @@ import java.util.*;
 public class BanTaiQuayController {
     @Autowired
     private IMuaTaiQuayService _muaTaiQuay;
+
+
+
 
     @RequestMapping(value = "/layhoadontaiquay", method = RequestMethod.GET)
     public ResponseEntity<?> layHetHoaDonCho() {
