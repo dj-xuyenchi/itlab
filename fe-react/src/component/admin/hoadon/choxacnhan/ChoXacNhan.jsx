@@ -227,7 +227,7 @@ function ChoGiaoHang() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon hoaDonId={id} type={true} />,
+      render: (id) => <ChiTietHoaDon hoaDonId={id} />,
     },
   ];
   const [data, setData] = useState([]);
@@ -254,7 +254,6 @@ function ChoGiaoHang() {
           "Hóa đơn" + item + "sản phẩm đã hết hàng",
           "bottomRight"
         );
-        return;
       }
       openNotification(
         "success",

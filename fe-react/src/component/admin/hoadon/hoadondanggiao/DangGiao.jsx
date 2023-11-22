@@ -296,7 +296,7 @@ function DangGiao() {
           >
             Xác nhận
           </Button>
-          <Modal title="Xác nhận hóa đơn" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered>
+          <Modal title="Xác nhận hóa đơn" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <p>Bạn có chắc muốn xác nhận hóa đơn</p>
           </Modal>
           <Modal title="Xác nhận hủy hóa đơn" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2}>

@@ -22,14 +22,12 @@ public class SanPhamSuKien {
     private Long id;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
-    @JsonIgnore
+//    @JsonIgnore
     private SanPham sanPham;
     @JoinColumn(name = "sukiengiamgiaid")
     @ManyToOne
-    @JsonIgnore
+//    @JsonIgnore
     private SuKienGiamGia suKienGiamGia;
-    @Column(name = "phantramgiam")
-    private Double phanTramGiam;
     @OneToMany(mappedBy = "sanPhamSuKien")
     @JsonIgnore
     private List<HoaDon> hoaDonList;

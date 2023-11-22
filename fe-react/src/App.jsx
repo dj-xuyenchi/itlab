@@ -13,6 +13,8 @@ import userSlice from "./component/login/userSlice";
 import { useEffect } from "react";
 import GioHangThanhToan from "./component/home/giohangthanhtoan/GioHangThanhToan";
 import Product from "./component/admin/product/Product";
+import SuKienGiamGia  from "./component/admin/sukiengiamgia/SuKienGiamGia";
+import SanPhamSuKien  from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
 import HuyDon from "./component/home/giohangthanhtoan/HuyDon";
 import Profile from "./component/home/profile/Profile";
 import HoaDon from "./component/admin/hoadon/HoaDon";
@@ -22,8 +24,6 @@ import ThietKe from "./component/admin/product/thietke/ThietKe";
 import MauSac from "./component/admin/product/mausac/MauSac";
 import KichThuoc from "./component/admin/product/kichthuoc/KichThuoc";
 import SanPhamChiTiet from "./component/admin/product/sanphamchitiet/SanPhamChiTiet";
-import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
-import { QRCode } from "antd";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -52,7 +52,6 @@ function App() {
   return (
     <>
       <Routes>
-
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
@@ -62,17 +61,15 @@ function App() {
         <Route path="/vnpay/ketqua" element={<HuyDon />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/admin/hoadon" element={<HoaDon />} />
+        <Route path="/admin/sukiengiamgia" element={<SuKienGiamGia />} />
+        <Route path="/admin/sukiengiamgia/sanphamsukien" element={<SanPhamSuKien />} />
         <Route path="/admin/dashboard" element={<DashBoard />} />
         <Route path="/admin/sanpham/chatlieu" element={<ChatLieu />} />
         <Route path="/admin/sanpham/nhomsanpham" element={<NhomSanPham />} />
         <Route path="/admin/sanpham/thietke" element={<ThietKe />} />
         <Route path="/admin/sanpham/mausac" element={<MauSac />} />
         <Route path="/admin/sanpham/kichthuoc" element={<KichThuoc />} />
-        <Route
-          path="/admin/sanpham/sanphamchitiet"
-          element={<SanPhamChiTiet />}
-        />
-        <Route path="/admin/bantaiquay" element={<BanTaiQuay />} />
+        <Route path="/admin/sanpham/sanphamchitiet" element={<SanPhamChiTiet />} />
       </Routes>
     </>
   );

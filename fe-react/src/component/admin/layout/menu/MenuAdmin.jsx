@@ -77,10 +77,22 @@ const items = [
     <FaUserFriends />
   ),
   getItem(
-    <Link to={"/admin/bantaiquay"}>Bán hàng tại quầy</Link>,
+    <Link to={"/admin/sanpham"}>Bán hàng tại quầy</Link>,
     "62",
     <BsShopWindow />
   ),
+  getItem("Quản lý sự kiện", "sub5", <BsFillBoxSeamFill />, [
+    getItem(
+      <Link to={"/admin/sukiengiamgia"}>Sự kiện giảm giá</Link>,
+      "2",
+      <BsFillBoxSeamFill />
+    ),
+    getItem(
+      <Link to={"/admin/sukiengiamgia/sanphamsukien"}>Sản phẩm sự kiện</Link>,
+      "3",
+      <TbPackages />
+    ),
+  ]),
 ];
 
 const rootSubmenuKeys = ["sub1", "sub2", "sub4"];

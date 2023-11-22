@@ -14,16 +14,15 @@ import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
 import it.lab.modelcustom.respon.SanPhamChiTiet;
 import it.lab.repository.*;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SanPhamService implements ISanPhamService {
@@ -83,6 +82,11 @@ public class SanPhamService implements ISanPhamService {
             return null;
         }
         return new SanPhamChiTiet(SanPhamDTO.fromEntity(sp.get()), SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findSanPhamChiTietsBySanPham(sp.get())));
+    }
+
+    @Override
+    public SanPham findById(long id) {
+        return _sanPhamRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -178,8 +182,6 @@ public class SanPhamService implements ISanPhamService {
         return layHetThietKe();
     }
 
-
-
     @Override
     public Page<ThietKeDTO> themThietKe(ThietKe thietKe) {
         thietKe.setNgayTao(LocalDate.now());
@@ -227,11 +229,6 @@ public class SanPhamService implements ISanPhamService {
     @Override
     public MauSacDTO layMauSacById(Long mauSacId) {
         return MauSacDTO.fromEntity(_mauSacRepo.findById(mauSacId).get());
-    }
-
-    @Override
-    public SanPhamDTO laySanPhamById(Long sanPhamId) {
-        return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());
     }
 
     @Override
@@ -307,59 +304,6 @@ public class SanPhamService implements ISanPhamService {
         _sanPhamChiTietRepository.save(sanPhamThayDoi);
         return laySanPhamChiTietCuaSanPham(sanPhamChiTiet.getSanPhamId());
     }
-//    @Override
-//    public ResponObject<SanPhamDTO, APIStatus> suaSanPham(SanPhamRequest sanPhamRequest) {
-//        try {
-//            SanPham sanPham = _sanPhamRepository.findById(sanPhamRequest.getId())
-//                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy sản phẩm với ID: " + sanPhamRequest.getId()));
-//
-//            // Cập nhật thông tin sản phẩm
-//            sanPham.setTenSanPham(sanPhamRequest.getTenSanPham());
-//            sanPham.setGiaNhap(sanPhamRequest.getGiaNhap());
-//            sanPham.setGiaBan(sanPhamRequest.getGiaBan());
-//            sanPham.setMoTa(sanPhamRequest.getMoTa());
-//            sanPham.setSoLuongTon(sanPhamRequest.getSoLuongTon());
-//            sanPham.setSoLuongDaBan(sanPhamRequest.getSoLuongDaBan());
-//            sanPham.setSoLuongLoi(sanPhamRequest.getSoLuongLoi());
-//            sanPham.setSoLuongTraHang(sanPhamRequest.getSoLuongTraHang());
-//            sanPham.setNgayCapNhat(LocalDate.now());
-//
-//            // Cập nhật mối quan hệ với các bảng khác
-//            sanPham.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId())
-//                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy chất liệu với ID: " + sanPhamRequest.getChatLieuId())));
-//            sanPham.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId())
-//                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy nhóm sản phẩm với ID: " + sanPhamRequest.getNhomSanPhamId())));
-//            sanPham.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId())
-//                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy thiết kế với ID: " + sanPhamRequest.getThietKeId())));
-//
-//            // Lưu thông tin sản phẩm đã cập nhật
-//            _sanPhamRepository.save(sanPham);
-//
-//            // Chuyển đổi sản phẩm thành DTO
-//            SanPhamDTO sanPhamDTO = SanPhamDTO.fromEntity(sanPham);
-//
-//            // Trả về kết quả cùng với trạng thái API
-//            return new ResponObject<>(sanPhamDTO, APIStatus.THANHCONG, "Cập nhật sản phẩm thành công.");
-//
-//        } catch (EntityNotFoundException ex) {
-//            // Xử lý ngoại lệ nếu không tìm thấy đối tượng liên quan
-//            return new ResponObject<>(null, APIStatus.THATBAI, ex.getMessage());
-//        } catch (Exception ex) {
-//            // Xử lý bất kỳ ngoại lệ khác không mong đợi
-//            return new ResponObject<>(null, APIStatus.THATBAI, "Có lỗi xảy ra trong quá trình cập nhật sản phẩm: " + ex.getMessage());
-//        }
-//    }
-
-
-
-
-//    private List<it.lab.entity.SanPham> isSanPhamDaTonTai(SanPhamRequest sanPham) {
-//        NhomSanPham nhomSanPham = _nhomSanPhamRepo.findById(sanPham.getNhomSanPhamId()).get();
-//        ThietKe thietKe = _thietKeRepo.findById(sanPham.getThietKeId()).get();
-//        ChatLieu chatLieu = _chatLieuRepo.findById(sanPham.getChatLieuId()).get();
-//        List<it.lab.entity.SanPham> sanPhamGoc = _sanPhamRepository.findSanPhamsByNhomSanPhamAndThietKeAndChatLieu(nhomSanPham, thietKe, chatLieu);
-//        return sanPhamGoc;
-//    }
 
     private List<it.lab.entity.SanPhamChiTiet> isSanPhamChiTietDaTonTai(SanPhamChiTietRequest sanPhamChiTiet) {
         MauSac mauSac = _mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get();
@@ -369,20 +313,16 @@ public class SanPhamService implements ISanPhamService {
         return sanPhamChiTietGoc;
     }
 
-
     @Override
     public Page<SanPhamChiTietDTO> themSanPhamChiTiet(SanPhamChiTietRequest sanPhamChiTiet) {
         if (isSanPhamChiTietDaTonTai(sanPhamChiTiet).size() != 0) {
             return new Page<SanPhamChiTietDTO>(null, 0, 10000);
         }
         SanPham sanPham = _sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get();
-        MauSac mauSac =_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get();
-        KichThuoc kichThuoc=_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get();
         it.lab.entity.SanPhamChiTiet sanPhamMoi = new it.lab.entity.SanPhamChiTiet();
         sanPhamMoi.setSanPham(_sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get());
-        sanPhamMoi.setMauSac(mauSac);
-        sanPhamMoi.setTenSanPham(sanPham.getTenSanPham()+" "+mauSac.getTenMau()+" "+kichThuoc.getTenKichThuoc());
-        sanPhamMoi.setKichThuoc(kichThuoc);
+        sanPhamMoi.setMauSac(_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get());
+        sanPhamMoi.setKichThuoc(_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get());
         sanPhamMoi.setGiaBan(sanPham.getGiaBan());
         sanPhamMoi.setGiaNhap(sanPham.getGiaNhap());
         sanPhamMoi.setTrangThai(TrangThaiSanPhamChiTiet.CONHANG);
@@ -406,6 +346,10 @@ public class SanPhamService implements ISanPhamService {
         return SanPhamChiTietDTO.fromEntity(_sanPhamChiTietRepository.findById(sanPhamChiTietId).get());
     }
 
+    @Override
+    public SanPhamDTO laySanPhamById(Long sanPhamId) {
+        return null;
+    }
 
     @Override
     public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId) {
@@ -441,5 +385,10 @@ public class SanPhamService implements ISanPhamService {
         sanPham.setMaSanPham("SP" + sanPham.getId());
         _sanPhamRepository.save(sanPham);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
+    }
+
+    @Override
+    public SanPham findById(Long id) {
+        return _sanPhamRepository.findById(id).orElse(null);
     }
 }
