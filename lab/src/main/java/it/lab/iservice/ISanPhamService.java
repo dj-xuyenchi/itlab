@@ -92,8 +92,8 @@ public interface ISanPhamService {
     public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId);
 
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException;
+
+    public Page<SanPhamDTO> suaSanPham(SanPhamRequest sanPham);
 }
 
-
-//    public Page<SanPhamDTO> suaSanPham(SanPhamRequest sanPhamRequest);
 

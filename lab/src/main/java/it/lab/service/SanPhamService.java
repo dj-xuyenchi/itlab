@@ -389,6 +389,11 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public Page<SanPhamDTO> suaSanPham(SanPhamRequest sanPham) {
+        return null;
+    }
+
+    @Override
     public SanPham findById(Long id) {
         return _sanPhamRepository.findById(id).orElse(null);
     }
