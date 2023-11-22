@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MauSacService implements IMauSacService {
@@ -24,7 +25,7 @@ public class MauSacService implements IMauSacService {
             list.sort(Comparator.comparing(MauSac::getNgayTao));
         }
         if (keyWord != null) {
-            list = list.stream().filter(x -> x.getTenMau().toLowerCase().toLowerCase().contains(keyWord.toLowerCase())).toList();
+            list = list.stream().filter(x -> x.getTenMau().toLowerCase().toLowerCase().contains(keyWord.toLowerCase())).collect(Collectors.toList());
         }
         return new Page<MauSacDTO>(MauSacDTO.fromCollection(list), page, pageSize);
     }

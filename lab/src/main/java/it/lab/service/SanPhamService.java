@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SanPhamService implements ISanPhamService {
@@ -56,21 +57,21 @@ public class SanPhamService implements ISanPhamService {
         if (list.size() > 0) {
             list.sort(Comparator.comparing(SanPham::getNgayTao).reversed());
         }
-        list = list.stream().filter(x -> x.getTrangThai() == TrangThaiSanPham.DANGBAN).toList();
+        list = list.stream().filter(x -> x.getTrangThai() == TrangThaiSanPham.DANGBAN).collect(Collectors.toList());
         if (thietKeId != null) {
-            list = list.stream().filter(x -> x.getThietKe().getId() == thietKeId).toList();
+            list = list.stream().filter(x -> x.getThietKe().getId() == thietKeId).collect(Collectors.toList());
         }
         if (chatLieuId != null) {
-            list = list.stream().filter(x -> x.getChatLieu().getId() == chatLieuId).toList();
+            list = list.stream().filter(x -> x.getChatLieu().getId() == chatLieuId).collect(Collectors.toList());
         }
         if (loaiSanPhamId != null) {
-            list = list.stream().filter(x -> x.getNhomSanPham().getId() == loaiSanPhamId).toList();
+            list = list.stream().filter(x -> x.getNhomSanPham().getId() == loaiSanPhamId).collect(Collectors.toList());
         }
         if (mauSacId != null) {
-            list = list.stream().filter(x -> x.getSanPhamChiTietList().stream().anyMatch(y -> y.getMauSac().getId() == mauSacId)).toList();
+            list = list.stream().filter(x -> x.getSanPhamChiTietList().stream().anyMatch(y -> y.getMauSac().getId() == mauSacId)).collect(Collectors.toList());
         }
         if (kichThuocId != null) {
-            list = list.stream().filter(x -> x.getSanPhamChiTietList().stream().anyMatch(y -> y.getKichThuoc().getId() == kichThuocId)).toList();
+            list = list.stream().filter(x -> x.getSanPhamChiTietList().stream().anyMatch(y -> y.getKichThuoc().getId() == kichThuocId)).collect(Collectors.toList());
         }
         return new Page<SanPhamDTO>(SanPhamDTO.fromCollection(list), page, pageSize);
     }
@@ -353,7 +354,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId) {
-        return new Page<SanPhamChiTietDTO>(SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findAll().stream().filter(x -> x.getSanPham().getId() == sanPhamId).toList()), 0, 1000);
+        return new Page<SanPhamChiTietDTO>(SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findAll().stream().filter(x -> x.getSanPham().getId() == sanPhamId).collect(Collectors.toList())), 0, 1000);
 
     }
 
