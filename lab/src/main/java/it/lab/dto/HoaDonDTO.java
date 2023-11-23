@@ -37,7 +37,6 @@ public class HoaDonDTO {
     private Double phiVanChuyen;
     private TrangThaiHoaDon trangThai;
     private NguoiDungVoucher voucherGiaoHang;
-    private SanPhamSuKien sanPhamSuKien;
     private NguoiDungVoucher voucherGiam;
     private NguoiDung nhanVien;
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
@@ -59,7 +58,6 @@ public class HoaDonDTO {
                 entity.getPhiGiaoHang(),
                 entity.getTrangThai(),
                 entity.getVoucherGiaoHang(),
-                entity.getSanPhamSuKien(),
                 entity.getVoucherGiam(),
                 entity.getNhanVien(),
                 entity.getBinhLuanDanhGiaList(),
