@@ -56,7 +56,7 @@ public class SanPham {
     private ThietKe thietKe;
     @JoinColumn(name = "nhomsanphamid")
     @ManyToOne
-    @JsonIgnore
+//    @JsonIgnore
     private NhomSanPham nhomSanPham;
     @JoinColumn(name = "chatlieuid")
     @ManyToOne

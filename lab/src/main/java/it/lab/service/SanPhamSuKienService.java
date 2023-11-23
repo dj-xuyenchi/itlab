@@ -1,5 +1,6 @@
 package it.lab.service;
 
+import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamSuKien;
 import it.lab.iservice.ISanPhamSuKienService;
 import it.lab.repository.SanPhamRepo;
@@ -18,7 +19,6 @@ public class SanPhamSuKienService implements ISanPhamSuKienService {
     @Autowired
     SanPhamRepo sanPhamRepo;
 
-
     @Override
     public Page<SanPhamSuKien> getPage(Pageable pageable) {
         return repo.findAll(pageable);
@@ -35,9 +35,14 @@ public class SanPhamSuKienService implements ISanPhamSuKienService {
     }
 
 
+    @Override
+    public List<Object[]> getSanPhamE(int thang, int nam) {
+        return sanPhamRepo.getSanPhamE(thang, nam);
+    }
 
     @Override
-    public List<Object[]> getSanPhamE(int thang,int nam) {
-        return sanPhamRepo.getSanPhamE(thang,nam);
+    public List<SanPham> getSanPhamTheoNhom(long nhom) {
+        return sanPhamRepo.getSanPhamTheoNhom(nhom);
     }
+
 }

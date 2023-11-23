@@ -1,5 +1,6 @@
 package it.lab.iservice;
 
+import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamSuKien;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,8 @@ public interface ISanPhamSuKienService {
     SanPhamSuKien save(SanPhamSuKien sanPhamSuKien);
     SanPhamSuKien findById(long id);
     List<Object[]> getSanPhamE(int thang,int nam);
+    List<SanPham> getSanPhamTheoNhom(long nhom);
+
 
 
 
