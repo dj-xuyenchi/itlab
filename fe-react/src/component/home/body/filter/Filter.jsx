@@ -137,9 +137,7 @@ function Filter() {
                     width: "90%",
                   }}
                 >
-                  <Stack spacing={[1, 5]} direction={["column", "row"]}>
-                 
-                  </Stack>
+                  <Stack spacing={[1, 5]} direction={["column", "row"]}></Stack>
                 </div>
               </AccordionPanel>
             </AccordionItem>
@@ -273,5 +271,5 @@ function Filter() {
     </>
   );
 }
-
+// hello
 export default Filter;
