@@ -15,14 +15,15 @@ import {
   notification,
 } from "antd";
 import "./style.css";
+import { Row, Table, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { useForm } from "antd/es/form/Form";
-function ModalThemSua({ type, thuocTinh, fetchData }) {
-  const [form] = useForm()
+function ModalThemSua({ type, thuocTinh, fetchData,setData }) {
+  const [form] = useForm();
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -206,13 +207,14 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     }
 
     setIsLoading(true);
-    var form = new FormData();
-    form.append("file1", hinhAnh[0]);
-    form.append("file2", hinhAnh[1]);
-    form.append("data", JSON.stringify(sanPham));
-    const data = await useSanPhamStore.actions.themSanPham(form);
+    var form1 = new FormData();
+    form1.append("file1", hinhAnh[0]);
+    form1.append("file2", hinhAnh[1]);
+    form1.append("data", JSON.stringify(sanPham));
+    const data = await useSanPhamStore.actions.themSanPham(form1);
     if (data.data.status == "THANHCONG") {
       form.resetFields();
+
       openNotification(
         "success",
         "Hệ thống",
@@ -244,6 +246,19 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     setFileList([]);
     setIsModalOpen(false);
     setIsLoading(false);
+  }
+  async function handleSuaSanPham() {
+    if (sanPham.tenSanPham == "") {
+      return;
+    }
+    const data = await useSanPhamStore.actions.suaSanPhamu(sanPham);
+    openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
+    setSanPham({
+      ...sanPham,
+      tenSanPham: "",
+    });
+    setData(data.data.data);
+    setIsModalOpen(false);
   }
   return (
     <>

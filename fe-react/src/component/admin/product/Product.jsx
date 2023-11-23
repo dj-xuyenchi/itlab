@@ -6,16 +6,22 @@ import { selectLanguage } from "../../../language/selectLanguage";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Image, Input, Space, Table, Tag } from "antd";
+import { Button, Image, Input, Space, Table, Tag,Form } from "antd";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
 import ModalThemSua from "./ModalThemSua";
+import ModalView from "./ModalView";
+import { useForm } from "antd/es/form/Form";
+
 function Product() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [chatLieu, setChatLieu] = useState({
+    tenNhom: "",
+  });
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -221,21 +227,28 @@ function Product() {
     {
       title: "Thao tác",
       dataIndex: "id",
-      key: "address",
-      width: "10%",
+      key: "maThietKe",
       align: "center",
-      render: (thietKe) => (
-        <div className="btn-gruop">
-          <div className="btn-sua">
-            <BsFillPencilFill />
-          </div>
-          <div className="btn-sua">
-            <BsFillPencilFill />
-          </div>
+      width: "15%",
+      render: (id) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ModalView id={id} />
+          <ModalThemSua id={id} setData={setData} />
         </div>
       ),
     },
   ];
+  const [form] = useForm()
+  const [data, setData] = useState([]);
+  async function layDuLieu() {
+    const data = await useSanPhamStore.actions.fetchSanPham();
+    setData(data.data.data);
+  }
   function handleSetFilter(source) {
     const thietKe = [];
     const nhomSanPham = [];

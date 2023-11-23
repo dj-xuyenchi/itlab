@@ -349,7 +349,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public SanPhamDTO laySanPhamById(Long sanPhamId) {
-        return null;
+        return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());
     }
 
     @Override
@@ -388,13 +388,43 @@ public class SanPhamService implements ISanPhamService {
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
 
-    @Override
-    public Page<SanPhamDTO> suaSanPham(SanPhamRequest sanPham) {
-        return null;
-    }
 
     @Override
     public SanPham findById(Long id) {
         return _sanPhamRepository.findById(id).orElse(null);
     }
+    @Override
+    public Page<SanPhamDTO> suaSanPham(SanPhamRequest sanPham) {
+        it.lab.entity.SanPham sp = _sanPhamRepository.findById(sanPham.getId()).get();
+        if (sp.getThietKe().getId() == sanPham.getThietKeId() && sp.getNhomSanPham().getId() == sanPham.getNhomSanPhamId() && sp.getChatLieu().getId()==sanPham.getChatLieuId()) {
+
+        } else {
+            if (isSanPhamDaTonTai(sanPham).size() == 1) {
+                return new Page<SanPhamDTO>(null, 0, 10000);
+            }
+        }
+        it.lab.entity.SanPham sanPhamThayDoi = _sanPhamRepository.findById(sanPham.getId()).get();
+        sanPhamThayDoi.setTenSanPham(sanPham.getTenSanPham());
+        sanPhamThayDoi.setGiaNhap(sanPham.getGiaNhap());
+        sanPhamThayDoi.setGiaBan(sanPham.getGiaBan());
+        sanPhamThayDoi.setMoTa(sanPham.getMoTa());
+        sanPhamThayDoi.setNgayCapNhat(LocalDate.now());
+        sanPhamThayDoi.setSoLuongTon(sanPham.getSoLuongTon());
+        sanPhamThayDoi.setSoLuongLoi(sanPham.getSoLuongLoi());
+        sanPhamThayDoi.setSoLuongTraHang(sanPham.getSoLuongTraHang());
+        sanPhamThayDoi.setNhomSanPham(_nhomSanPhamRepo.findById(sanPham.getNhomSanPhamId()).get());
+        sanPhamThayDoi.setThietKe(_thietKeRepo.findById(sanPham.getThietKeId()).get());
+        sanPhamThayDoi.setChatLieu(_chatLieuRepo.findById(sanPham.getChatLieuId()).get());
+        _sanPhamRepository.save(sanPhamThayDoi);
+        return layHetSanPham();
+    }
+
+    private List<it.lab.entity.SanPham> isSanPhamDaTonTai(SanPhamRequest sanPham) {
+        ChatLieu chatLieu = _chatLieuRepo.findById(sanPham.getChatLieuId()).get();
+        NhomSanPham nhomSanPham = _nhomSanPhamRepo.findById(sanPham.getNhomSanPhamId()).get();
+        ThietKe thietKe = _thietKeRepo.findById(sanPham.getThietKeId()).get();
+        List<it.lab.entity.SanPham> sanPhamGoc = _sanPhamRepository.findSanPhamsByThietKeAndNhomSanPhamAndChatLieu(thietKe, nhomSanPham, chatLieu);
+        return sanPhamGoc;
+    }
+
 }

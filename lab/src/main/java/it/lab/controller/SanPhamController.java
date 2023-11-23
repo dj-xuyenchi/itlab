@@ -223,4 +223,9 @@ public class SanPhamController {
         return ResponseEntity.ok(_sanPhamService.laySanPhamById(sanPhamId));
     }
 
+    @RequestMapping(value = "/suasanpham", method = RequestMethod.POST)
+    public ResponseEntity<?> suaSanPham(@RequestBody SanPhamRequest sanPhamRequest) {
+        return ResponseEntity.ok(_sanPhamService.suaSanPham(sanPhamRequest));
+    }
+
 }

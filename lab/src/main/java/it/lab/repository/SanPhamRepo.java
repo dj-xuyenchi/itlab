@@ -2,7 +2,7 @@ package it.lab.repository;
 
 import it.lab.dto.SanPhamDTO;
 import it.lab.dto.SanPhamEDTO;
-import it.lab.entity.SanPham;
+import it.lab.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +23,5 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Long> {
             "ORDER BY SUM(a.soLuong) DESC")
     List<Object[]> getSanPhamE(@Param("thang") int thang, @Param("nam") int nam);
 
+    public List<SanPham> findSanPhamsByThietKeAndNhomSanPhamAndChatLieu(ThietKe thietKe, NhomSanPham nhomSanPham, ChatLieu chatLieu);
 }

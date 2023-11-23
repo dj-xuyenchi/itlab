@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SanPhamRequest {
+    private Long id;
     private String maSanPham;
     private String tenSanPham;
     private Double giaNhap;
