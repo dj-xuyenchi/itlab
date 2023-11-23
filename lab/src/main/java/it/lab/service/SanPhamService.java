@@ -295,8 +295,12 @@ public class SanPhamService implements ISanPhamService {
     @Override
     public Page<SanPhamChiTietDTO> xoaSanPhamChiTiet(Long sanPhamChiTietId) {
         try {
+            it.lab.entity.SanPhamChiTiet sanPhamChiTiet = _sanPhamChiTietRepository.findById(sanPhamChiTietId).get();
+            SanPham sanPham = sanPhamChiTiet.getSanPham();
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon()-sanPhamChiTiet.getSoLuongTon());
             _sanPhamChiTietRepository.deleteById(sanPhamChiTietId);
-            return layHetSanPhamChiTiet();
+            _sanPhamRepository.save(sanPham);
+            return laySanPhamChiTietCuaSanPham(sanPham.getId());
         } catch (Exception e) {
             return null;
         }
@@ -313,6 +317,10 @@ public class SanPhamService implements ISanPhamService {
             }
         }
         it.lab.entity.SanPhamChiTiet sanPhamThayDoi = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
+
+
+        SanPham sanPham = sanPhamThayDoi.getSanPham();
+        sanPham.setSoLuongTon(sanPham.getSoLuongTon()-sanPhamThayDoi.getSoLuongTon()+sanPhamChiTiet.getSoLuongTon());
         sanPhamThayDoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
         sanPhamThayDoi.setGiaNhap(sanPhamChiTiet.getGiaNhap());
         sanPhamThayDoi.setGiaBan(sanPhamThayDoi.getGiaBan());
@@ -324,6 +332,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamThayDoi.setKichThuoc(_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get());
         sanPhamThayDoi.setMauSac(_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get());
         _sanPhamChiTietRepository.save(sanPhamThayDoi);
+        _sanPhamRepository.save(sanPham);
         return laySanPhamChiTietCuaSanPham(sanPhamChiTiet.getSanPhamId());
     }
 

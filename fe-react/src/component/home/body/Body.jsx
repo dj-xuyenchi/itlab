@@ -45,7 +45,7 @@ function Body() {
         <h3>{language.header.title}</h3>
       </div>
       <div className="body-home-container">
-        <Fillter handleFilter={handleFilter}  page={current} pageSize={1} />
+        <Fillter handleFilter={handleFilter}  page={current} pageSize={20} />
         <Product />
       </div>
       <Row style={{

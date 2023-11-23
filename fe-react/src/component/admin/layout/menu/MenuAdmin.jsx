@@ -11,6 +11,7 @@ import { MdGroupWork, MdArchitecture } from "react-icons/md";
 import { TbLayoutDashboard, TbPackages } from "react-icons/tb";
 import { useState } from "react";
 import { Menu } from "antd";
+import { RiRefundFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 function getItem(label, key, icon, children, type) {
   return {
@@ -80,6 +81,11 @@ const items = [
     <Link to={"/admin/bantaiquay"}>Bán hàng tại quầy</Link>,
     "62",
     <BsShopWindow />
+  ),
+  getItem(
+    <Link to={"/admin/doitra"}>Đổi trả</Link>,
+    "64",
+    <RiRefundFill />
   ),
 ];
 
