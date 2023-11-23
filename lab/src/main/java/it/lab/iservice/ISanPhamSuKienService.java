@@ -14,8 +14,9 @@ public interface ISanPhamSuKienService {
     SanPhamSuKien findById(long id);
     List<Object[]> getSanPhamE(int thang,int nam);
     List<SanPham> getSanPhamTheoNhom(long nhom);
+    List<SanPhamSuKien> getAll();
 
-
+    SanPham updateTrangThaiSanPham(SanPham sanPham);
 
 
 }

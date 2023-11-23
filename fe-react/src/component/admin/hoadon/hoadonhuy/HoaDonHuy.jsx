@@ -9,6 +9,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 
 function HoaDonHuy() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -207,6 +208,7 @@ function HoaDonHuy() {
       dataIndex: "ngayTao",
       width: "20%",
       sorter: (a, b) => a - b,
+      render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
       title: "Trạng thái",

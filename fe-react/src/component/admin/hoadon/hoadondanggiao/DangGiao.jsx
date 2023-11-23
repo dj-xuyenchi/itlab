@@ -9,6 +9,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 
 function DangGiao() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -207,6 +208,7 @@ function DangGiao() {
       dataIndex: "ngayTao",
       width: "20%",
       sorter: (a, b) => a - b,
+      render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
       title: "Trạng thái",
@@ -296,7 +298,7 @@ function DangGiao() {
           >
             Xác nhận
           </Button>
-          <Modal title="Xác nhận hóa đơn" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Modal title="Xác nhận hóa đơn" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered>
             <p>Bạn có chắc muốn xác nhận hóa đơn</p>
           </Modal>
           <Modal title="Xác nhận hủy hóa đơn" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2}>

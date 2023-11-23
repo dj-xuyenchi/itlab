@@ -1,6 +1,7 @@
 package it.lab.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.lab.enums.TrangThaiSanPham;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,4 +36,6 @@ public class SanPhamSuKien {
     private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDate ngayCapNhat;
+    @Column(name = "trangthai")
+    private TrangThaiSanPham trangThaiSanPham;
 }

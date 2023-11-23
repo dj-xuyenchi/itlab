@@ -2,6 +2,7 @@ package it.lab.service;
 
 import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamSuKien;
+import it.lab.enums.TrangThaiSanPham;
 import it.lab.iservice.ISanPhamSuKienService;
 import it.lab.repository.SanPhamRepo;
 import it.lab.repository.SanPhamSuKienRepo;
@@ -45,4 +46,18 @@ public class SanPhamSuKienService implements ISanPhamSuKienService {
         return sanPhamRepo.getSanPhamTheoNhom(nhom);
     }
 
+    @Override
+    public List<SanPhamSuKien> getAll() {
+        return repo.findAll();
+    }
+
+    @Override
+    public SanPham updateTrangThaiSanPham(SanPham sanPham) {
+        sanPham.setTrangThai(TrangThaiSanPham.kETTHUCSUKIEN);
+        sanPhamRepo.save(sanPham);
+        return sanPham;
+    }
+//    bỏ sanphamsukienid trong hóa đơn
+//    spsk có cần co trạng thái ko
+//
 }

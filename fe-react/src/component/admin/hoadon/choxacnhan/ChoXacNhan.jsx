@@ -18,6 +18,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useHoaDonChoStore } from "./useHoaDonChoStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 
 function ChoGiaoHang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -216,6 +217,7 @@ function ChoGiaoHang() {
       dataIndex: "ngayTao",
       width: "20%",
       sorter: (a, b) => a - b,
+      render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
       title: "Trạng thái",
@@ -227,7 +229,7 @@ function ChoGiaoHang() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon hoaDonId={id} />,
+      render: (id) => <ChiTietHoaDon hoaDonId={id} type={true} />,
     },
   ];
   const [data, setData] = useState([]);
@@ -254,6 +256,7 @@ function ChoGiaoHang() {
           "Hóa đơn" + item + "sản phẩm đã hết hàng",
           "bottomRight"
         );
+        return;
       }
       openNotification(
         "success",

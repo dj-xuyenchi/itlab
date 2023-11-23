@@ -9,6 +9,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useHoaDonChoGiaoStore } from "./useHoaDonChoGiaoStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 
 function ChoGiaoHang() {
   const [api, contextHolder] = notification.useNotification();
@@ -185,6 +186,7 @@ function ChoGiaoHang() {
       dataIndex: "ngayTao",
       width: "20%",
       sorter: (a, b) => a - b,
+      render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
       title: "Trạng thái",
@@ -196,7 +198,7 @@ function ChoGiaoHang() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon hoaDonId={id}/>,
+      render: (id) => <ChiTietHoaDon hoaDonId={id} />,
     },
   ];
   const [data, setData] = useState([
