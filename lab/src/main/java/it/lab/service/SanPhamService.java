@@ -9,6 +9,7 @@ import it.lab.enums.APIStatus;
 import it.lab.enums.TrangThaiSanPham;
 import it.lab.enums.TrangThaiSanPhamChiTiet;
 import it.lab.iservice.ISanPhamService;
+import it.lab.modelcustom.request.FilterSanPham;
 import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
@@ -20,10 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SanPhamService implements ISanPhamService {
@@ -72,6 +71,33 @@ public class SanPhamService implements ISanPhamService {
         }
         if (kichThuocId != null) {
             list = list.stream().filter(x -> x.getSanPhamChiTietList().stream().anyMatch(y -> y.getKichThuoc().getId() == kichThuocId)).toList();
+        }
+        return new Page<SanPhamDTO>(SanPhamDTO.fromCollection(list), page, pageSize);
+    }
+
+    @Override
+    public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page, Integer pageSize, FilterSanPham filterSanPham) {
+        List<SanPham> list = _sanPhamRepository.findAll();
+        if (list.size() > 0) {
+            list.sort(Comparator.comparing(SanPham::getNgayTao).reversed());
+        }
+        list = list.stream().filter(x -> x.getTrangThai() == TrangThaiSanPham.DANGBAN).toList();
+        if (filterSanPham.getNhomSanPham().length >= 1) {
+            list = list.stream().filter(x -> Arrays.asList(filterSanPham.getNhomSanPham()).contains(x.getNhomSanPham().getId())).toList();
+        }
+        if (filterSanPham.getChatLieu().length >= 1) {
+            list = list.stream().filter(x -> Arrays.asList(filterSanPham.getChatLieu()).contains(x.getChatLieu().getId())).toList();
+        }
+        if (filterSanPham.getMauSac().length >= 1) {
+            list = list.stream().filter(x -> {
+                for (var item : x.getSanPhamChiTietList()) {
+                    if (Arrays.asList(filterSanPham.getMauSac()).contains(item.getMauSac().getId())
+                    && Arrays.asList(filterSanPham.getKichThuoc()).contains(item.getKichThuoc().getId())) {
+                        return true;
+                    }
+                }
+                return false;
+            }).collect(Collectors.toList());
         }
         return new Page<SanPhamDTO>(SanPhamDTO.fromCollection(list), page, pageSize);
     }
@@ -315,12 +341,12 @@ public class SanPhamService implements ISanPhamService {
             return new Page<SanPhamChiTietDTO>(null, 0, 10000);
         }
         SanPham sanPham = _sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get();
-        MauSac mauSac =_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get();
-        KichThuoc kichThuoc=_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get();
+        MauSac mauSac = _mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get();
+        KichThuoc kichThuoc = _kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get();
         it.lab.entity.SanPhamChiTiet sanPhamMoi = new it.lab.entity.SanPhamChiTiet();
         sanPhamMoi.setSanPham(_sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get());
         sanPhamMoi.setMauSac(mauSac);
-        sanPhamMoi.setTenSanPham(sanPham.getTenSanPham()+" "+mauSac.getTenMau()+" "+kichThuoc.getTenKichThuoc());
+        sanPhamMoi.setTenSanPham(sanPham.getTenSanPham() + " " + mauSac.getTenMau() + " " + kichThuoc.getTenKichThuoc());
         sanPhamMoi.setKichThuoc(kichThuoc);
         sanPhamMoi.setGiaBan(sanPham.getGiaBan());
         sanPhamMoi.setGiaNhap(sanPham.getGiaNhap());
@@ -332,7 +358,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamMoi.setHinhAnh(sanPham.getHinhAnh1());
         sanPhamMoi.setNgayTao(LocalDate.now());
         _sanPhamChiTietRepository.save(sanPhamMoi);
-        sanPhamMoi.setMaSanPham("SP"+sanPhamMoi.getId());
+        sanPhamMoi.setMaSanPham("SP" + sanPhamMoi.getId());
         _sanPhamChiTietRepository.save(sanPhamMoi);
         return laySanPhamChiTietCuaSanPham(sanPham.getId());
     }

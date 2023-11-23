@@ -3,6 +3,7 @@ package it.lab.controller;
 import com.google.gson.Gson;
 import it.lab.entity.*;
 import it.lab.iservice.ISanPhamService;
+import it.lab.modelcustom.request.FilterSanPham;
 import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,19 @@ public class SanPhamController {
                 mauSacId.orElse(null),
                 loaiSanPhamId.orElse(null),
                 kichThuocId.orElse(null))
+        );
+    }
+
+    @RequestMapping(value = "/phantrangsanphamfilter", method = RequestMethod.POST)
+    public ResponseEntity<?> layDuLieuSanPhamYeuThich(
+            @RequestParam Integer page,
+            @RequestParam Integer pageSize,
+            @RequestBody FilterSanPham filterSanPham
+    ) {
+        return ResponseEntity.ok(_sanPhamService.phanTrangSanPhamTrangChu(
+                page,
+                pageSize,
+                filterSanPham)
         );
     }
 
@@ -204,10 +218,12 @@ public class SanPhamController {
     public ResponseEntity<?> laySanPhamChiTietById(@RequestParam Long sanPhamChiTietId) {
         return ResponseEntity.ok(_sanPhamService.laySanPhamChiTietById(sanPhamChiTietId));
     }
+
     @RequestMapping(value = "/laysanphamchitietcuasanpham", method = RequestMethod.GET)
     public ResponseEntity<?> laySanPhamChiTietCuaSanPham(@RequestParam Long sanPhamId) {
         return ResponseEntity.ok(_sanPhamService.laySanPhamChiTietCuaSanPham(sanPhamId));
     }
+
     @RequestMapping(value = "/themsanpham", method = RequestMethod.POST)
     public ResponseEntity<?> themSanPham(@RequestPart("file1") MultipartFile data1, @RequestPart("file2") MultipartFile data2, @RequestPart("data") String sanPham) throws IOException {
         Gson gson = new Gson();

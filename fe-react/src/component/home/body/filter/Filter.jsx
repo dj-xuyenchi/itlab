@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { fixMoney } from "../../../../extensions/fixMoney";
 import Tag1 from "../../../common/tag/Tag1";
 import { useFilterStore } from "./useFilter";
-function Filter() {
+function Filter({ handleFilter, page, pageSize }) {
   const language = useSelector(selectLanguage);
   const [value, setValue] = useState(undefined);
   const [thuocTinh, setThuocTinh] = useState(undefined);
@@ -30,13 +30,14 @@ function Filter() {
   const [checkedList2, setCheckedList2] = useState([]);
   const [checkedList3, setCheckedList3] = useState([]);
   const [checkedList4, setCheckedList4] = useState([]);
-  useEffect(() => {
-    layThuocTinh();
-  }, []);
   const [filterMauSac, setFilterMauSac] = useState([]);
   const [filterNhomSanPham, setFilterNhomSanPham] = useState([]);
   const [filterKichThuoc, setFilterKichThuoc] = useState([]);
   const [filterChatLieu, setFilterChatLieu] = useState([]);
+  useEffect(() => {
+    layThuocTinh();
+  }, []);
+
   const onChange = (e) => {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
@@ -50,7 +51,6 @@ function Filter() {
     setInputValue(newValue);
   };
   const [option, setOption] = useState(undefined);
-
   return (
     <>
       <div className="filter-container">
@@ -112,6 +112,16 @@ function Filter() {
                 setCheckedList2([]);
                 setCheckedList3([]);
                 setCheckedList4([]);
+                handleFilter({
+                  page: page,
+                  pageSize: pageSize,
+                  filter: {
+                    mauSac: [],
+                    chatLieu: [],
+                    nhomSanPham: [],
+                    kichThuoc: []
+                  }
+                })
               }}
             >
               Xóa tất cả
@@ -162,6 +172,22 @@ function Filter() {
                           });
                         }
                         setFilterNhomSanPham(filterNhomSanPham);
+                        handleFilter({
+                          page: page,
+                          pageSize: pageSize,
+                          filter: {
+                            mauSac: filterMauSac.map((item) => {
+                              return item.id
+                            }),
+                            chatLieu: filterChatLieu.map((item) => {
+                              return item.id
+                            }),
+                            nhomSanPham: e,
+                            kichThuoc: filterKichThuoc.map((item) => {
+                              return item.id
+                            })
+                          }
+                        })
                       }}
                     />
                   </div>
@@ -210,6 +236,22 @@ function Filter() {
                           });
                         }
                         setFilterChatLieu(filterChatLieu);
+                        handleFilter({
+                          page: page,
+                          pageSize: pageSize,
+                          filter: {
+                            mauSac: filterMauSac.map((item) => {
+                              return item.id
+                            }),
+                            chatLieu: e,
+                            nhomSanPham: filterNhomSanPham.map((item) => {
+                              return item.id
+                            }),
+                            kichThuoc: filterKichThuoc.map((item) => {
+                              return item.id
+                            })
+                          }
+                        })
                       }}
                     />
                   </div>
@@ -258,6 +300,22 @@ function Filter() {
                           });
                         }
                         setFilterKichThuoc(filterKichThuoc);
+                        handleFilter({
+                          page: page,
+                          pageSize: pageSize,
+                          filter: {
+                            mauSac: filterMauSac.map((item) => {
+                              return item.id
+                            }),
+                            chatLieu: filterChatLieu.map((item) => {
+                              return item.id
+                            }),
+                            nhomSanPham: filterNhomSanPham.map((item) => {
+                              return item.id
+                            }),
+                            kichThuoc: e
+                          }
+                        })
                       }}
                     />
                   </div>
@@ -306,6 +364,22 @@ function Filter() {
                           });
                         }
                         setFilterMauSac(filterMauSac);
+                        handleFilter({
+                          page: page,
+                          pageSize: pageSize,
+                          filter: {
+                            mauSac: e,
+                            chatLieu: filterChatLieu.map((item) => {
+                              return item.id
+                            }),
+                            nhomSanPham: filterNhomSanPham.map((item) => {
+                              return item.id
+                            }),
+                            kichThuoc: filterKichThuoc.map((item) => {
+                              return item.id
+                            })
+                          }
+                        })
                       }}
                     />
                   </div>
@@ -388,7 +462,7 @@ function Filter() {
             </Accordion>
           )}
         </div>
-      </div>
+      </div >
     </>
   );
 }

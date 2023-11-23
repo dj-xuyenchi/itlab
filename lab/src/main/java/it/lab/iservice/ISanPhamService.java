@@ -5,6 +5,7 @@ import it.lab.common.ResponObject;
 import it.lab.dto.*;
 import it.lab.entity.*;
 import it.lab.enums.APIStatus;
+import it.lab.modelcustom.request.FilterSanPham;
 import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
@@ -16,6 +17,8 @@ import java.util.List;
 
 public interface ISanPhamService {
     public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page, Integer pageSize, Long chatLieuId, Long thietKeId, Long thuongHieuId, Long mauSacId, Long loaiSanPhamId, Long kichThuocId);
+
+    public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page, Integer pageSize, FilterSanPham filterSanPham);
 
     public SanPhamChiTiet chiTietSanPham(Long sanPhamId);
 
