@@ -68,8 +68,8 @@ List<Object[]> ThongKeThanhPhoMuaNhieu();
     //thong ke doanh thu theo khoang ngay
     @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
             "WHERE h.ngayTao >= :selectedDateStart and h.ngayTao <= :selectedDateEnd")
-    BigDecimal tinhTongDoanhThuTrongKhoangNgay(@Param("selectedDateStart") LocalDate selectedDateStart,
-                                               @Param("selectedDateEnd") LocalDate selectedDateEnd);
+    BigDecimal tinhTongDoanhThuTrongKhoangNgay(@Param("selectedDateStart") LocalDateTime selectedDateStart,
+                                               @Param("selectedDateEnd") LocalDateTime selectedDateEnd);
 
 //thong ke doanh thu cua 12 thang bang bieu do
 @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +

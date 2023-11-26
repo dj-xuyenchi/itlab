@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.YearMonth;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDate;
@@ -117,15 +116,31 @@ public class ThongKeController {
             @RequestParam(value = "selectedDateStart", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String selectedDateStart,
             @RequestParam(value = "selectedDateEnd", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String selectedDateEnd) {
 
-        // Loại bỏ khoảng trắng dư thừa
+        // Trim whitespace from date strings
         selectedDateStart = selectedDateStart.trim();
         selectedDateEnd = selectedDateEnd.trim();
 
+        // Parse the date strings to LocalDate objects
         LocalDate startDate = LocalDate.parse(selectedDateStart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate endDate = LocalDate.parse(selectedDateEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        return repositoryThongKe.tinhTongDoanhThuTrongKhoangNgay(startDate, endDate);
+        // Convert LocalDate to LocalDateTime with time set to start and end of the day
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        // Call the repository method with LocalDateTime parameters
+        return repositoryThongKe.tinhTongDoanhThuTrongKhoangNgay(startDateTime, endDateTime);
     }
+
+
+//    @GetMapping("/tong-khoang-ngay")
+//    public BigDecimal tinhTongDoanhThuTrongKhoangNgay(
+//            @RequestParam(value = "selectedDateStart") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateStart,
+//            @RequestParam(value = "selectedDateEnd") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateEnd) {
+//
+//        return repositoryThongKe.tinhTongDoanhThuTrongKhoangNgay(selectedDateStart, selectedDateEnd);
+//    }
+
 
 // thong ke 12 thang bang bieu do doanh thu tung thang-yyyy
 @GetMapping("/bieu-do")
@@ -226,10 +241,14 @@ public Map<String, Object> layDuLieuDoanhThuThangVaNamHienTai() {
 
 //top san pham ban chay thang
 @GetMapping("/san-pham-ban-chay")
-public List<Object[]> getSanPhamBanChayTrongThang(
+public ResponseEntity<?> getSanPhamBanChayTrongThang(
         @RequestParam("selectedMonth") int selectedMonth,
         @RequestParam("selectedYear") int selectedYear) {
-    return repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
+//    return repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
+    List<Object[]> topSellingProducts =repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth,selectedYear);
+    return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
+
+
 }
 
 

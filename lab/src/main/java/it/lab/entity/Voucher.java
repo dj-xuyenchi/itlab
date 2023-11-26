@@ -37,7 +37,7 @@ public class Voucher {
     @Column(name = "trangthai")
     private TrangThaiVoucher trangThai;
 
-    @Column(name = "soLuong")
+    @Column(name = "soluong")
     private Integer soLuong;
     @Column(name = "ngayketthuc")
     private LocalDate ngayKetThuc;
