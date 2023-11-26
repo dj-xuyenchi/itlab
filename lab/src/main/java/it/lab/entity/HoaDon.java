@@ -56,10 +56,7 @@ public class HoaDon {
     @ManyToOne
     @JsonIgnore
     private NguoiDungVoucher voucherGiaoHang;
-    @JoinColumn(name = "sanphamsukienid")
-    @ManyToOne
-    @JsonIgnore
-    private SanPhamSuKien sanPhamSuKien;
+
     @JoinColumn(name = "vouchergiamid")
     @ManyToOne
     @JsonIgnore

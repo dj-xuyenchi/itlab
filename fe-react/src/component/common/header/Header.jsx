@@ -78,17 +78,19 @@ function Header() {
             </div>
           </div>
           <div className="mid-menu">
-            <img
-              src="https://routine.vn/media/logo/websites/1/logo-black-2x.png"
-              alt="logo"
-            />
+            <Link to="/">
+              <img
+                src="https://routine.vn/media/logo/websites/1/logo-black-2x.png"
+                alt="logo"
+              />
+            </Link>
             <Breadcrumb
               items={[
                 {
                   title: "Home",
                 },
                 {
-                  title: <a href="">Application Center</a>,
+                  title: <a href="">Trang chủ</a>,
                 },
               ]}
             />

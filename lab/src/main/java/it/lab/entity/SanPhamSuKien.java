@@ -28,11 +28,7 @@ public class SanPhamSuKien {
     @ManyToOne
     @JsonIgnore
     private SuKienGiamGia suKienGiamGia;
-    @Column(name = "phantramgiam")
-    private Double phanTramGiam;
-    @OneToMany(mappedBy = "sanPhamSuKien")
-    @JsonIgnore
-    private List<HoaDon> hoaDonList;
+
     @Column(name = "ngaytao")
     private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")

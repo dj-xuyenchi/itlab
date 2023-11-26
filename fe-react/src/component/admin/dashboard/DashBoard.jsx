@@ -12,6 +12,7 @@ import Highlighter from 'react-highlight-words';
 import { Button, Input, Space, Table } from 'antd';
 import { } from '@ant-design/icons';
 import { TbSettingsSearch } from 'react-icons/tb';
+import { useDashBoardStore } from "./useDashBoardStore";
 const data = [
   {
     key: '1',
@@ -280,6 +281,27 @@ function DashBoard() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  async function handleTaiBaoCao() {
+    try {
+      const response = await useDashBoardStore.actions.taiBaoCao();
+
+      // Tạo một đường dẫn URL từ dữ liệu Blob trả về từ API
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // Tạo một thẻ a để kích thích tải xuống file
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'baocao.xlsx'); // Đặt tên file tải về
+      document.body.appendChild(link);
+      link.click();
+
+      // Loại bỏ thẻ a sau khi tải xuống
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading report:', error);
+    }
+  }
   return (
     <>
       <div>
@@ -352,6 +374,9 @@ function DashBoard() {
                     }}
                     direction="horizontal"
                   >
+                    <Button type="primary" size='large' onClick={handleTaiBaoCao}>
+                      Nhận báo cáo
+                    </Button>
                     <Button type="primary" size='large' onClick={showModal}>
                       Thêm cột
                     </Button>

@@ -1,6 +1,8 @@
 package it.lab.service;
 
+import it.lab.common.Email;
 import it.lab.common.ResponObject;
+import it.lab.common.Template;
 import it.lab.dto.DiaChiDTO;
 import it.lab.dto.GioHangDTO;
 import it.lab.dto.PhuongThucThanhToanDTO;
@@ -79,10 +81,29 @@ public class ThanhToanService implements IThanhToan {
             giaTri += sp.getGiaBan() * gh.getSoLuong();
         }
         hd.setGiaTriHd(giaTri + yeuCau.getPhiVanChuyen());
+        String thongBao = Template.hoaDonMoi(hd);
+        guiThongBaoChoNhanVien(thongBao);
         _hoaDonRepo.save(hd);
-        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList,hd.getId()));
+        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _gioHangRepo.deleteAll(ghList);
         return null;
+    }
+
+    private void guiThongBaoChoNhanVien(String thongBao) {
+        List<NguoiDung> lst = _nguoiDungRepo.findAll().stream().filter(x -> {
+            for (var item : x.getQuyenNguoiDungList()) {
+                if (item.getQuyen().getId() == 3 || item.getQuyen().getId() == 2) {
+                    return true;
+                }
+            }
+            return false;
+        }).toList();
+        for (var item : lst) {
+            if (item.getEmail() != null) {
+                Email email = new Email();
+                email.sendContentHTML(item.getEmail(), "Hóa đơn mới", thongBao);
+            }
+        }
     }
 
     @Override
@@ -113,7 +134,7 @@ public class ThanhToanService implements IThanhToan {
 
         _hoaDonRepo.save(hd);
         hd.setMaHoaDon("HD" + hd.getId());
-        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList,hd.getId()));
+        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _hoaDonRepo.save(hd);
         _gioHangRepo.deleteAll(ghList);
         return hd.getMaHoaDon();

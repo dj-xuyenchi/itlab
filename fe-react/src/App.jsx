@@ -24,6 +24,7 @@ import KichThuoc from "./component/admin/product/kichthuoc/KichThuoc";
 import SanPhamChiTiet from "./component/admin/product/sanphamchitiet/SanPhamChiTiet";
 import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
 import { QRCode } from "antd";
+import DoiTra from "./component/admin/doitra/DoiTra";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -68,6 +69,7 @@ function App() {
         <Route path="/admin/sanpham/thietke" element={<ThietKe />} />
         <Route path="/admin/sanpham/mausac" element={<MauSac />} />
         <Route path="/admin/sanpham/kichthuoc" element={<KichThuoc />} />
+        <Route path="/admin/doitra" element={<DoiTra />} />
         <Route
           path="/admin/sanpham/sanphamchitiet"
           element={<SanPhamChiTiet />}
