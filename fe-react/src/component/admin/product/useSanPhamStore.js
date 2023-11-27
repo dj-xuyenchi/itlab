@@ -58,5 +58,9 @@ export const useSanPhamStore = {
                 },
             })
         },
+        async laySanPhamById(payload) {
+            return axiosIns.get('/api/sanpham/laysanphamId?sanPhamId=' + payload
+            )
+        },
     },
 }
