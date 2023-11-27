@@ -3,6 +3,7 @@ import "./style.css";
 import { selectLanguage } from "../../../language/selectLanguage";
 import { Drawer } from "antd";
 import { useState } from "react";
+import GioHangItem from "./GioHangItem";
 function GioHang({ open, setOpen }) {
   const language = useSelector(selectLanguage);
   const [placement, setPlacement] = useState("right");
@@ -12,16 +13,16 @@ function GioHang({ open, setOpen }) {
   return (
     <>
       <Drawer
-        title="Basic Drawer"
+        title={"Giỏ hàng của tôi"}
         placement={placement}
         closable={false}
         onClose={handleCloseGioHang}
         open={open}
         key={placement}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <GioHangItem />
+        <GioHangItem />
+        <GioHangItem />
       </Drawer>
     </>
   );

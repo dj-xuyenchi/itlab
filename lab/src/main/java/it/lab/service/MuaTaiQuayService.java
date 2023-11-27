@@ -108,38 +108,34 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         hoaDon.setPhuongThucThanhToan(phuongThucThanhToan);
         PhuongThucVanChuyen phuongThucVanChuyen = _phuongThucVanChuyenRepo.findById(muaTaiQuayRequest.getPhuongThucVanChuyen()).get();
         hoaDon.setPhuongThucVanChuyen(phuongThucVanChuyen);
-        if (!muaTaiQuayRequest.getKoDungDiaChi()) {
-            if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
-                DiaChi diaChi = new DiaChi();
-                diaChi.setChiTietDiaChi(muaTaiQuayRequest.getChiTietDiaChi());
-                diaChi.setNgayTao(LocalDate.now());
-                diaChi.setHuyenId(muaTaiQuayRequest.getHuyenId());
-                diaChi.setHuyen(muaTaiQuayRequest.getHuyen());
-                diaChi.setTinh(muaTaiQuayRequest.getTinhId());
-                diaChi.setTinh(muaTaiQuayRequest.getTinh());
-                diaChi.setXaId(muaTaiQuayRequest.getXaId());
-                diaChi.setXa(muaTaiQuayRequest.getXa());
-                diaChi.setNguoiDung(nguoiDung);
-                diaChi.setLaDiaChiChinh(false);
-                diaChi.setTrangThai(TrangThaiDiaChi.HOATDONG);
-                diaChi.setSoDienThoai(muaTaiQuayRequest.getSoDienThoai());
-                _diaChiRepo.save(diaChi);
-                hoaDon.setDiaChiGiao(diaChi);
-            } else {
-                DiaChi diaChi = _diaChiRepo.findById(muaTaiQuayRequest.getDiaChiId()).get();
-                hoaDon.setDiaChiGiao(diaChi);
-
-            }
+        if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
+            DiaChi diaChi = new DiaChi();
+            diaChi.setChiTietDiaChi(muaTaiQuayRequest.getChiTietDiaChi());
+            diaChi.setNgayTao(LocalDate.now());
+            diaChi.setHuyenId(muaTaiQuayRequest.getHuyenId());
+            diaChi.setHuyen(muaTaiQuayRequest.getHuyen());
+            diaChi.setTinh(muaTaiQuayRequest.getTinhId());
+            diaChi.setTinh(muaTaiQuayRequest.getTinh());
+            diaChi.setXaId(muaTaiQuayRequest.getXaId());
+            diaChi.setXa(muaTaiQuayRequest.getXa());
+            diaChi.setNguoiDung(nguoiDung);
+            diaChi.setLaDiaChiChinh(false);
+            diaChi.setTrangThai(TrangThaiDiaChi.HOATDONG);
+            diaChi.setSoDienThoai(muaTaiQuayRequest.getSoDienThoai());
+            _diaChiRepo.save(diaChi);
+            hoaDon.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+            hoaDon.setDiaChiGiao(diaChi);
+        } else {
+            hoaDon.setTrangThai(TrangThaiHoaDon.DAGIAO);
         }
+
         hoaDon.setNguoiMua(nguoiDung);
         if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 1) {
-            hoaDon.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
             hoaDon.setPhiGiaoHang(muaTaiQuayRequest.getPhiVanChuyen());
             hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + muaTaiQuayRequest.getPhiVanChuyen());
         }
         if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 3) {
             hoaDon.setNgayGiao(LocalDate.now());
-            hoaDon.setTrangThai(TrangThaiHoaDon.DAGIAO);
         }
         _hoaDonRepo.save(hoaDon);
         String thongbao = Template.hoaDonMoi(hoaDon);
@@ -148,20 +144,20 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     }
 
     private void guiThongBaoChoNhanVien(String thongBao) {
-        List<NguoiDung> lst = _nguoiDungRepo.findAll().stream().filter(x -> {
-            for (var item : x.getQuyenNguoiDungList()) {
-                if (item.getQuyen().getId() == 3 || item.getQuyen().getId() == 2) {
-                    return true;
-                }
-            }
-            return false;
-        }).toList();
-        for (var item : lst) {
-            if (item.getEmail() != null) {
-                Email email = new Email();
-                email.sendContentHTML(item.getEmail(), "Hóa đơn mới", thongBao);
-            }
-        }
+//        List<NguoiDung> lst = _nguoiDungRepo.findAll().stream().filter(x -> {
+//            for (var item : x.getQuyenNguoiDungList()) {
+//                if (item.getQuyen().getId() == 3 || item.getQuyen().getId() == 2) {
+//                    return true;
+//                }
+//            }
+//            return false;
+//        }).toList();
+//        for (var item : lst) {
+//            if (item.getEmail() != null) {
+//                Email email = new Email();
+//                email.sendContentHTML(item.getEmail(), "Hóa đơn mới", thongBao);
+//            }
+//        }
     }
 
     @Override

@@ -8,11 +8,16 @@ function Header() {
   return (
     <>
       <div className="header-admin-container">
-        <div className="shop-logo">
-            <img
-              src="https://routine.vn/media/logo/websites/1/logo-black-2x.png"
-              alt="logo"
-            />
+        <div
+          className="shop-logo"
+          onClick={() => {
+            window.location = "http://localhost:3000/";
+          }}
+        >
+          <img
+            src="https://routine.vn/media/logo/websites/1/logo-black-2x.png"
+            alt="logo"
+          />
         </div>
         <div className="user">
           <div className="user-detail">

@@ -3,7 +3,8 @@ import "./style.css";
 import { selectLanguage } from "../../../language/selectLanguage";
 import { AiOutlineClose } from "react-icons/ai";
 import { fixMoney } from "../../../extensions/fixMoney";
-function YeuThichItem({ open, setOpen }) {
+import { InputNumber } from "antd";
+function GioHangItem({ open, setOpen }) {
   const language = useSelector(selectLanguage);
   return (
     <>
@@ -80,10 +81,13 @@ function YeuThichItem({ open, setOpen }) {
               {fixMoney(20000)} - <del>{fixMoney(20000)}</del>
             </p>
           </div>
+          <div>
+            <InputNumber />
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-export default YeuThichItem;
+export default GioHangItem;
