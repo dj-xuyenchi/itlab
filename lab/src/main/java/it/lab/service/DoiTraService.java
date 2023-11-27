@@ -1,2 +1,6 @@
-package it.lab.service;public class DoiTraService {
+package it.lab.service;
+
+import it.lab.iservice.IDoiTraService;
+
+public class DoiTraService implements IDoiTraService {
 }

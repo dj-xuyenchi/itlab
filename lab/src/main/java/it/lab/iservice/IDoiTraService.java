@@ -1,2 +1,5 @@
-package it.lab.iservice;public class IDoiTraService {
+package it.lab.iservice;
+
+public interface IDoiTraService {
+
 }
