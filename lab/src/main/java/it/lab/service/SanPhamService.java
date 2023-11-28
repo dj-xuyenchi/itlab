@@ -417,4 +417,8 @@ public class SanPhamService implements ISanPhamService {
         _sanPhamRepository.save(sanPham);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
+    @Override
+    public SanPhamDTO laySanPhamById(Long sanPhamId) {
+        return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());
+    }
 }
