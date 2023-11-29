@@ -3,7 +3,7 @@ import "./style.css";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { BsFillBoxSeamFill, BsShopWindow } from "react-icons/bs";
 import { RiBillLine } from "react-icons/ri";
-import { FaBuffer, FaUserFriends, FaTag  } from "react-icons/fa";
+import { FaBuffer, FaUserFriends, FaTag } from "react-icons/fa";
 import { SiZerodha } from "react-icons/si";
 import { AiOutlineBgColors } from "react-icons/ai";
 import { SiSteelseries } from "react-icons/si";
@@ -79,6 +79,11 @@ const items = [
     <FaUserFriends />
   ),
   getItem(
+    <Link to={"/admin/voucher"}>Quản lý voucher</Link>,
+    "6",
+    <FaUserFriends />
+  ),
+  getItem(
     <Link to={"/admin/bantaiquay"}>Bán hàng tại quầy</Link>,
     "62",
     <BsShopWindow />
@@ -88,11 +93,11 @@ const items = [
     "64",
     <RiRefundFill />
   ),
-  getItem("Quản lý sự kiện", "sub5", <FaTag  />, [
+  getItem("Quản lý sự kiện", "sub5", <FaTag />, [
     getItem(
       <Link to={"/admin/sukiengiamgia"}>Sự kiện giảm giá</Link>,
       "2",
-      <BsPercent  />
+      <BsPercent />
     ),
     getItem(
       <Link to={"/admin/sukiengiamgia/sanphamsukien"}>Sản phẩm sự kiện</Link>,

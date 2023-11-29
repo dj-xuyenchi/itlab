@@ -24,7 +24,7 @@ public class Voucher {
     private Long id;
     @Column(name = "mavoucher", unique = true)
     private String maVoucher;
-    @Column(name = "tenvoucher", columnDefinition = "nvarchar(max)")
+    @Column(name = "tenvoucher")
     private String tenVoucher;
     @Column(name = "giatrigiam")
     private Double giaTriGiam;
@@ -32,6 +32,8 @@ public class Voucher {
     private LoaiGiam loaiGiam;
     @Column(name = "ngaytao")
     private LocalDate ngayTao;
+    @Column(name = "soluong")
+    private Integer soLuong;
     @Column(name = "ngaycapnhat")
     private LocalDate ngayCapNhat;
     @Column(name = "trangthai")

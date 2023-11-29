@@ -25,8 +25,9 @@ import SanPhamChiTiet from "./component/admin/product/sanphamchitiet/SanPhamChiT
 import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
 import { QRCode } from "antd";
 import DoiTra from "./component/admin/doitra/DoiTra";
-import SuKienGiamGia  from "./component/admin/sukiengiamgia/SuKienGiamGia";
-import SanPhamSuKien  from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
+import SuKienGiamGia from "./component/admin/sukiengiamgia/SuKienGiamGia";
+import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
+import Voucher from "./component/admin/voucher/Voucher";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -54,8 +55,10 @@ function App() {
   }, []);
   return (
     <>
+
       <Routes>
 
+        <Route path="/admin/voucher" element={<Voucher />} />
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
