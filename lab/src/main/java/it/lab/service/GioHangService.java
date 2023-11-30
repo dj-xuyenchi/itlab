@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class GioHangService implements IGioHangService {
         Optional<GioHang> gioHang = _gioHangRepo.findGioHangByNguoiMuaAndSanPhamChiTiet(ng.get(), spct.get());
         if (gioHang.isEmpty()) {
             GioHang gh = new GioHang();
-            gh.setNgayTao(LocalDate.now());
+            gh.setNgayTao(LocalDateTime.now());
             gh.setNguoiMua(ng.get());
             gh.setSoLuong(soLuong);
             gh.setSanPhamChiTiet(spct.get());

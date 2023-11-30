@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ private PasswordEncoder _bcrypt;
         nguoiDungRepo.setGioiTinh(nguoiDung.getGioiTinh());
         nguoiDungRepo.setHo(nguoiDung.getHo());
         nguoiDungRepo.setTen(nguoiDung.getTen());
-        nguoiDungRepo.setNgayCapNhat(LocalDate.now());
+        nguoiDungRepo.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDungRepo);
         return new ResponObject<>(NguoiDungDTO.fromEntity(nguoiDungRepo), CapNhat.THANHCONG, "Thành công");
     }
@@ -57,7 +58,7 @@ private PasswordEncoder _bcrypt;
             return new ResponObject<>(null, CapNhat.MATKHAUCUSAI, "Thất bại");
         }
         nguoiDungRepo.setMatKhau(_bcrypt.encode(matKhau.getMatKhauMoi()));
-        nguoiDungRepo.setNgayCapNhat(LocalDate.now());
+        nguoiDungRepo.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDungRepo);
         return new ResponObject<>(NguoiDungDTO.fromEntity(nguoiDungRepo), CapNhat.THANHCONG, "Thành công");
     }

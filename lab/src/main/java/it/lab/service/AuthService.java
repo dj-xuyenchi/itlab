@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 public class AuthService implements IAuthService {
@@ -30,11 +31,11 @@ public class AuthService implements IAuthService {
         NguoiDung ng = new NguoiDung();
         ng.setMatKhau(new BCryptPasswordEncoder().encode(nguoiDung.getMatKhau()));
         ng.setEmail(nguoiDung.getEmail());
-        ng.setNgayTao(LocalDate.now());
+        ng.setNgayTao(LocalDateTime.now());
         ng.setTrangThai(TrangThaiNguoiDung.HOATDONG);
         _nguNguoiDungRepo.save(ng);
         QuyenNguoiDung qnd = new QuyenNguoiDung();
-        qnd.setNgayTao(LocalDate.now());
+        qnd.setNgayTao(LocalDateTime.now());
         qnd.setNguoiDung(ng);
         qnd.setQuyen(_quyenRepo.findById(1l).get());
         _quyenNguoiDung.save(qnd);

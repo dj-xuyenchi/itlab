@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "hoadonchitiet")
@@ -31,7 +32,12 @@ public class HoaDonChiTiet {
     @Column(name = "dongia")
     private Double donGia;
     @Column(name = "ngaytao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayCapNhat;
+    @JoinColumn(name = "sanphamdoitraid")
+    @ManyToOne
+    private SanPhamChiTiet sanPhamDoiTra;
+    @Column(name = "soluongdoitra")
+    private Integer soLuongDoiTra;
 }

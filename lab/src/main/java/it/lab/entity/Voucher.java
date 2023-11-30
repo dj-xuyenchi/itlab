@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,11 +32,11 @@ public class Voucher {
     @Column(name = "loaigiam")
     private LoaiGiam loaiGiam;
     @Column(name = "ngaytao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayCapNhat;
     @Column(name = "ngayketthuc")
-    private LocalDate ngayKetThuc;
+    private LocalDateTime ngayKetThuc;
     @Column(name = "soluong")
     private Integer soLuong;
     @Column(name = "trangthai")

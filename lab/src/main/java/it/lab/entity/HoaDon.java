@@ -47,7 +47,7 @@ public class HoaDon {
     @Column(name = "ngaycapnhat")
     private LocalDateTime ngayCapNhat;
     @Column(name = "ngaygiao")
-    private LocalDate ngayGiao;
+    private LocalDateTime ngayGiao;
     @Column(name = "giatrihd")
     private Double giaTriHd;
     @Column(name = "trangthai")

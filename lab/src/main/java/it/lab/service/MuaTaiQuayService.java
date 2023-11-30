@@ -78,7 +78,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         hoaDonNew.setHoaDon(hoaDon);
         hoaDonNew.setSoLuong(0);
         hoaDonNew.setSanPhamChiTiet(sanPhamChiTiet);
-        hoaDonNew.setNgayTao(LocalDate.now());
+        hoaDonNew.setNgayTao(LocalDateTime.now());
         hoaDonNew.setDonGia(sanPhamChiTiet.getGiaBan());
         _hoaDonChiTietRepo.save(hoaDonNew);
         _hoaDonRepo.save(hoaDon);
@@ -111,7 +111,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
             DiaChi diaChi = new DiaChi();
             diaChi.setChiTietDiaChi(muaTaiQuayRequest.getChiTietDiaChi());
-            diaChi.setNgayTao(LocalDate.now());
+            diaChi.setNgayTao(LocalDateTime.now());
             diaChi.setHuyenId(muaTaiQuayRequest.getHuyenId());
             diaChi.setHuyen(muaTaiQuayRequest.getHuyen());
             diaChi.setTinh(muaTaiQuayRequest.getTinhId());
@@ -135,7 +135,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + muaTaiQuayRequest.getPhiVanChuyen());
         }
         if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 3) {
-            hoaDon.setNgayGiao(LocalDate.now());
+            hoaDon.setNgayGiao(LocalDateTime.now());
         }
         _hoaDonRepo.save(hoaDon);
         String thongbao = Template.hoaDonMoi(hoaDon);
@@ -173,7 +173,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             if (muaTaiQuayRequest.getIsCoDiaChiMoi()) {
                 DiaChi diaChi = new DiaChi();
                 diaChi.setChiTietDiaChi(muaTaiQuayRequest.getChiTietDiaChi());
-                diaChi.setNgayTao(LocalDate.now());
+                diaChi.setNgayTao(LocalDateTime.now());
                 diaChi.setHuyenId(muaTaiQuayRequest.getHuyenId());
                 diaChi.setHuyen(muaTaiQuayRequest.getHuyen());
                 diaChi.setTinh(muaTaiQuayRequest.getTinhId());
@@ -199,7 +199,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             hoaDon.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
         }
         if (muaTaiQuayRequest.getPhuongThucVanChuyen() == 3) {
-            hoaDon.setNgayGiao(LocalDate.now());
+            hoaDon.setNgayGiao(LocalDateTime.now());
             hoaDon.setTrangThai(TrangThaiHoaDon.DAGIAO);
         }
         _hoaDonRepo.save(hoaDon);
@@ -216,7 +216,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         nguoiDung.setDiem(0);
         nguoiDung.setGioiTinh(false);
         nguoiDung.setMatKhau(UUID.randomUUID().toString());
-        nguoiDung.setNgayTao(LocalDate.now());
+        nguoiDung.setNgayTao(LocalDateTime.now());
         nguoiDung.setTrangThai(TrangThaiNguoiDung.HOATDONG);
         nguoiDung.setRankKhachHang(_rankKhachRepo.findById(1l).get());
         _nguoiDungRepo.save(nguoiDung);
@@ -243,7 +243,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         hoaDonNew.setHoaDon(hoaDon);
         hoaDonNew.setSoLuong(0);
         hoaDonNew.setSanPhamChiTiet(sanPhamChiTiet.get());
-        hoaDonNew.setNgayTao(LocalDate.now());
+        hoaDonNew.setNgayTao(LocalDateTime.now());
         hoaDonNew.setDonGia(sanPhamChiTiet.get().getGiaBan());
         _hoaDonChiTietRepo.save(hoaDonNew);
         _hoaDonRepo.save(hoaDon);

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +21,13 @@ import java.util.List;
 public class SuKienGiamGiaDTO {
     private Long id;
     private String tenSuKien;
-    private LocalDate ngayBatDau;
-    private LocalDate ngayKetThuc;
+    private LocalDateTime ngayBatDau;
+    private LocalDateTime ngayKetThuc;
     private String moTa;
     private String logoSuKien;
     private TrangThaiSuKienGiamGia trangThai;
-    private LocalDate ngayTao;
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayTao;
+    private LocalDateTime ngayCapNhat;
     private List<SanPhamSuKien> sanPhamSuKienList;
 
     public static SuKienGiamGiaDTO fromEntity(SuKienGiamGia entity) {

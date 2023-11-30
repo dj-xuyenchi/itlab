@@ -18,9 +18,14 @@ import {
 } from "antd";
 import { RiRefundLine } from "react-icons/ri";
 import TextArea from "antd/es/input/TextArea";
+import { useDoiTra } from "./useDoiTra";
+import { fixMoney } from "../../../extensions/fixMoney";
+import DoiSanPham from "./DoiSanPham";
 
 function YeuCauDoiTra({ hoaDonId }) {
   const [api, contextHolder] = notification.useNotification();
+  const [selectedChiTietHoaDon, setSelectedChiTietHoaDon] = useState(undefined);
+  const [dataThayDoi, setDataThayDoi] = useState([])
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
       api.error({
@@ -36,115 +41,164 @@ function YeuCauDoiTra({ hoaDonId }) {
       });
     }
   };
-
-  const dispath = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const columns = [
     {
       title: "Sản phẩm",
-      dataIndex: "tenSanPham",
-      render: (text) => <a>{text}</a>,
+      dataIndex: "sanPhamChiTiet",
+      render: (sanPhamChiTiet) => <>
+        <div style={{
+          display: 'flex'
+        }}>
+
+          <Image src={sanPhamChiTiet.hinhAnh} style={{
+            width: "80px",
+            height: "120px"
+
+          }} />
+          <span style={{
+            marginLeft: "4px"
+          }}>{sanPhamChiTiet.tenSanPham}</span>
+        </div>
+      </>
+      ,
       width: "25%",
     },
     {
       title: "Số lượng",
       dataIndex: "soLuong",
-      width: "10%",
+      width: "15%",
+      render: (soLuong, record, number) => <>
+        <InputNumber min={1} max={soLuong} onChange={(e) => {
+          dataThayDoi[number] = {
+            ...dataThayDoi[number],
+            soLuongDoi: e
+          }
+          setDataThayDoi([...dataThayDoi])
+        }} />/{soLuong}
+      </>,
     },
     {
       title: "Đơn giá",
       dataIndex: "donGia",
       width: "10%",
+      render: (donGia) => <a>{fixMoney(donGia)}</a>,
     },
     {
       title: "Tổng tiền",
-      dataIndex: "tongTien",
+      dataIndex: "donGia",
       width: "10%",
+      render: (donGia, record) => <a>{fixMoney(donGia * record.soLuong)}</a>,
     },
     {
       title: "Ghi chú",
       dataIndex: "ghiChu",
-      render: () => <TextArea rows={4} />,
+      render: (ghiChu, record, number) => <TextArea placeholder="Ghi chú" rows={4} onChange={(e) => {
+        dataThayDoi[number] = {
+          ...dataThayDoi[number],
+          ghiChu: e.target.value
+        }
+        setDataThayDoi([...dataThayDoi])
+
+      }} />,
       width: "20%",
     },
     {
       title: "Hiện trạng sản phẩm",
       dataIndex: "hienTrangSanPham",
-      render: () => (
-        <Select
-          defaultValue="lucy"
-        
-          onChange={null}
-          options={[
-            {
-              value: "jack",
-              label: "Sản phẩm lỗi",
-            },
-            {
-              value: "lucy",
-              label: "Sản phẩm đổi trả",
-            },
-          ]}
-        />
-      ),
+      render: (ghiChu, record, number) =>
+      (
+        Array(dataThayDoi[number]?.soLuongDoi).fill().map((item) => {
+          return <>
+            <Select
+              defaultValue="Hiện trạng sản phẩm"
+              style={{
+                width: "100%"
+              }}
+              onChange={(e) => {
+                dataThayDoi[number] = { ...dataThayDoi[number], hienTrang: e }
+                setDataThayDoi(dataThayDoi)
+              }}
+              options={[{ value: "1", label: "Sản phẩm lỗi", }, { value: "2", label: "Sản phẩm đổi trả", },]} />
+          </>;
+        })
+      )
+      ,
       width: "10%",
     },
     {
       title: "Hình thức đổi trả",
       dataIndex: "action",
-      render: () => (
-        <>
-          <Select
-            defaultValue="lucy"
-          
-            onChange={null}
-            options={[
-              {
-                value: "jack",
-                label: "Đổi trả",
-              },
-              {
-                value: "lucy",
-                label: "Hoàn tiền",
-              },
-            ]}
-          />
-          <Button
-            style={{
-              marginLeft: "4px",
-            }}
-            type="primary"
-          >
-            Chọn sản phẩm
-          </Button>
-        </>
+      render: (ghiChu, record, number) => (
+        Array(dataThayDoi[number]?.soLuongDoi).fill().map((item) => {
+          return <>
+            <Select
+              defaultValue="Hình thức đổi trả"
+              style={{
+                width: "100%"
+              }}
+              onChange={(e) => {
+                dataThayDoi[number] = {
+                  ...dataThayDoi[number],
+                  hinhThuc: e
+                }
+                setDataThayDoi(dataThayDoi)
+              }}
+              options={[
+                {
+                  value: "1",
+                  label: "Đổi sản phẩm",
+                },
+                {
+                  value: "2",
+                  label: "Hoàn tiền",
+                },
+              ]}
+            />
+          </>;
+        })
       ),
-      width: "15%",
+      width: "10%",
     },
-  ];
-  const data = [
     {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
+      title: "Action",
+      dataIndex: "ghiChu",
+      render: (ghiChu, record, number) => (
+        Array(dataThayDoi[number]?.soLuongDoi).fill().map((item) => {
+          return <>
+            <Row style={{
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <DoiSanPham />
+            </Row>
+          </>;
+        })
+      ),
+      width: "10%",
     },
   ];
+  const [data, setData] = useState(undefined)
+  async function handleLayChiTiet() {
+    const data = await useDoiTra.actions.layChiTiet(hoaDonId)
+    setData(data.data)
+  }
+  useEffect(() => {
+    handleLayChiTiet()
+  }, [])
   const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
+    onChange: (selectedRowKeys) => {
+      setSelectedChiTietHoaDon(selectedRowKeys)
     },
     getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
+      disabled: record.name === 'Disabled User',
       name: record.name,
     }),
   };
-  async function handleDoiTra() {}
+  async function handleDoiTra() {
+    console.log(dataThayDoi);
+  }
   return (
     <>
       {contextHolder}
@@ -180,11 +234,16 @@ function YeuCauDoiTra({ hoaDonId }) {
           <Col span={24}>
             <Table
               rowSelection={{
-                type: "checkbox",
+                type: 'checkbox',
                 ...rowSelection,
               }}
               columns={columns}
-              dataSource={data}
+              dataSource={data && data.map((item) => {
+                return {
+                  ...item,
+                  key: item.id
+                }
+              })}
             />
           </Col>
         </Row>

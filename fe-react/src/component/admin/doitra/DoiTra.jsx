@@ -2,7 +2,7 @@ import "./style.css";
 import MenuAdmin from "../layout/menu/MenuAdmin";
 import Header from "../layout/header/Header";
 import React from "react";
-import {} from "@ant-design/icons";
+import { } from "@ant-design/icons";
 import HoanThanh from "../hoadon/hoanthanh/HoanThanh";
 function DoiTra() {
   return (
