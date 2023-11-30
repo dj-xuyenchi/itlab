@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface iVoucherService {
     List<Voucher> searchByName(String tenVoucher);
-    ResponObject<Voucher, APIStatus> layGioHang(Long maVoucher);
-    ResponObject<Voucher, APIStatus> layVoucherTheoMa(Long maVoucher);
+
     public ResponObject<String, APIStatus> themVoucher(Voucher voucher);
 
 

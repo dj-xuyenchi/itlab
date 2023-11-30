@@ -4,9 +4,12 @@ import { Input, Table, Button, Form, Tag } from 'antd';
 import axios from 'axios';
 import "./style.css";
 
+import moment from 'moment';
 import ModalU from './ModalU';
 import ModalD from './ModalD';
 import ModalA from './ModalA';
+import MenuAdmin from '../layout/menu/MenuAdmin';
+import Header from '../layout/header/Header';
 
 const { Search } = Input;
 export default function Voucher() {
@@ -34,7 +37,7 @@ export default function Voucher() {
             dataIndex: 'loaiGiam',
             key: 'loaiGiam',
         }, {
-            title: 'Giá trị hiển thị',
+            title: 'Mức giảm',
             dataIndex: 'giaTriGiam',
             key: 'giaTriGiamDisplay',
             render: (giaTriGiam, record) => {
@@ -52,17 +55,38 @@ export default function Voucher() {
             key: 'soLuong',
         },
         {
-            title: 'Ngày tạo',
+            title: 'Ngày tạo ',
             dataIndex: 'ngayTao',
             key: 'ngayTao',
+            render: (ngayTao) => (
+                <span >
+
+                    {moment(ngayTao).format('DD/MM/YYYY')}
+
+                </span>
+            )
         },
+        // {
+        //     title: 'Ngày hết hạn',
+        //     dataIndex: 'ngayhethan',
+        //     key: 'ngayhethan',
+        //     render: (ngayhethan) => (
+        //         <span style={{ backgroundColor: 'yellow', fontWeight: 'bold' }}>
+
+        //             {moment(ngayhethan).format('DD/MM/YYYY')}
+
+        //         </span>
+
+        //     ),
+        // },
         {
             title: "Ngày cập nhật",
             dataIndex: "ngayCapNhat",
             key: "ngayCapNhat",
             width: "15%",
             render: (ngayCapNhat) => (
-                <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Chưa cập nh</Tag>}</>
+
+                <>{ngayCapNhat ? <span>{moment(ngayCapNhat).format('DD/MM/YYYY')}</span> : <Tag color="processing">Chưa cập nhật</Tag>}</>
             ),
         },
         {
@@ -70,6 +94,7 @@ export default function Voucher() {
             dataIndex: 'trangThai',
             key: 'trangThai',
         },
+
         {
             title: 'Action',
             dataIndex: '',
@@ -134,39 +159,46 @@ export default function Voucher() {
 
 
     return (
-        <div>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-            <Form>
-                <div className='hed'>
-                    {/* <Search className='sear' placeholder="Nhập Tên Voucher" enterButton="Search" size="large" loading /> */}
-                    <Search
-                        className='sear'
-                        placeholder="Nhập Tên Voucher"
-                        enterButton="Search"
-                        size="large"
-                        loading={loading}
-                        onChange={handleSearchChange}
-                    />
+        <div><Header />
+            <MenuAdmin />
+            <div className="body-container" >
+                <div>
+                    {/* <Header /> */}
+
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                    <Form>
+                        <div className='hed'>
+                            {/* <Search className='sear' placeholder="Nhập Tên Voucher" enterButton="Search" size="large" loading /> */}
+                            <Search
+                                className='sear'
+                                placeholder="Nhập Tên Voucher"
+                                enterButton="Search"
+                                size="large"
+                                loading={loading}
+                                onChange={handleSearchChange}
+                            />
+                        </div>
+
+
+                        <div className="button"
+                            style={{
+                                display: 'flex',
+                                justifyContent: "flex-end",
+                                marginBottom: "10px",
+                            }}>
+
+
+                            <ModalA />
+
+                        </div>
+                        <div className='cart'>
+                            <Table dataSource={searchResults.length > 0 ? searchResults : vouchers} columns={column} loading={loading} />
+
+                        </div>
+                    </Form>
+
                 </div>
-
-
-                <div className="button"
-                    style={{
-                        display: 'flex',
-                        justifyContent: "flex-end",
-                        marginBottom: "10px",
-                    }}>
-
-
-                    <ModalA />
-
-                </div>
-                <div className='cart'>
-                    <Table dataSource={searchResults.length > 0 ? searchResults : vouchers} columns={column} loading={loading} />
-
-                </div>
-            </Form>
-
+            </div>
         </div>
     );
 }

@@ -14,7 +14,6 @@ import React, { useState } from "react";
 const { Option } = Select;
 function ModalA() {
     const [tenVoucher, setTenVoucher] = useState('')
-    const [maVoucher, setMaVoucher] = useState('')
     const [loaiGiam, setLoaiGiam] = useState('')
     const [giaTriGiam, setGiaTriGiam] = useState('')
     const [soLuong, setSoLuong] = useState('')
@@ -26,26 +25,35 @@ function ModalA() {
             openNotification("error", "Lỗi", "Tên voucher không được để trống", "bottomRight");
             return;
         }
-
-        // if (!maVoucher || maVoucher.trim() === "") {
-        //     openNotification("error", "Lỗi", "Mã voucher không được để trống", "bottomRight");
-        //     return;
-        // }
-
-        if (!loaiGiam || loaiGiam.trim() === "") {
-            openNotification("error", "Lỗi", "Loại giảm không được để trống", "bottomRight");
+        if (!loaiGiam) {
+            openNotification("error", "Lỗi", "Vui lòng chọn Loại giảm!", "bottomRight");
             return;
         }
-
         if (!giaTriGiam || giaTriGiam.trim() === "") {
             openNotification("error", "Lỗi", "Giá trị giảm không được để trống", "bottomRight");
             return;
-        }
-
-        if (!soLuong || isNaN(soLuong)) {
-            openNotification("error", "Lỗi", "Số lượng không hợp lệ", "bottomRight");
+        } else if (isNaN(giaTriGiam) || giaTriGiam <= 0) {
+            openNotification("error", "Lỗi", "Giá trị giảm phải là một số dương lớn hơn 0!", "bottomRight");
             return;
         }
+        if (loaiGiam === 'PHANTRAM' && (giaTriGiam < 0 || giaTriGiam > 100)) {
+            openNotification("error", "Lỗi", "Giá trị giảm phần trăm phải nằm trong khoảng từ 0 đến 100!", "bottomRight");
+            return;
+        }
+        if (loaiGiam === 'GIAMTHANG' && (giaTriGiam <= 1000)) {
+            openNotification("error", "Lỗi", "Bạn đang dùng tiền VIỆT đấy ít nhất hãy cho giảm 1000 đ", "bottomRight");
+            return;
+        }
+
+
+        if (!soLuong) {
+            openNotification("error", "Lỗi", "Số lượng không được để trống", "bottomRight");
+            return;
+        } else if (isNaN(soLuong) || soLuong <= 0) {
+            openNotification("error", "Lỗi", "Số lượng phải là một số dương lớn hơn 0!", "bottomRight");
+            return;
+        }
+
         const voucher = { tenVoucher, loaiGiam, giaTriGiam, soLuong }
 
         console.log(voucher)

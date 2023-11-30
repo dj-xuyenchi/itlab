@@ -35,11 +35,7 @@ public class VoucherController {
         return ResponseEntity.ok(voucherRepo.findAll());
     }
 //
-    @RequestMapping(value = "/tim", method = RequestMethod.GET)
-    public ResponseEntity<?> laythu(@RequestParam long maVoucher)throws IOException {
-        return ResponseEntity.ok(IvoucherService.layGioHang( maVoucher));
 
-    }
 
     @PostMapping(value = "/addVoucher")
     public Voucher create(@RequestBody Voucher voucher) {
@@ -91,7 +87,7 @@ public class VoucherController {
         if (voucher.isPresent()) {
             Voucher existingVoucher = voucher.get();
             if (  existingVoucher.getTrangThai() == TrangThaiVoucher.PHATHANH ) {
-                existingVoucher.setTrangThai(TrangThaiVoucher.NGUNGPHATHANH);
+                existingVoucher.setTrangThai(TrangThaiVoucher.TAMNGUNG);
                 voucherRepo.save(existingVoucher);
 
                 return new ResponseEntity<>(existingVoucher, HttpStatus.OK);
