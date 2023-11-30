@@ -2,12 +2,18 @@ import { useSelector } from "react-redux";
 import "./style.css";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { FiMenu } from "react-icons/fi";
+import { Link } from "react-router-dom";
 function Header() {
   const language = useSelector(selectLanguage);
   return (
     <>
       <div className="header-admin-container">
-        <div className="shop-logo">
+        <div
+          className="shop-logo"
+          onClick={() => {
+            window.location = "http://localhost:3000/";
+          }}
+        >
           <img
             src="https://routine.vn/media/logo/websites/1/logo-black-2x.png"
             alt="logo"

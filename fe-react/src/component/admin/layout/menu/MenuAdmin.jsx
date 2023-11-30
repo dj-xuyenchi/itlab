@@ -3,7 +3,7 @@ import "./style.css";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { BsFillBoxSeamFill, BsShopWindow } from "react-icons/bs";
 import { RiBillLine } from "react-icons/ri";
-import { FaBuffer, FaUserFriends } from "react-icons/fa";
+import { FaBuffer, FaUserFriends, FaTag  } from "react-icons/fa";
 import { SiZerodha } from "react-icons/si";
 import { AiOutlineBgColors } from "react-icons/ai";
 import { SiSteelseries } from "react-icons/si";
@@ -11,7 +11,9 @@ import { MdGroupWork, MdArchitecture } from "react-icons/md";
 import { TbLayoutDashboard, TbPackages } from "react-icons/tb";
 import { useState } from "react";
 import { Menu } from "antd";
+import { RiRefundFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { BsPercent } from 'react-icons/bs';
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -81,6 +83,23 @@ const items = [
     "62",
     <BsShopWindow />
   ),
+  getItem(
+    <Link to={"/admin/doitra"}>Đổi trả</Link>,
+    "64",
+    <RiRefundFill />
+  ),
+  getItem("Quản lý sự kiện", "sub5", <FaTag  />, [
+    getItem(
+      <Link to={"/admin/sukiengiamgia"}>Sự kiện giảm giá</Link>,
+      "2",
+      <BsPercent  />
+    ),
+    getItem(
+      <Link to={"/admin/sukiengiamgia/sanphamsukien"}>Sản phẩm sự kiện</Link>,
+      "3",
+      <TbPackages />
+    ),
+  ]),
 ];
 
 const rootSubmenuKeys = ["sub1", "sub2", "sub4"];

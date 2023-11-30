@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { selectUser } from "../../login/selectUser";
 function Header() {
   const language = useSelector(selectLanguage);
-  const user = useSelector(selectUser)
+  const user = useSelector(selectUser);
   const [openGioHang, setOpenGioHang] = useState(false);
   const [openYeuThich, setOpenYeuThich] = useState(false);
   const [openMenuLeft, setOpenMenuLeft] = useState(false);
@@ -47,11 +47,12 @@ function Header() {
         "bottomRight"
       );
       setTimeout(() => {
-        window.location.href = process.env.REACT_APP_FRONTEND_URL + "login"
-      }, 1000)
-      return
+        window.location.href = process.env.REACT_APP_FRONTEND_URL + "login";
+      }, 1000);
+      return;
     }
-    window.location.href = process.env.REACT_APP_FRONTEND_URL + "profile/" + user.nguoiDung.id
+    window.location.href =
+      process.env.REACT_APP_FRONTEND_URL + "profile/" + user.nguoiDung.id;
   }
   return (
     <>
@@ -104,7 +105,17 @@ function Header() {
               <span>{language.header.search.inputHolder}</span>
             </div>
             <div className="icon-right">
-              <div onClick={handleRedirect}>
+              <div
+                onClick={() => {
+                  var nguoiDung = JSON.parse(localStorage.getItem("user"));
+                  if (nguoiDung) {
+                    handleRedirect();
+                    return;
+                  } else {
+                    window.location = "http://localhost:3000/login";
+                  }
+                }}
+              >
                 <FaRegUser />
               </div>
               <div

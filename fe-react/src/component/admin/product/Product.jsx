@@ -10,6 +10,7 @@ import { Button, Image, Input, Space, Table, Tag } from "antd";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
 import ModalThemSua from "./ModalThemSua";
+import ModalView from "./ModalView";
 function Product() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -221,17 +222,18 @@ function Product() {
     {
       title: "Thao tác",
       dataIndex: "id",
-      key: "address",
-      width: "10%",
+      key: "maThietKe",
       align: "center",
-      render: (thietKe) => (
-        <div className="btn-gruop">
-          <div className="btn-sua">
-            <BsFillPencilFill />
-          </div>
-          <div className="btn-sua">
-            <BsFillPencilFill />
-          </div>
+      width: "15%",
+      render: (id) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ModalView id={id} />
+          {/* <ModalThemSua id={id} setData={setData} /> */}
         </div>
       ),
     },

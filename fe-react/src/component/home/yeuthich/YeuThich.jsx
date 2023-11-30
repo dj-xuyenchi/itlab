@@ -21,6 +21,12 @@ function YeuThich({ open, setOpen }) {
         key={placement}
       >
         <YeuThichItem />
+        <YeuThichItem />
+        <YeuThichItem />
+        <YeuThichItem />
+        <YeuThichItem />
+        <YeuThichItem />
+        <YeuThichItem />
       </Drawer>
     </>
   );
