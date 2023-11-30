@@ -37,7 +37,7 @@ public class SanPhamSuKienController {
     }
 
     @GetMapping("/getnhomsanpham")
-    public ResponseEntity<?> getNhomSP(@RequestParam(name = "id") long id) {
+    public ResponseEntity<List<SanPham>> getNhomSP(@RequestParam(name = "id") long id) {
         return ResponseEntity.ok(service.getSanPhamTheoNhom(id));
     }
 
@@ -51,7 +51,7 @@ public class SanPhamSuKienController {
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
 
-    @PostMapping("/add}")
+    @PostMapping("/add")
     public ResponseEntity<?> saveTheoSanPhamE(@RequestParam(name = "id") long id,
                                               @RequestParam(name = "idSuKien") long idSK
     ) {

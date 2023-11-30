@@ -38,4 +38,5 @@ public class SanPhamSuKien {
     private LocalDate ngayCapNhat;
     @Column(name = "trangthai")
     private TrangThaiSanPham trangThaiSanPham;
+
 }
