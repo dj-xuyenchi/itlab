@@ -1,8 +1,8 @@
 import axios from 'axios'
 const backendUrl = 'https://api.openai.com';
-const KEY = "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";
+const KEY = "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";
 
-const axiosGpt = axios.create({
+const axiosGpt2 = axios.create({
     // You can add your headers here
     // ================================
     baseURL: backendUrl,
@@ -12,7 +12,7 @@ const axiosGpt = axios.create({
 
 
 // ℹ️ Add request interceptor to send the authorization header on each subsequent request after login
-axiosGpt.interceptors.request.use(config => {
+axiosGpt2.interceptors.request.use(config => {
     // Retrieve token from localStorage
     // Set authorization header
     // ℹ️ JSON.parse will convert token to string
@@ -23,10 +23,10 @@ axiosGpt.interceptors.request.use(config => {
 })
 
 // ℹ️ Add response interceptor to handle 403 response
-axiosGpt.interceptors.response.use(response => {
+axiosGpt2.interceptors.response.use(response => {
     return response
 }, error => {
     console.log(error);
     // Handle error
 })
-export default axiosGpt
+export default axiosGpt2
