@@ -1,6 +1,5 @@
 package it.lab.service;
 
-import it.lab.common.Email;
 import it.lab.common.Template;
 import it.lab.dto.*;
 import it.lab.entity.*;
@@ -160,7 +159,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
 //        }
     }
 
-    @Override
+
     public String[] taoHoaDonTaiQuayThanhToanVNPAY(MuaTaiQuayRequest muaTaiQuayRequest) {
         String[] res = new String[2];
         HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuayRequest.getHoaDonId()).get();

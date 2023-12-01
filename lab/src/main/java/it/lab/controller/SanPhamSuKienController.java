@@ -5,6 +5,7 @@ import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamSuKien;
 import it.lab.entity.SuKienGiamGia;
 import it.lab.enums.TrangThaiSanPham;
+import it.lab.enums.TrangThaiSanPhamSuKien;
 import it.lab.iservice.ISanPhamService;
 import it.lab.iservice.ISanPhamSuKienService;
 import it.lab.iservice.ISuKienGiamGiaService;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +63,7 @@ public class SanPhamSuKienController {
         SanPhamSuKien sanPhamSuKien = new SanPhamSuKien();
         sanPhamSuKien.setSanPham(sanPham);
         sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
-        sanPhamSuKien.setTrangThaiSanPham(TrangThaiSanPham.CHAYSUKIEN);
+        sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
 
@@ -77,12 +80,15 @@ public class SanPhamSuKienController {
         SuKienGiamGia suKienGiamGia = suKienGiamGiaService.findById(idSK);
         List<SanPham> sanPhamList = service.getSanPhamTheoNhom(idNhom);
         SanPhamSuKien sanPhamSuKien=null;
+        LocalDate currentDate = LocalDate.now();
         for (int i = 0; i < sanPhamList.size(); i++) {
             sanPhamSuKien=mapSP.get(sanPhamList.get(i).getId());
             if(sanPhamSuKien == null){
                 sanPhamSuKien = new SanPhamSuKien();
                 sanPhamSuKien.setSanPham(sanPhamList.get(i));
                 sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
+                sanPhamSuKien.setNgayTao(currentDate);
+                sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
                 service.save(sanPhamSuKien);
             }
         }

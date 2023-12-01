@@ -1,6 +1,7 @@
 package it.lab.iservice;
 
 import it.lab.dto.*;
+import it.lab.enums.TrangThaiQuetMa;
 import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
 
@@ -25,5 +26,5 @@ public interface IMuaTaiQuayService {
 
     public Boolean taoHoaDonTaiQuay(MuaTaiQuayRequest muaTaiQuayRequest);
 
-    public List<HoaDonChiTietDTO> quetMa(String maSp, Long hoaDonId);
+    public TrangThaiQuetMa quetMa(String maSp, Long hoaDonId);
 }

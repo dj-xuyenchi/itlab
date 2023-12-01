@@ -223,9 +223,6 @@ public class SanPhamController {
         return ResponseEntity.ok(_sanPhamService.laySanPhamById(sanPhamId));
     }
 
-    @RequestMapping(value = "/laysanphamId", method = RequestMethod.GET)
-    public ResponseEntity<?> laySanPhamBy(@RequestParam Long sanPhamId) {
-        return ResponseEntity.ok(_sanPhamService.laySanPhamById(sanPhamId));
-    }
+
 
 }
