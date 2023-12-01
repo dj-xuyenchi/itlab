@@ -59,9 +59,9 @@ function App() {
       <Routes>
 
         <Route path="/admin/voucher" element={<Voucher />} />
-        {/* <Route path="/*" element={<NotFound />} />
+        <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} /> */}
+        <Route path="/login" element={<Login />} />
         <Route path="/sanpham/:id" element={<ProductDetail />} />
         <Route path="/thanhtoan" element={<GioHangThanhToan />} />
         <Route path="/admin/sanpham" element={<Product />} />

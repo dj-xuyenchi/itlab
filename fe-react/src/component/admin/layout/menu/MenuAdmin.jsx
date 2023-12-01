@@ -80,7 +80,7 @@ const items = [
   ),
   getItem(
     <Link to={"/admin/voucher"}>Quản lý voucher</Link>,
-    "6",
+    "65",
     <i className="fa-solid fa-ticket"></i>
     // <FaUserFriends />
   ),

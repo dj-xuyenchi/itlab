@@ -57,8 +57,6 @@ public class VoucherController {
 
         // Kết hợp với chuỗi thông thường
         voucher.setMaVoucher( randomPart.toString());
-
-//        voucher.setMaVoucher("V" + System.currentTimeMillis());
 //        voucher.setMaVoucher(UUID.randomUUID().toString());
         voucher.setNgayTao(LocalDate.now());
         return voucherRepo.save(voucher);

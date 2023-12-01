@@ -13,7 +13,9 @@ import {
     Space
 } from "antd";
 import axios from 'axios';
-const ModalU = ({ recordId }) => {
+const ModalU = ({ recordId, onActionSuccess }) => {
+
+
     const { Option } = Select;
     const [api, contextHolder] = notification.useNotification();
     const openNotification = (type, title, des, placement) => {
@@ -44,6 +46,7 @@ const ModalU = ({ recordId }) => {
         if (validationErrors.length === 0) {
             // Gọi hàm cập nhật với dữ liệu từ state editVoucherData và recordId
             await updateVoucher(recordId, editVoucherData);
+            onActionSuccess();
             setOpen(false);
         } else {
             // Hiển thị thông báo nếu validation không thành công
@@ -74,31 +77,22 @@ const ModalU = ({ recordId }) => {
             if (editVoucherData.loaiGiam === 'PHANTRAM' && (editVoucherData.giaTriGiam < 0 || editVoucherData.giaTriGiam > 100)) {
                 errors.push("Giá trị giảm phần trăm phải nằm trong khoảng từ 0 đến 100!");
             }
-
-
+            if (editVoucherData.loaiGiam === 'GIAMTHANG' && (editVoucherData.giaTriGiam < 1000)) {
+                errors.push("Bạn đang dùng tiền VIỆT đấy ít nhất hãy cho giảm 1000 đ");
+            }
         }
 
         if (!editVoucherData.giaTriGiam) {
             errors.push("Vui lòng nhập Giá trị giảm!");
-        } else if (isNaN(editVoucherData.giaTriGiam) || editVoucherData.giaTriGiam <= 0) {
+        } else if (isNaN(editVoucherData.giaTriGiam)) {
             errors.push("Giá trị giảm phải là một số dương lớn hơn 0!");
         }
-
-        if (!editVoucherData.giaTriGiam) {
-            errors.push("Vui lòng nhập Giá trị giảm!");
-        }
-
-
-
         return errors;
+
     };
-
-
-
     const handleCancel = () => {
         setOpen(false);
     };
-
     const [editVoucherData, setEditVoucherData] = useState({
         tenVoucher: '',
         maVoucher: '',

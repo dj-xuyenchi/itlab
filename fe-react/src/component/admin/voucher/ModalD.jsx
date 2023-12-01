@@ -4,7 +4,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 
 
 import axios from 'axios';
-const ModalD = ({ recordId }) => {
+const ModalD = ({ recordId, onActionSuccess }) => {
     const [api, contextHolder] = notification.useNotification();
     const openNotification = (type, title, des, placement) => {
         if (type === "error") {
@@ -28,6 +28,7 @@ const ModalD = ({ recordId }) => {
     };
     const handleOk = () => {
         handleClickDelete(recordId)
+
         setOpen(false);
     };
     const handleCancel = () => {
@@ -36,6 +37,7 @@ const ModalD = ({ recordId }) => {
     const handleClickDelete = async (id) => {
 
         await axios.patch(`http://localhost:8080/api/voucher/delete/${id}`);
+        onActionSuccess();
         openNotification("success", "Hệ thống", "Đổi trạng thái thành công ~", "bottomRight");
     }
     return (
@@ -45,31 +47,11 @@ const ModalD = ({ recordId }) => {
                 <Button danger shape="circle" icon={<AiOutlineDelete />} onClick={showModal}>
 
                 </Button>
-                {/* <Button
-                    type="primary"
 
-                    onClick={() => {
-                        Modal.confirm({
-
-                            title: 'Confirm',
-                            content: 'Bla bla ...',
-                            footer: (_, { OkBtn, CancelBtn }) => (
-
-                                <>
-                                    <Button onClick={() => handleClickDelete(recordId)}>Custom Button</Button>
-                                    <CancelBtn />
-                                    <OkBtn />
-                                </>
-                            ),
-                        });
-                    }}
-                >
-                    Open Modal Confirm
-                </Button> */}
             </Space>
             <Modal
                 open={open}
-                title="Ngưng hoạt động voucher"
+                title="Đổi trạng thái voucher"
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={(_, { OkBtn, CancelBtn }) => (
