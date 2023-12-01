@@ -21,3 +21,16 @@ export const fixNgayThang = (chuoiThoiGian) => {
 
     return ngayThangNamGioPhutGiay;
 }
+
+export const convertNgayThang = (inputDate) => {
+    const parts = inputDate.split("/");
+    if (parts.length === 3) {
+        // Nếu định dạng hợp lệ (3 phần tử), chuyển đổi
+        const [day, month, year] = parts;
+        const formattedDate = `${year}-${month}-${day}`;
+        return formattedDate;
+    } else {
+        // Nếu định dạng không hợp lệ, trả về null hoặc giá trị mặc định tùy vào yêu cầu của bạn
+        return null;
+    }
+}

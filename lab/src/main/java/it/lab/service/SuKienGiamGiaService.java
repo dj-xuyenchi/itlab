@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Service
 public class SuKienGiamGiaService implements ISuKienGiamGiaService {
     @Autowired
@@ -36,14 +38,14 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
         suKienGiamGiaGoc.setLogoSuKien(suKienGiamGia.getLogoSuKien());
         suKienGiamGiaGoc.setTrangThai(suKienGiamGia.getTrangThai());
         suKienGiamGiaGoc.setNgayTao(suKienGiamGia.getNgayTao());
-        suKienGiamGiaGoc.setNgayCapNhat(LocalDate.now());
+        suKienGiamGiaGoc.setNgayCapNhat(LocalDateTime.now());
         suKienGiamGiaRepo.save(suKienGiamGiaGoc);
         return layHetSuKienGiamGia();
     }
 
     @Override
     public Page<SuKienGiamGiaDTO> themSuKienGiamGia(SuKienGiamGia suKienGiamGia) {
-        suKienGiamGia.setNgayTao(LocalDate.now());
+        suKienGiamGia.setNgayTao(LocalDateTime.now());
         suKienGiamGiaRepo.save(suKienGiamGia);
         suKienGiamGiaRepo.save(suKienGiamGia);
         return layHetSuKienGiamGia();

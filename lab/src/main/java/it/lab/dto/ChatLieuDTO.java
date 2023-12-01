@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class ChatLieuDTO {
     private String maChatLieu;
     private String tenChatLieu;
     private List<SanPham> sanPhamList;
-    private LocalDate ngayTao;
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayTao;
+    private LocalDateTime ngayCapNhat;
 
     public static ChatLieuDTO fromEntity(ChatLieu entity) {
         return new ChatLieuDTO(

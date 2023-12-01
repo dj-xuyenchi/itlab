@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ private PasswordEncoder _bcrypt;
         nguoiDungRepo.setAnhDaiDien(nguoiDung.getAnhDaiDien());
         nguoiDungRepo.setTrangThai(nguoiDung.getTrangThai());
         nguoiDungRepo.setRankKhachHang(nguoiDung.getRankKhachHang());
-        nguoiDungRepo.setNgayCapNhat(LocalDate.now());
+        nguoiDungRepo.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDungRepo);
         return new ResponObject<>(NguoiDungDTO.fromEntity(nguoiDungRepo), CapNhat.THANHCONG, "Thành công");
     }
@@ -71,7 +72,7 @@ private PasswordEncoder _bcrypt;
             return new ResponObject<>(null, CapNhat.MATKHAUCUSAI, "Thất bại");
         }
         nguoiDungRepo.setMatKhau(_bcrypt.encode(matKhau.getMatKhauMoi()));
-        nguoiDungRepo.setNgayCapNhat(LocalDate.now());
+        nguoiDungRepo.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDungRepo);
         return new ResponObject<>(NguoiDungDTO.fromEntity(nguoiDungRepo), CapNhat.THANHCONG, "Thành công");
     }
@@ -84,7 +85,7 @@ private PasswordEncoder _bcrypt;
 
     @Override
     public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung) {
-        nguoiDung.setNgayTao(LocalDate.now());
+        nguoiDung.setNgayTao(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDung);
         nguoiDung.setMaNguoiDung("MND" + nguoiDung.getId());
         nguoiDung.setTen(nguoiDung.getTen());

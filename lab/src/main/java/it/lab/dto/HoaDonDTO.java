@@ -32,7 +32,7 @@ public class HoaDonDTO {
     private String ghiChu;
     private LocalDateTime ngayTao;
     private LocalDateTime ngayCapNhat;
-    private LocalDate ngayGiao;
+    private LocalDateTime ngayGiao;
     private Double giaTriHd;
     private Double phiVanChuyen;
     private TrangThaiHoaDon trangThai;

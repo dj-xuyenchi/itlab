@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -210,7 +211,7 @@ public class HoaDonService implements IHoaDonService {
             hoaDonChiTiet.setHoaDon(hoaDon);
             hoaDonChiTiet.setSanPhamChiTiet(spct);
             hoaDonChiTiet.setSoLuong(soLuong);
-            hoaDonChiTiet.setNgayTao(LocalDate.now());
+            hoaDonChiTiet.setNgayTao(LocalDateTime.now());
             Double giaTri = spct.getGiaBan() * soLuong;
             hoaDonChiTiet.setDonGia(spct.getGiaBan());
             hoaDon.setGiaTriHd(hoaDon.getGiaTriHd() + giaTri);

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class NguoiDungDTO {
     private Boolean gioiTinh;
     private Integer diem;
     private TrangThaiNguoiDung trangThai;
-    private LocalDate ngayTao;
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayTao;
+    private LocalDateTime ngayCapNhat;
     private RankKhachHang rankKhachHang;
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
     private List<DiaChi> diaChiList;

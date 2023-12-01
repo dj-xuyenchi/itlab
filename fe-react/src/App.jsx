@@ -25,8 +25,9 @@ import SanPhamChiTiet from "./component/admin/product/sanphamchitiet/SanPhamChiT
 import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
 import { QRCode } from "antd";
 import DoiTra from "./component/admin/doitra/DoiTra";
-import SuKienGiamGia  from "./component/admin/sukiengiamgia/SuKienGiamGia";
-import SanPhamSuKien  from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
+import SuKienGiamGia from "./component/admin/sukiengiamgia/SuKienGiamGia";
+import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
+import CRM from "./component/admin/crm/CRM";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -74,6 +75,7 @@ function App() {
         <Route path="/admin/doitra" element={<DoiTra />} />
         <Route path="/admin/sukiengiamgia" element={<SuKienGiamGia />} />
         <Route path="/admin/sukiengiamgia/sanphamsukien" element={<SanPhamSuKien />} />
+        <Route path="/admin/crm" element={<CRM />} />
         <Route
           path="/admin/sanpham/sanphamchitiet"
           element={<SanPhamChiTiet />}

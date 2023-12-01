@@ -41,6 +41,16 @@ const items = [
     key: "hoadonhuy",
     icon: <AiFillCloseCircle />,
   },
+  {
+    label: "Đã đổi trả",
+    key: "doitrathanhcong",
+    icon: <MdDoneOutline />,
+  },
+  {
+    label: "Từ chối đổi trả",
+    key: "tuchoidoitra",
+    icon: <AiFillCloseCircle />,
+  },
 ];
 function HoaDon() {
   const language = useSelector(selectLanguage);
@@ -68,6 +78,8 @@ function HoaDon() {
               {current === "hoadonhuy" ? <HoaDonHuy /> : ""}
               {current === "danggiao" ? <DangGiao /> : ""}
               {current === "hoanthanh" ? <HoanThanh /> : ""}
+              {current === "doitrathanhcong" ? <HoanThanh /> : ""}
+              {current === "tuchoidoitra" ? <HoanThanh /> : ""}
             </div>
           </div>
         </div>

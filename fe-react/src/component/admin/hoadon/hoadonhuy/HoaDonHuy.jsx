@@ -286,24 +286,6 @@ function HoaDonHuy() {
             justifyContent: "flex-end",
           }}
         >
-          {/* <Button type="primary" danger onClick={showModal2}>
-            Hủy
-          </Button> */}
-          <Button
-            style={{
-              marginLeft: "12px",
-            }}
-            type="primary"
-            onClick={showModal}
-          >
-            Xác nhận
-          </Button>
-          <Modal title="Xác nhận hóa đơn" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-            <p>Bạn có chắc muốn xác nhận hóa đơn</p>
-          </Modal>
-          <Modal title="Xác nhận hủy hóa đơn" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2}>
-            <p>Bạn có chắc muốn hủy hóa đơn</p>
-          </Modal>
         </Row>
       </div>
     </>
