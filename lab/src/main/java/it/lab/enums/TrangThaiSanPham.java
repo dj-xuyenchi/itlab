@@ -4,5 +4,6 @@ public enum TrangThaiSanPham {
     DANGBAN,
     HETHANG,
     NGUNGBAN,
-    CHAYSUKIEN
+    CHAYSUKIEN,
+    kETTHUCSUKIEN,
 }

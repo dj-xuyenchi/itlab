@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiSuKienGiamGia;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,18 +21,24 @@ public class SuKienGiamGia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "tensukien")
+    @Column(name = "tensukien",columnDefinition = "nvarchar(max)")
     private String tenSuKien;
     @Column(name = "ngaybatdau")
     private LocalDate ngayBatDau;
     @Column(name = "ngayketthuc")
     private LocalDate ngayKetThuc;
-    @Column(name = "mota")
+    @Column(name = "mota",columnDefinition = "nvarchar(max)")
     private String moTa;
     @Column(name = "logosukien")
     private String logoSuKien;
     @Column(name = "trangthai")
+    @JsonIgnore
     private TrangThaiSuKienGiamGia trangThai;
     @OneToMany(mappedBy = "suKienGiamGia")
+    @JsonIgnore
     private List<SanPhamSuKien> sanPhamSuKienList;
+    @Column(name = "ngaytao")
+    private LocalDate ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDate ngayCapNhat;
 }
