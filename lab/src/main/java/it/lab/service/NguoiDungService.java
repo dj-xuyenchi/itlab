@@ -1,5 +1,6 @@
 package it.lab.service;
 
+import it.lab.common.Page;
 import it.lab.common.ResponObject;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
@@ -26,6 +27,12 @@ public class NguoiDungService implements INguoiDungService {
 private PasswordEncoder _bcrypt;
 
     @Override
+    public Page<NguoiDungDTO> layHetNguoiDung() {
+        return new Page<NguoiDungDTO>(NguoiDungDTO.fromCollection(_nguoiDungRepo.findAll()), 0, 10000);
+
+    }
+
+    @Override
     public NguoiDungDTO layThongTinTaiKhoanById(Long id) {
         return NguoiDungDTO.fromEntity(_nguoiDungRepo.findById(id).orElse(null));
     }
@@ -37,9 +44,16 @@ private PasswordEncoder _bcrypt;
             return new ResponObject<>(null, CapNhat.THATBAI, "Thất bại");
         }
         NguoiDung nguoiDungRepo = ng.get();
-        nguoiDungRepo.setGioiTinh(nguoiDung.getGioiTinh());
-        nguoiDungRepo.setHo(nguoiDung.getHo());
         nguoiDungRepo.setTen(nguoiDung.getTen());
+        nguoiDungRepo.setHo(nguoiDung.getHo());
+        nguoiDungRepo.setMatKhau(nguoiDung.getMatKhau());
+        nguoiDungRepo.setEmail(nguoiDung.getEmail());
+        nguoiDungRepo.setSoDienThoai(nguoiDung.getSoDienThoai());
+        nguoiDungRepo.setGioiTinh(nguoiDung.getGioiTinh());
+        nguoiDungRepo.setDiem(nguoiDung.getDiem());
+        nguoiDungRepo.setAnhDaiDien(nguoiDung.getAnhDaiDien());
+        nguoiDungRepo.setTrangThai(nguoiDung.getTrangThai());
+        nguoiDungRepo.setRankKhachHang(nguoiDung.getRankKhachHang());
         nguoiDungRepo.setNgayCapNhat(LocalDate.now());
         _nguoiDungRepo.save(nguoiDungRepo);
         return new ResponObject<>(NguoiDungDTO.fromEntity(nguoiDungRepo), CapNhat.THANHCONG, "Thành công");
@@ -60,5 +74,30 @@ private PasswordEncoder _bcrypt;
         nguoiDungRepo.setNgayCapNhat(LocalDate.now());
         _nguoiDungRepo.save(nguoiDungRepo);
         return new ResponObject<>(NguoiDungDTO.fromEntity(nguoiDungRepo), CapNhat.THANHCONG, "Thành công");
+    }
+
+    @Override
+    public Page<NguoiDungDTO> xoaNguoiDung(Long nguoiDungId) {
+        _nguoiDungRepo.deleteById(nguoiDungId);
+        return layHetNguoiDung();
+    }
+
+    @Override
+    public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung) {
+        nguoiDung.setNgayTao(LocalDate.now());
+        _nguoiDungRepo.save(nguoiDung);
+        nguoiDung.setMaNguoiDung("MND" + nguoiDung.getId());
+        nguoiDung.setTen(nguoiDung.getTen());
+        nguoiDung.setHo(nguoiDung.getHo());
+        nguoiDung.setEmail(nguoiDung.getEmail());
+        nguoiDung.setMatKhau(nguoiDung.getMatKhau());
+        nguoiDung.setAnhDaiDien(nguoiDung.getAnhDaiDien());
+        nguoiDung.setRankKhachHang(nguoiDung.getRankKhachHang());
+        nguoiDung.setSoDienThoai(nguoiDung.getSoDienThoai());
+        nguoiDung.setNgayCapNhat(nguoiDung.getNgayCapNhat());
+        nguoiDung.setTrangThai(nguoiDung.getTrangThai());
+        nguoiDung.setGioiTinh(nguoiDung.getGioiTinh());
+        _nguoiDungRepo.save(nguoiDung);
+        return layHetNguoiDung();
     }
 }
