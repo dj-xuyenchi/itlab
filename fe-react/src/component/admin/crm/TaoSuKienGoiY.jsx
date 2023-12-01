@@ -15,10 +15,8 @@ import dayjs from "dayjs";
 import { DatePicker } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { taoSuKien } from "./context";
-import { useGpt2 } from "../../../plugins/gpt2";
 import { useCrm } from "./crmStore";
 import { isValidDateFormat } from "../../../extensions/testDay";
-import { useGpt3 } from "../../../plugins/gpt3";
 const { RangePicker } = DatePicker;
 function TaoSuKienGoiY({ suKien }) {
     const [isShow, setIsShow] = useState(false);
@@ -56,7 +54,7 @@ function TaoSuKienGoiY({ suKien }) {
         }
     };
     async function handleSendContext2GPT(context) {
-        const data = await useGpt3.actions.chat(context);
+        const data = await useGpt.actions.chat(context);
         var dataNew =
             "{" +
             data.data.choices[0].message.content.split("}")[0].split("{")[1] +

@@ -130,33 +130,29 @@ function YeuCauDoiTra({ hoaDonId }) {
       title: "Hình thức đổi trả",
       dataIndex: "action",
       render: (ghiChu, record, number) => (
-        Array(dataThayDoi[number]?.soLuongDoi).fill().map((item) => {
-          return <>
-            <Select
-              defaultValue="Hình thức đổi trả"
-              style={{
-                width: "100%"
-              }}
-              onChange={(e) => {
-                dataThayDoi[number] = {
-                  ...dataThayDoi[number],
-                  hinhThuc: e
-                }
-                setDataThayDoi(dataThayDoi)
-              }}
-              options={[
-                {
-                  value: "1",
-                  label: "Đổi sản phẩm",
-                },
-                {
-                  value: "2",
-                  label: "Hoàn tiền",
-                },
-              ]}
-            />
-          </>;
-        })
+        <Select
+          defaultValue="Hình thức đổi trả"
+          style={{
+            width: "100%"
+          }}
+          onChange={(e) => {
+            dataThayDoi[number] = {
+              ...dataThayDoi[number],
+              hinhThuc: e
+            }
+            setDataThayDoi(dataThayDoi)
+          }}
+          options={[
+            {
+              value: "1",
+              label: "Đổi sản phẩm",
+            },
+            {
+              value: "2",
+              label: "Hoàn tiền",
+            },
+          ]}
+        />
       ),
       width: "10%",
     },

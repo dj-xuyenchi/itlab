@@ -30,7 +30,7 @@ public class HoaDon {
     @ManyToOne
     @JsonIgnore
     private DiaChi diaChiGiao;
-    @Column(name = "mahoadon",unique = true)
+    @Column(name = "mahoadon", unique = true)
     private String maHoaDon;
     @JoinColumn(name = "phuongthucthanhtoan")
     @ManyToOne
@@ -40,7 +40,7 @@ public class HoaDon {
     @ManyToOne
     @JsonIgnore
     private PhuongThucVanChuyen phuongThucVanChuyen;
-    @Column(name = "ghichu",columnDefinition = "nvarchar(max)")
+    @Column(name = "ghichu", columnDefinition = "nvarchar(max)")
     private String ghiChu;
     @Column(name = "ngaytao")
     private LocalDateTime ngayTao;
@@ -52,11 +52,12 @@ public class HoaDon {
     private Double giaTriHd;
     @Column(name = "trangthai")
     private TrangThaiHoaDon trangThai;
+    @Column(name = "lydotuchoitra",columnDefinition = "nvarchar(max)")
+    private String lyDoTuChoiTra;
     @JoinColumn(name = "vouchergiaohangid")
     @ManyToOne
     @JsonIgnore
     private NguoiDungVoucher voucherGiaoHang;
-
     @JoinColumn(name = "vouchergiamid")
     @ManyToOne
     @JsonIgnore

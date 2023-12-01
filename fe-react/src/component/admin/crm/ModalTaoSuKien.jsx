@@ -133,7 +133,7 @@ function ModalTaoSuKien({ profit }) {
                 }
                 i++;
             }
-        }, 50);
+        }, 1);
     }
 
     useEffect(() => {

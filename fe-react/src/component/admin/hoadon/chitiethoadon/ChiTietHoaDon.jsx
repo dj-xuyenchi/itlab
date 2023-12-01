@@ -30,7 +30,7 @@ import ModalView from "../../product/sanphamchitiet/ModalView";
 import AddSanPham from "./AddSanPham";
 import { useGHN } from "../../../../plugins/ghnapi";
 
-function ChiTietHoaDon({ hoaDonId, type = false }) {
+function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false }) {
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -742,16 +742,34 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                 disabled
                 value={fixMoney(
                   hoaDonChiTiet.giaTriHd -
-                    (hoaDonChiTiet.phiVanChuyen
-                      ? hoaDonChiTiet.phiVanChuyen
-                      : 0)
+                  (hoaDonChiTiet.phiVanChuyen
+                    ? hoaDonChiTiet.phiVanChuyen
+                    : 0)
                 )}
               />
             </Col>
           </Row>
+          {tuChoi && <Row>
+            <Col span={24}>
+              <h6>Lý do từ chối</h6>
+            </Col>
+            <Col span={23} style={{
+              marginTop: "12px",
+              marginBottom: "12px"
+            }}>
+              <TextArea
+                rows={4}
+                disabled
+                value={
+                  hoaDonChiTiet.lyDoTuChoiDoi
+                }
+                maxLength={6}
+              />
+            </Col>
+          </Row>}
           <Row>
             <Col span={11}>
-              <h6>Thông tin sản phẩm</h6>
+              <h6>Thông tin sản phẩm </h6>
             </Col>
             {type ? (
               <Col
@@ -799,10 +817,10 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                       >
                         {data
                           ? data.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.tenSanPham}
-                              </Select.Option>
-                            ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenSanPham}
+                            </Select.Option>
+                          ))
                           : ""}
                       </Select>
                     </Col>
@@ -840,7 +858,10 @@ function ChiTietHoaDon({ hoaDonId, type = false }) {
                 dataSource={hoaDonChiTiet.hoaDonChiTietList}
               />
             </Col>
+
+
           </Row>
+
         </Modal>
       ) : (
         ""

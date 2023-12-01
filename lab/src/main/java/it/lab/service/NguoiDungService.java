@@ -6,18 +6,13 @@ import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
 import it.lab.enums.CapNhat;
 import it.lab.iservice.INguoiDungService;
-import it.lab.iservice.TestService;
-import it.lab.modelcustom.NguoiDungCustom;
 import it.lab.modelcustom.request.DoiMatKhau;
 import it.lab.repository.NguoiDungRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +20,7 @@ public class NguoiDungService implements INguoiDungService {
     @Autowired
     private NguoiDungRepo _nguoiDungRepo;
     @Autowired
-private PasswordEncoder _bcrypt;
+    private PasswordEncoder _bcrypt;
 
     @Override
     public Page<NguoiDungDTO> layHetNguoiDung() {
@@ -67,8 +62,8 @@ private PasswordEncoder _bcrypt;
             return new ResponObject<>(null, CapNhat.THATBAI, "Thất bại");
         }
         NguoiDung nguoiDungRepo = ng.get();
-        String matKhauMaHoa=_bcrypt.encode(matKhau.getMatKhauCu());
-        if(!matKhauMaHoa.equals(nguoiDungRepo.getMatKhau())){
+        String matKhauMaHoa = _bcrypt.encode(matKhau.getMatKhauCu());
+        if (!matKhauMaHoa.equals(nguoiDungRepo.getMatKhau())) {
             return new ResponObject<>(null, CapNhat.MATKHAUCUSAI, "Thất bại");
         }
         nguoiDungRepo.setMatKhau(_bcrypt.encode(matKhau.getMatKhauMoi()));
@@ -87,7 +82,7 @@ private PasswordEncoder _bcrypt;
     public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung) {
         nguoiDung.setNgayTao(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDung);
-        nguoiDung.setMaNguoiDung("MND" + nguoiDung.getId());
+        nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
         nguoiDung.setTen(nguoiDung.getTen());
         nguoiDung.setHo(nguoiDung.getHo());
         nguoiDung.setEmail(nguoiDung.getEmail());

@@ -16,8 +16,6 @@ import { DatePicker, Space } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { modal, suKienTrongThang } from "./context";
 import TaoSuKienGoiY from "./TaoSuKienGoiY";
-import { useGpt2 } from "../../../plugins/gpt2";
-import { useGpt3 } from "../../../plugins/gpt3";
 const { RangePicker } = DatePicker;
 function GoiYTheoThang({ thang, profit }) {
     const [isShow, setIsShow] = useState(false);
@@ -50,7 +48,7 @@ function GoiYTheoThang({ thang, profit }) {
         }
     };
     async function handleSendContext2GPT(context) {
-        const data = await useGpt2.actions.chat(context);
+        const data = await useGpt.actions.chat(context);
         var dataNew = data.data.choices[0].message.content.split("=")[1];
         dataNew = JSON.parse(dataNew.replaceAll("\n", ""));
         setDataSus(dataNew);
@@ -72,7 +70,7 @@ function GoiYTheoThang({ thang, profit }) {
                 }
                 i++;
             }
-        }, 50);
+        }, 1);
     }
     useEffect(() => {
         if (isShow) {

@@ -40,4 +40,11 @@ public class HoaDonChiTiet {
     private SanPhamChiTiet sanPhamDoiTra;
     @Column(name = "soluongdoitra")
     private Integer soLuongDoiTra;
+    @Column(name = "dongiamoi")
+    private Double donGiaMoi;
+    @Column(name = "ghichu", columnDefinition = "nvarchar(max)")
+    private String ghiChu;
+    @Column(name = "trangthai",columnDefinition = "INT DEFAULT 0")
+    // 1 là đổi 2 là trả 0 là bình thường
+    private Integer trangThai;
 }

@@ -62,6 +62,18 @@ public class HoaDonService implements IHoaDonService {
     }
 
     @Override
+    public Page<HoaDonDoiTra> layHetHoaDonDoiTra() {
+        return new Page<HoaDonDoiTra>(HoaDonDoiTra.fromCollection(_hoaDonRepo.findAll()), 0, 100000);
+
+    }
+
+    @Override
+    public Page<HoaDonTuChoiDoi> layHetHoaDonTuChoiHuy() {
+        return new Page<HoaDonTuChoiDoi>(HoaDonTuChoiDoi.fromCollection(_hoaDonRepo.findAll()), 0, 100000);
+
+    }
+
+    @Override
     public ResponObject<List<String>, XacNhanHoaDonEnum> xacNhanHoaDon(Long[] hoaDonId) {
         List<String> hoaDonMaSanPhamDaHet = new ArrayList<>();
         boolean check = true;

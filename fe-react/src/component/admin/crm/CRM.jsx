@@ -60,7 +60,7 @@ function CRM() {
                 }
                 i++
             }
-        }, 50)
+        }, 1)
 
     }
     async function handleLayDoanhThu12Thang() {
