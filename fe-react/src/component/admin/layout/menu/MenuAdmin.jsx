@@ -13,7 +13,7 @@ import { useState } from "react";
 import { Menu } from "antd";
 import { RiRefundFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { BsPercent } from 'react-icons/bs';
+import { BsPercent } from "react-icons/bs";
 import { FcIdea } from "react-icons/fc";
 function getItem(label, key, icon, children, type) {
   return {
@@ -80,19 +80,20 @@ const items = [
     <FaUserFriends />
   ),
   getItem(
+    <Link to={"/admin/voucher"}>Quản lý voucher</Link>,
+    "6",
+    <FaUserFriends />
+  ),
+  getItem(
     <Link to={"/admin/bantaiquay"}>Bán hàng tại quầy</Link>,
     "62",
     <BsShopWindow />
   ),
-  getItem(
-    <Link to={"/admin/doitra"}>Đổi trả</Link>,
-    "64",
-    <RiRefundFill />
-  ),
+  getItem(<Link to={"/admin/doitra"}>Đổi trả</Link>, "64", <RiRefundFill />),
   getItem("Quản lý sự kiện", "sub5", <FaTag />, [
     getItem(
       <Link to={"/admin/sukiengiamgia"}>Sự kiện giảm giá</Link>,
-      "66",
+      "2",
       <BsPercent />
     ),
     getItem(
@@ -100,11 +101,7 @@ const items = [
       "67",
       <TbPackages />
     ),
-    getItem(
-      <Link to={"/admin/crm"}>CRM</Link>,
-      "65",
-      <FcIdea />
-    ),
+    getItem(<Link to={"/admin/crm"}>CRM</Link>, "65", <FcIdea />),
   ]),
 ];
 
