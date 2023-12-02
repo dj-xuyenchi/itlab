@@ -28,7 +28,7 @@ public class HoaDonChoTaiCuaHang {
     private String ghiChu;
     private LocalDateTime ngayTao;
     private LocalDateTime ngayCapNhat;
-    private LocalDate ngayGiao;
+    private LocalDateTime ngayGiao;
     private Double giaTriHd;
     private String trangThai;
     private NguoiDungVoucher voucherGiaoHang;

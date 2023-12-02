@@ -52,6 +52,16 @@ public class HoaDonController {
         return ResponseEntity.ok(_hoaDonService.layHetHoaDonHuy());
     }
 
+    @RequestMapping(value = "/layhoadondoitra", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonDoiTra() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonDoiTra());
+    }
+
+    @RequestMapping(value = "/layhoadontuchoidoi", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonDoiTuChoiDoi() {
+        return ResponseEntity.ok(_hoaDonService.layHetHoaDonTuChoiHuy());
+    }
+
     @RequestMapping(value = "/huyhoadon", method = RequestMethod.POST)
     public ResponseEntity<?> huyHoaDon(@RequestBody Long[] hoaDonId) {
         return ResponseEntity.ok(_hoaDonService.huyHoaDon(hoaDonId));

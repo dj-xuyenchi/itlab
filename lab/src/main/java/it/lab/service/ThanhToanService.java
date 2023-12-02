@@ -147,7 +147,7 @@ public class ThanhToanService implements IThanhToan {
             SanPhamChiTiet spct = _sanPhamChiTietRepo.findById(gh.getSanPhamChiTiet().getId()).get();
             spct.setSoLuongTon(spct.getSoLuongTon() - gh.getSoLuong());
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-            hoaDonChiTiet.setNgayTao(LocalDate.now());
+            hoaDonChiTiet.setNgayTao(LocalDateTime.now());
             hoaDonChiTiet.setSanPhamChiTiet(spct);
             hoaDonChiTiet.setSoLuong(gh.getSoLuong());
             hoaDonChiTiet.setDonGia(gh.getSanPhamChiTiet().getGiaBan());

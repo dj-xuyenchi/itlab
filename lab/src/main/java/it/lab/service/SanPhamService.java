@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,14 +127,14 @@ public class SanPhamService implements ISanPhamService {
     public Page<ChatLieuDTO> suaChatLieu(ChatLieu chatLieu) {
         ChatLieu chatLieuGoc = _chatLieuRepo.findById(chatLieu.getId()).get();
         chatLieuGoc.setTenChatLieu(chatLieu.getTenChatLieu());
-        chatLieuGoc.setNgayCapNhat(LocalDate.now());
+        chatLieuGoc.setNgayCapNhat(LocalDateTime.now());
         _chatLieuRepo.save(chatLieuGoc);
         return layHetChatLieu();
     }
 
     @Override
     public Page<ChatLieuDTO> themChatLieu(ChatLieu chatLieu) {
-        chatLieu.setNgayTao(LocalDate.now());
+        chatLieu.setNgayTao(LocalDateTime.now());
         _chatLieuRepo.save(chatLieu);
         chatLieu.setMaChatLieu("CL" + chatLieu.getId());
         _chatLieuRepo.save(chatLieu);
@@ -155,14 +156,14 @@ public class SanPhamService implements ISanPhamService {
     public Page<NhomSanPhamDTO> suaNhomSanPham(NhomSanPham nhomSanPham) {
         NhomSanPham nhomSanPhamGoc = _nhomSanPhamRepo.findById(nhomSanPham.getId()).get();
         nhomSanPhamGoc.setTenNhom(nhomSanPham.getTenNhom());
-        nhomSanPhamGoc.setNgayCapNhat(LocalDate.now());
+        nhomSanPhamGoc.setNgayCapNhat(LocalDateTime.now());
         _nhomSanPhamRepo.save(nhomSanPhamGoc);
         return layHetNhomSanPham();
     }
 
     @Override
     public Page<NhomSanPhamDTO> themNhomSanPham(NhomSanPham nhomSanPham) {
-        nhomSanPham.setNgayTao(LocalDate.now());
+        nhomSanPham.setNgayTao(LocalDateTime.now());
         _nhomSanPhamRepo.save(nhomSanPham);
         nhomSanPham.setMaNhom("NSP" + nhomSanPham.getId());
         _nhomSanPhamRepo.save(nhomSanPham);
@@ -199,14 +200,14 @@ public class SanPhamService implements ISanPhamService {
     public Page<ThietKeDTO> suaThietKe(ThietKe thietKe) {
         ThietKe thietKeGoc = _thietKeRepo.findById(thietKe.getId()).get();
         thietKeGoc.setTenThietKe(thietKe.getTenThietKe());
-        thietKeGoc.setNgayCapNhat(LocalDate.now());
+        thietKeGoc.setNgayCapNhat(LocalDateTime.now());
         _thietKeRepo.save(thietKeGoc);
         return layHetThietKe();
     }
 
     @Override
     public Page<ThietKeDTO> themThietKe(ThietKe thietKe) {
-        thietKe.setNgayTao(LocalDate.now());
+        thietKe.setNgayTao(LocalDateTime.now());
         _thietKeRepo.save(thietKe);
         thietKe.setMaThietKe("TK" + thietKe.getId());
         _thietKeRepo.save(thietKe);
@@ -234,14 +235,14 @@ public class SanPhamService implements ISanPhamService {
         MauSac mauSacGoc = _mauSacRepo.findById(mauSac.getId()).get();
         mauSacGoc.setTenMau(mauSac.getTenMau());
         mauSacGoc.setMaMauCss(mauSac.getMaMauCss());
-        mauSacGoc.setNgayCapNhat(LocalDate.now());
+        mauSacGoc.setNgayCapNhat(LocalDateTime.now());
         _mauSacRepo.save(mauSacGoc);
         return layHetMauSac();
     }
 
     @Override
     public Page<MauSacDTO> themMauSac(MauSac mauSac) {
-        mauSac.setNgayTao(LocalDate.now());
+        mauSac.setNgayTao(LocalDateTime.now());
         _mauSacRepo.save(mauSac);
         mauSac.setMaMau("MS" + mauSac.getId());
         _mauSacRepo.save(mauSac);
@@ -268,14 +269,14 @@ public class SanPhamService implements ISanPhamService {
     public Page<KichThuocDTO> suaKichThuoc(KichThuoc kichThuoc) {
         KichThuoc kichThuocGoc = _kichThuocRepo.findById(kichThuoc.getId()).get();
         kichThuocGoc.setTenKichThuoc(kichThuoc.getTenKichThuoc());
-        kichThuocGoc.setNgayCapNhat(LocalDate.now());
+        kichThuocGoc.setNgayCapNhat(LocalDateTime.now());
         _kichThuocRepo.save(kichThuocGoc);
         return layHetKichThuoc();
     }
 
     @Override
     public Page<KichThuocDTO> themKichThuoc(KichThuoc kichThuoc) {
-        kichThuoc.setNgayTao(LocalDate.now());
+        kichThuoc.setNgayTao(LocalDateTime.now());
         _kichThuocRepo.save(kichThuoc);
         kichThuoc.setMaKichThuoc("MKT" + kichThuoc.getId());
         _kichThuocRepo.save(kichThuoc);
@@ -325,7 +326,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamThayDoi.setGiaNhap(sanPhamChiTiet.getGiaNhap());
         sanPhamThayDoi.setGiaBan(sanPhamThayDoi.getGiaBan());
         sanPhamThayDoi.setTrangThai(sanPhamChiTiet.getTrangThai());
-        sanPhamThayDoi.setNgayCapNhat(LocalDate.now());
+        sanPhamThayDoi.setNgayCapNhat(LocalDateTime.now());
         sanPhamThayDoi.setSoLuongDaBan(sanPhamChiTiet.getSoLuongDaBan());
         sanPhamThayDoi.setSoLuongLoi(sanPhamChiTiet.getSoLuongLoi());
         sanPhamThayDoi.setSoLuongTraHang(sanPhamChiTiet.getSoLuongTraHang());
@@ -365,7 +366,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamMoi.setSoLuongDaBan(0);
         sanPhamMoi.setSoLuongTraHang(0);
         sanPhamMoi.setHinhAnh(sanPham.getHinhAnh1());
-        sanPhamMoi.setNgayTao(LocalDate.now());
+        sanPhamMoi.setNgayTao(LocalDateTime.now());
         _sanPhamChiTietRepository.save(sanPhamMoi);
         sanPhamMoi.setMaSanPham("SP" + sanPhamMoi.getId());
         _sanPhamChiTietRepository.save(sanPhamMoi);
@@ -391,7 +392,7 @@ public class SanPhamService implements ISanPhamService {
     @Override
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPhamRequest, MultipartFile hinh1, MultipartFile hinh2) throws IOException {
         SanPham sanPham = new SanPham();
-        sanPham.setNgayTao(LocalDate.now());
+        sanPham.setNgayTao(LocalDateTime.now());
         sanPham.setGiaBan(sanPhamRequest.getGiaBan());
         sanPham.setSoLuongTon(sanPhamRequest.getSoLuongTon());
         sanPham.setTrangThai(TrangThaiSanPham.DANGBAN);
@@ -405,11 +406,11 @@ public class SanPhamService implements ISanPhamService {
         HinhAnhSanPham hinhAnh1 = new HinhAnhSanPham();
         hinhAnh1.setLinkHinhAnh(sanPham.getHinhAnh1());
         hinhAnh1.setSanPham(sanPham);
-        hinhAnh1.setNgayTao(LocalDate.now());
+        hinhAnh1.setNgayTao(LocalDateTime.now());
         HinhAnhSanPham hinhAnh2 = new HinhAnhSanPham();
         hinhAnh2.setLinkHinhAnh(sanPham.getHinhAnh2());
         hinhAnh2.setSanPham(sanPham);
-        hinhAnh2.setNgayTao(LocalDate.now());
+        hinhAnh2.setNgayTao(LocalDateTime.now());
         _sanPhamRepository.save(sanPham);
         _hinhAnhSanPhamRepo.save(hinhAnh1);
         _hinhAnhSanPhamRepo.save(hinhAnh2);

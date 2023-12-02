@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -25,9 +26,9 @@ public class SuKienGiamGia {
     @Column(name = "tensukien",columnDefinition = "nvarchar(max)")
     private String tenSuKien;
     @Column(name = "ngaybatdau")
-    private LocalDate ngayBatDau;
+    private LocalDateTime ngayBatDau;
     @Column(name = "ngayketthuc")
-    private LocalDate ngayKetThuc;
+    private LocalDateTime ngayKetThuc;
     @Column(name = "mota",columnDefinition = "nvarchar(max)")
     private String moTa;
     @Column(name = "logosukien")
@@ -39,11 +40,9 @@ public class SuKienGiamGia {
     @JsonIgnore
     private List<SanPhamSuKien> sanPhamSuKienList;
     @Column(name = "ngaytao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayCapNhat;
     @Column(name = "giatrigiam")
     private Double giaTriGiam;
-    @Column(name = "loaigiam")
-    private LoaiGiam loaiGiam;
 }

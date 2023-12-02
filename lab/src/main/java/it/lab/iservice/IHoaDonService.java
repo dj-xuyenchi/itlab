@@ -20,6 +20,11 @@ public interface IHoaDonService {
 
     public Page<HoaDonHoanThanh> layHetHoaDonHoanThanh();
 
+    public Page<HoaDonDoiTra> layHetHoaDonDoiTra();
+
+    public Page<HoaDonTuChoiDoi> layHetHoaDonTuChoiHuy();
+
+
     public ResponObject<List<String>, XacNhanHoaDonEnum> xacNhanHoaDon(Long[] hoaDonId);
 
     public ResponObject<List<String>, XacNhanHoaDonEnum> chuyenSangDangGiao(Long[] hoaDonId);

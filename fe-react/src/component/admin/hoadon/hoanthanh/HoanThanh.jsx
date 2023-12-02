@@ -19,8 +19,9 @@ import Highlighter from "react-highlight-words";
 import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+import YeuCauDoiTra from "../../doitra/YeuCauDoiTra";
 
-function HoanThanh() {
+function HoanThanh({ type = 2 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -229,7 +230,12 @@ function HoanThanh() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon hoaDonId={id} />,
+      render: (id) => (
+        <>
+          <ChiTietHoaDon hoaDonId={id} />
+          {type == 1 && <YeuCauDoiTra hoaDonId={id} />}
+        </>
+      ),
     },
   ];
   const [data, setData] = useState([]);

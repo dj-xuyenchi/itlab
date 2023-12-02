@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class SanPhamChiTietDTO {
     private Integer soLuongLoi;
     private Integer soLuongTraHang;
     private TrangThaiSanPhamChiTiet trangThai;
-    private LocalDate ngayTao;
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayTao;
+    private LocalDateTime ngayCapNhat;
     private MauSac mauSac;
     private KichThuoc kichThuoc;
     private SanPham sanPham;
