@@ -89,7 +89,7 @@ public class ThongKeController {
     //Thong ke tai khoan moi trong 1 thang
     @GetMapping("/tai-khoan-moi")
     public List<Object[]> thongKeTaiKhoanMoiTrongThang() {
-        LocalDate oneMonthAgo = LocalDate.now().minusMonths(1); // Lấy thời điểm hiện tại và trừ đi 1 tháng
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1); // Lấy thời điểm hiện tại và trừ đi 1 tháng
         List<Object[]> ketQua = repositoryNguoiDung.countTaiKhoanMoiTrongThang(oneMonthAgo);
         return ketQua;
     }
@@ -207,9 +207,9 @@ public Map<String, Object> layDuLieuDoanhThuThangVaNamHienTai() {
     Long tongSoLuongNhanVien = quyenNguoiDungRepo.tongSoNhanVien();
     result.put("tongSoLuongNhanVien",tongSoLuongNhanVien);
 
-    // Thống kê tài khoản mới trong 1 tháng
-    List<Object[]> taiKhoanMoiThang = repositoryNguoiDung.countTaiKhoanMoiTrongThang(currentDate.minusMonths(1));
-    result.put("taiKhoanMoiThang", taiKhoanMoiThang);
+//    // Thống kê tài khoản mới trong 1 tháng
+//    List<Object[]> taiKhoanMoiThang = repositoryNguoiDung.countTaiKhoanMoiTrongThang(currentDate.minusMonths(1));
+//    result.put("taiKhoanMoiThang", taiKhoanMoiThang);
 
     return result;
 }
