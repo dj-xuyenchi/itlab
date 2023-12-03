@@ -32,9 +32,9 @@ public class Voucher {
     @Column(name = "loaigiam")
     private LoaiGiam loaiGiam;
     @Column(name = "ngaytao")
-    private LocalDateTime ngayTao;
+    private LocalDate ngayTao;
     @Column(name = "ngaycapnhat")
-    private LocalDateTime ngayCapNhat;
+    private LocalDate ngayCapNhat;
     @Column(name = "ngayketthuc")
     private LocalDateTime ngayKetThuc;
     @Column(name = "soluong")
