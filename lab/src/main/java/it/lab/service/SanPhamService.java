@@ -45,6 +45,11 @@ public class SanPhamService implements ISanPhamService {
     private HinhAnhSanPhamRepository _hinhAnhSanPhamRepo;
 
     @Override
+    public SanPham findById(Long id) {
+        return _sanPhamRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Page<SanPhamDTO> phanTrangSanPhamTrangChu(Integer page,
                                                      Integer pageSize,
                                                      Long chatLieuId,
