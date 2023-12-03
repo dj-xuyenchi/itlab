@@ -172,6 +172,8 @@ public Map<String, List<BigDecimal>> getBieuDoTongHop() {
     List<BigDecimal> doanhThuTheoThang = new ArrayList<>();
     List<BigDecimal> doanhThuTheoThangTruChiPhi = new ArrayList<>();
 
+    // Assuming you have repositories named repositoryThongKe and repositoryHDCT
+    // Modify these lines according to your repository structure
     for (int month = 1; month <= 12; month++) {
         BigDecimal doanhThuThang = repositoryThongKe.tinhTongDoanhThuTrongThangChar(currentYear, month);
         doanhThuTheoThang.add(doanhThuThang);
@@ -193,7 +195,7 @@ public Map<String, Object> layDuLieuDoanhThuThangVaNamHienTai() {
     Map<String, Object> result = new HashMap<>();
 
     // Lấy thời điểm hiện tại
-    LocalDate currentDate = LocalDate.now();
+    LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1); // Lấy thời điểm hiện tại và trừ đi 1 tháng
 
     //thong ke tong so luong bị lỗi
     Long TongSoLuongLoi =sanPhamRepo.sumSoluongloi();
@@ -207,9 +209,9 @@ public Map<String, Object> layDuLieuDoanhThuThangVaNamHienTai() {
     Long tongSoLuongNhanVien = quyenNguoiDungRepo.tongSoNhanVien();
     result.put("tongSoLuongNhanVien",tongSoLuongNhanVien);
 
-//    // Thống kê tài khoản mới trong 1 tháng
-//    List<Object[]> taiKhoanMoiThang = repositoryNguoiDung.countTaiKhoanMoiTrongThang(currentDate.minusMonths(1));
-//    result.put("taiKhoanMoiThang", taiKhoanMoiThang);
+    // Thống kê tài khoản mới trong 1 tháng
+    List<Object[]> taiKhoanMoiThang = repositoryNguoiDung.countTaiKhoanMoiTrongThang(oneMonthAgo);
+    result.put("taiKhoanMoiThang", taiKhoanMoiThang);
 
     return result;
 }
