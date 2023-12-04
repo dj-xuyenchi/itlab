@@ -60,7 +60,7 @@ public class SanPhamSuKienController {
         SanPhamSuKien sanPhamSuKien = new SanPhamSuKien();
         sanPhamSuKien.setSanPham(sanPham);
         sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
-        sanPhamSuKien.setTrangthai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
+        sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
 
