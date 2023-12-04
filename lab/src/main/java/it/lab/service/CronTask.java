@@ -24,7 +24,8 @@ public class CronTask implements Cron {
 
     @Scheduled(cron = "15 * * * * ?")
     public void guiBaoCaoHangNgay() {
-        doiTrangThaiSuKien();
+        System.out.println(123);
+     //   doiTrangThaiSuKien();
 //       Excel.taoBaoCaoNgay();
 //
 //        email.sendContentAndMultipartToVer2("anhdqph19418@fpt.edu.vn", "ss","ss", Arrays.stream(new String[]{"/Users/quanganhdo/Documents/it/Template.xlsx"}).toList());
