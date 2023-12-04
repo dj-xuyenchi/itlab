@@ -1,99 +1,254 @@
-import { Button, Modal, Space, Table, Tag, Tooltip } from "antd";
+import { Button, Col, Image, InputNumber, Modal, Row, Select, Space, Table, Tag, Tooltip, notification } from "antd";
 import "./style.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegPenToSquare } from "react-icons/fa6";
-function DoiSanPham() {
+import QRCodeDoiTra from "./QRCodeDoiTra";
+import { GrScan } from "react-icons/gr";
+import { useBanTaiQuayStore } from "../bantaiquay/useBanTaiQuayStore";
+import { useDoiTra } from "./useDoiTra";
+import { fixMoney } from "../../../extensions/fixMoney";
+import { AiOutlineDelete } from "react-icons/ai";
+function DoiSanPham({ dataDoi, setSanPhamDoi, number }) {
     const [isShow, setIsShow] = useState(false)
+    const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined)
+    const [isOpen, setIsOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const [api, contextHolder] = notification.useNotification();
+    const [modal, setModal] = useState([])
+    const openNotification = (type, title, des, placement) => {
+        if (type === "error") {
+            api.error({
+                message: title,
+                description: des,
+                placement,
+            });
+        }
+        if (type === "warning") {
+            api.warning({
+                message: title,
+                description: des,
+                placement,
+            });
+        }
+        if (type === "success") {
+            api.success({
+                message: title,
+                description: des,
+                placement,
+            });
+        }
+    };
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text) => <a>{text}</a>,
+            title: 'Hình ảnh',
+            dataIndex: 'hinhAnh',
+            key: 'hinhAnh',
+            render: (hinhAnh) => <Image
+                src={hinhAnh}
+                style={{ width: "80px", height: "120px" }}
+            />,
         },
         {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
+            title: 'Tên sản phẩm',
+            dataIndex: 'tenSanPham',
+            key: 'tenSanPham',
+            render: (tenSanPham) => <span>{tenSanPham}</span>,
         },
         {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Số lượng',
+            render: (tenSanPham, record, number) => <InputNumber onChange={(e) => {
+                data[number] = {
+                    ...data[number],
+                    soLuongDoi: e
+                }
+                setData([...data])
+            }} min={1} max={record.soLuongTon} />,
         },
         {
-            title: 'Tags',
-            key: 'tags',
-            dataIndex: 'tags',
-            render: (_, { tags }) => (
-                <>
-                    {tags.map((tag) => {
-                        let color = tag.length > 5 ? 'geekblue' : 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag}>
-                                {tag.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </>
-            ),
+            title: 'Đơn giá',
+            dataIndex: 'giaBan',
+            key: 'giaBan',
+            render: (giaBan) => <span>{giaBan}</span>,
+        },
+        {
+            title: 'Số lượng tồn',
+            dataIndex: 'soLuongTon',
+            key: 'soLuongTon',
+            render: (soLuongTon) => <span>{soLuongTon}</span>,
         },
         {
             title: 'Action',
             key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <a>Invite {record.name}</a>
-                    <a>Delete</a>
-                </Space>
+            render: (_, record, number) => (
+                <>
+                    <Tooltip title="Xóa" >
+                        <Button danger shape="circle" onClick={() => {
+                            modal[number] = true
+                            setModal([...modal])
+                        }} icon={<AiOutlineDelete />} />
+                    </Tooltip>
+                    <Modal
+                        title="Xóa sản phẩm"
+                        open={modal[number]}
+                        onCancel={() => {
+                            modal[number] = false
+                            setModal([...modal])
+                        }}
+                        onOk={() => {
+                            var mang = data.filter((item) => {
+                                return item.id !== data[number].id
+                            })
+                            modal[number] = false
+                            setData(mang)
+                            setModal([...modal])
+                        }}
+                        centered
+                    ></Modal>
+                </>
+
             ),
         },
     ];
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sydney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
+    async function handleChonSanPham(e) {
+
+        const dataSearch = await useDoiTra.actions.laySanPhamChiTietById(e.key)
+        if (dataSearch.data) {
+            if (data.some((item) => {
+                return item.id === dataSearch.data.id
+            })) {
+                openNotification(
+                    "warning",
+                    "Hệ thống",
+                    "Sản phẩm đã có",
+                    "bottomRight"
+                );
+                return
+            }
+            setData([...data, dataSearch.data])
+        }
+    }
+    function handleChonSanPham2(data2) {
+        if (data.some((item) => {
+            return item.id === data2.id
+        })) {
+            openNotification(
+                "warning",
+                "Hệ thống",
+                "Sản phẩm đã có",
+                "bottomRight"
+            );
+            return
+        }
+        openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+        setData([...data, data2])
+        return
+    }
+    async function layDuLieuSanPham() {
+        const data = await useBanTaiQuayStore.actions.fetSanPhamChiTiet();
+        setSanPhamChiTiet(data.data);
+    }
+    useEffect(() => {
+        layDuLieuSanPham()
+    }, [])
     return (
         <>
+            {contextHolder}
             <Tooltip title="Cập nhật" onClick={() => {
                 setIsShow(true)
             }}>
                 <Button
                     style={{
                         color: "green",
+                        width: '100%',
+                        marginTop: "4px"
                     }}
-                    shape="circle"
                     icon={<FaRegPenToSquare />}
-                />
+                >Đổi sản phẩm</Button>
             </Tooltip>
-            <Modal title="Basic Modal" open={isShow} onOk={() => {
-                setIsShow(false)
-            }} onCancel={() => {
-                setIsShow(false)
-            }}>
-                <Table columns={columns} dataSource={data} />
+            <Modal title="Đổi sản phẩm" open={isShow}
+                width={1268}
+                onOk={() => {
+                    for (var item of data) {
+                        if (!item.soLuongDoi) {
+                            openNotification("error", "Hệ thống", "Chưa chọn số lượng", "bottomRight");
+                            return
+                        }
+                    }
+                    dataDoi[number] = data
+                    setSanPhamDoi([...dataDoi])
+                    setIsShow(false)
+                }}
+                onCancel={() => {
+                    setIsShow(false)
+                }}>
+                <Row style={{
+                    marginBottom: "12px"
+                }}>
+                    <Col span={18}>
+                        <Select
+                            style={{
+                                width: "100%",
+                            }}
+                            showSearch
+                            labelInValue
+                            defaultValue={"Chọn sản phẩm"}
+                            onChange={handleChonSanPham}
+                            filterOption={(input, option) =>
+                                option.children[0]
+                                    .toLowerCase()
+                                    .indexOf(input.toLowerCase()) >= 0
+                            }
+                        >
+                            {sanPhamChiTiet
+                                ? sanPhamChiTiet.map((option) => (
+                                    <Select.Option key={option.id} value={option.id}>
+                                        {option.tenSanPham}
+                                        <Tag
+                                            color="success"
+                                            style={{
+                                                marginLeft: "4px",
+                                            }}
+                                        >
+                                            {option.mauSac.tenMau}
+                                        </Tag>
+                                        <Tag color="processing">
+                                            {option.kichThuoc.tenKichThuoc}
+                                        </Tag>
+                                        <span
+                                            style={{
+                                                fontWeight: "700",
+                                                marginLeft: "12px",
+                                            }}
+                                        >
+                                            Số lượng còn: {option.soLuongTon}
+                                        </span>
+                                    </Select.Option>
+                                ))
+                                : ""}
+                        </Select>
+                    </Col>
+                    <Col span={3} offset={1}>
+                        <Button
+                            icon={<GrScan />}
+                            onClick={() => {
+                                setIsOpen(true);
+                            }}
+                        >
+                            Quét mã
+                        </Button>
+                        {
+                            isOpen && <QRCodeDoiTra
+                                setOpen={setIsOpen}
+                                open={isOpen}
+                                handleChonSanPham={handleChonSanPham2}
+                            />
+                        }
+
+                    </Col>
+                </Row>
+                <Table columns={columns} dataSource={data} style={{
+                    width: "100%"
+                }} />
             </Modal>
         </>
     );

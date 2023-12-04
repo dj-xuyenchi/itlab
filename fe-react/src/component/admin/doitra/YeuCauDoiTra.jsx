@@ -26,6 +26,7 @@ function YeuCauDoiTra({ hoaDonId }) {
   const [api, contextHolder] = notification.useNotification();
   const [selectedChiTietHoaDon, setSelectedChiTietHoaDon] = useState(undefined);
   const [dataThayDoi, setDataThayDoi] = useState([])
+  const [sanPhamDoi, setSanPhamDoi] = useState([])
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
       api.error({
@@ -42,6 +43,8 @@ function YeuCauDoiTra({ hoaDonId }) {
     }
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ghiChu, setGhiChu] = useState([])
+  const [thongTinDoiTra, setThongTinDoiTra] = useState([])
   const columns = [
     {
       title: "Sản phẩm",
@@ -70,9 +73,8 @@ function YeuCauDoiTra({ hoaDonId }) {
       width: "15%",
       render: (soLuong, record, number) => <>
         <InputNumber min={1} max={soLuong} onChange={(e) => {
-          dataThayDoi[number] = {
-            ...dataThayDoi[number],
-            soLuongDoi: e
+          thongTinDoiTra[number] = {
+            soLuong: e
           }
           setDataThayDoi([...dataThayDoi])
         }} />/{soLuong}
@@ -93,12 +95,11 @@ function YeuCauDoiTra({ hoaDonId }) {
     {
       title: "Ghi chú",
       dataIndex: "ghiChu",
-      render: (ghiChu, record, number) => <TextArea placeholder="Ghi chú" rows={4} onChange={(e) => {
-        dataThayDoi[number] = {
-          ...dataThayDoi[number],
-          ghiChu: e.target.value
-        }
-        setDataThayDoi([...dataThayDoi])
+      render: (_, record, number) => <TextArea placeholder="Ghi chú" rows={4} onChange={(e) => {
+        ghiChu[number] = e.target.value
+        setGhiChu([
+          ...ghiChu
+        ])
 
       }} />,
       width: "20%",
@@ -130,50 +131,35 @@ function YeuCauDoiTra({ hoaDonId }) {
       title: "Hình thức đổi trả",
       dataIndex: "action",
       render: (ghiChu, record, number) => (
-        <Select
-          defaultValue="Hình thức đổi trả"
-          style={{
-            width: "100%"
-          }}
-          onChange={(e) => {
-            dataThayDoi[number] = {
-              ...dataThayDoi[number],
-              hinhThuc: e
-            }
-            setDataThayDoi(dataThayDoi)
-          }}
-          options={[
-            {
-              value: "1",
-              label: "Đổi sản phẩm",
-            },
-            {
-              value: "2",
-              label: "Hoàn tiền",
-            },
-          ]}
-        />
+        <>
+          <Select
+            defaultValue="Hình thức đổi trả"
+            style={{
+              width: "100%"
+            }}
+            onChange={(e) => {
+              dataThayDoi[number] = {
+                ...dataThayDoi[number],
+                hinhThuc: e
+              }
+              setDataThayDoi(dataThayDoi)
+            }}
+            options={[
+              {
+                value: "1",
+                label: "Đổi sản phẩm",
+              },
+              {
+                value: "2",
+                label: "Hoàn tiền",
+              },
+            ]}
+          />
+          <DoiSanPham dataDoi={sanPhamDoi} setSanPhamDoi={setSanPhamDoi} number={number} />
+        </>
       ),
       width: "10%",
-    },
-    {
-      title: "Action",
-      dataIndex: "ghiChu",
-      render: (ghiChu, record, number) => (
-        Array(dataThayDoi[number]?.soLuongDoi).fill().map((item) => {
-          return <>
-            <Row style={{
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center'
-            }}>
-              <DoiSanPham />
-            </Row>
-          </>;
-        })
-      ),
-      width: "10%",
-    },
+    }
   ];
   const [data, setData] = useState(undefined)
   async function handleLayChiTiet() {
@@ -187,13 +173,50 @@ function YeuCauDoiTra({ hoaDonId }) {
     onChange: (selectedRowKeys) => {
       setSelectedChiTietHoaDon(selectedRowKeys)
     },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      name: record.name,
-    }),
+    selectedChiTietHoaDon
   };
   async function handleDoiTra() {
-    console.log(dataThayDoi);
+    if (!selectedChiTietHoaDon) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Vui lòng chọn 1 sản phẩm",
+        "bottomRight"
+      );
+      return
+    }
+    if (selectedChiTietHoaDon.length === 0) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Vui lòng chọn 1 sản phẩm",
+        "bottomRight"
+      );
+      return
+    }
+
+    var duLieuDoiTra = []
+    for (var item of selectedChiTietHoaDon) {
+
+      if (!ghiChu[item] || ghiChu[item] === '') {
+        openNotification(
+          "error",
+          "Hệ thống",
+          "Vui lòng nhập ghi chú cho lựa chọn thứ " + (Number(item) + 1),
+          "bottomRight"
+        );
+        return
+      }
+      duLieuDoiTra[item] = {
+        chiTietId: data[item].id,
+        duLieuMoi: sanPhamDoi[item],
+        ghiChu: ghiChu[item]
+      }
+    }
+    var tienDoi = data.reduce((pre, next) => {
+      return pre + (next.soLuong + next.donGia)
+    }, 0)
+    console.log(duLieuDoiTra);
   }
   return (
     <>
@@ -234,10 +257,10 @@ function YeuCauDoiTra({ hoaDonId }) {
                 ...rowSelection,
               }}
               columns={columns}
-              dataSource={data && data.map((item) => {
+              dataSource={data && data.map((item, index) => {
                 return {
                   ...item,
-                  key: item.id
+                  key: index
                 }
               })}
             />
