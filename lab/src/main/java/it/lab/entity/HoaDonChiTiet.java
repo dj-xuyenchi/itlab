@@ -37,4 +37,9 @@ public class HoaDonChiTiet {
     private LocalDateTime ngayCapNhat;
     @Column(name = "ghichu", columnDefinition = "nvarchar(max)")
     private String ghiChu;
+    @Column(name = "soluongdoitra")
+    private Integer soLuongDoiTra;
+    @Column(name = "trangthai")
+    //1 là đã qua đổi tra 2 là chưa
+    private Integer trangThai = 2;
 }

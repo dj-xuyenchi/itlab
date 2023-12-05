@@ -305,7 +305,7 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
       width: "15%",
       render: (sanPhamChiTiet) => (
         <Image
-          src={sanPhamChiTiet.sanPham.hinhAnh1}
+          src={sanPhamChiTiet.hinhAnh}
           style={{ width: "120px", height: "180px" }}
         />
       ),

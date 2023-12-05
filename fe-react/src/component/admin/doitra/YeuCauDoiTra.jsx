@@ -22,7 +22,7 @@ import { useDoiTra } from "./useDoiTra";
 import { fixMoney } from "../../../extensions/fixMoney";
 import DoiSanPham from "./DoiSanPham";
 
-function YeuCauDoiTra({ hoaDonId }) {
+function YeuCauDoiTra({ hoaDonId, setData2 }) {
   const [api, contextHolder] = notification.useNotification();
   const [selectedChiTietHoaDon, setSelectedChiTietHoaDon] = useState(undefined);
   const [dataThayDoi, setDataThayDoi] = useState([]);
@@ -168,7 +168,7 @@ function YeuCauDoiTra({ hoaDonId }) {
             style={{
               width: "100%",
             }}
-            onChange={(e) => {}}
+            onChange={(e) => { }}
             options={[
               {
                 value: "1",
@@ -277,11 +277,32 @@ function YeuCauDoiTra({ hoaDonId }) {
       return pre + (next.soLuong + next.donGia);
     }, 0);
 
-    console.log(selectTrangThai[item]);
-    console.log(duLieuDoiTra);
+    setDataDoiTra(duLieuDoiTra);
     setConfirmModal(true);
   }
+  const [dataDoiTra, setDataDoiTra] = useState(undefined)
   const [confirmModal, setConfirmModal] = useState(false);
+  async function handleTaoYeuCau() {
+    const data = await useDoiTra.actions.taoYeuCau(dataDoiTra)
+    if (data.data) {
+      openNotification(
+        "success",
+        "Hệ thống",
+        "Đổi trả thành công",
+        "bottomRight"
+      );
+      setData2()
+    } else {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Đổi trả thất bại",
+        "bottomRight"
+      );
+    }
+    setIsModalOpen(false)
+  }
+
   return (
     <>
       {contextHolder}
@@ -335,9 +356,11 @@ function YeuCauDoiTra({ hoaDonId }) {
         </Row>
       </Modal>
       <Modal
-        title="Basic Modal"
+        title="Đổi trả sản phẩm?"
         open={confirmModal}
         onOk={() => {
+          console.log(dataDoiTra);
+          handleTaoYeuCau();
           setConfirmModal(false);
         }}
         onCancel={() => {
@@ -345,9 +368,7 @@ function YeuCauDoiTra({ hoaDonId }) {
         }}
         centered
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <p>Xác nhận đổi trả</p>
       </Modal>
     </>
   );
