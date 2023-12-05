@@ -91,6 +91,7 @@ public class SanPhamSuKienController {
         }
         return ResponseEntity.ok(sanPhamSuKien);
     }
+
     @PostMapping("/add-nhom-san-pham")
     public ResponseEntity<?> saveNhomSanPhamSuKien(
             @RequestParam(name = "idSuKien") long idSK,
@@ -114,7 +115,7 @@ public class SanPhamSuKienController {
                 sanPhamSuKien.setNgayTao(currentDate);
                 sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
                 service.save(sanPhamSuKien);
-            }else {
+            } else {
                 sanPhamSuKien.setNgayTao(currentDate);
                 sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
                 service.save(sanPhamSuKien);
@@ -122,6 +123,7 @@ public class SanPhamSuKienController {
         }
         return ResponseEntity.ok(sanPhamSuKien);
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id) {
         SanPhamSuKien sanPhamSuKien = service.findById(id);
@@ -131,24 +133,36 @@ public class SanPhamSuKienController {
         service.save(sanPhamSuKien);
         return ResponseEntity.ok(sanPhamSuKien);
     }
+
     @PutMapping("/update-ngung-su-kien")
     public ResponseEntity<?> updateAll(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 20);
         List<SanPhamSuKien> sanPhamSuKienList = service.getAll();
-        for (SanPhamSuKien sanPhamSuKien:sanPhamSuKienList){
+        for (SanPhamSuKien sanPhamSuKien : sanPhamSuKienList) {
             sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
             service.save(sanPhamSuKien);
         }
         return ResponseEntity.ok(service.getPage(pageable));
     }
+
     @PutMapping("/update-ngung-su-kien")
-    public ResponseEntity<?> ngungNhomSanPham(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        List<SanPhamSuKien> sanPhamSuKienList = service.getAll();
-        for (SanPhamSuKien sanPhamSuKien:sanPhamSuKienList){
-            sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
-            service.save(sanPhamSuKien);
+    public ResponseEntity<?> ngungNhomSanPham(@RequestParam(name = "id") long idNhom
+    ) {
+        List<SanPham> sanPhamList = service.getSanPhamTheoNhom(idNhom);
+        Map<Long, SanPham> sanPhamMap = new HashMap<>();
+        for (SanPham sanPham : sanPhamList) {
+            sanPhamMap.put(sanPham.getId(), sanPham);
         }
-        return ResponseEntity.ok(service.getPage(pageable));
+        List<SanPhamSuKien> sanPhamSuKienList = service.getAll();
+        LocalDateTime currentDate = LocalDateTime.now();
+        for (SanPhamSuKien sanPhamSuKien : sanPhamSuKienList) {
+            SanPham sanPham = sanPhamMap.get(sanPhamSuKien.getSanPham().getId());
+            if (sanPham != null) {
+                sanPhamSuKien.setNgayTao(currentDate);
+                sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+                service.save(sanPhamSuKien);
+            }
+        }
+        return (ResponseEntity<?>) ResponseEntity.ok();
     }
 }
