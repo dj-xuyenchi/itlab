@@ -56,6 +56,12 @@ public class ThongKeController {
         return repositoryRank.findTotalRevenueByUser();
     }
 
+    @GetMapping("/sp-ban-chay-thang")
+    public List<Object[]> getSanPhamBanChayTrongThang1(
+            @RequestParam("selectedMonth") int selectedMonth,
+            @RequestParam("selectedYear") int selectedYear) {
+        return repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
+    }
 
 
     @GetMapping("/tai-khoan-doanh-thu-cao")
@@ -127,13 +133,7 @@ public class ThongKeController {
     }
 
 
-//    @GetMapping("/tong-khoang-ngay")
-//    public BigDecimal tinhTongDoanhThuTrongKhoangNgay(
-//            @RequestParam(value = "selectedDateStart") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateStart,
-//            @RequestParam(value = "selectedDateEnd") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateEnd) {
-//
-//        return repositoryThongKe.tinhTongDoanhThuTrongKhoangNgay(selectedDateStart, selectedDateEnd);
-//    }
+
 
 
 // thong ke 12 thang bang bieu do doanh thu tung thang-yyyy
@@ -227,5 +227,26 @@ public ResponseEntity<?> getSanPhamBanChayTrongThang(
     return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
 
 }
+
+
+    @GetMapping("/san-pham-ban-chay1")
+    public ResponseEntity<?> getSanPhamBanChayTrongThang(
+            @RequestParam(name = "selectedMonth", required = false) Integer selectedMonth,
+            @RequestParam(name = "selectedYear", required = false) Integer selectedYear) {
+
+        // If selectedMonth or selectedYear is not provided, use the current month and year
+        if (selectedMonth == null) {
+            selectedMonth = LocalDate.now().getMonthValue();
+        }
+
+        if (selectedYear == null) {
+            selectedYear = LocalDate.now().getYear();
+        }
+
+        List<Object[]> topSellingProducts = repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
+        return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
+    }
+
+
 
 }

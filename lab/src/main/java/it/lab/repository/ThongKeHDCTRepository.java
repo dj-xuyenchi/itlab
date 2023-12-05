@@ -32,8 +32,7 @@ public interface ThongKeHDCTRepository extends JpaRepository<HoaDonChiTiet,Integ
             "AND YEAR(b.ngayTao) = :selectedYear " +
             "GROUP BY c.id, CONVERT(VARCHAR(100), c.hinhAnh), c.sanPham " +
             "ORDER BY SUM(a.soLuong) DESC")
-    List<Object[]> SanPhamBanChayTrongThang(@Param("selectedMonth") int selectedMonth, @Param("selectedYear") int selectedYear);
-    //thông kê sản phẩm bán chạy nhất tháng
+    List<Object[]> SanPhamBanChayTrongThang(@Param("selectedMonth") int selectedMonth, @Param("selectedYear") int selectedYear);//thông kê sản phẩm bán chạy nhất tháng
     @Query("SELECT c.id AS idCTSP, c.sanPham.tenSanPham, CONVERT(VARCHAR(100), c.hinhAnh) AS image, SUM(a.soLuong) AS tongSoLuong " +
             "FROM HoaDonChiTiet a " +
             "JOIN  a.hoaDon  b " +
