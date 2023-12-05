@@ -14,6 +14,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { useSelector } from "react-redux";
 import { IoEyeSharp } from "react-icons/io5";
+import dayjs from 'dayjs';
 function ModalView({ id }) {
   const language = useSelector(selectLanguage);
   const [sanPham, setSanPham] = useState({
@@ -128,26 +129,18 @@ function ModalView({ id }) {
           >
             <Input disabled value={sanPham.giaBan} />
           </Form.Item>
-          <Form.Item
-            label="Ngày tạo"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={sanPham.ngayTao} />
-          </Form.Item>
-          <Form.Item
-            label="Ngày cập nhật"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={sanPham.ngayCapNhat} />
-          </Form.Item>
+          <Form.Item label="Ngày tạo">
+            <Input 
+              disabled 
+              value={sanPham.ngayTao ? dayjs(sanPham.ngayTao).format('DD/MM/YYYY') : "Mới"} 
+            />
+            </Form.Item>
+          <Form.Item label="Ngày cập nhật">
+            <Input 
+              disabled 
+              value={sanPham.ngayCapNhat ? dayjs(sanPham.ngayCapNhat).format('DD/MM/YYYY') : "Mới"} 
+            />
+            </Form.Item>
           <Form.Item
             label="Mô tả"
             rules={[
@@ -159,15 +152,15 @@ function ModalView({ id }) {
             <Input disabled value={sanPham.moTa} />
           </Form.Item>
           <Form.Item
-            label="Trạng thái"
+            label="Trạng Thái"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={sanPham.trangThai} />
-          </Form.Item>
+             <Input disabled value={sanPham.trangThai === "DANGBAN" ? "Đang bán" : sanPham.trangThai === "HETHANG" ? "Hết hàng" : ""}/>
+          </Form.Item>  
           <Form.Item
             label="Số lượng tồn"
             rules={[

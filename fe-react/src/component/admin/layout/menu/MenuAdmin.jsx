@@ -75,7 +75,7 @@ const items = [
     <RiBillLine />
   ),
   getItem(
-    <Link to={"/admin/sanpham"}>Quản lý người dùng</Link>,
+    <Link to={"/admin/nguoidung"}>Quản lý người dùng</Link>,
     "63",
     <FaUserFriends />
   ),

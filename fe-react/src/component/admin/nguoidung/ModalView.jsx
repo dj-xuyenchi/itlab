@@ -14,6 +14,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNguoiDungStore } from "./useNguoiDungStore";
 import { useSelector } from "react-redux";
 import { IoEyeSharp } from "react-icons/io5";
+import dayjs from 'dayjs';
 
 function ModalView({ id }) {
   const language = useSelector(selectLanguage);
@@ -136,8 +137,8 @@ function ModalView({ id }) {
               },
             ]}
           >
-            <Input disabled value={nguoiDung.trangThai} />
-          </Form.Item>
+             <Input disabled value={nguoiDung.trangThai === "HOATDONG" ? "Hoạt Động" : nguoiDung.trangThai === "BIKHOA" ? "Bị Khóa" : ""}/>
+          </Form.Item>  
           <Form.Item
             label="Rank Khách Hàng"
             rules={[
@@ -146,7 +147,10 @@ function ModalView({ id }) {
               },
             ]}
           >
-            <Input disabled value={nguoiDung.rankKhachHang} />
+            <Input
+              disabled
+              value={nguoiDung.rankKhachHang ? nguoiDung.rankKhachHang.tenRank : ''}
+            />
           </Form.Item>
           <Form.Item
             label="Điểm"
@@ -166,8 +170,12 @@ function ModalView({ id }) {
               },
             ]}
           >
-            <Input disabled value={nguoiDung.gioiTinh} />
+            <Input 
+              disabled 
+              value={nguoiDung.gioiTinh ? "Nam" : "Nữ"} 
+            />
           </Form.Item>
+
           <Form.Item
             label="Số Điện Thoại"
             rules={[
@@ -186,10 +194,16 @@ function ModalView({ id }) {
               },
             ]}
           >
-            <Input disabled value={nguoiDung.ngayTao} />
+            <Input 
+              disabled 
+              value={nguoiDung.ngayTao ? dayjs(nguoiDung.ngayTao).format('DD/MM/YYYY') : ''} 
+            />
           </Form.Item>
           <Form.Item label="Ngày cập nhật">
-            <Input disabled value={nguoiDung.ngayCapNhat ? nguoiDung.ngayCapNhat : "Mới"} />
+            <Input 
+              disabled 
+              value={nguoiDung.ngayCapNhat ? dayjs(nguoiDung.ngayCapNhat).format('DD/MM/YYYY') : "Mới"} 
+            />
           </Form.Item>
         </Form>
       </Modal>
