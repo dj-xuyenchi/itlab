@@ -42,8 +42,16 @@ public class HoaDonDTO {
     private String lyDoTuChoiDoi;
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
     private List<HoaDonChiTiet> hoaDonChiTietList;
+    private List<HoaDonChiTiet> truocDo;
+    private List<HoaDonChiTiet> sauKhiDoi;
 
     public static HoaDonDTO fromEntity(HoaDon entity) {
+        List<HoaDonChiTiet> truocDo = new ArrayList<>();
+        List<HoaDonChiTiet> sauKhiDoi = new ArrayList<>();
+        if (entity.getHoaDonChiTietList() != null) {
+            truocDo = entity.getHoaDonChiTietList().stream().filter(x -> x.getTrangThai() == 1).toList();
+            sauKhiDoi = entity.getHoaDonChiTietList().stream().filter(x -> x.getTrangThai() == 2).toList();
+        }
         return new HoaDonDTO(
                 entity.getId(),
                 entity.getNguoiMua(),
@@ -63,7 +71,9 @@ public class HoaDonDTO {
                 entity.getNhanVien(),
                 entity.getLyDoTuChoiTra(),
                 entity.getBinhLuanDanhGiaList(),
-                entity.getHoaDonChiTietList()
+                entity.getHoaDonChiTietList(),
+                truocDo,
+                sauKhiDoi
         );
     }
 
