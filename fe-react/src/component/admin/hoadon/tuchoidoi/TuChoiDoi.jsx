@@ -229,7 +229,7 @@ function TuChoiDoi() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon hoaDonId={id} tuChoi={true} showDoi={true} type={false} />,
+      render: (id) => <ChiTietHoaDon hoaDonId={id} tuChoi={true} type={false} />,
     },
   ];
   const [data, setData] = useState([]);
