@@ -7,20 +7,25 @@ import { Form, Modal, Row, Table, Tag, notification } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Input, Space ,Image} from "antd";
+import { Button, Input, Space ,Image,Radio,Checkbox,DatePicker,Select } from "antd";
 import { useNguoiDungStore } from "./useNguoiDungStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
 import { useForm } from "antd/es/form/Form";
+import dayjs from 'dayjs';
+
 function NguoiDung() {
   const [form] = useForm()
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
+  const [date, setDate] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
+  const { Option } = Select;
   const [nguoiDung, setNguoiDung] = useState({
     ten: "",
+    rankKhachHang: undefined,
   });
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -137,6 +142,19 @@ function NguoiDung() {
   const columns = [
 
     {
+      title: "Mã người dùng",
+      dataIndex: "maNguoiDung",
+      key: "maNguoiDung",
+      width: "15%",
+      ...getColumnSearchProps("maNguoiDung"),
+      render: (maNguoiDung) => (
+        <>
+          <Tag color="success"> {maNguoiDung}</Tag>
+        </>
+      ),
+    },
+
+    {
         title: "Ảnh đại diện",
         dataIndex: "anhDaiDien",
         key: "anhDaiDien",
@@ -162,29 +180,45 @@ function NguoiDung() {
         ...getColumnSearchProps("ten"),
       },
 
-    {
+      {
         title: "Ngày tạo",
         dataIndex: "ngayTao",
         key: "ngayTao",
         width: "15%",
         ...getColumnSearchProps("ngayTao"),
-      },
-    {
-      title: "Ngày cập nhật",
-      dataIndex: "ngayCapNhat",
-      key: "ngayCapNhat",
-      width: "15%",
-      render: (ngayCapNhat) => (
-        <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Mới</Tag>}</>
-      ),
-    },
-    {
-        title: "Trạng thái",
-        dataIndex: "trangThai",
-        key: "trangThai",
+        render: (text) => {
+          return text ? dayjs(text).format('DD/MM/YYYY HH:mm:ss') : "Mới";
+        },
+      }
+      ,
+      {
+        title: "Ngày cập nhật",
+        dataIndex: "ngayCapNhat",
+        key: "ngayCapNhat",
         width: "15%",
-        ...getColumnSearchProps("trangThai"),
+        render: (ngayCapNhat) => (
+          <>
+            {ngayCapNhat ? dayjs(ngayCapNhat).format('DD/MM/YYYY HH:mm:ss') : <Tag color="processing">Mới</Tag>}
+          </>
+        ),
       },
+      
+    {
+      title: "Trạng thái",
+      dataIndex: "trangThai",
+      key: "trangThai",
+      width: "15%",
+      ...getColumnSearchProps("trangThai"),
+      render: text => {
+        if (text === "HOATDONG") {
+          return "Hoạt Động";
+        } else if (text === "BIKHOA") {
+          return "Bị Khóa";
+        }
+        return text;
+      },
+    },
+    
     
       {
         title: "Thao tác",
@@ -432,24 +466,23 @@ function NguoiDung() {
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Giơi Tính"
-                    name="Giới Tính"
+                    label="Giới Tính"
+                    name="gioiTinh"
                     rules={[
                       {
-                        required: true == "Nam",
+                        required: true,
+                        message: 'Vui lòng chọn giới tính!'
                       },
                     ]}
                   >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          gioiTinh: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.gioiTinh}
-                    />
+                    <Radio.Group 
+                      onChange={(e) => setNguoiDung({...nguoiDung, gioiTinh: e.target.value === "Nam"})} 
+                    >
+                      <Radio value="Nam">Nam</Radio>
+                      <Radio value="Nữ">Nữ</Radio>
+                    </Radio.Group>
                   </Form.Item>
+
                   <Form.Item
                     label="Điểm"
                     name="Điểm"
@@ -471,22 +504,21 @@ function NguoiDung() {
                   </Form.Item>
                   <Form.Item
                     label="Trạng Thái"
-                    name="Trạng Thái"
+                    name="trangThai"
+                    valuePropName="checked" // Quan trọng để liên kết đúng giá trị với Checkbox
                     rules={[
                       {
                         required: true,
+                        message: 'Vui lòng chọn trạng thái!'
                       },
                     ]}
                   >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          trangThai: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.trangThai}
-                    />
+                    <Checkbox
+                      onChange={(e) => setNguoiDung({
+                        ...nguoiDung,
+                        trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
+                      })}
+                    >Hoạt động</Checkbox>
                   </Form.Item>
                   {/* <Form.Item
                     label="Ngày Tạo"
@@ -494,17 +526,15 @@ function NguoiDung() {
                     rules={[
                       {
                         required: true,
+                        message: 'Vui lòng chọn ngày!',
                       },
                     ]}
                   >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          ngayTao: e.target.value,
-                        });
+                    <DatePicker
+                      onChange={(value) => {
+                        setDate(value);
                       }}
-                      value={nguoiDung.ngayTao}
+                      value={date}
                     />
                   </Form.Item> */}
                   {/* <Form.Item
@@ -526,25 +556,24 @@ function NguoiDung() {
                       value={nguoiDung.ngayCapNhat}
                     />
                   </Form.Item> */}
-                  {/* <Form.Item
-                    label="Rank Khách Hàng"
-                    name="Rank Khách Hàng"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          rankKhachHang: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.rankKhachHang}
-                    />
-                  </Form.Item> */}
+                  <Form.Item
+                        label="Rank Khách Hàng"
+                        name="rankKhachHang"
+                        rules={[{ required: true, message: 'Vui lòng chọn Rank Khách Hàng!' }]}
+                      >
+                        <Select
+                          placeholder="Chọn Rank Khách Hàng"
+                          onChange={(value) => setNguoiDung({ ...nguoiDung, rankKhachHang: value })}
+                          value={nguoiDung.rankKhachHang}
+                        >
+                          {/* Lặp qua danh sách rank để tạo các Option */}
+                          <Option value="bronze">Bronze</Option>
+                          <Option value="silver">Silver</Option>
+                          <Option value="gold">Gold</Option>
+                          <Option value="platinum">Platinum</Option>
+                          {/* Thêm các Option khác tùy theo nhu cầu */}
+                        </Select>
+                      </Form.Item>
                   <Form.Item label=" ">
                     <Button
                       type="primary"

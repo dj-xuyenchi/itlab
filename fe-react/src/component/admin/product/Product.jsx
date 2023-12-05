@@ -311,7 +311,7 @@ function Product() {
         <MenuAdmin />
         <div className="body-container">
           <div className="content">
-            <div className="header-status background-color">
+            <div className="modalThem">
               <ModalThemSua
                 type={1}
                 thuocTinh={thuocTinh}
