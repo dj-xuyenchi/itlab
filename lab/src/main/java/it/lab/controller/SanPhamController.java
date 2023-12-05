@@ -87,7 +87,6 @@ public class SanPhamController {
         return ResponseEntity.ok(_sanPhamService.suaChatLieu(chatLieu));
     }
 
-
     @RequestMapping(value = "/laynhomsanpham", method = RequestMethod.GET)
     public ResponseEntity<?> layNhomSp() {
         return ResponseEntity.ok(_sanPhamService.layHetNhomSanPham());
@@ -117,7 +116,6 @@ public class SanPhamController {
     public ResponseEntity<?> layNhomSanPhamById(@RequestParam Long nhomSanPhamId) {
         return ResponseEntity.ok(_sanPhamService.layNhomSanPhamById(nhomSanPhamId));
     }
-
 
     @RequestMapping(value = "/laythietke", method = RequestMethod.GET)
     public ResponseEntity<?> layThietKe() {
@@ -217,6 +215,11 @@ public class SanPhamController {
     @RequestMapping(value = "/laysanphamchitietbyid", method = RequestMethod.GET)
     public ResponseEntity<?> laySanPhamChiTietById(@RequestParam Long sanPhamChiTietId) {
         return ResponseEntity.ok(_sanPhamService.laySanPhamChiTietById(sanPhamChiTietId));
+    }
+
+    @RequestMapping(value = "/laysanphamchitietbyma", method = RequestMethod.GET)
+    public ResponseEntity<?> laySanPhamChiTietById(@RequestParam String maSp) {
+        return ResponseEntity.ok(_sanPhamService.laySanPhamChiTietByMaSp(maSp));
     }
 
     @RequestMapping(value = "/laysanphamchitietcuasanpham", method = RequestMethod.GET)
