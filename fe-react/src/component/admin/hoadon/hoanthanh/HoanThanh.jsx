@@ -20,6 +20,8 @@ import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 import YeuCauDoiTra from "../../doitra/YeuCauDoiTra";
+import { useDoiTra } from "../../doitra/useDoiTra";
+import HuyDoiTra from "../../doitra/HuyDoiTra";
 
 function HoanThanh({ type = 2 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,10 +69,6 @@ function HoanThanh({ type = 2 }) {
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
   };
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -197,7 +195,7 @@ function HoanThanh({ type = 2 }) {
     {
       title: "Tên khách hàng",
       dataIndex: "tenKhachHang",
-      width: "20%",
+      width: "15%",
       ...getColumnSearchProps("tenKhachHang"),
     },
     {
@@ -228,12 +226,17 @@ function HoanThanh({ type = 2 }) {
     {
       title: "Thao tác",
       dataIndex: "key",
-      width: "10%",
+      width: "15%",
       align: "center",
       render: (id) => (
         <>
           <ChiTietHoaDon hoaDonId={id} />
-          {type == 1 && <YeuCauDoiTra hoaDonId={id} />}
+          {type == 1 &&
+            <>
+              <YeuCauDoiTra hoaDonId={id} setData2={layDuLieu} />
+              <HuyDoiTra id={id} setData={layDuLieu} />
+            </>
+          }
         </>
       ),
     },
@@ -283,7 +286,6 @@ function HoanThanh({ type = 2 }) {
       {contextHolder}
       <div className="choxacnhan">
         <Table
-          rowSelection={rowSelection}
           columns={columns}
           dataSource={data}
         />

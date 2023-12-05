@@ -11,5 +11,11 @@ export const useDoiTra = {
         async laySanPhamChiTietByMa(payload) {
             return axiosIns.get('/api/sanpham/laysanphamchitietbyma?maSp=' + payload)
         },
+        async taoYeuCau(payload) {
+            return axiosIns.post('/api/admin/taoyeucau', payload)
+        },
+        async huyYeuCau(payload) {
+            return axiosIns.get('/api/admin/huydoitra?hoaDonId=' + payload)
+        },
     },
 }
