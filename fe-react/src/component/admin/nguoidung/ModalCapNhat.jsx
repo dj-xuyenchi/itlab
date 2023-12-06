@@ -14,6 +14,7 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import { useNguoiDungStore } from "./useNguoiDungStore";
 
 function ModalThemSua({ id, setData }) {
+  const [rankKhachHang, setRankKhachHang] = useState();
   const { Option } = Select;
   const [nguoiDung, setNguoiDung] = useState({
     id: id,
@@ -78,14 +79,20 @@ function ModalThemSua({ id, setData }) {
       openNotification("error", "Hệ thống", "Sửa thông tin người dùng thất bại", "bottomRight");
     }
   }
+  async function layDuLieu2() {
+    const data = await useNguoiDungStore.actions.layRankKhachHang();
+    setRankKhachHang(data.data.data);
+  }
 
   useEffect(() => {
     async function layDuLieu() {
       const data = await useNguoiDungStore.actions.layNguoiDungId(id);
+      console.log(data);
       setNguoiDung(data.data);
     }
     if (isModalOpen) {
       layDuLieu();
+      layDuLieu2();
     }
   }, [id, isModalOpen]);
 
@@ -137,7 +144,13 @@ function ModalThemSua({ id, setData }) {
               },
             ]}
           >
-            <Input value={nguoiDung.ho} />
+            <Input value={nguoiDung.ho}
+            onChange={(e) => {
+              setNguoiDung({
+                ...nguoiDung,
+                ho: e.target.value,
+              });
+            }} />
           </Form.Item>
           <Form.Item label="Tên">
             <Input
@@ -158,7 +171,13 @@ function ModalThemSua({ id, setData }) {
               },
             ]}
           >
-            <Input  value={nguoiDung.email} />
+            <Input  value={nguoiDung.email}
+            onChange={(e) => {
+              setNguoiDung({
+                ...nguoiDung,
+                email: e.target.value,
+              });
+            }} />
           </Form.Item>
           <Form.Item
                     label="Trạng Thái"
@@ -186,7 +205,13 @@ function ModalThemSua({ id, setData }) {
                       },
                     ]}
                   >
-                    <Input  value={nguoiDung.diem} />
+                    <Input  value={nguoiDung.diem}
+                    onChange={(e) => {
+                      setNguoiDung({
+                        ...nguoiDung,
+                        diem: e.target.value,
+                      });
+                    }} />
                   </Form.Item>
                   <Form.Item
                     label="Số Điện Thoại"
@@ -196,7 +221,13 @@ function ModalThemSua({ id, setData }) {
                       },
                     ]}
                   >
-                    <Input  value={nguoiDung.soDienThoai} />
+                    <Input  value={nguoiDung.soDienThoai}
+                    onChange={(e) => {
+                      setNguoiDung({
+                        ...nguoiDung,
+                        s: e.target.value,
+                      });
+                    }} />
                   </Form.Item>
                   <Form.Item
                     label="Giới Tính"
@@ -214,25 +245,36 @@ function ModalThemSua({ id, setData }) {
                       <Radio value="Nam">Nam</Radio>
                       <Radio value="Nữ">Nữ</Radio>
                     </Radio.Group>
+                    
                   </Form.Item>
+          
                   <Form.Item
-                        label="Rank Khách Hàng"
-                        name="rankKhachHang"
-                        rules={[{ required: true, message: 'Vui lòng chọn Rank Khách Hàng!' }]}
-                      >
-                        <Select
-                          placeholder="Chọn Rank Khách Hàng"
-                          onChange={(value) => setNguoiDung({ ...nguoiDung, rankKhachHang: value })}
-                          value={nguoiDung.rankKhachHang}
-                        >
-                          {/* Lặp qua danh sách rank để tạo các Option */}
-                          <Option value="bronze">Bronze</Option>
-                          <Option value="silver">Silver</Option>
-                          <Option value="gold">Gold</Option>
-                          <Option value="platinum">Platinum</Option>
-                          {/* Thêm các Option khác tùy theo nhu cầu */}
-                        </Select>
-                      </Form.Item>
+                    label="Rank Khách Hàng"
+                    name="rankKhachHang"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn rank khách hàng!'
+                      },
+                    ]}
+                  >
+                <Select
+                  placeholder="Chọn rank khách hàng"
+                  onChange={(value) => setNguoiDung({...nguoiDung, rankKhachHang: { id: value }})}
+                  value={nguoiDung.rankKhachHang?.id || null}
+                >
+                  {rankKhachHang && rankKhachHang.map((rank) => (
+                    <Select.Option key={rank.id} value={rank.id}>
+                      {rank.tenRank}
+                    </Select.Option>
+                  ))}
+                </Select>
+
+                  </Form.Item>
+
+
+
+
         </Form>
       </Modal>
     </>

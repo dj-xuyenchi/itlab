@@ -3,7 +3,7 @@ import { selectLanguage } from "../../../language/selectLanguage";
 import "./style.css";
 import Header from "../layout/header/Header";
 import MenuAdmin from "../layout/menu/MenuAdmin";
-import { Form, Modal, Row, Table, Tag, notification } from "antd";
+import { Form, Modal, Row, Table, Tag, notification,message,Upload } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -14,8 +14,10 @@ import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
 import { useForm } from "antd/es/form/Form";
 import dayjs from 'dayjs';
+import { PlusOutlined } from "@ant-design/icons";
 
 function NguoiDung() {
+  const [rankKhachHang, setRankKhachHang] = useState();
   const [form] = useForm()
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -24,9 +26,33 @@ function NguoiDung() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const { Option } = Select;
   const [nguoiDung, setNguoiDung] = useState({
+    id:"",
     ten: "",
     rankKhachHang: undefined,
+    trangThai: "BIKHOA",
   });
+  const [fileList, setFileList] = useState([]);
+const [hinhAnh, setHinhAnh] = useState([]);
+const [isLoading, setIsLoading] = useState(false);
+
+const props = {
+  beforeUpload: (file) => {
+    return false;
+  },
+  onChange: (file) => {
+    setFileList(file.fileList);
+    if (file.fileList.length === 0) {
+      setHinhAnh([]);
+      return;
+    }
+    const isImage = file.file.type === "image/png" || file.file.type === "image/jpg" || file.file.type === "image/jpeg";
+    if (!isImage) {
+      message.error(`${file.file.name} không phải file hình ảnh`);
+      return;
+    }
+    setHinhAnh([file.fileList[0].originFileObj]);
+  },
+};
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -247,8 +273,14 @@ function NguoiDung() {
     setData(data.data.data);
   }
 
+  async function layDuLieu2() {
+    const data = await useNguoiDungStore.actions.layRankKhachHang();
+    setRankKhachHang(data.data.data);
+  }
+
   useEffect(() => {
     layDuLieu();
+    layDuLieu2()
   }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -287,7 +319,7 @@ function NguoiDung() {
     setNguoiDung({
       ...nguoiDung,
       ten: "",
-      anhDaiDien: "",
+      anhDaiDien: null,
       ho: "",
       email: "",
       soDienThoai: "",
@@ -302,6 +334,44 @@ function NguoiDung() {
     form.resetFields()
     setIsModalOpen(false);
   }
+  // async function handleThemNguoiDung() {
+  //   // Kiểm tra dữ liệu cơ bản
+  //   if (nguoiDung.ten.trim() === "" || !hinhAnh[0]) {
+  //     openNotification("error", "Hệ thống", "Tên và ảnh đại diện là bắt buộc", "bottomRight");
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   // Tạo đối tượng FormData
+  //   var formData = new FormData();
+  //   formData.append("anhDaiDien", hinhAnh[0]);
+  //   formData.append("data", JSON.stringify(nguoiDung));
+  //   try {
+  //     // Gọi API để thêm người dùng
+  //     const response = await useNguoiDungStore.actions.themNguoiDung(formData);
+      
+  //     if (response && response.data && response.data.status === "THANHCONG") {
+  //       openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+  //       setData(response.data.data);
+  //     } else {
+  //       throw new Error(response.data.message || "Thêm người dùng không thành công");
+  //     }
+  //   } catch (error) {
+  //     openNotification("error", "Hệ thống", error.message, "bottomRight");
+  //   } finally {
+  //     // Reset trạng thái và dữ liệu form
+  //     setNguoiDung({
+  //       ten: "",
+  //       anhDaiDien: null,
+  //       // các trường dữ liệu khác
+  //     });
+  //     setFileList([]);
+  //     setHinhAnh([]);
+  //     form.resetFields();
+  //     setIsLoading(false);
+  //     setIsModalOpen(false);
+  //   }
+  // }
+  
   return (
     <>
       {contextHolder}
@@ -371,8 +441,8 @@ function NguoiDung() {
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Ảnh Đại Diện"
-                    name="Ảnh Đại Diện"
+                    label="Ảnh đại diện"
+                    name="Ảnh đại diện "
                     rules={[
                       {
                         required: true,
@@ -389,6 +459,27 @@ function NguoiDung() {
                       value={nguoiDung.anhDaiDien}
                     />
                   </Form.Item>
+                  {/* <Form.Item label="Upload">
+                    <Upload
+                      listType="picture-card"
+                      multiple
+                      customRequest={() => { }}
+                      {...props}
+                      maxCount={4}
+                      fileList={fileList}
+                    >
+                      <div>
+                        <PlusOutlined />
+                        <div
+                          style={{
+                            marginTop: 8,
+                          }}
+                        >
+                          Upload
+                        </div>
+                      </div>
+                    </Upload>
+                  </Form.Item> */}
                   <Form.Item
                     label="Họ"
                     name="Họ"
@@ -505,13 +596,7 @@ function NguoiDung() {
                   <Form.Item
                     label="Trạng Thái"
                     name="trangThai"
-                    valuePropName="checked" // Quan trọng để liên kết đúng giá trị với Checkbox
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng chọn trạng thái!'
-                      },
-                    ]}
+                    valuePropName="checked"
                   >
                     <Checkbox
                       onChange={(e) => setNguoiDung({
@@ -556,24 +641,36 @@ function NguoiDung() {
                       value={nguoiDung.ngayCapNhat}
                     />
                   </Form.Item> */}
+
                   <Form.Item
-                        label="Rank Khách Hàng"
-                        name="rankKhachHang"
-                        rules={[{ required: true, message: 'Vui lòng chọn Rank Khách Hàng!' }]}
-                      >
-                        <Select
-                          placeholder="Chọn Rank Khách Hàng"
-                          onChange={(value) => setNguoiDung({ ...nguoiDung, rankKhachHang: value })}
-                          value={nguoiDung.rankKhachHang}
-                        >
-                          {/* Lặp qua danh sách rank để tạo các Option */}
-                          <Option value="bronze">Bronze</Option>
-                          <Option value="silver">Silver</Option>
-                          <Option value="gold">Gold</Option>
-                          <Option value="platinum">Platinum</Option>
-                          {/* Thêm các Option khác tùy theo nhu cầu */}
-                        </Select>
-                      </Form.Item>
+                    label="Rank Khách Hàng"
+                    name="rankKhachHang"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn rank khách hàng!'
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Chọn rank khách hàng"
+                      onChange={(value) => {
+                        const selectedRank = rankKhachHang.find(rank => rank.id === value);
+                        setNguoiDung({
+                          ...nguoiDung,
+                          rankKhachHang: selectedRank ? { id: selectedRank.id, tenRank: selectedRank.tenRank } : null
+                        });
+                      }}
+                      value={nguoiDung.rankKhachHang?.id || null}
+                    >
+                      {rankKhachHang && rankKhachHang.map((rank) => (
+                        <Select.Option key={rank.id} value={rank.id}>
+                          {rank.tenRank}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+
                   <Form.Item label=" ">
                     <Button
                       type="primary"
