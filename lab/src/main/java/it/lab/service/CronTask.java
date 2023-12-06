@@ -21,10 +21,8 @@ public class CronTask implements Cron {
 //
     @Autowired
     private SuKienGiamGiaRepo _suKienGiamGiaRepo;
-
     @Scheduled(cron = "15 * * * * ?")
     public void guiBaoCaoHangNgay() {
-        System.out.println(123);
      //   doiTrangThaiSuKien();
 //       Excel.taoBaoCaoNgay();
 //

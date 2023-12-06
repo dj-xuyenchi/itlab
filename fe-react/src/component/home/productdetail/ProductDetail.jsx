@@ -5,14 +5,15 @@ import ProductImgSlider from "./ProductImgSlider";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { CiRuler } from "react-icons/ci";
 import { AiOutlineHeart } from "react-icons/ai";
-import {  useNumberInput } from "@chakra-ui/react";
-import { Rate, notification } from "antd";
+import { useNumberInput } from "@chakra-ui/react";
+import { Col, Rate, Row, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSanPhamChiTiet } from "./useSanPhamChiTiet";
 import { selectUser } from "../../login/selectUser";
 import { selectLanguage } from "../../../language/selectLanguage";
 import QuantityField from "./QuantityField";
+import ChonSize from "./ChonSize";
 function ProductDetail() {
   const language = useSelector(selectLanguage);
   const [api, contextHolder] = notification.useNotification();
@@ -319,22 +320,8 @@ function ProductDetail() {
                 >
                   {sanPhamChon.kichThuoc.tenKichThuoc}
                 </span>
-                <span
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    fontSize: "14px",
-                    textDecoration: "underline",
-                    fontWeight: 400,
-                  }}
-                >
-                  <CiRuler
-                    style={{
-                      fontSize: "24px",
-                    }}
-                  />
-                  Hướng dẫn chọn size
-                </span>
+                <ChonSize />
+
               </div>
               <div
                 style={{
@@ -449,21 +436,47 @@ function ProductDetail() {
         }}
       >
         <div className="danh-gia">
-          <h3>Đánh giá sản phẩm</h3>
+          <h3>Thông tin sản phẩm</h3>
           <div className="star">
-            <div
-              style={{
-                width: "30%",
-              }}
-            >
-              <Rate allowHalf defaultValue={2.5} />
-            </div>
-            <div
-              style={{
-                width: "70%",
-              }}
-            >
-              <Rate allowHalf defaultValue={2.5} />
+            <div style={{
+              padding: "12px"
+            }}>
+              <Row style={{
+                width: "100%"
+              }}>
+                <Col span={24}>
+                  Thiết kế: <span style={{
+                    fontSize: "15px",
+                    fontWeight: 600
+                  }}>
+                    {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.thietKe.tenThietKe : ""}
+                  </span>
+                </Col>
+                <Col span={24}>
+                  Nhóm sản phẩm: <span style={{
+                    fontSize: "15px",
+                    fontWeight: 600
+                  }}>
+                    {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.nhomSanPham.tenNhom : ""}
+                  </span>
+                </Col>
+                <Col span={24}>
+                  Chất liệu: <span style={{
+                    fontSize: "15px",
+                    fontWeight: 600
+                  }}>
+                    {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.chatLieu.tenChatLieu : ""}
+                  </span>
+                </Col>
+                <Col span={24}>
+                  Mô tả: <span style={{
+                    fontSize: "15px",
+                    fontWeight: 600
+                  }}>
+                    {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.moTa : ""}
+                  </span>
+                </Col>
+              </Row>
             </div>
           </div>
         </div>

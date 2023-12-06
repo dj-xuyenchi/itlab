@@ -14,6 +14,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { useSelector } from "react-redux";
 import { IoEyeSharp } from "react-icons/io5";
+import dayjs from 'dayjs';
 function ModalView({ id }) {
   const language = useSelector(selectLanguage);
   const [sanPham, setSanPham] = useState({
@@ -58,6 +59,7 @@ function ModalView({ id }) {
         open={isModalOpen}
         onCancel={handleCancel}
         centered
+        width={768}
       >
         <Form
           name="wrap"
@@ -97,15 +99,15 @@ function ModalView({ id }) {
           <Form.Item label="Hình ảnh 1" >
             <img
               alt="Hình ảnh sản phẩm"
-              src={sanPham.hinhAnh1} 
-              style={{ width: '30%', height: '30%' }} 
+              src={sanPham.hinhAnh1}
+              style={{ width: '30%', height: '30%' }}
             />
           </Form.Item>
           <Form.Item label="Hình ảnh 2">
             <img
               alt="Hình ảnh sản phẩm"
-              src={sanPham.hinhAnh2} 
-              style={{ width: '30%', height: '30%', floa:"left" }} 
+              src={sanPham.hinhAnh2}
+              style={{ width: '30%', height: '30%', floa: "left" }}
             />
           </Form.Item>
           <Form.Item
@@ -128,25 +130,17 @@ function ModalView({ id }) {
           >
             <Input disabled value={sanPham.giaBan} />
           </Form.Item>
-          <Form.Item
-            label="Ngày tạo"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={sanPham.ngayTao} />
+          <Form.Item label="Ngày tạo">
+            <Input
+              disabled
+              value={sanPham.ngayTao ? dayjs(sanPham.ngayTao).format('DD/MM/YYYY') : "Mới"}
+            />
           </Form.Item>
-          <Form.Item
-            label="Ngày cập nhật"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={sanPham.ngayCapNhat} />
+          <Form.Item label="Ngày cập nhật">
+            <Input
+              disabled
+              value={sanPham.ngayCapNhat ? dayjs(sanPham.ngayCapNhat).format('DD/MM/YYYY') : "Mới"}
+            />
           </Form.Item>
           <Form.Item
             label="Mô tả"
@@ -159,14 +153,14 @@ function ModalView({ id }) {
             <Input disabled value={sanPham.moTa} />
           </Form.Item>
           <Form.Item
-            label="Trạng thái"
+            label="Trạng Thái"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input disabled value={sanPham.trangThai} />
+            <Input disabled value={sanPham.trangThai === "DANGBAN" ? "Đang bán" : sanPham.trangThai === "HETHANG" ? "Hết hàng" : ""} />
           </Form.Item>
           <Form.Item
             label="Số lượng tồn"

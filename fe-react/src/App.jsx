@@ -26,6 +26,7 @@ import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
 import { QRCode } from "antd";
 import DoiTra from "./component/admin/doitra/DoiTra";
 import SuKienGiamGia from "./component/admin/sukiengiamgia/SuKienGiamGia";
+import NguoiDung from "./component/admin/nguoidung/NguoiDung";
 import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
 import CRM from "./component/admin/crm/CRM";
 function App() {
@@ -74,6 +75,7 @@ function App() {
         <Route path="/admin/sanpham/kichthuoc" element={<KichThuoc />} />
         <Route path="/admin/doitra" element={<DoiTra />} />
         <Route path="/admin/sukiengiamgia" element={<SuKienGiamGia />} />
+        <Route path="/admin/nguoidung" element={<NguoiDung />} />
         <Route path="/admin/sukiengiamgia/sanphamsukien" element={<SanPhamSuKien />} />
         <Route path="/admin/crm" element={<CRM />} />
         <Route

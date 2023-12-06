@@ -87,6 +87,8 @@ public interface ISanPhamService {
 
     public SanPhamChiTietDTO laySanPhamChiTietById(Long sanPhamChiTietId);
 
+    public SanPhamChiTietDTO laySanPhamChiTietByMaSp(String maSp);
+
     public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId);
 
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException;

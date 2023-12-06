@@ -21,6 +21,8 @@ import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { useForm } from "antd/es/form/Form";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 function ModalThemSua({ type, thuocTinh, fetchData }) {
   const [form] = useForm()
   const [api, contextHolder] = notification.useNotification();
@@ -393,7 +395,23 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
             />
           </Form.Item>
           <Form.Item label="Thông tin chi tiết">
-            <TextArea rows={4} />
+            <CKEditor
+              editor={ClassicEditor}
+              data="<p>Hello from CKEditor&nbsp;5!</p>"
+              onReady={editor => {
+                // You can store the "editor" and use when it is needed.
+                console.log('Editor is ready to use!', editor);
+              }}
+              onChange={(event) => {
+                console.log(event);
+              }}
+              onBlur={(event, editor) => {
+                console.log('Blur.', editor);
+              }}
+              onFocus={(event, editor) => {
+                console.log('Focus.', editor);
+              }}
+            />
           </Form.Item>
           <Form.Item label="Upload">
             <Upload
