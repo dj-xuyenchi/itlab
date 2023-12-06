@@ -1,23 +1,35 @@
-
 import { useDispatch, useSelector } from "react-redux";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import "./style.css";
 import Header from "../../layout/header/Header";
 import MenuAdmin from "../../layout/menu/MenuAdmin";
-import { Form, Modal, Row, Table, Tag, notification } from "antd";
+import {
+  Col,
+  Form,
+  InputNumber,
+  Modal,
+  Row,
+  Select,
+  Spin,
+  Table,
+  Tag,
+  notification,
+} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Input, Space ,Image} from "antd";
-import { useSanPhamSuKienStore } from "./useSanPhamSuKienStore";
+import { Button, Input, Space } from "antd";
+import { useNhomSanPhamStore } from "../../product/sanphamchitiet/useNhomSanPhamStore";
+import ModalCapNhat from "../../product/sanphamchitiet/ModalCapNhat";
+import ModalXoa from "../../product/sanphamchitiet/ModalXoa";
+import ModalView from "../../product/sanphamchitiet/ModalView";
 import { useForm } from "antd/es/form/Form";
 function SanPhamSuKien() {
-  const [form] = useForm()
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-
+  const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined);
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -132,37 +144,72 @@ function SanPhamSuKien() {
   });
   const columns = [
     {
-      title: "Mã sản phẩm",
-      dataIndex: "sanPhamSuKien.sanPham.maSanPham",
+      title: "Mã SP",
+      dataIndex: "maSanPham",
       key: "maSanPham",
-      width: "15%",
-      ...getColumnSearchProps("maSanPham"),
-      render: (maNhom) => (
-        <>
-          <Tag color="success"> {maNhom}</Tag>
-        </>
+      width: "7.5%",
+      render: (maSanPham) => <>{maSanPham}</>,
+    },
+    {
+      title: "Màu sắc",
+      dataIndex: "mauSac",
+      key: "mauSac",
+      width: "10%",
+      render: (mauSac) => <>{mauSac.tenMau}</>,
+    },
+    {
+      title: "Kích thước",
+      dataIndex: "kichThuoc",
+      key: "kichThuoc",
+      width: "10%",
+      render: (kichThuoc) => <>{kichThuoc.tenKichThuoc}</>,
+    },
+    {
+      title: "Số lượng tồn",
+      dataIndex: "soLuongTon",
+      key: "soLuongTon",
+      width: "10%",
+      render: (soLuongTon) => <>{soLuongTon ? soLuongTon : 0}</>,
+    },
+    {
+      title: "Đã bán",
+      dataIndex: "soLuongDaBan",
+      key: "soLuongDaBan",
+      width: "10%",
+      render: (soLuongDaBan) => <>{soLuongDaBan ? soLuongDaBan : 0}</>,
+    },
+    {
+      title: "Số lượng lỗi",
+      dataIndex: "soLuongLoi",
+      key: "soLuongLoi",
+      width: "10%",
+      render: (soLuongLoi) => <>{soLuongLoi ? soLuongLoi : 0}</>,
+    },
+    {
+      title: "Số lượng trả hàng",
+      dataIndex: "soLuongTraHang",
+      key: "soLuongTraHang",
+      width: "10%",
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "ngayTao",
+      key: "ngayTao",
+      width: "10%",
+    },
+    {
+      title: "Ngày cập nhật",
+      dataIndex: "ngayCapNhat",
+      key: "ngayCapNhat",
+      width: "10%",
+      render: (ngayCapNhat) => (
+        <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Mới</Tag>}</>
       ),
     },
-
-    {
-        title: "Sự kiện giảm giá",
-        dataIndex: "suKienGiamGia.tenSuKien",
-        key: "suKienGiamGia",
-        width: "20%",
-        ...getColumnSearchProps("suKienGiamGia"),
-      },
-      {
-        title: "Ngày tạo",
-        dataIndex: "ngayTao",
-        key: "ngayTao",
-        width: "20%",
-        ...getColumnSearchProps("ngayTao"),
-      },
-    
     {
       title: "Thao tác",
       dataIndex: "id",
-      key: "id",
+      key: "maThietKe",
       align: "center",
       width: "15%",
       render: (id) => (
@@ -172,24 +219,31 @@ function SanPhamSuKien() {
             justifyContent: "center",
           }}
         >
-          {/* <ModalView id={id} />
-          <ModalCapNhat id={id} setData={setData} />
-          <ModalXoa id={id} setData={setData} /> */}
+          <ModalView id={id} />
+          <ModalCapNhat id={id} setData={setDataChiTiet} />
+          <ModalXoa id={id} setData={setDataChiTiet} />
         </div>
       ),
     },
   ];
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(undefined);
+  const [dataChiTiet, setDataChiTiet] = useState(undefined);
+  const [thuocTinh, setThuocTinh] = useState();
   async function layDuLieu() {
-    const data = await useSanPhamSuKienStore.actions.fetchSanPhamSuKien();
-    setData(data.data.content);
+    const data = await useNhomSanPhamStore.actions.fetchChatLieu();
+    setData(data.data.data);
   }
+  async function layDuLieu2() {
+    const data = await useNhomSanPhamStore.actions.fetchThuocTinh();
+    setThuocTinh(data.data);
+  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     layDuLieu();
+    layDuLieu2();
   }, []);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -216,26 +270,60 @@ function SanPhamSuKien() {
       });
     }
   };
-  // async function handleThemSuKienGiamGia() {
-  //   if (suKienGiamGia.tenSuKien == "" ) {
-  //     return;
-  //   }
-  //   const data = await useSuKienGiamGiaStore.actions.themSuKienGiamGia(suKienGiamGia);
-  //   openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-  //   setData(data.data.data);
-  //   setSuKienGiamGia({
-  //     ...suKienGiamGia,
-  //     tenSuKien: "",
-  //     logoSuKien: "",
-  //     mota: "",
-  //     ngayBatDau: "",
-  //     ngayCapNhat: "",
-  //     ngayKetThuc: "",
-  //     ngayTao: "",
-  //   });
-  //   form.resetFields()
-  //   setIsModalOpen(false);
-  // }
+  async function handleThemChatLieu() {
+    if (sanPhamChiTiet.mauSacId == null) {
+      openNotification("error", "Hệ thống", "Chưa chọn màu sắc", "bottomRight");
+      return;
+    }
+    if (sanPhamChiTiet.kichThuocId == null) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chưa chọn kích thước",
+        "bottomRight"
+      );
+      return;
+    }
+    if (sanPhamChiTiet.soLuongTon < 1 || sanPhamChiTiet.soLuongTon == null) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chưa nhập số lượng",
+        "bottomRight"
+      );
+      return;
+    }
+    if (!sanPhamChiTiet.sanPhamId) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chưa chọn sản phẩm",
+        "bottomRight"
+      );
+      return;
+    }
+    const data = await useNhomSanPhamStore.actions.themChatLieu(sanPhamChiTiet);
+    if (!data.data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại", "bottomRight");
+      setIsModalOpen(false);
+      return;
+    }
+    openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+    setDataChiTiet(data.data.data);
+    setSanPhamChiTiet(null);
+    form.resetFields();
+    setIsModalOpen(false);
+  }
+  async function handleSearchSelect(e) {
+    const data =
+      await useNhomSanPhamStore.actions.fetchSanPhamChiTietCuaSanPham(e.value);
+    setDataChiTiet(data.data.data);
+    setSanPhamChiTiet({
+      ...sanPhamChiTiet,
+      sanPhamId: e.value,
+    });
+  }
+  const [form] = useForm()
   return (
     <>
       {contextHolder}
@@ -250,21 +338,52 @@ function SanPhamSuKien() {
                 padding: "12px 12px",
               }}
             >
-              {/* <Row
+              <Row
                 style={{
                   display: "flex",
-                  justifyContent: "flex-end",
                   marginBottom: "10px",
                 }}
               >
-                <Button type="primary" size="large" onClick={showModal}>
-                  Thêm dữ liệu
-                </Button>
-              </Row> */}
-              {/* <Modal
+                <Col span={12}>
+                  <Select
+                    style={{
+                      width: "100%",
+                    }}
+                    showSearch
+                    labelInValue
+                    defaultValue={"Chọn sản phẩm"}
+                    onChange={handleSearchSelect}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {data
+                      ? data.map((option) => (
+                        <Select.Option key={option.id} value={option.id}>
+                          {option.tenSanPham}
+                        </Select.Option>
+                      ))
+                      : ""}
+                  </Select>
+                </Col>
+                <Col
+                  span={12}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Button type="primary" size="large" onClick={showModal}>
+                    Thêm chi tiết
+                  </Button>
+                </Col>
+              </Row>
+              <Modal
                 okButtonProps={{ style: { display: "none" } }}
                 cancelButtonProps={{ style: { display: "none" } }}
-                title="Thêm sản phẩm sự kiện"
+                title="Thêm chi tiết"
                 open={isModalOpen}
                 onCancel={handleCancel}
                 centered
@@ -286,76 +405,114 @@ function SanPhamSuKien() {
                   }}
                 >
                   <Form.Item
-                    label="Tên sự kiện"
-                    name="Tên sự kiện"
+                    label="Màu sắc"
+                    name="Màu sắc"
                     rules={[
                       {
                         required: true,
                       },
                     ]}
                   >
-                    <Input
+                    <Select
+                      labelInValue
+                      optionLabelProp="children"
+                      style={{
+                        width: "100%",
+                      }}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
                       onChange={(e) => {
-                        setSuKienGiamGia({
-                          ...suKienGiamGia,
-                          tenSuKien: e.target.value,
+                        setSanPhamChiTiet({
+                          ...sanPhamChiTiet,
+                          mauSacId: e.value,
                         });
                       }}
-                      value={suKienGiamGia.tenSuKien}
-                    />
+                    >
+                      {thuocTinh
+                        ? thuocTinh.mauSacList.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenMau}
+                          </Select.Option>
+                        ))
+                        : ""}
+                    </Select>
                   </Form.Item>
                   <Form.Item
-                    label="Logo sự kiện"
-                    name="Logo sự kiện"
+                    label="Kích thước"
+                    name="Kích thước"
                     rules={[
                       {
                         required: true,
                       },
                     ]}
                   >
-                    <Input
+                    <Select
+                      labelInValue
+                      optionLabelProp="children"
+                      style={{
+                        width: "100%",
+                      }}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
                       onChange={(e) => {
-                        setSuKienGiamGia({
-                          ...suKienGiamGia,
-                          logoSuKien: e.target.value,
+                        setSanPhamChiTiet({
+                          ...sanPhamChiTiet,
+                          kichThuocId: e.value,
                         });
                       }}
-                      value={suKienGiamGia.logoSuKien}
-                    />
+                    >
+                      {thuocTinh
+                        ? thuocTinh.kichThuocList.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenKichThuoc}
+                          </Select.Option>
+                        ))
+                        : ""}
+                    </Select>
                   </Form.Item>
                   <Form.Item
-                    label="Mô tả"
-                    name="Mô tả"
+                    label="Số lượng tồn"
+                    name="Số lượng tồn"
                     rules={[
                       {
                         required: true,
                       },
                     ]}
                   >
-                    <Input
+                    <InputNumber
                       onChange={(e) => {
-                        setSuKienGiamGia({
-                          ...suKienGiamGia,
-                          moTa: e.target.value,
+                        setSanPhamChiTiet({
+                          ...sanPhamChiTiet,
+                          soLuongTon: e,
                         });
                       }}
-                      value={suKienGiamGia.moTa}
+                      value={sanPhamChiTiet ? sanPhamChiTiet.soLuongTon : null}
+                      style={{
+                        width: "100%",
+                      }}
+                      min={1}
                     />
                   </Form.Item>
                   <Form.Item label=" ">
                     <Button
                       type="primary"
                       htmlType="submit"
-                      onClick={handleThemSuKienGiamGia}
+                      onClick={handleThemChatLieu}
                     >
                       Thêm mới
                     </Button>
                   </Form.Item>
                 </Form>
-              </Modal> */}
+              </Modal>
               <Table
                 columns={columns}
-                dataSource={data}
+                dataSource={dataChiTiet}
                 pagination={{ pageSize: 10 }}
               />
             </div>
