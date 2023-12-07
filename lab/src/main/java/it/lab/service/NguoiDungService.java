@@ -1,17 +1,24 @@
 package it.lab.service;
 
+import it.lab.common.CloudinaryUpload;
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
+import it.lab.enums.APIStatus;
 import it.lab.enums.CapNhat;
+import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.iservice.INguoiDungService;
 import it.lab.modelcustom.request.DoiMatKhau;
+import it.lab.modelcustom.request.NguoiDungRequest;
 import it.lab.repository.NguoiDungRepo;
+import it.lab.repository.RankKhachHangRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -21,6 +28,9 @@ public class NguoiDungService implements INguoiDungService {
     private NguoiDungRepo _nguoiDungRepo;
     @Autowired
     private PasswordEncoder _bcrypt;
+
+    @Autowired
+    private RankKhachHangRepo _rankKhachHangRepo;
 
     @Override
     public Page<NguoiDungDTO> layHetNguoiDung() {
@@ -78,22 +88,42 @@ public class NguoiDungService implements INguoiDungService {
         return layHetNguoiDung();
     }
 
+//    @Override
+//    public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung) {
+//        nguoiDung.setNgayTao(LocalDateTime.now());
+//        _nguoiDungRepo.save(nguoiDung);
+//        nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
+//        nguoiDung.setTen(nguoiDung.getTen());
+//        nguoiDung.setHo(nguoiDung.getHo());
+//        nguoiDung.setEmail(nguoiDung.getEmail());
+//        nguoiDung.setMatKhau(nguoiDung.getMatKhau());
+//        nguoiDung.setAnhDaiDien(nguoiDung.getAnhDaiDien());
+//        nguoiDung.setRankKhachHang(nguoiDung.getRankKhachHang());
+//        nguoiDung.setSoDienThoai(nguoiDung.getSoDienThoai());
+//        nguoiDung.setNgayCapNhat(nguoiDung.getNgayCapNhat());
+//        nguoiDung.setTrangThai(nguoiDung.getTrangThai());
+//        nguoiDung.setGioiTinh(nguoiDung.getGioiTinh());
+//        _nguoiDungRepo.save(nguoiDung);
+//        return layHetNguoiDung();
+//    }
+
     @Override
-    public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung) {
+    public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDungRequest, MultipartFile anhdaidien) throws IOException {
+        NguoiDung nguoiDung = new NguoiDung();
         nguoiDung.setNgayTao(LocalDateTime.now());
+        nguoiDung.setTen(nguoiDungRequest.getTen());
+        nguoiDung.setHo(nguoiDungRequest.getHo());
+        nguoiDung.setDiem(nguoiDungRequest.getDiem());
+        nguoiDung.setEmail(nguoiDungRequest.getEmail());
+        nguoiDung.setMatKhau(nguoiDungRequest.getMatKhau());
+        nguoiDung.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
+        nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
+        nguoiDung.setTrangThai(TrangThaiNguoiDung.HOATDONG);
+        nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
+        nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
         _nguoiDungRepo.save(nguoiDung);
-        nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
-        nguoiDung.setTen(nguoiDung.getTen());
-        nguoiDung.setHo(nguoiDung.getHo());
-        nguoiDung.setEmail(nguoiDung.getEmail());
-        nguoiDung.setMatKhau(nguoiDung.getMatKhau());
-        nguoiDung.setAnhDaiDien(nguoiDung.getAnhDaiDien());
-        nguoiDung.setRankKhachHang(nguoiDung.getRankKhachHang());
-        nguoiDung.setSoDienThoai(nguoiDung.getSoDienThoai());
-        nguoiDung.setNgayCapNhat(nguoiDung.getNgayCapNhat());
-        nguoiDung.setTrangThai(nguoiDung.getTrangThai());
-        nguoiDung.setGioiTinh(nguoiDung.getGioiTinh());
+        nguoiDung.setMaNguoiDung("ND" + nguoiDung.getId());
         _nguoiDungRepo.save(nguoiDung);
-        return layHetNguoiDung();
+        return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
 }

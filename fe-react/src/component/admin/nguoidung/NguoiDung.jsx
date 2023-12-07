@@ -309,69 +309,72 @@ const props = {
       });
     }
   };
-  async function handleThemNguoiDung() {
-    if (nguoiDung.ten == "" ) {
-      return;
-    }
-    const data = await useNguoiDungStore.actions.themNguoiDung(nguoiDung);
-    openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-    setData(data.data.data);
-    setNguoiDung({
-      ...nguoiDung,
-      ten: "",
-      anhDaiDien: null,
-      ho: "",
-      email: "",
-      soDienThoai: "",
-      matKhau: "",
-      gioiTinh: "",
-      diem: "",
-      trangThai: "",
-      ngayTao: "",
-      ngayCapNhat: "",
-      rankKhachHang: "",
-    });
-    form.resetFields()
-    setIsModalOpen(false);
-  }
   // async function handleThemNguoiDung() {
-  //   // Kiểm tra dữ liệu cơ bản
-  //   if (nguoiDung.ten.trim() === "" || !hinhAnh[0]) {
-  //     openNotification("error", "Hệ thống", "Tên và ảnh đại diện là bắt buộc", "bottomRight");
+  //   if (nguoiDung.ten == "" ) {
   //     return;
   //   }
-  //   setIsLoading(true);
-  //   // Tạo đối tượng FormData
-  //   var formData = new FormData();
-  //   formData.append("anhDaiDien", hinhAnh[0]);
-  //   formData.append("data", JSON.stringify(nguoiDung));
-  //   try {
-  //     // Gọi API để thêm người dùng
-  //     const response = await useNguoiDungStore.actions.themNguoiDung(formData);
-      
-  //     if (response && response.data && response.data.status === "THANHCONG") {
-  //       openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-  //       setData(response.data.data);
-  //     } else {
-  //       throw new Error(response.data.message || "Thêm người dùng không thành công");
-  //     }
-  //   } catch (error) {
-  //     openNotification("error", "Hệ thống", error.message, "bottomRight");
-  //   } finally {
-  //     // Reset trạng thái và dữ liệu form
-  //     setNguoiDung({
-  //       ten: "",
-  //       anhDaiDien: null,
-  //       // các trường dữ liệu khác
-  //     });
-  //     setFileList([]);
-  //     setHinhAnh([]);
-  //     form.resetFields();
-  //     setIsLoading(false);
-  //     setIsModalOpen(false);
-  //   }
+  //   const data = await useNguoiDungStore.actions.themNguoiDung(nguoiDung);
+  //   openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+  //   setData(data.data.data);
+  //   setNguoiDung({
+  //     ...nguoiDung,
+  //     ten: "",
+  //     anhDaiDien: null,
+  //     ho: "",
+  //     email: "",
+  //     soDienThoai: "",
+  //     matKhau: "",
+  //     gioiTinh: "",
+  //     diem: "",
+  //     trangThai: "",
+  //     ngayTao: "",
+  //     ngayCapNhat: "",
+  //     rankKhachHang: "",
+  //   });
+  //   form.resetFields()
+  //   setIsModalOpen(false);
   // }
-  
+  async function handleThemNguoiDung() {
+    // Kiểm tra dữ liệu cơ bản
+    if (nguoiDung.ten.trim() === "" ) {
+      openNotification("error", "Hệ thống", "Tên là bắt buộc", "bottomRight");
+      return;
+    }
+    setIsLoading(true);
+    // Tạo đối tượng FormData
+    var formData = new FormData();
+    formData.append("anhDaiDien", hinhAnh[0]);
+    formData.append("data", JSON.stringify(nguoiDung));
+    try {
+      const response = await useNguoiDungStore.actions.themNguoiDung(formData);
+      
+      if (response && response.data && response.data.status === "THANHCONG") {
+        openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+        setData(response.data.data);
+      } else {
+        throw new Error(response.data.message || "Thêm người dùng không thành công");
+      }
+    } catch (error) {
+      openNotification("error", "Hệ thống", error.message, "bottomRight");
+    } finally {
+      setNguoiDung({
+        ten: "",
+        anhDaiDien: null,
+        
+      });
+      setFileList([]);
+      setHinhAnh([]);
+      form.resetFields();
+      setIsLoading(false);
+      setIsModalOpen(false);
+    }
+  }
+  function handleSetRankKhachHang(e) {
+    setNguoiDung({
+      ...nguoiDung,
+      rankKhachHangId: e.value,
+    });
+  }
   return (
     <>
       {contextHolder}
@@ -440,7 +443,7 @@ const props = {
                       value={nguoiDung.ten}
                     />
                   </Form.Item>
-                  <Form.Item
+                  {/* <Form.Item
                     label="Ảnh đại diện"
                     name="Ảnh đại diện "
                     rules={[
@@ -458,8 +461,8 @@ const props = {
                       }}
                       value={nguoiDung.anhDaiDien}
                     />
-                  </Form.Item>
-                  {/* <Form.Item label="Upload">
+                  </Form.Item> */}
+                  <Form.Item label="Upload">
                     <Upload
                       listType="picture-card"
                       multiple
@@ -479,7 +482,7 @@ const props = {
                         </div>
                       </div>
                     </Upload>
-                  </Form.Item> */}
+                  </Form.Item>
                   <Form.Item
                     label="Họ"
                     name="Họ"
@@ -642,7 +645,7 @@ const props = {
                     />
                   </Form.Item> */}
 
-                  <Form.Item
+                  {/* <Form.Item
                     label="Rank Khách Hàng"
                     name="rankKhachHang"
                     rules={[
@@ -669,7 +672,31 @@ const props = {
                         </Select.Option>
                       ))}
                     </Select>
-                  </Form.Item>
+                  </Form.Item> */}
+
+          <Form.Item label="Rank khách hàng">
+            <Select
+              labelInValue
+              optionLabelProp="children"
+              style={{
+                width: "100%",
+              }}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              onChange={handleSetRankKhachHang}
+            >
+              {rankKhachHang
+                ? rankKhachHang.map((option) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.tenRank}
+                  </Select.Option>
+                ))
+                : ""}
+            </Select>
+          </Form.Item>
 
                   <Form.Item label=" ">
                     <Button
