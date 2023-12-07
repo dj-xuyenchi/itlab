@@ -24,11 +24,9 @@ public class SanPhamSuKien {
     private Long id;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
-    @JsonIgnore
     private SanPham sanPham;
     @JoinColumn(name = "sukiengiamgiaid")
     @ManyToOne
-    @JsonIgnore
     private SuKienGiamGia suKienGiamGia;
     @Column(name = "ngaytao")
     private LocalDateTime ngayTao;

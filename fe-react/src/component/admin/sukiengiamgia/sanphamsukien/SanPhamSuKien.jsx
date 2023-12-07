@@ -11,300 +11,111 @@ import { useSanPhamStore } from "../../product/useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
 import ModalThemSua from "../../product/ModalThemSua";
 import ModalView from "../../product/ModalView";
+import { useSanPhamSuKienStore } from "./useSanPhamSuKienStore";
+import { FaRegPenToSquare } from "react-icons/fa6";
 function Product() {
-  const language = useSelector(selectLanguage);
-  const dispath = useDispatch();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef(null);
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText("");
-  };
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: "block",
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Tìm
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Lọc
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Đóng
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1677ff" : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-  const [filter, setFilter] = useState({
-    thietKe: [],
-    nhomSanPham: [],
-    chatLieu: [],
-  });
-  const [sanPham, setSanPham] = useState([
+  const [sanPham, setSanPhamSuKien] = useState([
     {
       key: "1",
-      maSanPham: "ABC",
-      hinhAnh1: "",
-      soLuongTon: 32,
-
-      chatLieu: {
-        tenChatLieu: "abc",
+      id: 1, // ID của SanPhamSuKien
+      sanPham: {
+        maSanPham: "ABC",
+        hinhAnh1: "https://res.cloudinary.com/dh0kxilvg/image/upload/v1698932643/ddmloiyei8cha4wblo4f.png",
+        soLuongTon: 32,
       },
-      thietKe: {
-        tenThietKe: "abc",
+      suKienGiamGia: {
+        // thông tin của SuKienGiamGia
       },
-      nhomSanPham: {
-        tenNhom: "abc",
-      },
+      ngayTao: "2023-12-06T00:00:00",
+      ngayCapNhat: "2023-12-06T00:00:00",
+      trangThai: "NGUNG_SU_KIEN",
+      // các thuộc tính khác của SanPhamSuKien
     },
   ]);
-  const [filteredInfo, setFilteredInfo] = useState({});
+
   const columns = [
     {
-      title: "Mã sản phẩm",
-      dataIndex: "maSanPham",
-      key: "name",
-      width: "15%",
-      ...getColumnSearchProps("maSanPham"),
-      render: (maSanPham) => (
-        <>
-          <Tag color="success"> {maSanPham}</Tag>
-        </>
-      ),
-    },
-    {
-      title: "Hình ảnh",
-      dataIndex: "hinhAnh1",
-      key: "age",
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
       width: "10%",
-      render: (hinhAnh1) => (
-        <Image src={hinhAnh1} style={{ width: "120px", height: "180px" }} />
-      ),
     },
     {
-      title: "Tên sản phẩm",
-      dataIndex: "tenSanPham",
-      key: "address",
-      width: "30%",
-      ...getColumnSearchProps("tenSanPham"),
+      title: "Ngày Tạo",
+      dataIndex: "ngayTao",
+      key: "ngayTao",
+      width: "15%",
     },
     {
-      title: "SLT",
-      dataIndex: "soLuongTon",
-      key: "address",
-      width: "5%",
-      sorter: (a, b) => a.soLuongTon - b.soLuongTon,
-      sortDirections: ["descend", "ascend"],
+      title: "Ngày Cập Nhật",
+      dataIndex: "ngayCapNhat",
+      key: "ngayCapNhat",
+      width: "15%",
     },
     {
-      title: "Chất liệu",
-      dataIndex: "chatLieu",
-      key: "address",
-      width: "7.5%",
-      render: (chatLieu) => <span>{chatLieu.tenChatLieu}</span>,
-      // filters: filter.chatLieu,
-      // filteredValue: filteredInfo.address || null,
-      // onFilter: (value, record) => record.chatLieu.tenChatLieu.includes(value),
+      title: "Mã Sản Phẩm",
+      dataIndex: ["sanPham", "maSanPham"], // Thay đổi từ "sanPham.maSanPham" thành ["sanPham", "maSanPham"]
+      key: "maSanPham",
+      width: "20%",
+      render: (maSanPham) => <span>{maSanPham}</span>,
     },
     {
-      title: "Nhóm sản phẩm",
-      dataIndex: "nhomSanPham",
-      key: "address",
-      width: "7.5%",
-      render: (nhomSanPham) => <span>{nhomSanPham.tenNhom}</span>,
-      // filters: filter.nhomSanPham,
-      // filteredValue: filteredInfo.address || null,
-      // onFilter: (value, record) => record.nhomSanPham.tenNhom.includes(value),
+      title: "Hình Ảnh",
+      dataIndex: ["sanPham", "hinhAnh1"], // Thay đổi từ "sanPham.hinhAnh1" thành ["sanPham", "hinhAnh1"]
+      key: "hinhAnh",
+      width: "20%",
+      render: (hinhAnh) => <Image src={hinhAnh} style={{ width: "100px", height: "100px" }} />,
     },
     {
-      title: "Thiết kế",
-      dataIndex: "thietKe",
-      key: "address",
-      width: "7.5%",
-      render: (thietKe) => <span>{thietKe.tenThietKe}</span>,
-      // filters: filter.thietKe,
-      // filteredValue: filteredInfo.address || null,
-      // onFilter: (value, record) => record.thietKe.tenThietKe.includes(value),
+      title: "Trạng Thái",
+      dataIndex: "trangThai",
+      key: "trangThai",
+      width: "20%",
     },
     {
       title: "Thao tác",
-      dataIndex: "id",
-      key: "maThietKe",
-      align: "center",
-      width: "15%",
+      dataIndex: "id", // Sử dụng dataIndex là 'id' vì chúng ta muốn truy cập 'id' của mỗi hàng
+      key: "action",
+      width: "10%",
       render: (id) => (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <ModalView id={id} />
-          
-          {/* <ModalThemSua id={id} setData={setData} /> */}
-        </div>
+        <Button
+            style={{
+              color: "green",
+            }}
+            shape="circle"
+            icon={<FaRegPenToSquare />}
+          />
       ),
     },
   ];
-  function handleSetFilter(source) {
-    const thietKe = [];
-    const nhomSanPham = [];
-    const chatLieu = [];
-    for (var item of source) {
-      if (
-        !thietKe.some((item2) => {
-          return item2.id == item.thietKe.id;
-        })
-      ) {
-        thietKe.push({
-          id: item.thietKe.id,
-          text: item.thietKe.tenThietKe,
-          value: item.thietKe.tenThietKe,
-        });
-      }
-    }
-    if (
-      !nhomSanPham.some((item2) => {
-        return item2.id == item.nhomSanPham.id;
-      })
-    ) {
-      nhomSanPham.push({
-        id: item.nhomSanPham.id,
-        text: item.nhomSanPham.tenNhom,
-        value: item.nhomSanPham.tenNhom,
-      });
-    }
-    if (
-      !chatLieu.some((item2) => {
-        return item2.id == item.chatLieu.id;
-      })
-    ) {
-      chatLieu.push({
-        id: item.chatLieu.id,
-        text: item.chatLieu.tenChatLieu,
-        value: item.chatLieu.tenChatLieu,
-      });
-    }
-    setFilter({
-      thietKe: thietKe,
-      nhomSanPham: nhomSanPham,
-      chatLieu: chatLieu,
-    });
-  }
-  const [thuocTinh, setThuocTinh] = useState(undefined);
   const fetchData = async () => {
-    const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
-    setSanPham(data.data.data);
-    handleSetFilter(data.data.data);
-    // dispath(productSlice.actions.setSanPham(data));
-    // dispath(productSlice.actions.setIsLoading(false));
+    try {
+      const { data } = await useSanPhamSuKienStore.actions.fetchSanPhamSuKien();
+      // Kiểm tra dữ liệu nhận được từ API
+      console.log(data);
+
+      if (Array.isArray(data) && data.length > 0) {
+        const formattedData = data.map((item) => ({
+          key: item.id.toString(),
+          id: item.id,
+          ngayTao: item.ngayTao,
+          ngayCapNhat: item.ngayCapNhat,
+          sanPham: {
+            maSanPham: item.sanPham?.maSanPham || "", // Sử dụng Optional Chaining (?.) để tránh lỗi nếu 'maSanPham' không tồn tại
+            hinhAnh1: item.sanPham?.hinhAnh1 || "", // Tương tự với 'hinhAnh1'
+            //Thêm các trường khác của 'sanPham' tương tự ở đây
+          },
+          trangThai: item.trangThai,
+        }));
+        setSanPhamSuKien(formattedData);
+      }
+    } catch (error) {
+      console.error("Lỗi data error:", error);
+    }
   };
   useEffect(() => {
-    // dispath(productSlice.actions.setIsLoading(true));
-    const fetchThuocTinh = async () => {
-      const data = await useSanPhamStore.actions.fetchThuocTinh();
-      setThuocTinh(data.data);
-    };
     fetchData();
-    fetchThuocTinh();
   }, []);
-  const onChange = (pagination, filters, sorter, extra) => {
-    setFilteredInfo(filters);
-    console.log(filters);
-  };
   return (
     <>
       <div>
@@ -313,20 +124,16 @@ function Product() {
         <div className="body-container">
           <div className="content">
             <div className="modalThem">
-              <ModalThemSua
-                type={1}
-                thuocTinh={thuocTinh}
-                fetchData={fetchData}
-              />
+              <ModalThemSua type={1} fetchData={fetchData} />
             </div>
             <div className="table-sanpham background-color">
               <Table
                 columns={columns}
                 dataSource={sanPham}
-                onChange={onChange}
                 pagination={{
                   position: ["bottomRight"],
                 }}
+                rowKey="id" // Sử dụng thuộc tính 'id' làm key cho mỗi hàng trong Table
               />
             </div>
           </div>
