@@ -1,46 +1,47 @@
-import { selectLanguage } from "../../../language/selectLanguage";
-import "./style.css";
+import { useState, useEffect } from "react";
 import {
   Button,
   Form,
   Input,
   Modal,
-  Row,
-  Table,
   Tooltip,
   notification,
+  Checkbox,
+  Radio,
+  Select
 } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { useNguoiDungStore } from "./useNguoiDungStore";
-import { useSelector } from "react-redux";
 import { FaRegPenToSquare } from "react-icons/fa6";
-function ModalCapNhat({ id, setData }) {
-  const language = useSelector(selectLanguage);
+import { useNguoiDungStore } from "./useNguoiDungStore";
+
+function ModalThemSua({ id, setData }) {
+  const [rankKhachHang, setRankKhachHang] = useState();
+  const { Option } = Select;
   const [nguoiDung, setNguoiDung] = useState({
     id: id,
     ten: "",
-    anhDaiDien: "",
     ho: "",
     email: "",
-    gioiTinh: "",
-    soDienThoai: "",
     matKhau: "",
-    diem: "",
     trangThai: "",
     rankKhachHang: "",
-    
+    diem: "",
+    gioiTinh: "",
+    soDienThoai: "",
+    anhDaiDien: "",
   });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
   const [api, contextHolder] = notification.useNotification();
+
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
       api.error({
@@ -56,314 +57,228 @@ function ModalCapNhat({ id, setData }) {
       });
     }
   };
+
   async function handleSuaNguoiDung() {
-    if (nguoiDung.ten == "" ) {
+    if (nguoiDung.ten === "") {
       return;
     }
-    const data = await useNguoiDungStore.actions.suaNguoiDung(nguoiDung);
-    openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
-    setNguoiDung({
-      ...nguoiDung,
-      ten: "",
-      ho: "",
-      matKhau: "",
-      email: "",
-      soDienThoai: "",
-      gioiTinh: "",
-      anhDaiDien: "",
-      diem: "",
-      trangThai: "",
-      rankKhachHang: "",
 
-      
-    });
-    setData(data.data.data);
-    setIsModalOpen(false);
+    const data = await useNguoiDungStore.actions.suaNguoiDung(nguoiDung);
+
+    if (data.success) {
+      openNotification(
+        "success",
+        "Hệ thống",
+        "Sửa thông tin người dùng thành công",
+        "bottomRight"
+      );
+      setData(data.data);
+
+      setIsModalOpen(false);
+    } else {
+      openNotification("error", "Hệ thống", "Sửa thông tin người dùng thất bại", "bottomRight");
+    }
   }
+  async function layDuLieu2() {
+    const data = await useNguoiDungStore.actions.layRankKhachHang();
+    setRankKhachHang(data.data.data);
+  }
+
+  useEffect(() => {
+    async function layDuLieu() {
+      const data = await useNguoiDungStore.actions.layNguoiDungId(id);
+      console.log(data);
+      setNguoiDung(data.data);
+    }
+    if (isModalOpen) {
+      layDuLieu();
+      layDuLieu2();
+    }
+  }, [id, isModalOpen]);
+
   return (
     <>
       {contextHolder}
-      <div
-        style={{
-          marginLeft: "4px",
-          marginRight: "4px",
-        }}
+      <Tooltip title="Cập nhật" onClick={showModal}>
+        <Button
+          style={{
+            color: "green",
+          }}
+          shape="circle"
+          icon={<FaRegPenToSquare />} 
+        />
+      </Tooltip>
+      <Modal
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+        title="Sửa Người Dùng"
+        visible={isModalOpen}
+        onCancel={handleCancel}
+        centered
+        footer={[
+          <Button key="submit" type="primary" onClick={handleSuaNguoiDung}>
+            Sửa
+          </Button>,
+        ]}
       >
-        <Tooltip title="Cập nhật" onClick={showModal}>
-          <Button
-            style={{
-              color: "green",
-            }}
-            shape="circle"
-            icon={<FaRegPenToSquare />}
-          />
-        </Tooltip>
-        <Modal
-          okButtonProps={{ style: { display: "none" } }}
-          cancelButtonProps={{ style: { display: "none" } }}
-          title="Sửa Người Dùng"
-          open={isModalOpen}
-          onCancel={handleCancel}
-          centered
+        <Form
+          name="wrap"
+          labelCol={{
+            flex: "110px",
+          }}
+          labelAlign="left"
+          labelWrap
+          wrapperCol={{
+            flex: 1,
+          }}
+          colon={false}
+          style={{
+            maxWidth: 600,
+          }}
         >
-          <Form
-            name="wrap"
-            labelCol={{
-              flex: "110px",
-            }}
-            labelAlign="left"
-            labelWrap
-            wrapperCol={{
-              flex: 1,
-            }}
-            colon={false}
-            style={{
-              maxWidth: 600,
-            }}
+          <Form.Item
+            label="Họ"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
           >
-            
-            <Form.Item
-              label="Tên Người Dùng"
-              name="Tên Người Dùng"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    ten: e.target.value,
-                  });
-                }}
-                value={nguoiDung.ten}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Họ "
-              name="Họ"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    ho: e.target.value,
-                  });
-                }}
-                value={nguoiDung.ho}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Mật Khẩu"
-              name="Mật Khẩu"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    matKhau: e.target.value,
-                  });
-                }}
-                value={nguoiDung.matKhau}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Email"
-              name="Email"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    email: e.target.value,
-                  });
-                }}
-                value={nguoiDung.email}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Số Điện Thoại"
-              name="Số Điện Thoại"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    soDienThoai: e.target.value,
-                  });
-                }}
-                value={nguoiDung.soDienThoai}
-              />
-            </Form.Item>  
-            <Form.Item
-              label="Giới Tính"
-              name="Giới Tính"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    gioiTinh: e.target.value,
-                  });
-                }}
-                value={nguoiDung.gioiTinh}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Điểm"
-              name="Điểm"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    diem: e.target.value,
-                  });
-                }}
-                value={nguoiDung.diem}
-              />
-            </Form.Item>  
-            <Form.Item
-              label="Ảnh Đại Diện"
-              name="Ảnh Đại Diện"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    anhDaiDien: e.target.value,
-                  });
-                }}
-                value={nguoiDung.anhDaiDien}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Trạng Thái"
-              name="Trạng Thái"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    trangThai: e.target.value,
-                  });
-                }}
-                value={nguoiDung.trangThai}
-              />
-            </Form.Item>
-            {/* <Form.Item
-              label="Ngày Tạo"
-              name="Ngày Tạo"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    ngayTao: e.target.value,
-                  });
-                }}
-                value={nguoiDung.ngayTao}
-              />
-            </Form.Item> */}
-            {/* <Form.Item
-              label="Ngày Cập Nhật"
-              name="Ngày Cập Nhật"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    ngayCapNhat: e.target.value,
-                  });
-                }}
-                value={nguoiDung.ngayCapNhat}
-              />
-            </Form.Item> */}
-            {/* <Form.Item
-              label="Rank Khách Hàng"
-              name="Rank Khách Hàng"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => {
-                  setNguoiDung({
-                    ...nguoiDung,
-                    rankKhachHang: e.target.value,
-                  });
-                }}
-                value={nguoiDung.rankKhachHang}
-              />
-            </Form.Item> */}
-            <Form.Item label=" ">
-              <Button
-                type="primary"
-                htmlType="submit"
-                onClick={handleSuaNguoiDung}
-              >
-                Sửa
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
+            <Input value={nguoiDung.ho}
+            onChange={(e) => {
+              setNguoiDung({
+                ...nguoiDung,
+                ho: e.target.value,
+              });
+            }} />
+          </Form.Item>
+          <Form.Item label="Tên">
+            <Input
+              value={nguoiDung.ten}
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  ten: e.target.value,
+                });
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input  value={nguoiDung.email}
+            onChange={(e) => {
+              setNguoiDung({
+                ...nguoiDung,
+                email: e.target.value,
+              });
+            }} />
+          </Form.Item>
+          <Form.Item
+                    label="Trạng Thái"
+                    name="trangThai"
+                    valuePropName="checked"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn trạng thái!'
+                      },
+                    ]}
+                  >
+                    <Checkbox
+                      onChange={(e) => setNguoiDung({
+                        ...nguoiDung,
+                        trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
+                      })}
+                    >Hoạt động</Checkbox>
+                  </Form.Item>
+                  <Form.Item
+                    label="Điểm"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Input  value={nguoiDung.diem}
+                    onChange={(e) => {
+                      setNguoiDung({
+                        ...nguoiDung,
+                        diem: e.target.value,
+                      });
+                    }} />
+                  </Form.Item>
+                  <Form.Item
+                    label="Số Điện Thoại"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Input  value={nguoiDung.soDienThoai}
+                    onChange={(e) => {
+                      setNguoiDung({
+                        ...nguoiDung,
+                        s: e.target.value,
+                      });
+                    }} />
+                  </Form.Item>
+                  <Form.Item
+                    label="Giới Tính"
+                    name="gioiTinh"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn giới tính!'
+                      },
+                    ]}
+                  >
+                    <Radio.Group 
+                      onChange={(e) => setNguoiDung({...nguoiDung, gioiTinh: e.target.value === "Nam"})} 
+                    >
+                      <Radio value="Nam">Nam</Radio>
+                      <Radio value="Nữ">Nữ</Radio>
+                    </Radio.Group>
+                    
+                  </Form.Item>
+          
+                  <Form.Item
+                    label="Rank Khách Hàng"
+                    name="rankKhachHang"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn rank khách hàng!'
+                      },
+                    ]}
+                  >
+                <Select
+                  placeholder="Chọn rank khách hàng"
+                  onChange={(value) => setNguoiDung({...nguoiDung, rankKhachHang: { id: value }})}
+                  value={nguoiDung.rankKhachHang?.id || null}
+                >
+                  {rankKhachHang && rankKhachHang.map((rank) => (
+                    <Select.Option key={rank.id} value={rank.id}>
+                      {rank.tenRank}
+                    </Select.Option>
+                  ))}
+                </Select>
+
+                  </Form.Item>
+
+
+
+
+        </Form>
+      </Modal>
     </>
   );
 }
 
-export default ModalCapNhat;
+export default ModalThemSua;

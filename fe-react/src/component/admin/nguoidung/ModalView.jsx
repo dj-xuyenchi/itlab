@@ -76,7 +76,7 @@ function ModalView({ id }) {
           <Form.Item label="Ảnh Đại Diện" >
             <img
               src={nguoiDung.anhDaiDien} 
-              style={{ width: '20%', height: '20%' }} 
+              style={{ width: '80px', height: '120px' }} 
             />
           </Form.Item>
           <Form.Item
