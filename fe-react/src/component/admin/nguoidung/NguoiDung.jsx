@@ -309,59 +309,30 @@ const props = {
       });
     }
   };
-  // async function handleThemNguoiDung() {
-  //   if (nguoiDung.ten == "" ) {
-  //     return;
-  //   }
-  //   const data = await useNguoiDungStore.actions.themNguoiDung(nguoiDung);
-  //   openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-  //   setData(data.data.data);
-  //   setNguoiDung({
-  //     ...nguoiDung,
-  //     ten: "",
-  //     anhDaiDien: null,
-  //     ho: "",
-  //     email: "",
-  //     soDienThoai: "",
-  //     matKhau: "",
-  //     gioiTinh: "",
-  //     diem: "",
-  //     trangThai: "",
-  //     ngayTao: "",
-  //     ngayCapNhat: "",
-  //     rankKhachHang: "",
-  //   });
-  //   form.resetFields()
-  //   setIsModalOpen(false);
-  // }
   async function handleThemNguoiDung() {
-    // Kiểm tra dữ liệu cơ bản
-    if (nguoiDung.ten.trim() === "" ) {
+    if (!nguoiDung.ten.trim()) {
       openNotification("error", "Hệ thống", "Tên là bắt buộc", "bottomRight");
       return;
     }
     setIsLoading(true);
-    // Tạo đối tượng FormData
-    var formData = new FormData();
-    formData.append("anhDaiDien", hinhAnh[0]);
+    const formData = new FormData();
+    if (hinhAnh.length > 0) {
+      formData.append("anhDaiDien", hinhAnh[0]);
+    }
     formData.append("data", JSON.stringify(nguoiDung));
+  
     try {
       const response = await useNguoiDungStore.actions.themNguoiDung(formData);
-      
       if (response && response.data && response.data.status === "THANHCONG") {
-        openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-        setData(response.data.data);
+        openNotification("success", "Hệ thống", "Thêm người dùng thành công", "bottomRight");
+        await layDuLieu();
       } else {
         throw new Error(response.data.message || "Thêm người dùng không thành công");
       }
     } catch (error) {
       openNotification("error", "Hệ thống", error.message, "bottomRight");
     } finally {
-      setNguoiDung({
-        ten: "",
-        anhDaiDien: null,
-        
-      });
+      setNguoiDung({ ten: "", anhDaiDien: null });
       setFileList([]);
       setHinhAnh([]);
       form.resetFields();
@@ -369,6 +340,7 @@ const props = {
       setIsModalOpen(false);
     }
   }
+  
   function handleSetRankKhachHang(e) {
     setNguoiDung({
       ...nguoiDung,
@@ -443,25 +415,6 @@ const props = {
                       value={nguoiDung.ten}
                     />
                   </Form.Item>
-                  {/* <Form.Item
-                    label="Ảnh đại diện"
-                    name="Ảnh đại diện "
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          anhDaiDien: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.anhDaiDien}
-                    />
-                  </Form.Item> */}
                   <Form.Item label="Upload">
                     <Upload
                       listType="picture-card"
@@ -608,95 +561,29 @@ const props = {
                       })}
                     >Hoạt động</Checkbox>
                   </Form.Item>
-                  {/* <Form.Item
-                    label="Ngày Tạo"
-                    name="Ngày Tạo"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng chọn ngày!',
-                      },
-                    ]}
-                  >
-                    <DatePicker
-                      onChange={(value) => {
-                        setDate(value);
-                      }}
-                      value={date}
-                    />
-                  </Form.Item> */}
-                  {/* <Form.Item
-                    label="Ngày Cập Nhật"
-                    name="Ngày Cập Nhật"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          ngayCapNhat: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.ngayCapNhat}
-                    />
-                  </Form.Item> */}
-
-                  {/* <Form.Item
-                    label="Rank Khách Hàng"
-                    name="rankKhachHang"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng chọn rank khách hàng!'
-                      },
-                    ]}
-                  >
+                  <Form.Item label="Rank khách hàng">
                     <Select
-                      placeholder="Chọn rank khách hàng"
-                      onChange={(value) => {
-                        const selectedRank = rankKhachHang.find(rank => rank.id === value);
-                        setNguoiDung({
-                          ...nguoiDung,
-                          rankKhachHang: selectedRank ? { id: selectedRank.id, tenRank: selectedRank.tenRank } : null
-                        });
+                      labelInValue
+                      optionLabelProp="children"
+                      style={{
+                        width: "100%",
                       }}
-                      value={nguoiDung.rankKhachHang?.id || null}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
+                      onChange={handleSetRankKhachHang}
                     >
-                      {rankKhachHang && rankKhachHang.map((rank) => (
-                        <Select.Option key={rank.id} value={rank.id}>
-                          {rank.tenRank}
-                        </Select.Option>
-                      ))}
+                      {rankKhachHang
+                        ? rankKhachHang.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>
+                            {option.tenRank}
+                          </Select.Option>
+                        ))
+                        : ""}
                     </Select>
-                  </Form.Item> */}
-
-          <Form.Item label="Rank khách hàng">
-            <Select
-              labelInValue
-              optionLabelProp="children"
-              style={{
-                width: "100%",
-              }}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              onChange={handleSetRankKhachHang}
-            >
-              {rankKhachHang
-                ? rankKhachHang.map((option) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.tenRank}
-                  </Select.Option>
-                ))
-                : ""}
-            </Select>
-          </Form.Item>
+                  </Form.Item>
 
                   <Form.Item label=" ">
                     <Button

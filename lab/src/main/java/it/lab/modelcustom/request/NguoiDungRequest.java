@@ -1,6 +1,7 @@
 package it.lab.modelcustom.request;
 
 import it.lab.entity.RankKhachHang;
+import it.lab.enums.TrangThaiNguoiDung;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,6 @@ public class NguoiDungRequest {
     private Boolean gioiTinh;
     private Integer diem;
     private Long rankKhachHangId;
+    private TrangThaiNguoiDung trangThaiNguoiDung;
+
 }
