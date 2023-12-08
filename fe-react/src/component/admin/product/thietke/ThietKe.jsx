@@ -12,6 +12,7 @@ import { useNhomSanPhamStore } from "./useNhomSanPhamStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 function ThietKe() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -157,6 +158,9 @@ function ThietKe() {
       dataIndex: "ngayTao",
       key: "ngayTao",
       width: "20%",
+      render: (ngayTao) => (
+        <>{ngayTao ? fixNgayThang(ngayTao) : <Tag color="processing">Mới</Tag>}</>
+      ),
     },
     {
       title: "Ngày cập nhật",
@@ -164,7 +168,7 @@ function ThietKe() {
       key: "ngayCapNhat",
       width: "20%",
       render: (ngayCapNhat) => (
-        <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Mới</Tag>}</>
+        <>{ngayCapNhat ? fixNgayThang(ngayCapNhat) : <Tag color="processing">Mới</Tag>}</>
       ),
     },
     {

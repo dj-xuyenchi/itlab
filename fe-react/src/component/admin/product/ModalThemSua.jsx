@@ -79,6 +79,12 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       giaNhap: e,
     });
   }
+  function handleSetMoTa(e, e1) {
+    setSanPham({
+      ...sanPham,
+      moTa: e1.getData(),
+    });
+  }
   function handleSetSoLuong(e) {
     setSanPham({
       ...sanPham,
@@ -188,15 +194,15 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       );
       return;
     }
-    if (sanPham.soLuongTon <= 0) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Vui lòng nhập số lượng",
-        "bottomRight"
-      );
-      return;
-    }
+    // if (sanPham.soLuongTon <= 0) {
+    //   openNotification(
+    //     "error",
+    //     "Hệ thống",
+    //     "Vui lòng nhập số lượng",
+    //     "bottomRight"
+    //   );
+    //   return;
+    // }
     if (hinhAnh.length < 2) {
       openNotification(
         "error",
@@ -208,11 +214,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     }
 
     setIsLoading(true);
-    var form = new FormData();
-    form.append("file1", hinhAnh[0]);
-    form.append("file2", hinhAnh[1]);
-    form.append("data", JSON.stringify(sanPham));
-    const data = await useSanPhamStore.actions.themSanPham(form);
+    var form2 = new FormData();
+    form2.append("file1", hinhAnh[0]);
+    form2.append("file2", hinhAnh[1]);
+    form2.append("data", JSON.stringify(sanPham));
+    const data = await useSanPhamStore.actions.themSanPham(form2);
     if (data.data.status == "THANHCONG") {
       form.resetFields();
       openNotification(
@@ -282,6 +288,8 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
 
           <Form.Item label="Giá nhập">
             <InputNumber
+              formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
               style={{
                 width: "100%",
               }}
@@ -297,6 +305,8 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
           </Form.Item>
           <Form.Item label="Giá bán">
             <InputNumber
+              formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
               style={{
                 width: "100%",
               }}
@@ -379,7 +389,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                 : ""}
             </Select>
           </Form.Item>
-          <Form.Item label="Số lượng">
+          {/* <Form.Item label="Số lượng">
             <InputNumber
               style={{
                 width: "100%",
@@ -393,23 +403,20 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               ]}
               onChange={handleSetSoLuong}
             />
-          </Form.Item>
-          <Form.Item label="Thông tin chi tiết">
+          </Form.Item> */}
+          <Form.Item label="Thông tin chi tiết"
+
+          >
             <CKEditor
               editor={ClassicEditor}
-              data="<p>Hello from CKEditor&nbsp;5!</p>"
+              data={sanPham.moTa ? sanPham.moTa : ""}
               onReady={editor => {
                 // You can store the "editor" and use when it is needed.
-                console.log('Editor is ready to use!', editor);
               }}
-              onChange={(event) => {
-                console.log(event);
-              }}
+              onChange={handleSetMoTa}
               onBlur={(event, editor) => {
-                console.log('Blur.', editor);
               }}
               onFocus={(event, editor) => {
-                console.log('Focus.', editor);
               }}
             />
           </Form.Item>

@@ -2,6 +2,7 @@ package it.lab.service;
 
 import it.lab.entity.HoaDon;
 import it.lab.entity.HoaDonChiTiet;
+import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamChiTiet;
 import it.lab.enums.TrangThaiHoaDon;
 import it.lab.iservice.IDoiTraService;
@@ -43,6 +44,12 @@ public class DoiTraService implements IDoiTraService {
                 SanPhamChiTiet sanPhamChiTiet = _sanPhamChiTietRepo.findById(hoaDonChiTiet.getSanPhamChiTiet().getId()).get();
                 sanPhamChiTiet.setSoLuongLoi(sanPhamChiTiet.getSoLuongLoi() + item.getSoLuongLoi());
                 sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() + item.getSoLuongDoiTra());
+                sanPhamChiTiet.setSoLuongTraHang(sanPhamChiTiet.getSoLuongTraHang() + item.getSoLuongDoiTra());
+
+                SanPham sanPham = sanPhamChiTiet.getSanPham();
+                sanPham.setSoLuongTon(sanPham.getSoLuongTon() + item.getSoLuongDoiTra());
+                sanPham.setSoLuongLoi(sanPham.getSoLuongLoi() + item.getSoLuongLoi());
+                sanPham.setSoLuongTraHang(sanPham.getSoLuongTraHang() + item.getSoLuongDoiTra());
                 hoaDonChiTiet.setGhiChu(item.getGhiChu());
                 totalGiaMoi = item.getSoLuong() * sanPhamChiTiet.getGiaBan();
                 _hoaDonChiTietRepo.save(hoaDonChiTiet);
@@ -83,7 +90,6 @@ public class DoiTraService implements IDoiTraService {
                 hoaDon.setNgayCapNhat(LocalDateTime.now());
                 _hoaDonRepo.save(hoaDon);
             }
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();

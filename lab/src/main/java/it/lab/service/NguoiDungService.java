@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,7 +37,6 @@ public class NguoiDungService implements INguoiDungService {
     @Override
     public Page<NguoiDungDTO> layHetNguoiDung() {
         return new Page<NguoiDungDTO>(NguoiDungDTO.fromCollection(_nguoiDungRepo.findAll()), 0, 10000);
-
     }
 
     @Override
