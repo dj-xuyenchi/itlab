@@ -6,6 +6,10 @@ export const useNguoiDungStore = {
             return axiosIns.get('/api/nguoi-dung/laynguoidung'
             )
         },
+        async layRankKhachHang() {
+            return axiosIns.get('/api/nguoi-dung/layrankkhachhang'
+            )
+        },
         async themNguoiDung(payload) {
             return axiosIns.post('/api/nguoi-dung/themnguoidung', payload
             )

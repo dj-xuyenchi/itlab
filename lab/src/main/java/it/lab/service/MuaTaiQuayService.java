@@ -100,6 +100,17 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         return DiaChiDTO.fromCollection(_diaChiRepo.findDiaChisByNguoiDung(_nguoiDungRepo.findById(nguoiDungId).get()));
     }
 
+    private void thayDoiSoLuongKhiConfirmHoaDon(long hoaDonId) {
+        HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
+        var chiTiet = _hoaDonChiTietRepo.findHoaDonChiTietsByHoaDon(hoaDon);
+        for (var item : chiTiet) {
+            SanPhamChiTiet sp = item.getSanPhamChiTiet();
+            sp.setSoLuongDaBan(sp.getSoLuongDaBan()+item.getSoLuong());
+            sp.setSoLuongTon(sp.getSoLuongTon() - item.getSoLuong());
+            _sanPhamChiTietRepo.save(sp);
+        }
+    }
+
     @Override
     public Boolean taoHoaDonTaiQuay(MuaTaiQuayRequest muaTaiQuayRequest) {
         HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuayRequest.getHoaDonId()).get();
@@ -138,6 +149,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             hoaDon.setNgayGiao(LocalDateTime.now());
         }
         _hoaDonRepo.save(hoaDon);
+        thayDoiSoLuongKhiConfirmHoaDon(hoaDon.getId());
         String thongbao = Template.hoaDonMoi(hoaDon);
         guiThongBaoChoNhanVien(thongbao);
         return true;
@@ -203,6 +215,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             hoaDon.setTrangThai(TrangThaiHoaDon.DAGIAO);
         }
         _hoaDonRepo.save(hoaDon);
+        thayDoiSoLuongKhiConfirmHoaDon(hoaDon.getId());
         res[0] = hoaDon.getMaHoaDon();
         res[1] = String.valueOf(hoaDon.getGiaTriHd().intValue());
         return res;
