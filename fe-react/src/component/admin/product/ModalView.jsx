@@ -15,6 +15,7 @@ import { useSanPhamStore } from "./useSanPhamStore";
 import { useSelector } from "react-redux";
 import { IoEyeSharp } from "react-icons/io5";
 import dayjs from 'dayjs';
+import { fixMoney } from "../../../extensions/fixMoney";
 function ModalView({ id }) {
   const language = useSelector(selectLanguage);
   const [sanPham, setSanPham] = useState({

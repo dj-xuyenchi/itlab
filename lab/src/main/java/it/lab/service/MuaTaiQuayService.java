@@ -39,7 +39,8 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     private PhuongThucVanChuyenRepo _phuongThucVanChuyenRepo;
     @Autowired
     private RankKhachHangRepo _rankKhachRepo;
-
+    @Autowired
+private SanPhamRepo _sanPhamRepo;
     @Override
     public List<HoaDonChoTaiCuaHang> layDanhSachTaiCuaHang() {
         return HoaDonChoTaiCuaHang.fromCollection(_hoaDonRepo.findAll());
@@ -105,9 +106,13 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         var chiTiet = _hoaDonChiTietRepo.findHoaDonChiTietsByHoaDon(hoaDon);
         for (var item : chiTiet) {
             SanPhamChiTiet sp = item.getSanPhamChiTiet();
-            sp.setSoLuongDaBan(sp.getSoLuongDaBan()+item.getSoLuong());
+            SanPham sanPham = sp.getSanPham();
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon() - item.getSoLuong());
+            sanPham.setSoLuongDaBan(sanPham.getSoLuongDaBan() + item.getSoLuong());
+            sp.setSoLuongDaBan(sp.getSoLuongDaBan() + item.getSoLuong());
             sp.setSoLuongTon(sp.getSoLuongTon() - item.getSoLuong());
             _sanPhamChiTietRepo.save(sp);
+            _sanPhamRepo.save(sanPham);
         }
     }
 

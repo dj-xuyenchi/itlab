@@ -323,11 +323,11 @@ public class SanPhamService implements ISanPhamService {
             }
         }
         it.lab.entity.SanPhamChiTiet sanPhamThayDoi = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
-
-
         SanPham sanPham = sanPhamThayDoi.getSanPham();
         sanPham.setSoLuongTon(sanPham.getSoLuongTon() - sanPhamThayDoi.getSoLuongTon() + sanPhamChiTiet.getSoLuongTon());
         sanPhamThayDoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPham.setSoLuongLoi(sanPham.getSoLuongLoi() - sanPhamThayDoi.getSoLuongLoi() + sanPhamChiTiet.getSoLuongLoi());
+        sanPham.setSoLuongTraHang(sanPham.getSoLuongTraHang() - sanPhamThayDoi.getSoLuongTraHang() + sanPhamChiTiet.getSoLuongTraHang());
         sanPhamThayDoi.setGiaNhap(sanPhamChiTiet.getGiaNhap());
         sanPhamThayDoi.setGiaBan(sanPhamThayDoi.getGiaBan());
         sanPhamThayDoi.setTrangThai(sanPhamChiTiet.getTrangThai());
@@ -367,6 +367,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamMoi.setGiaNhap(sanPham.getGiaNhap());
         sanPhamMoi.setTrangThai(TrangThaiSanPhamChiTiet.CONHANG);
         sanPhamMoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPham.setSoLuongTon(sanPham.getSoLuongTon()+sanPhamMoi.getSoLuongTon());
         sanPhamMoi.setSoLuongLoi(0);
         sanPhamMoi.setSoLuongDaBan(0);
         sanPhamMoi.setSoLuongTraHang(0);
@@ -408,7 +409,11 @@ public class SanPhamService implements ISanPhamService {
         SanPham sanPham = new SanPham();
         sanPham.setNgayTao(LocalDateTime.now());
         sanPham.setGiaBan(sanPhamRequest.getGiaBan());
-        sanPham.setSoLuongTon(sanPhamRequest.getSoLuongTon());
+        sanPham.setSoLuongTon(0);
+        sanPham.setSoLuongDaBan(0);
+        sanPham.setSoLuongLoi(0);
+        sanPham.setMoTa(sanPhamRequest.getMoTa());
+        sanPham.setSoLuongTraHang(0);
         sanPham.setTrangThai(TrangThaiSanPham.DANGBAN);
         sanPham.setTenSanPham(sanPhamRequest.getTenSanPham());
         sanPham.setGiaNhap(sanPhamRequest.getGiaNhap());

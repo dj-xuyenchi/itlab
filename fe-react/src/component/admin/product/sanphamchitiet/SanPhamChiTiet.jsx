@@ -24,6 +24,7 @@ import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
 import { useForm } from "antd/es/form/Form";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 function SanPhamChiTiet() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -196,6 +197,9 @@ function SanPhamChiTiet() {
       dataIndex: "ngayTao",
       key: "ngayTao",
       width: "10%",
+      render: (ngayTao) => (
+        <>{ngayTao ? fixNgayThang(ngayTao) : <Tag color="processing">Mới</Tag>}</>
+      ),
     },
     {
       title: "Ngày cập nhật",
@@ -203,7 +207,7 @@ function SanPhamChiTiet() {
       key: "ngayCapNhat",
       width: "10%",
       render: (ngayCapNhat) => (
-        <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Mới</Tag>}</>
+        <>{ngayCapNhat ? fixNgayThang(ngayCapNhat) : <Tag color="processing">Mới</Tag>}</>
       ),
     },
     {
