@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/sanphamsukien")
@@ -35,10 +36,12 @@ public class SanPhamSuKienController {
         Pageable pageable = PageRequest.of(page, 20);
         return ResponseEntity.ok(service.getPage(pageable));
     }
+
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
+
     @GetMapping("/getnhomsanpham")
     public ResponseEntity<List<SanPham>> getNhomSP(@RequestParam(name = "id") long id) {
         return ResponseEntity.ok(service.getSanPhamTheoNhom(id));
@@ -132,7 +135,11 @@ public class SanPhamSuKienController {
         SanPhamSuKien sanPhamSuKien = service.findById(id);
         LocalDateTime currentDate = LocalDateTime.now();
         sanPhamSuKien.setNgayTao(currentDate);
-        sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+        if (sanPhamSuKien.getTrangThai() == TrangThaiSanPhamSuKien.CHAY_SU_KIEN) {
+            sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+        } else {
+            sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
+        }
         service.save(sanPhamSuKien);
         return ResponseEntity.ok(sanPhamSuKien);
     }
