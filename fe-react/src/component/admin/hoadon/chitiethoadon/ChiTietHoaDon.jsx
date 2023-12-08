@@ -30,7 +30,9 @@ import ModalView from "../../product/sanphamchitiet/ModalView";
 import AddSanPham from "./AddSanPham";
 import { useGHN } from "../../../../plugins/ghnapi";
 import { IoMdPrint } from "react-icons/io";
+import InHoaDon from "../InHoaDon";
 function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false }) {
+
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -597,15 +599,12 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
         >
           <Row>
             <h6>Thông tin hóa đơn</h6>
-          </Row>
-          <Row style={{
-            marginTop: "12px"
-          }}>
-            <Button type="primary">
-              <IoMdPrint />
-              <span style={{
-                marginLeft: "4px"
-              }}>In hóa đơn</span></Button>
+            <Col style={{
+              marginTop: "4px"
+            }} span={24}>
+              <InHoaDon data={hoaDonChiTiet} />
+            </Col>
+
           </Row>
           <Row
             style={{
@@ -1068,6 +1067,17 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
       ) : (
         ""
       )}
+      <div style={{
+        display: 'none'
+      }}>
+        <div>
+          <Table
+            columns={columnsDoiTra2}
+            dataSource={hoaDonChiTiet && hoaDonChiTiet.sauKhiDoi}
+          />
+        </div>
+      </div>
+
     </>
   );
 }

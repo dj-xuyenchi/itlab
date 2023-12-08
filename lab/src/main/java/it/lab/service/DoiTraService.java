@@ -43,6 +43,8 @@ public class DoiTraService implements IDoiTraService {
                 SanPhamChiTiet sanPhamChiTiet = _sanPhamChiTietRepo.findById(hoaDonChiTiet.getSanPhamChiTiet().getId()).get();
                 sanPhamChiTiet.setSoLuongLoi(sanPhamChiTiet.getSoLuongLoi() + item.getSoLuongLoi());
                 sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() + item.getSoLuongDoiTra());
+
+                sanPhamChiTiet.setSoLuongTraHang(sanPhamChiTiet.getSoLuongTraHang()+item.getSoLuongDoiTra());
                 hoaDonChiTiet.setGhiChu(item.getGhiChu());
                 totalGiaMoi = item.getSoLuong() * sanPhamChiTiet.getGiaBan();
                 _hoaDonChiTietRepo.save(hoaDonChiTiet);
