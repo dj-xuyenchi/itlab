@@ -42,17 +42,24 @@ public class ThanhToanService implements IThanhToan {
     private HoaDonRepo _hoaDonRepo;
     @Autowired
     private HoaDonChiTietRepo _hoaDonChiTietRepo;
+    @Autowired
+    private SanPhamRepo _sanPhamRepo;
 
     private void thayDoiSoLuongKhiConfirmHoaDon(long hoaDonId) {
         HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
         var chiTiet = _hoaDonChiTietRepo.findHoaDonChiTietsByHoaDon(hoaDon);
         for (var item : chiTiet) {
             SanPhamChiTiet sp = item.getSanPhamChiTiet();
-            sp.setSoLuongDaBan(sp.getSoLuongDaBan()+item.getSoLuong());
+            SanPham sanPham = sp.getSanPham();
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon() - item.getSoLuong());
+            sanPham.setSoLuongDaBan(sanPham.getSoLuongDaBan() + item.getSoLuong());
+            sp.setSoLuongDaBan(sp.getSoLuongDaBan() + item.getSoLuong());
             sp.setSoLuongTon(sp.getSoLuongTon() - item.getSoLuong());
             _sanPhamChiTietRepo.save(sp);
+            _sanPhamRepo.save(sanPham);
         }
     }
+
     @Override
     public ResponObject<CheckOut, APIStatus> layDuLieuThanhToan(Long nguoiDungId) {
         Optional<NguoiDung> ng = _nguoiDungRepo.findById(nguoiDungId);
