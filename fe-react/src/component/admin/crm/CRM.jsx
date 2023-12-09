@@ -38,11 +38,16 @@ function CRM() {
         }
     };
     async function handleSendContext2GPT(context) {
+        setIsFetching(true)
         const data = await useGpt.actions.chat(context)
         handleSetText(data.data.choices[0].message.content + `\n
         Dưới đây là một vài gợi ý về chiến lược kinh doanh
         `)
+        setIsFetching(false)
     }
+
+    const onButtonPress = () => handleSendContext2GPT(cmr(profit))
+
 
     const showContentSpan = useRef(undefined)
     function handleSetText(content) {
@@ -91,11 +96,7 @@ function CRM() {
                                         marginLeft: "12px",
                                     }}
                                     type="primary"
-                                    onClick={() => {
-                                        setIsFetching(true)
-                                        handleSendContext2GPT(cmr(profit))
-                                        setIsFetching(false)
-                                    }}
+                                    onClick={onButtonPress}
                                     loading={isFetching}
                                 >
                                     Đánh giá doanh số 12 tháng

@@ -91,7 +91,7 @@ function BanTaiQuay() {
       isCoDiaChiMoi: true,
     });
 
-    if (e.value === 11) {
+    if (e.value === 2) {
       setHoaDonRequest({
         ...hoaDonRequest,
         khachHangId: e.value,
@@ -253,8 +253,8 @@ function BanTaiQuay() {
     setHoaDonHienTai(
       danhSachHoaDon
         ? danhSachHoaDon.find((item) => {
-            return item.key == e.key;
-          })
+          return item.key == e.key;
+        })
         : undefined
     );
   };
@@ -526,8 +526,8 @@ function BanTaiQuay() {
                             value={
                               hoaDonHienTai
                                 ? hoaDonHienTai.nhanVien.ho +
-                                  " " +
-                                  hoaDonHienTai.nhanVien.ten
+                                " " +
+                                hoaDonHienTai.nhanVien.ten
                                 : ""
                             }
                           />
@@ -589,10 +589,10 @@ function BanTaiQuay() {
                       >
                         {danhSachKhachHang
                           ? danhSachKhachHang.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.ho + " " + option.ten}
-                              </Select.Option>
-                            ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.ho + " " + option.ten}
+                            </Select.Option>
+                          ))
                           : ""}
                       </Select>
                     </Col>
@@ -661,12 +661,12 @@ function BanTaiQuay() {
                       <Space direction="vertical">
                         {danhSachDiaChi
                           ? danhSachDiaChi.map((item) => {
-                              return (
-                                <Radio value={item.id}>
-                                  {item.xa + " " + item.huyen + " " + item.tinh}
-                                </Radio>
-                              );
-                            })
+                            return (
+                              <Radio value={item.id}>
+                                {item.xa + " " + item.huyen + " " + item.tinh}
+                              </Radio>
+                            );
+                          })
                           : ""}
                         <Radio value={-1}>Tạo mới</Radio>
                         {!yeuCauDiaChiChi && (
@@ -815,13 +815,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachTinh
                                   ? danhSachTinh.map((option) => (
-                                      <Select.Option
-                                        key={option.ProvinceID}
-                                        value={option.ProvinceID}
-                                      >
-                                        {option.NameExtension[0]}
-                                      </Select.Option>
-                                    ))
+                                    <Select.Option
+                                      key={option.ProvinceID}
+                                      value={option.ProvinceID}
+                                    >
+                                      {option.NameExtension[0]}
+                                    </Select.Option>
+                                  ))
                                   : ""}
                               </Select>
                             </Col>
@@ -867,13 +867,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachHuyen
                                   ? danhSachHuyen.map((option) => (
-                                      <Select.Option
-                                        key={option.DistrictID}
-                                        value={option.DistrictID}
-                                      >
-                                        {option.DistrictName}
-                                      </Select.Option>
-                                    ))
+                                    <Select.Option
+                                      key={option.DistrictID}
+                                      value={option.DistrictID}
+                                    >
+                                      {option.DistrictName}
+                                    </Select.Option>
+                                  ))
                                   : ""}
                               </Select>
                             </Col>
@@ -927,13 +927,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachXa
                                   ? danhSachXa.map((option) => (
-                                      <Select.Option
-                                        key={option.WardCode}
-                                        value={option.WardCode}
-                                      >
-                                        {option.NameExtension[0]}
-                                      </Select.Option>
-                                    ))
+                                    <Select.Option
+                                      key={option.WardCode}
+                                      value={option.WardCode}
+                                    >
+                                      {option.NameExtension[0]}
+                                    </Select.Option>
+                                  ))
                                   : ""}
                               </Select>
                             </Col>
@@ -1063,7 +1063,7 @@ function BanTaiQuay() {
                             <Select.Option key={1} value={1}>
                               VN Pay
                             </Select.Option>
-                            <Select.Option key={3} value={3}>
+                            <Select.Option key={2} value={2}>
                               Tiền mặt
                             </Select.Option>
                           </Select>
@@ -1159,8 +1159,8 @@ function BanTaiQuay() {
                             value={fixMoney(
                               gioHangHienTai
                                 ? gioHangHienTai.reduce((a, b) => {
-                                    return a + b.soLuong * b.donGia;
-                                  }, 0)
+                                  return a + b.soLuong * b.donGia;
+                                }, 0)
                                 : 0
                             )}
                           />
@@ -1211,11 +1211,11 @@ function BanTaiQuay() {
                               addonAfter={<FcMoneyTransfer />}
                               value={fixMoney(
                                 tienKhachDua -
-                                  (gioHangHienTai
-                                    ? gioHangHienTai.reduce((a, b) => {
-                                        return a + b.soLuong * b.donGia;
-                                      }, 0)
-                                    : 0)
+                                (gioHangHienTai
+                                  ? gioHangHienTai.reduce((a, b) => {
+                                    return a + b.soLuong * b.donGia;
+                                  }, 0)
+                                  : 0)
                               )}
                             />
                           </Col>
@@ -1296,8 +1296,8 @@ function BanTaiQuay() {
                                     "error",
                                     "Hệ thống",
                                     "Sản phẩm " +
-                                      item.sanPhamChiTiet.tenSanPham +
-                                      " số lượng không phù hợp",
+                                    item.sanPhamChiTiet.tenSanPham +
+                                    " số lượng không phù hợp",
                                     "bottomRight"
                                   );
                                   return;
@@ -1481,29 +1481,29 @@ function BanTaiQuay() {
                       >
                         {sanPhamChiTiet
                           ? sanPhamChiTiet.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.tenSanPham}
-                                <Tag
-                                  color="success"
-                                  style={{
-                                    marginLeft: "4px",
-                                  }}
-                                >
-                                  {option.mauSac.tenMau}
-                                </Tag>
-                                <Tag color="processing">
-                                  {option.kichThuoc.tenKichThuoc}
-                                </Tag>
-                                <span
-                                  style={{
-                                    fontWeight: "700",
-                                    marginLeft: "12px",
-                                  }}
-                                >
-                                  Số lượng còn: {option.soLuongTon}
-                                </span>
-                              </Select.Option>
-                            ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenSanPham}
+                              <Tag
+                                color="success"
+                                style={{
+                                  marginLeft: "4px",
+                                }}
+                              >
+                                {option.mauSac.tenMau}
+                              </Tag>
+                              <Tag color="processing">
+                                {option.kichThuoc.tenKichThuoc}
+                              </Tag>
+                              <span
+                                style={{
+                                  fontWeight: "700",
+                                  marginLeft: "12px",
+                                }}
+                              >
+                                Số lượng còn: {option.soLuongTon}
+                              </span>
+                            </Select.Option>
+                          ))
                           : ""}
                       </Select>
                     </Col>

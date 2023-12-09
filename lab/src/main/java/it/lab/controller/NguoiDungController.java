@@ -3,6 +3,7 @@ package it.lab.controller;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
 import it.lab.iservice.INguoiDungService;
+import it.lab.iservice.IRankKhachHang;
 import it.lab.modelcustom.request.DoiMatKhau;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 public class NguoiDungController {
     @Autowired
     private INguoiDungService _nguoiDungService;
+
+    @Autowired
+    private IRankKhachHang _rankKhachHangService;
 
     @RequestMapping(value = "/laynguoidung", method = RequestMethod.GET)
     public ResponseEntity<?> layNguoiDung() {
@@ -48,4 +52,10 @@ public class NguoiDungController {
     public ResponseEntity<?> themNguoiDung(@RequestBody NguoiDung nguoiDung) {
         return ResponseEntity.ok(_nguoiDungService.themNguoiDung(nguoiDung));
     }
+
+    @RequestMapping(value = "/layrankkhachhang", method = RequestMethod.GET)
+    public ResponseEntity<?> layRankKhachHang() {
+        return ResponseEntity.ok(_rankKhachHangService.layHetRankKhachHang());
+    }
+
 }

@@ -98,7 +98,7 @@ public class SanPhamService implements ISanPhamService {
             list = list.stream().filter(x -> {
                 for (var item : x.getSanPhamChiTietList()) {
                     if (Arrays.asList(filterSanPham.getMauSac()).contains(item.getMauSac().getId())
-                    && Arrays.asList(filterSanPham.getKichThuoc()).contains(item.getKichThuoc().getId())) {
+                            && Arrays.asList(filterSanPham.getKichThuoc()).contains(item.getKichThuoc().getId())) {
                         return true;
                     }
                 }
@@ -303,7 +303,7 @@ public class SanPhamService implements ISanPhamService {
         try {
             it.lab.entity.SanPhamChiTiet sanPhamChiTiet = _sanPhamChiTietRepository.findById(sanPhamChiTietId).get();
             SanPham sanPham = sanPhamChiTiet.getSanPham();
-            sanPham.setSoLuongTon(sanPham.getSoLuongTon()-sanPhamChiTiet.getSoLuongTon());
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon() - sanPhamChiTiet.getSoLuongTon());
             _sanPhamChiTietRepository.deleteById(sanPhamChiTietId);
             _sanPhamRepository.save(sanPham);
             return laySanPhamChiTietCuaSanPham(sanPham.getId());
@@ -323,11 +323,11 @@ public class SanPhamService implements ISanPhamService {
             }
         }
         it.lab.entity.SanPhamChiTiet sanPhamThayDoi = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
-
-
         SanPham sanPham = sanPhamThayDoi.getSanPham();
-        sanPham.setSoLuongTon(sanPham.getSoLuongTon()-sanPhamThayDoi.getSoLuongTon()+sanPhamChiTiet.getSoLuongTon());
+        sanPham.setSoLuongTon(sanPham.getSoLuongTon() - sanPhamThayDoi.getSoLuongTon() + sanPhamChiTiet.getSoLuongTon());
         sanPhamThayDoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPham.setSoLuongLoi(sanPham.getSoLuongLoi() - sanPhamThayDoi.getSoLuongLoi() + sanPhamChiTiet.getSoLuongLoi());
+        sanPham.setSoLuongTraHang(sanPham.getSoLuongTraHang() - sanPhamThayDoi.getSoLuongTraHang() + sanPhamChiTiet.getSoLuongTraHang());
         sanPhamThayDoi.setGiaNhap(sanPhamChiTiet.getGiaNhap());
         sanPhamThayDoi.setGiaBan(sanPhamThayDoi.getGiaBan());
         sanPhamThayDoi.setTrangThai(sanPhamChiTiet.getTrangThai());
@@ -367,6 +367,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamMoi.setGiaNhap(sanPham.getGiaNhap());
         sanPhamMoi.setTrangThai(TrangThaiSanPhamChiTiet.CONHANG);
         sanPhamMoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPham.setSoLuongTon(sanPham.getSoLuongTon()+sanPhamMoi.getSoLuongTon());
         sanPhamMoi.setSoLuongLoi(0);
         sanPhamMoi.setSoLuongDaBan(0);
         sanPhamMoi.setSoLuongTraHang(0);
@@ -389,6 +390,15 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public SanPhamChiTietDTO laySanPhamChiTietByMaSp(String maSp) {
+        Optional<it.lab.entity.SanPhamChiTiet> sp = _sanPhamChiTietRepository.findSanPhamChiTietByMaSanPham(maSp);
+        if (sp.isEmpty()) {
+            return null;
+        }
+        return SanPhamChiTietDTO.fromEntity(sp.get());
+    }
+
+    @Override
     public Page<SanPhamChiTietDTO> laySanPhamChiTietCuaSanPham(Long sanPhamId) {
         return new Page<SanPhamChiTietDTO>(SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findAll().stream().filter(x -> x.getSanPham().getId() == sanPhamId).toList()), 0, 1000);
 
@@ -399,7 +409,11 @@ public class SanPhamService implements ISanPhamService {
         SanPham sanPham = new SanPham();
         sanPham.setNgayTao(LocalDateTime.now());
         sanPham.setGiaBan(sanPhamRequest.getGiaBan());
-        sanPham.setSoLuongTon(sanPhamRequest.getSoLuongTon());
+        sanPham.setSoLuongTon(0);
+        sanPham.setSoLuongDaBan(0);
+        sanPham.setSoLuongLoi(0);
+        sanPham.setMoTa(sanPhamRequest.getMoTa());
+        sanPham.setSoLuongTraHang(0);
         sanPham.setTrangThai(TrangThaiSanPham.DANGBAN);
         sanPham.setTenSanPham(sanPhamRequest.getTenSanPham());
         sanPham.setGiaNhap(sanPhamRequest.getGiaNhap());
@@ -423,6 +437,7 @@ public class SanPhamService implements ISanPhamService {
         _sanPhamRepository.save(sanPham);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
+
     @Override
     public SanPhamDTO laySanPhamById(Long sanPhamId) {
         return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());

@@ -133,24 +133,7 @@ function Product() {
     nhomSanPham: [],
     chatLieu: [],
   });
-  const [sanPham, setSanPham] = useState([
-    {
-      key: "1",
-      maSanPham: "ABC",
-      hinhAnh1: "",
-      soLuongTon: 32,
-
-      chatLieu: {
-        tenChatLieu: "abc",
-      },
-      thietKe: {
-        tenThietKe: "abc",
-      },
-      nhomSanPham: {
-        tenNhom: "abc",
-      },
-    },
-  ]);
+  const [sanPham, setSanPham] = useState(undefined);
   const [filteredInfo, setFilteredInfo] = useState({});
   const columns = [
     {
@@ -239,6 +222,9 @@ function Product() {
     },
   ];
   function handleSetFilter(source) {
+    if (!source) {
+      return
+    }
     const thietKe = [];
     const nhomSanPham = [];
     const chatLieu = [];
@@ -286,6 +272,9 @@ function Product() {
   const [thuocTinh, setThuocTinh] = useState(undefined);
   const fetchData = async () => {
     const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
+    if (data.data.data.length == 0) {
+      return
+    }
     setSanPham(data.data.data);
     handleSetFilter(data.data.data);
     // dispath(productSlice.actions.setSanPham(data));
@@ -311,7 +300,7 @@ function Product() {
         <MenuAdmin />
         <div className="body-container">
           <div className="content">
-            <div className="header-status background-color">
+            <div className="modalThem">
               <ModalThemSua
                 type={1}
                 thuocTinh={thuocTinh}

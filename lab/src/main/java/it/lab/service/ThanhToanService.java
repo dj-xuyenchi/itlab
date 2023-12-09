@@ -42,6 +42,23 @@ public class ThanhToanService implements IThanhToan {
     private HoaDonRepo _hoaDonRepo;
     @Autowired
     private HoaDonChiTietRepo _hoaDonChiTietRepo;
+    @Autowired
+    private SanPhamRepo _sanPhamRepo;
+
+    private void thayDoiSoLuongKhiConfirmHoaDon(long hoaDonId) {
+        HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
+        var chiTiet = _hoaDonChiTietRepo.findHoaDonChiTietsByHoaDon(hoaDon);
+        for (var item : chiTiet) {
+            SanPhamChiTiet sp = item.getSanPhamChiTiet();
+            SanPham sanPham = sp.getSanPham();
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon() - item.getSoLuong());
+            sanPham.setSoLuongDaBan(sanPham.getSoLuongDaBan() + item.getSoLuong());
+            sp.setSoLuongDaBan(sp.getSoLuongDaBan() + item.getSoLuong());
+            sp.setSoLuongTon(sp.getSoLuongTon() - item.getSoLuong());
+            _sanPhamChiTietRepo.save(sp);
+            _sanPhamRepo.save(sanPham);
+        }
+    }
 
     @Override
     public ResponObject<CheckOut, APIStatus> layDuLieuThanhToan(Long nguoiDungId) {
@@ -85,6 +102,7 @@ public class ThanhToanService implements IThanhToan {
         guiThongBaoChoNhanVien(thongBao);
         _hoaDonRepo.save(hd);
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
+        thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
         _gioHangRepo.deleteAll(ghList);
         return null;
     }
@@ -137,6 +155,7 @@ public class ThanhToanService implements IThanhToan {
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _hoaDonRepo.save(hd);
         _gioHangRepo.deleteAll(ghList);
+        thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
         return hd.getMaHoaDon();
     }
 

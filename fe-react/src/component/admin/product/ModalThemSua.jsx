@@ -21,6 +21,8 @@ import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { useForm } from "antd/es/form/Form";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 function ModalThemSua({ type, thuocTinh, fetchData }) {
   const [form] = useForm()
   const [api, contextHolder] = notification.useNotification();
@@ -75,6 +77,12 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     setSanPham({
       ...sanPham,
       giaNhap: e,
+    });
+  }
+  function handleSetMoTa(e, e1) {
+    setSanPham({
+      ...sanPham,
+      moTa: e1.getData(),
     });
   }
   function handleSetSoLuong(e) {
@@ -186,15 +194,15 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       );
       return;
     }
-    if (sanPham.soLuongTon <= 0) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Vui lòng nhập số lượng",
-        "bottomRight"
-      );
-      return;
-    }
+    // if (sanPham.soLuongTon <= 0) {
+    //   openNotification(
+    //     "error",
+    //     "Hệ thống",
+    //     "Vui lòng nhập số lượng",
+    //     "bottomRight"
+    //   );
+    //   return;
+    // }
     if (hinhAnh.length < 2) {
       openNotification(
         "error",
@@ -206,11 +214,11 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     }
 
     setIsLoading(true);
-    var form = new FormData();
-    form.append("file1", hinhAnh[0]);
-    form.append("file2", hinhAnh[1]);
-    form.append("data", JSON.stringify(sanPham));
-    const data = await useSanPhamStore.actions.themSanPham(form);
+    var form2 = new FormData();
+    form2.append("file1", hinhAnh[0]);
+    form2.append("file2", hinhAnh[1]);
+    form2.append("data", JSON.stringify(sanPham));
+    const data = await useSanPhamStore.actions.themSanPham(form2);
     if (data.data.status == "THANHCONG") {
       form.resetFields();
       openNotification(
@@ -280,6 +288,8 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
 
           <Form.Item label="Giá nhập">
             <InputNumber
+              formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
               style={{
                 width: "100%",
               }}
@@ -295,6 +305,8 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
           </Form.Item>
           <Form.Item label="Giá bán">
             <InputNumber
+              formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
               style={{
                 width: "100%",
               }}
@@ -377,7 +389,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                 : ""}
             </Select>
           </Form.Item>
-          <Form.Item label="Số lượng">
+          {/* <Form.Item label="Số lượng">
             <InputNumber
               style={{
                 width: "100%",
@@ -391,9 +403,22 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               ]}
               onChange={handleSetSoLuong}
             />
-          </Form.Item>
-          <Form.Item label="Thông tin chi tiết">
-            <TextArea rows={4} />
+          </Form.Item> */}
+          <Form.Item label="Thông tin chi tiết"
+
+          >
+            <CKEditor
+              editor={ClassicEditor}
+              data={sanPham.moTa ? sanPham.moTa : ""}
+              onReady={editor => {
+                // You can store the "editor" and use when it is needed.
+              }}
+              onChange={handleSetMoTa}
+              onBlur={(event, editor) => {
+              }}
+              onFocus={(event, editor) => {
+              }}
+            />
           </Form.Item>
           <Form.Item label="Upload">
             <Upload
