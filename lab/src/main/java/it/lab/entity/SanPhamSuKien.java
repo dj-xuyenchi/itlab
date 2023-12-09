@@ -1,6 +1,7 @@
 package it.lab.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.lab.enums.TrangThaiSanPhamSuKien;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,14 +24,15 @@ public class SanPhamSuKien {
     private Long id;
     @JoinColumn(name = "sanphamid")
     @ManyToOne
-    @JsonIgnore
     private SanPham sanPham;
     @JoinColumn(name = "sukiengiamgiaid")
     @ManyToOne
-    @JsonIgnore
     private SuKienGiamGia suKienGiamGia;
     @Column(name = "ngaytao")
     private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDateTime ngayCapNhat;
+    @Column(name = "trangthai")
+    private TrangThaiSanPhamSuKien trangThai;
+
 }
