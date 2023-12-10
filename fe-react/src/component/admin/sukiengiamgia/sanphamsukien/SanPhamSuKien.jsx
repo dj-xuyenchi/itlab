@@ -11,6 +11,7 @@ import { useSanPhamSuKienStore } from "./useSanPhamSuKienStore";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import axiosIns from "../../../../plugins/axios";
 import { Form, Modal, Row, Tooltip, notification } from "antd";
+import { Link } from "react-router-dom";
 function Product() {
   const [sanPham, setSanPhamSuKien] = useState([]);
 
@@ -161,6 +162,9 @@ function Product() {
                 }}
                 rowKey="id" // Sử dụng thuộc tính 'id' làm key cho mỗi hàng trong Table
               />
+              <Link to="/themsanphamsukien">
+                <Button type="primary">Thêm Sản Phẩm Sự Kiện</Button>
+              </Link>
             </div>
           </div>
         </div>

@@ -97,39 +97,6 @@ public class SanPhamSuKienController {
         }
         return ResponseEntity.ok(sanPhamSuKien);
     }
-
-//    @PostMapping("/add-nhom-san-pham")
-//    public ResponseEntity<?> saveNhomSanPhamSuKien(
-//            @RequestParam(name = "idSuKien") long idSK,
-//            @RequestParam(name = "id") long idNhom
-//    ) {
-//        List<SanPhamSuKien> sanPhamSuKienList = service.getAll();
-//        Map<Long, SanPhamSuKien> mapSP = new HashMap<>();
-//        for (SanPhamSuKien sanPhamSuKien : sanPhamSuKienList) {
-//            mapSP.put(sanPhamSuKien.getSanPham().getId(), sanPhamSuKien);
-//        }
-//        SuKienGiamGia suKienGiamGia = suKienGiamGiaService.findById(idSK);
-//        List<SanPham> sanPhamList = service.getSanPhamTheoNhom(idNhom);
-//        SanPhamSuKien sanPhamSuKien = null;
-//        LocalDateTime currentDate = LocalDateTime.now();
-//        for (int i = 0; i < sanPhamList.size(); i++) {
-//            sanPhamSuKien = mapSP.get(sanPhamList.get(i).getId());
-//            if (sanPhamSuKien == null) {
-//                sanPhamSuKien = new SanPhamSuKien();
-//                sanPhamSuKien.setSanPham(sanPhamList.get(i));
-//                sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
-//                sanPhamSuKien.setNgayTao(currentDate);
-//                sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
-//                service.save(sanPhamSuKien);
-//            } else {
-//                sanPhamSuKien.setNgayTao(currentDate);
-//                sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
-//                service.save(sanPhamSuKien);
-//            }
-//        }
-//        return ResponseEntity.ok(sanPhamSuKien);
-//    }
-
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id) {
         SanPhamSuKien sanPhamSuKien = service.findById(id);
@@ -146,13 +113,12 @@ public class SanPhamSuKienController {
 
     @PutMapping("/update-ngung-su-kien")
     public ResponseEntity<?> updateAll(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 20);
         List<SanPhamSuKien> sanPhamSuKienList = service.getAll();
         for (SanPhamSuKien sanPhamSuKien : sanPhamSuKienList) {
             sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
             service.save(sanPhamSuKien);
         }
-        return ResponseEntity.ok(service.getPage(pageable));
+        return ResponseEntity.ok(service.getAll());
     }
 
     @PutMapping("/update-ngung-su-kien-nhom")
@@ -167,7 +133,7 @@ public class SanPhamSuKienController {
         LocalDateTime currentDate = LocalDateTime.now();
         for (SanPhamSuKien sanPhamSuKien : sanPhamSuKienList) {
             SanPham sanPham = sanPhamMap.get(sanPhamSuKien.getSanPham().getId());
-            if (sanPham != null) {
+            if (sanPham != null && sanPhamSuKien.getTrangThai() == TrangThaiSanPhamSuKien.CHAY_SU_KIEN) {
                 sanPhamSuKien.setNgayTao(currentDate);
                 sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
                 service.save(sanPhamSuKien);

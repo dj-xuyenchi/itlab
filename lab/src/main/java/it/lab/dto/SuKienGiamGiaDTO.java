@@ -29,6 +29,13 @@ public class SuKienGiamGiaDTO {
     private LocalDateTime ngayTao;
     private LocalDateTime ngayCapNhat;
     private List<SanPhamSuKien> sanPhamSuKienList;
+    private Double giaTriGiam;
+
+    public SuKienGiamGiaDTO(Long id, String tenSuKien, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, String moTa, String logoSuKien, TrangThaiSuKienGiamGia trangThai, LocalDateTime ngayTao, LocalDateTime ngayCapNhat, Object o) {
+    }
+
+    public SuKienGiamGiaDTO(Long id, String tenSuKien, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, String moTa, String logoSuKien, TrangThaiSuKienGiamGia trangThai, LocalDateTime ngayTao, LocalDateTime ngayCapNhat, Double giaTriGiam, Object giaTriGiam1) {
+    }
 
     public static SuKienGiamGiaDTO fromEntity(SuKienGiamGia entity) {
         return new SuKienGiamGiaDTO(
@@ -41,6 +48,7 @@ public class SuKienGiamGiaDTO {
                 entity.getTrangThai(),
                 entity.getNgayTao(),
                 entity.getNgayCapNhat(),
+                entity.getGiaTriGiam(),
                 null
 
         );

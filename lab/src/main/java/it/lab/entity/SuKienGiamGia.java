@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "sukiengiamgia")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "sukiengiamgia")
 public class SuKienGiamGia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

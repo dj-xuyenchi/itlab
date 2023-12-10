@@ -6,6 +6,10 @@ export const useSuKienGiamGiaStore = {
             return axiosIns.get('/api/sukiengiamgia/laysukiengiamgia'
             )
         },
+        async fetchSuKienGiamGiaGetAll() {
+            return axiosIns.get('/api/sukiengiamgia/sukiengiamgiagetall'
+            )
+        },
         async themSuKienGiamGia(payload) {
             return axiosIns.post('/api/sukiengiamgia/themsukiengiamgia', payload
             )

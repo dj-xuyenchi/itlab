@@ -17,6 +17,10 @@ public class SuKienGiamGiaController {
     public ResponseEntity<?> laySuKiengiamGia() {
         return ResponseEntity.ok(suKienGiamGiaService.layHetSuKienGiamGia());
     }
+    @RequestMapping(value = "/sukiengiamgiagetall", method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(suKienGiamGiaService.getAll());
+    }
 
     @RequestMapping(value = "/themsukiengiamgia", method = RequestMethod.POST)
     public ResponseEntity<?> themSuKienGiamGia(@RequestBody SuKienGiamGia suKienGiamGia) {
