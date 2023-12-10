@@ -59,6 +59,11 @@ function ModalView({ id }) {
         title="Sản phẩm"
         open={isModalOpen}
         onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            OK
+          </Button>,
+        ]}
         centered
         width={768}
       >
@@ -225,6 +230,7 @@ function ModalView({ id }) {
             <Input disabled value={sanPham.thietKe.tenThietKe} />
           </Form.Item>
         </Form>
+        
       </Modal>
     </>
   );

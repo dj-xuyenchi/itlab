@@ -314,7 +314,12 @@ function SanPhamChiTiet() {
     }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setDataChiTiet(data.data.data);
-    setSanPhamChiTiet(null);
+    setSanPhamChiTiet(prevState => ({
+      ...prevState, //Giữ lại id sản phẩm
+      mauSacId: null, 
+      kichThuocId: null, 
+      soLuongTon: null, 
+    }));    
     form.resetFields();
     setIsModalOpen(false);
   }
