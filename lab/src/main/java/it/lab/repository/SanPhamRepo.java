@@ -1,6 +1,7 @@
 package it.lab.repository;
 
 import it.lab.entity.SanPham;
+import it.lab.modelcustom.SanPhamTheo12Thang;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +28,44 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Long> {
 
     @Query("SELECT SUM(s.soLuongLoi) FROM SanPham s")
     Long sumSoluongloi();
+
+    @Query(
+            value = """
+                    SELECT top 10 sp.id as sanPhamId,sum(hdct.soluong)as soLuongBan from sanphamchitiet spct
+                    join hoadonchitiet hdct on spct.id = hdct.sanphamchitietid
+                    join hoadon hd on hd.id = hdct.hoadonid
+                    join sanpham sp on sp.id = spct.sanphamid
+                    WHERE hd.trangthai in (1,8) 
+                    GROUP BY sp.id
+                    ORDER BY  sum(hdct.soluong) desc
+                    """, nativeQuery = true
+    )
+    List<SanPhamTheo12Thang> laySanPham12Thang();
+
+    @Query(value = """
+            select sum(hdct.soluong) from sanphamchitiet spct
+            join hoadonchitiet hdct on spct.id = hdct.sanphamchitietid
+            join hoadon hd on hd.id = hdct.hoadonid
+            join sanpham sp on sp.id = spct.sanphamid
+            WHERE hd.trangthai in (1,8) and MONTH(hd.ngaytao) = :thang
+            and sp.id = :spId
+            ORDER BY  sum(hdct.soluong) desc
+            """
+    ,nativeQuery = true
+    )
+    public Integer layDoanhSo(@Param("thang") int thang,@Param("spId") long spId);
+
+
+    @Query(
+            value = """
+                  SELECT  spct.id as sanPhamId,sum(hdct.soluong)as soLuongBan from sanphamchitiet spct
+                                                                        join hoadonchitiet hdct on spct.id = hdct.sanphamchitietid
+                                                                        join hoadon hd on hd.id = hdct.hoadonid
+                                                                        join sanpham sp on sp.id = spct.sanphamid
+                                                                        WHERE hd.trangthai in (1,8) and sp.id = :spId
+                                                                        GROUP BY spct.id
+                                                                        ORDER BY  sum(hdct.soluong) desc
+                    """, nativeQuery = true
+    )
+    List<SanPhamTheo12Thang> layChiTietIdBySp(@Param("spId") long spId);
 }

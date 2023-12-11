@@ -1,7 +1,11 @@
 package it.lab.service;
 
+import it.lab.dto.ChiTietDoanhSoTheo12Thang;
+import it.lab.dto.DoanhSoSanPham12Thang;
+import it.lab.dto.SanPhamDTO;
 import it.lab.dto.SanPhamYeuThichDTO;
 import it.lab.entity.NguoiDung;
+import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamYeuThich;
 import it.lab.entity.SuKienGiamGia;
 import it.lab.enums.APIStatus;
@@ -29,6 +33,10 @@ public class CRMService implements ICRMService {
     private HoaDonChiTietRepo _hoaDonChiTiet;
     @Autowired
     private SuKienGiamGiaRepo _suKienGiamGiaRepo;
+    @Autowired
+    private SanPhamRepo _sanPhamRepo;
+    @Autowired
+    private SanPhamChiTietRepo _sanPhamChiTietRepo;
 
     @Override
     public List<SanPhamYeuThichDTO> getSanPhamYeuThichUser(Long userId) {
@@ -71,5 +79,36 @@ public class CRMService implements ICRMService {
         }
         _suKienGiamGiaRepo.save(suKienGiamGia);
         return APIStatus.THANHCONG;
+    }
+
+    @Override
+    public List<DoanhSoSanPham12Thang> thongKeBan12Thang() {
+        List<DoanhSoSanPham12Thang> res = new ArrayList<>();
+        var sanPhamTop12 = _sanPhamRepo.laySanPham12Thang();
+        for (var item : sanPhamTop12) {
+            DoanhSoSanPham12Thang ds = new DoanhSoSanPham12Thang();
+            List<Integer> doanhSo = new ArrayList<>();
+            for (int i = 1; i < 13; i++) {
+                Integer spDs = _sanPhamRepo.layDoanhSo(i, item.getSanPhamId());
+                doanhSo.add(spDs == null ? 0 : spDs);
+            }
+            ds.setDoanhSo(doanhSo);
+            ds.setSanPham(SanPhamDTO.fromEntity(_sanPhamRepo.findById(item.getSanPhamId()).get()));
+            res.add(ds);
+        }
+        return res;
+    }
+
+    @Override
+    public List<ChiTietDoanhSoTheo12Thang> thongKeChiTietCuaSanPham(long spId) {
+        List<ChiTietDoanhSoTheo12Thang> res = new ArrayList<>();
+        var sanPham = _sanPhamRepo.layChiTietIdBySp(spId);
+        for (var item : sanPham) {
+            ChiTietDoanhSoTheo12Thang chiTiet = new ChiTietDoanhSoTheo12Thang();
+            chiTiet.setSanPhamChiTiet(_sanPhamChiTietRepo.findById(item.getSanPhamId()).get());
+            chiTiet.setSoLuong(item.getSoLuongBan());
+            res.add(chiTiet);
+        }
+        return res;
     }
 }

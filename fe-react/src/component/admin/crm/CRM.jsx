@@ -9,6 +9,7 @@ import ModalTaoSuKien from "./ModalTaoSuKien";
 import { cmr } from "./context";
 import "./style.css";
 import { useCrm } from "./crmStore";
+import DanhGiaTop10SanPham from "./danhgiasanpham/DanhGiaTop10SanPham";
 function CRM() {
     const [api, contextHolder] = notification.useNotification();
     const [isFetching, setIsFetching] = useState(false)
@@ -76,6 +77,7 @@ function CRM() {
     useEffect(() => {
         handleLayDoanhThu12Thang()
     }, [])
+    const [sanPhamModalShow, setSanPhamModalShow] = useState(false)
     return (
         <>
             {contextHolder}
@@ -108,12 +110,18 @@ function CRM() {
                             padding: "12px 12px"
                         }}>
                             <span ref={showContentSpan}></span>
-                            {sussgest && <>
+                            {true && <>
+                                <ModalTaoSuKien profit={profit} />
+                                -
+                                <DanhGiaTop10SanPham />
+                            </>}
+                            {/* {sussgest && <>
                                 <ModalTaoSuKien profit={profit} />
                                 -
                                 <span onClick={() => {
                                 }} className="sussgest">  đánh giá những sản phẩm nên giảm giá theo doanh số bán ra</span>
-                            </>}
+                            </>} */}
+
                         </Row>
                         <Row style={{
                             backgroundColor: "#ffffff",

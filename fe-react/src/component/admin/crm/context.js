@@ -89,3 +89,30 @@ const suKien = {
 }
     `
 }
+
+
+export const doanhSo10SanPhamDanhGia = (data) => {
+    var content = "Đây là doanh số top 10 sản phẩm bán chạy nhất trong 12 tháng \n";
+    var i = 1;
+    for (var item of data) {
+        content += i + ". " + item.sanPham.tenSanPham + "\n";
+        var thang = 1;
+        for (var item2 of item.doanhSo) {
+            content += "Tháng " + thang + ": " + item2 + " cái.\n";
+            thang++;
+        }
+        i++;
+    }
+    return content + "\n Hãy giúp tôi đánh giá tiềm năng của 10 sản phẩm này trong năm tới";
+}
+
+
+export const danhGiaSanPham = (data) => {
+    var content = "Đây là doanh số 12 tháng của " + data.sanPham.tenSanPham + ".";
+    var thang = 1;
+    for (var item of data.doanhSo) {
+        content += " Tháng " + thang + ": " + item + " cái.";
+        thang++;
+    }
+    return content + "\n Hãy giúp tôi đánh giá về doanh số của sản phẩm này tôi đang bán với giá " + data.sanPham.giaBan + 'đ/cái';
+}

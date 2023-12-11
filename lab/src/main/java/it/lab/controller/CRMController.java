@@ -5,10 +5,7 @@ import it.lab.entity.SuKienGiamGia;
 import it.lab.iservice.ICRMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -41,5 +38,15 @@ public class CRMController {
     @RequestMapping(value = "/taosukiengoiy", method = RequestMethod.POST)
     public ResponseEntity<?> taoSuKienGoiY(@RequestBody String suKienGiamGia) {
         return ResponseEntity.ok(_crmService.themSuKien(gson.fromJson(suKienGiamGia, SuKienGiamGia.class)));
+    }
+
+    @RequestMapping(value = "/laydoanhso10sanphamtop", method = RequestMethod.GET)
+    public ResponseEntity<?> layDoanhSo10SanPhamTop() {
+        return ResponseEntity.ok(_crmService.thongKeBan12Thang());
+    }
+
+    @RequestMapping(value = "/laydoanhsochitiet", method = RequestMethod.GET)
+    public ResponseEntity<?> layDoanhSoChiTiet(@RequestParam Long sanPhamId) {
+        return ResponseEntity.ok(_crmService.thongKeChiTietCuaSanPham(sanPhamId));
     }
 }

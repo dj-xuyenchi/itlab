@@ -14,5 +14,11 @@ export const useCrm = {
             }
             return axiosIns.post('/api/crm/taosukiengoiy', payload)
         },
+        async layTopDoanhSo12Thang() {
+            return axiosIns.get('/api/crm/laydoanhso10sanphamtop')
+        },
+        async layChiTiet(payload) {
+            return axiosIns.get('/api/crm/laydoanhsochitiet?sanPhamId=' + payload)
+        },
     },
 }
