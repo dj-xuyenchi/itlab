@@ -3,6 +3,7 @@ package it.lab.controller;
 import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamSuKien;
 import it.lab.entity.SuKienGiamGia;
+import it.lab.enums.TrangThaiSanPhamSuKien;
 import it.lab.iservice.ISanPhamService;
 import it.lab.iservice.ISanPhamSuKienService;
 import it.lab.iservice.ISuKienGiamGiaService;
@@ -34,6 +35,10 @@ public class SanPhamSuKienController {
         Pageable pageable = PageRequest.of(page, 20);
         return ResponseEntity.ok(service.getPage(pageable));
     }
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
 
     @GetMapping("/getnhomsanpham")
     public ResponseEntity<List<SanPham>> getNhomSP(@RequestParam(name = "id") long id) {
@@ -59,7 +64,7 @@ public class SanPhamSuKienController {
         SanPhamSuKien sanPhamSuKien = new SanPhamSuKien();
         sanPhamSuKien.setSanPham(sanPham);
         sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
-//        sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
+        sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
 
@@ -84,7 +89,7 @@ public class SanPhamSuKienController {
                 sanPhamSuKien.setSanPham(sanPhamList.get(i));
                 sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
                 sanPhamSuKien.setNgayTao(currentDate);
-//                sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
+                sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
                 service.save(sanPhamSuKien);
             }
         }
