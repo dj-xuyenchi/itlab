@@ -8,12 +8,17 @@ import {
   notification,
   Checkbox,
   Radio,
-  Select
+  Select,
+  Upload,
+  message
 } from "antd";
+import { useForm } from "antd/es/form/Form";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { useNguoiDungStore } from "./useNguoiDungStore";
+import { PlusOutlined } from "@ant-design/icons";
 
 function ModalThemSua({ id, setData }) {
+  const [form] = useForm()
   const [rankKhachHang, setRankKhachHang] = useState();
   const { Option } = Select;
   const [nguoiDung, setNguoiDung] = useState({
@@ -29,6 +34,27 @@ function ModalThemSua({ id, setData }) {
     soDienThoai: "",
     anhDaiDien: "",
   });
+  const [fileList, setFileList] = useState([]);
+  const [hinhAnh, setHinhAnh] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const props = {
+    beforeUpload: (file) => {
+      return false;
+    },
+    onChange: (file) => {
+      setFileList(file.fileList);
+      if (file.fileList.length === 0) {
+        setHinhAnh([]);
+        return;
+      }
+      const isImage = file.file.type === "image/png" || file.file.type === "image/jpg" || file.file.type === "image/jpeg";
+      if (!isImage) {
+        message.error(`${file.file.name} không phải file hình ảnh`);
+        return;
+      }
+      setHinhAnh([file.fileList[0].originFileObj]);
+    },
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -58,30 +84,69 @@ function ModalThemSua({ id, setData }) {
     }
   };
 
+  // async function handleSuaNguoiDung() {
+  //   if (nguoiDung.ten === "") {
+  //     return;
+  //   }
+
+  //   const data = await useNguoiDungStore.actions.suaNguoiDung(nguoiDung);
+
+  //   if (data.success) {
+  //     openNotification(
+  //       "success",
+  //       "Hệ thống",
+  //       "Sửa thông tin người dùng thành công",
+  //       "bottomRight"
+  //     );
+  //     setData(data.data);
+
+  //     setIsModalOpen(false);
+  //   } else {
+  //     openNotification("error", "Hệ thống", "Sửa thông tin người dùng thất bại", "bottomRight");
+  //   }
+  // }
+
   async function handleSuaNguoiDung() {
-    if (nguoiDung.ten === "") {
+    if (!nguoiDung.ten.trim()) {
+      openNotification("error", "Hệ thống", "Tên là bắt buộc", "bottomRight");
       return;
     }
-
-    const data = await useNguoiDungStore.actions.suaNguoiDung(nguoiDung);
-
-    if (data.success) {
-      openNotification(
-        "success",
-        "Hệ thống",
-        "Sửa thông tin người dùng thành công",
-        "bottomRight"
-      );
-      setData(data.data);
-
+    setIsLoading(true);
+    const formData = new FormData();
+    if (hinhAnh.length > 0) {
+      formData.append("anhDaiDien", hinhAnh[0]);
+    }
+    formData.append("data", JSON.stringify(nguoiDung));
+    try {
+      const response = await useNguoiDungStore.actions.suaNguoiDung(formData);
+      if (response && response.data && response.data.status === "THANHCONG") {
+        openNotification(
+          "success",
+          "Hệ thống",
+          "Sửa thông tin người dùng thành công",
+          "bottomRight"
+        );
+        await layDuLieu3();
+      } else {
+        throw new Error(response.data.message || "Sửa thông tin người dùng thất bại");
+      }
+    } catch (error) {
+      openNotification("error", "Hệ thống", error.message, "bottomRight");
+    } finally {
+      setNguoiDung({ ten: "", anhDaiDien: null });
+      setFileList([]);
+      setHinhAnh([]);
+      setIsLoading(false);
       setIsModalOpen(false);
-    } else {
-      openNotification("error", "Hệ thống", "Sửa thông tin người dùng thất bại", "bottomRight");
     }
   }
   async function layDuLieu2() {
     const data = await useNguoiDungStore.actions.layRankKhachHang();
     setRankKhachHang(data.data.data);
+  }
+  async function layDuLieu3() {
+    const data = await useNguoiDungStore.actions.fetchNguoiDung();
+    setData(data.data.data);
   }
 
   useEffect(() => {
@@ -122,6 +187,7 @@ function ModalThemSua({ id, setData }) {
         ]}
       >
         <Form
+          form={form}
           name="wrap"
           labelCol={{
             flex: "110px",
@@ -163,6 +229,27 @@ function ModalThemSua({ id, setData }) {
               }}
             />
           </Form.Item>
+          <Form.Item label="Upload">
+                    <Upload
+                      listType="picture-card"
+                      multiple
+                      customRequest={() => { }}
+                      {...props}
+                      maxCount={4}
+                      fileList={fileList}
+                    >
+                      <div>
+                        <PlusOutlined />
+                        <div
+                          style={{
+                            marginTop: 8,
+                          }}
+                        >
+                          Upload
+                        </div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
           <Form.Item
             label="Email"
             rules={[
@@ -248,7 +335,7 @@ function ModalThemSua({ id, setData }) {
                     
                   </Form.Item>
           
-                  <Form.Item
+                  {/* <Form.Item
                     label="Rank Khách Hàng"
                     name="rankKhachHang"
                     rules={[
@@ -270,7 +357,7 @@ function ModalThemSua({ id, setData }) {
                   ))}
                 </Select>
 
-                  </Form.Item>
+                  </Form.Item> */}
 
 
 

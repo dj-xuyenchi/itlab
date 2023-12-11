@@ -302,8 +302,8 @@ function MauSac() {
                   }}
                 >
                   <Form.Item
-                    label="Tên nhóm"
-                    name="Tên nhóm"
+                    label="Tên màu"
+                    name="Tên màu"
                     rules={[
                       {
                         required: true,

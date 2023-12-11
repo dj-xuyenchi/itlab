@@ -1,13 +1,18 @@
 package it.lab.controller;
 
+import com.google.gson.Gson;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
 import it.lab.iservice.INguoiDungService;
 import it.lab.iservice.IRankKhachHang;
 import it.lab.modelcustom.request.DoiMatKhau;
+import it.lab.modelcustom.request.NguoiDungRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/nguoi-dung")
@@ -31,10 +36,9 @@ public class NguoiDungController {
     }
 
     @RequestMapping(value = "/capnhatnguoidung", method = RequestMethod.POST)
-    public ResponseEntity<?> capNhatNguoiDung(
-            @RequestBody NguoiDungDTO nguoiDungDTO
-    ) {
-        return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(nguoiDungDTO));
+    public ResponseEntity<?> suaNguoiDung(@RequestPart("anhDaiDien") MultipartFile data, @RequestPart("data") String nguoiDung) throws IOException {
+        Gson gson = new Gson();
+        return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(gson.fromJson(nguoiDung, NguoiDungRequest.class), data));
     }
     @RequestMapping(value = "/doimatkhau", method = RequestMethod.POST)
     public ResponseEntity<?> doiMatKhau(
@@ -49,8 +53,9 @@ public class NguoiDungController {
     }
 
     @RequestMapping(value = "/themnguoidung", method = RequestMethod.POST)
-    public ResponseEntity<?> themNguoiDung(@RequestBody NguoiDung nguoiDung) {
-        return ResponseEntity.ok(_nguoiDungService.themNguoiDung(nguoiDung));
+    public ResponseEntity<?> themNguoiDung(@RequestPart("anhDaiDien") MultipartFile data, @RequestPart("data") String nguoiDung) throws IOException {
+        Gson gson = new Gson();
+        return ResponseEntity.ok(_nguoiDungService.themNguoiDung(gson.fromJson(nguoiDung, NguoiDungRequest.class), data));
     }
 
     @RequestMapping(value = "/layrankkhachhang", method = RequestMethod.GET)
