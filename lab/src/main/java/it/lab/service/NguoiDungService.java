@@ -45,25 +45,25 @@ public class NguoiDungService implements INguoiDungService {
     }
 
     @Override
-    public ResponObject<NguoiDungDTO, CapNhat> capNhatNguoiDung(NguoiDungDTO nguoiDung) {
-        Optional<NguoiDung> ng = _nguoiDungRepo.findById(nguoiDung.getId());
+    public ResponObject<String, APIStatus> capNhatNguoiDung(NguoiDungRequest nguoiDungRequest,MultipartFile anhdaidien) throws IOException {
+        Optional<NguoiDung> ng = _nguoiDungRepo.findById(nguoiDungRequest.getId());
         if (ng.isEmpty()) {
-            return new ResponObject<>(null, CapNhat.THATBAI, "Thất bại");
+            return new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Thất bại");
         }
         NguoiDung nguoiDungRepo = ng.get();
-        nguoiDungRepo.setTen(nguoiDung.getTen());
-        nguoiDungRepo.setHo(nguoiDung.getHo());
-        nguoiDungRepo.setMatKhau(nguoiDung.getMatKhau());
-        nguoiDungRepo.setEmail(nguoiDung.getEmail());
-        nguoiDungRepo.setSoDienThoai(nguoiDung.getSoDienThoai());
-        nguoiDungRepo.setGioiTinh(nguoiDung.getGioiTinh());
-        nguoiDungRepo.setDiem(nguoiDung.getDiem());
-        nguoiDungRepo.setAnhDaiDien(nguoiDung.getAnhDaiDien());
-        nguoiDungRepo.setTrangThai(nguoiDung.getTrangThai());
-        nguoiDungRepo.setRankKhachHang(nguoiDung.getRankKhachHang());
+        nguoiDungRepo.setTen(nguoiDungRequest.getTen());
+        nguoiDungRepo.setHo(nguoiDungRequest.getHo());
+        nguoiDungRepo.setMatKhau(nguoiDungRequest.getMatKhau());
+        nguoiDungRepo.setEmail(nguoiDungRequest.getEmail());
+        nguoiDungRepo.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
+        nguoiDungRepo.setGioiTinh(nguoiDungRequest.getGioiTinh());
+        nguoiDungRepo.setDiem(nguoiDungRequest.getDiem());
+        nguoiDungRepo.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
+        nguoiDungRepo.setTrangThai(nguoiDungRequest.getTrangThaiNguoiDung());
+//        nguoiDungRepo.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
         nguoiDungRepo.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDungRepo);
-        return new ResponObject<>(NguoiDungDTO.fromEntity(nguoiDungRepo), CapNhat.THANHCONG, "Thành công");
+        return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
 
     @Override

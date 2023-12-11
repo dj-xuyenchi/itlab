@@ -32,8 +32,8 @@ function NguoiDung() {
     trangThai: "BIKHOA",
   });
   const [fileList, setFileList] = useState([]);
-const [hinhAnh, setHinhAnh] = useState([]);
-const [isLoading, setIsLoading] = useState(false);
+  const [hinhAnh, setHinhAnh] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
 const props = {
   beforeUpload: (file) => {
@@ -550,40 +550,26 @@ const props = {
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Trạng Thái"
-                    name="trangThai"
-                    valuePropName="checked"
+                    label="Rank khách hàng"
+                    name="rankKhachHang"
+                    rules={[{ required: true, message: 'Vui lòng chọn rank khách hàng!' }]}
+                    initialValue={undefined}
                   >
-                    <Checkbox
-                      onChange={(e) => setNguoiDung({
-                        ...nguoiDung,
-                        trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
-                      })}
-                    >Hoạt động</Checkbox>
-                  </Form.Item>
-                  <Form.Item label="Rank khách hàng">
                     <Select
                       labelInValue
                       optionLabelProp="children"
-                      style={{
-                        width: "100%",
-                      }}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
+                      placeholder="Chọn rank khách hàng"
+                      style={{ width: "100%" }}
                       onChange={handleSetRankKhachHang}
                     >
-                      {rankKhachHang
-                        ? rankKhachHang.map((option) => (
-                          <Select.Option key={option.id} value={option.id}>
-                            {option.tenRank}
-                          </Select.Option>
-                        ))
-                        : ""}
+                      {rankKhachHang && rankKhachHang.map((option) => (
+                        <Select.Option key={option.id} value={option.id}>
+                          {option.tenRank}
+                        </Select.Option>
+                      ))}
                     </Select>
                   </Form.Item>
+
 
                   <Form.Item label=" ">
                     <Button

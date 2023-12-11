@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NguoiDungRequest {
+    private Long id;
     private String maNguoiDung;
     private String email;
     private String matKhau;

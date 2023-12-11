@@ -15,7 +15,7 @@ import java.io.IOException;
 public interface INguoiDungService {
     public Page<NguoiDungDTO> layHetNguoiDung();
     public NguoiDungDTO layThongTinTaiKhoanById(Long id);
-    public ResponObject<NguoiDungDTO, CapNhat> capNhatNguoiDung(NguoiDungDTO nguoiDung);
+    public ResponObject<String, APIStatus> capNhatNguoiDung(NguoiDungRequest nguoiDung,MultipartFile anhdaidien) throws IOException;
     public ResponObject<NguoiDungDTO, CapNhat> doiMatKhau(DoiMatKhau matKhau);
     public Page<NguoiDungDTO> xoaNguoiDung(Long nguoiDungId);
 //    public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung);
