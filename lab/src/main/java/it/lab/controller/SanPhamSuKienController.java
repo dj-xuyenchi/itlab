@@ -63,11 +63,13 @@ public class SanPhamSuKienController {
     public ResponseEntity<?> saveTheoSanPhamE(@RequestParam(name = "id") long id,
                                               @RequestParam(name = "idSuKien") long idSK
     ) {
+        LocalDateTime currentDate = LocalDateTime.now();
         SanPham sanPham = iSanPhamService.findById(id);
         SuKienGiamGia suKienGiamGia = suKienGiamGiaService.findById(idSK);
         SanPhamSuKien sanPhamSuKien = new SanPhamSuKien();
         sanPhamSuKien.setSanPham(sanPham);
         sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
+        sanPhamSuKien.setNgayTao(currentDate);
         sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
@@ -106,10 +108,11 @@ public class SanPhamSuKienController {
         LocalDateTime time=LocalDateTime.now();
        if(phamSuKien.getTrangThai()==TrangThaiSanPhamSuKien.CHAY_SU_KIEN){
            phamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+           phamSuKien.setNgayCapNhat(time);
        }
        else {
            phamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
-
+           phamSuKien.setNgayCapNhat(time);
        }
         return ResponseEntity.ok(phamSuKien);
     }
