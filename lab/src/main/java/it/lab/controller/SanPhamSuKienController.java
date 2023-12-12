@@ -39,6 +39,10 @@ public class SanPhamSuKienController {
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
+    @GetMapping("/get-all-sukiengiamgia")
+    public ResponseEntity<?> getAllSuKienGiamGia() {
+        return ResponseEntity.ok(suKienGiamGiaService.getAll());
+    }
 
     @GetMapping("/getnhomsanpham")
     public ResponseEntity<List<SanPham>> getNhomSP(@RequestParam(name = "id") long id) {
@@ -97,8 +101,16 @@ public class SanPhamSuKienController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody SanPhamSuKien sanPhamSuKien, @PathVariable(name = "id") Long id) {
-        service.save(sanPhamSuKien);
-        return ResponseEntity.ok(sanPhamSuKien);
+    public ResponseEntity<?> update( @PathVariable(name = "id") Long id) {
+        SanPhamSuKien phamSuKien=service.findById(id);
+        LocalDateTime time=LocalDateTime.now();
+       if(phamSuKien.getTrangThai()==TrangThaiSanPhamSuKien.CHAY_SU_KIEN){
+           phamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+       }
+       else {
+           phamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
+
+       }
+        return ResponseEntity.ok(phamSuKien);
     }
 }

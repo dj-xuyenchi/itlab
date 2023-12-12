@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class SuKienGiamGiaService implements ISuKienGiamGiaService {
@@ -59,5 +60,10 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
     @Override
     public SuKienGiamGia findById(Long suKienGiamGiaId) {
         return suKienGiamGiaRepo.findById(suKienGiamGiaId).orElse(null);
+    }
+
+    @Override
+    public List<SuKienGiamGia> getAll() {
+        return suKienGiamGiaRepo.findAll();
     }
 }
