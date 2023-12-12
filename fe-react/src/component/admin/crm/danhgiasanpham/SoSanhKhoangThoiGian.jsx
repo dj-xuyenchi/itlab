@@ -2,9 +2,14 @@ import { useSelector } from "react-redux";
 import * as echarts from 'echarts';
 
 import { useEffect, useRef } from "react";
-import { Col, Row, Tag } from "antd";
-function BieuDoTheoOption({ title = "Tên biểu đồ", data }) {
-    const arr = data && data.map((item) => {
+import { Col, Row } from "antd";
+function SoSanhKhoangThoiGian({ title = "Tên biểu đồ", data = [{
+    soLuong: 1,
+    sanPhamChiTiet: {
+        tenSanPham: ""
+    }
+}] }) {
+    const arr = data.map((item) => {
         return {
             value: item.soLuong,
             name: item.sanPhamChiTiet.tenSanPham
@@ -15,32 +20,35 @@ function BieuDoTheoOption({ title = "Tên biểu đồ", data }) {
         const chart = echarts.init(chartRef.current);
         const option = {
             title: {
-                text: 'Biểu đồ chi tiết',
+                text: 'So sánh với năm ngoái',
                 subtext: '(Đơn vị: cái)',
+                top: 'bottom',
                 left: 'center'
             },
-            tooltip: {
-                trigger: 'item'
+            legend: {},
+            tooltip: {},
+            dataset: {
+                source: [
+                    ['product', '2022', '2023'],
+                    ['Tháng 1', 43.3, 85.8],
+                    ['Tháng 2', 83.1, 73.4],
+                    ['Tháng 3', 86.4, 65.2],
+                    ['Tháng 4', 72.4, 53.9],
+                    ['Tháng 5', 43.3, 85.8],
+                    ['Tháng 6', 83.1, 73.4],
+                    ['Tháng 7', 86.4, 65.2],
+                    ['Tháng 8', 72.4, 53.9],
+                    ['Tháng 9', 43.3, 85.8],
+                    ['Tháng 10', 83.1, 73.4],
+                    ['Tháng 11', 86.4, 65.2],
+                    ['Tháng 12', 72.4, 53.2],
+                ]
             },
-            legend: {
-                orient: 'vertical',
-                left: 'left'
-            },
-            series: [
-                {
-                    name: 'Thông tin sản phẩm',
-                    type: 'pie',
-                    radius: '50%',
-                    data: arr,
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }
-            ]
+            xAxis: { type: 'category' },
+            yAxis: {},
+            // Declare several bar series, each will be mapped
+            // to a column of dataset.source by default.
+            series: [{ type: 'bar' }, { type: 'bar' }]
         };
         chart.setOption(option);
         // Đảm bảo rằng biểu đồ được tự động thay đổi kích thước khi cửa sổ trình duyệt thay đổi
@@ -62,15 +70,6 @@ function BieuDoTheoOption({ title = "Tên biểu đồ", data }) {
             <Row style={{
                 marginBottom: "40px"
             }}>
-                <ul style={{
-                    marginBottom: "unset"
-                }}>
-                    {data && data.map((item) => {
-                        return <li>{item.sanPhamChiTiet.tenSanPham} <span style={{
-                            color: "red"
-                        }}>số lượng đã bán:</span> {item.soLuong} cái</li>
-                    })}
-                </ul>
                 <Col span={24}>
                     <a href="">tải xuống báo cáo excel.</a>
                 </Col>
@@ -79,4 +78,4 @@ function BieuDoTheoOption({ title = "Tên biểu đồ", data }) {
     );
 }
 
-export default BieuDoTheoOption;
+export default SoSanhKhoangThoiGian;

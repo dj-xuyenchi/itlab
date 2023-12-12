@@ -190,6 +190,9 @@ function BanTaiQuay() {
         <InputNumber
           defaultValue={soLuong}
           onChange={(e) => {
+            if (!e) {
+              return;
+            }
             handleCapNhatSoLuong(record.id, e);
             if (diaChiChon) {
               handleTinhGiaVanChuyen({

@@ -11,6 +11,7 @@ import { useGpt } from "../../../../plugins/gpt";
 import { danhGiaSanPham } from "../context";
 import BieuDoTheoOption from "./BieuDoTheoOption";
 import { useCrm } from "../crmStore";
+import SoSanhKhoangThoiGian from "./SoSanhKhoangThoiGian";
 const { RangePicker } = DatePicker;
 function ModalDanhGiaChiTiet({ data }) {
     const [isShow, setIsShow] = useState(false);
@@ -93,9 +94,14 @@ function ModalDanhGiaChiTiet({ data }) {
                     true && <BieuDoTheoOption data={chiTietDoanhSo} />
                 }
                 {
-                    true && <p style={{
+                    true &&
+                    <>                    <p style={{
                         color: "red"
                     }}>Cụ thể hơn thì dưới đây là so sánh với doanh số của năm ngoái.</p>
+                        <SoSanhKhoangThoiGian />
+                    </>
+
+
                 }
             </Modal>
         </>
