@@ -114,6 +114,7 @@ public class SanPhamSuKienController {
            phamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
            phamSuKien.setNgayCapNhat(time);
        }
+        service.save(phamSuKien);
         return ResponseEntity.ok(phamSuKien);
     }
 }
