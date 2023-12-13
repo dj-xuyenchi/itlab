@@ -50,19 +50,19 @@ public class NguoiDungService implements INguoiDungService {
         if (ng.isEmpty()) {
             return new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Thất bại");
         }
-        NguoiDung nguoiDungRepo = ng.get();
-        nguoiDungRepo.setTen(nguoiDungRequest.getTen());
-        nguoiDungRepo.setHo(nguoiDungRequest.getHo());
-        nguoiDungRepo.setMatKhau(nguoiDungRequest.getMatKhau());
-        nguoiDungRepo.setEmail(nguoiDungRequest.getEmail());
-        nguoiDungRepo.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
-        nguoiDungRepo.setGioiTinh(nguoiDungRequest.getGioiTinh());
-        nguoiDungRepo.setDiem(nguoiDungRequest.getDiem());
-        nguoiDungRepo.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
-        nguoiDungRepo.setTrangThai(nguoiDungRequest.getTrangThaiNguoiDung());
-//        nguoiDungRepo.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
-        nguoiDungRepo.setNgayCapNhat(LocalDateTime.now());
-        _nguoiDungRepo.save(nguoiDungRepo);
+        NguoiDung nguoiDung = ng.get();
+        nguoiDung.setTen(nguoiDungRequest.getTen());
+        nguoiDung.setHo(nguoiDungRequest.getHo());
+        nguoiDung.setMatKhau(nguoiDungRequest.getMatKhau());
+        nguoiDung.setEmail(nguoiDungRequest.getEmail());
+        nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
+        nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
+        nguoiDung.setDiem(nguoiDungRequest.getDiem());
+        nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
+        nguoiDung.setTrangThai(nguoiDungRequest.getTrangThai());
+//        nguoiDung.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
+        nguoiDung.setNgayCapNhat(LocalDateTime.now());
+        _nguoiDungRepo.save(nguoiDung);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
 
@@ -123,7 +123,7 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
         nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
         _nguoiDungRepo.save(nguoiDung);
-        nguoiDung.setMaNguoiDung("ND" + nguoiDung.getId());
+        nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
         _nguoiDungRepo.save(nguoiDung);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }

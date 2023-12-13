@@ -27,7 +27,6 @@ function ModalThemSua({ id, setData }) {
     ho: "",
     email: "",
     matKhau: "",
-    trangThai: "",
     rankKhachHang: "",
     diem: "",
     gioiTinh: "",
@@ -83,29 +82,6 @@ function ModalThemSua({ id, setData }) {
       });
     }
   };
-
-  // async function handleSuaNguoiDung() {
-  //   if (nguoiDung.ten === "") {
-  //     return;
-  //   }
-
-  //   const data = await useNguoiDungStore.actions.suaNguoiDung(nguoiDung);
-
-  //   if (data.success) {
-  //     openNotification(
-  //       "success",
-  //       "Hệ thống",
-  //       "Sửa thông tin người dùng thành công",
-  //       "bottomRight"
-  //     );
-  //     setData(data.data);
-
-  //     setIsModalOpen(false);
-  //   } else {
-  //     openNotification("error", "Hệ thống", "Sửa thông tin người dùng thất bại", "bottomRight");
-  //   }
-  // }
-
   async function handleSuaNguoiDung() {
     if (!nguoiDung.ten.trim()) {
       openNotification("error", "Hệ thống", "Tên là bắt buộc", "bottomRight");
@@ -116,6 +92,7 @@ function ModalThemSua({ id, setData }) {
     if (hinhAnh.length > 0) {
       formData.append("anhDaiDien", hinhAnh[0]);
     }
+    formData.append("trangThai", nguoiDung.trangThai ? "HOATDONG" : "BIKHOA");
     formData.append("data", JSON.stringify(nguoiDung));
     try {
       const response = await useNguoiDungStore.actions.suaNguoiDung(formData);
@@ -127,6 +104,7 @@ function ModalThemSua({ id, setData }) {
           "bottomRight"
         );
         await layDuLieu3();
+        console.log("Sau Khi Sua Nguoi Dung:", nguoiDung);
       } else {
         throw new Error(response.data.message || "Sửa thông tin người dùng thất bại");
       }
@@ -140,6 +118,7 @@ function ModalThemSua({ id, setData }) {
       setIsModalOpen(false);
     }
   }
+  
   async function layDuLieu2() {
     const data = await useNguoiDungStore.actions.layRankKhachHang();
     setRankKhachHang(data.data.data);
@@ -148,12 +127,16 @@ function ModalThemSua({ id, setData }) {
     const data = await useNguoiDungStore.actions.fetchNguoiDung();
     setData(data.data.data);
   }
-
   useEffect(() => {
     async function layDuLieu() {
       const data = await useNguoiDungStore.actions.layNguoiDungId(id);
-      console.log(data);
+      console.log("Lấy dữ liệu: ",data);
       setNguoiDung(data.data);
+      // setFileList([{ uid: '1', url: data.data.anhDaiDien, name: 'Ảnh đại diện' }]);
+      form.setFieldsValue({
+        trangThai: data.data.trangThai === 'HOATDONG',
+        gioiTinh: data.data.gioiTinh ? "Nam" : "Nữ",
+      });
     }
     if (isModalOpen) {
       layDuLieu();
@@ -229,7 +212,7 @@ function ModalThemSua({ id, setData }) {
               }}
             />
           </Form.Item>
-          <Form.Item label="Upload">
+          <Form.Item label="Ảnh đại diện">
                     <Upload
                       listType="picture-card"
                       multiple
@@ -245,7 +228,7 @@ function ModalThemSua({ id, setData }) {
                             marginTop: 8,
                           }}
                         >
-                          Upload
+                          Ảnh đại diện
                         </div>
                       </div>
                     </Upload>
@@ -278,11 +261,12 @@ function ModalThemSua({ id, setData }) {
                     ]}
                   >
                     <Checkbox
-                      onChange={(e) => setNguoiDung({
-                        ...nguoiDung,
-                        trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
-                      })}
-                    >Hoạt động</Checkbox>
+                        onChange={(e) => setNguoiDung({
+                          ...nguoiDung,
+                          trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
+                        })}
+                      >Hoạt động
+                    </Checkbox>
                   </Form.Item>
                   <Form.Item
                     label="Điểm"
@@ -332,9 +316,8 @@ function ModalThemSua({ id, setData }) {
                       <Radio value="Nam">Nam</Radio>
                       <Radio value="Nữ">Nữ</Radio>
                     </Radio.Group>
-                    
                   </Form.Item>
-          
+
                   {/* <Form.Item
                     label="Rank Khách Hàng"
                     name="rankKhachHang"
@@ -345,22 +328,18 @@ function ModalThemSua({ id, setData }) {
                       },
                     ]}
                   >
-                <Select
-                  placeholder="Chọn rank khách hàng"
-                  onChange={(value) => setNguoiDung({...nguoiDung, rankKhachHang: { id: value }})}
-                  value={nguoiDung.rankKhachHang?.id || null}
-                >
-                  {rankKhachHang && rankKhachHang.map((rank) => (
-                    <Select.Option key={rank.id} value={rank.id}>
-                      {rank.tenRank}
-                    </Select.Option>
-                  ))}
-                </Select>
-
+                    <Select
+                      placeholder="Chọn rank khách hàng"
+                      onChange={(value) => setNguoiDung({...nguoiDung, rankKhachHang: { id: value }})}
+                      value={nguoiDung.rankKhachHang?.id || null}
+                    >
+                    {rankKhachHang && rankKhachHang.map((rank) => (
+                      <Select.Option key={rank.id} value={rank.id}>
+                        {rank.tenRank}
+                      </Select.Option>
+                    ))}
+                    </Select>
                   </Form.Item> */}
-
-
-
 
         </Form>
       </Modal>
