@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface NguoiDungRepo extends JpaRepository<NguoiDung, Long> {
-    @Query(value = "select * from nguoidung", nativeQuery = true)
-    public List<NguoiDungCustom> layDuLieu();
 
     public Optional<NguoiDung> findNguoiDungByEmailEquals(String email);
 }
