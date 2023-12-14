@@ -14,23 +14,90 @@ import { Form, Modal, Row, Tooltip, notification } from "antd";
 import { Link } from "react-router-dom";
 function Product() {
   const [sanPham, setSanPhamSuKien] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
 
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder={`Search maSanPham`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={(text && text.toString()) || ""}
+        />
+      ) : (
+        text
+      ),
+    
+  });
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
   const columns = [
     {
       title: "Mã Sản Phẩm",
-      dataIndex: ["sanPham", "maSanPham"], // Thay đổi từ "sanPham.maSanPham" thành ["sanPham", "maSanPham"]
+      dataIndex: ["sanPham", "maSanPham"], 
       key: "maSanPham",
       width: "20%",
-      render: (maSanPham) => <span>{maSanPham}</span>,
+      //  ...getColumnSearchProps("sanPham", "maSanPham"),
+      render: (maSanPham) => (
+        <>
+          <Tag color="success"> {maSanPham}</Tag>
+        </>
+      ),
     },
     {
       title: "Hình Ảnh",
-      dataIndex: ["sanPham", "hinhAnh1"], // Thay đổi từ "sanPham.hinhAnh1" thành ["sanPham", "hinhAnh1"]
+      dataIndex: ["sanPham", "hinhAnh1"], 
       key: "hinhAnh",
       width: "20%",
       render: (hinhAnh) => (
         <Image src={hinhAnh} style={{ width: "100px", height: "100px" }} />
       ),
+    },
+    {
+      title: "Tên Sản Phẩm",
+      dataIndex: ["sanPham", "tenSanPham"], 
+      key: "tenSanPham",
+      width: "20%",
+      render: (tenSanPham) => <span>{tenSanPham}</span>,
     },
     {
       title: "Tên sự kiện",
@@ -126,6 +193,7 @@ function Product() {
           ngayCapNhat: item.ngayCapNhat,
           sanPham: {
             maSanPham: item.sanPham?.maSanPham || "", // Sử dụng Optional Chaining (?.) để tránh lỗi nếu 'maSanPham' không tồn tại
+            tenSanPham: item.sanPham?.tenSanPham || "", // Sử dụng Optional Chaining (?.) để tránh lỗi nếu 'maSanPham' không tồn tại
             hinhAnh1: item.sanPham?.hinhAnh1 || "", // Tương tự với 'hinhAnh1'
             //Thêm các trường khác của 'sanPham' tương tự ở đây
           },
@@ -144,7 +212,6 @@ function Product() {
   useEffect(() => {
     fetchData();
   }, []);
-
   return (
     <>
       {contextHolder}

@@ -285,12 +285,10 @@ function ThemSanPhamSuKien() {
   const fetchData = async () => {
     const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
     setSanPham(data.data.data);
-    handleSetFilter(data.data.data);
-    // dispath(productSlice.actions.setSanPham(data));
-    // dispath(productSlice.actions.setIsLoading(false));
+    // handleSetFilter(data.data.data);
+  
   };
   useEffect(() => {
-    // dispath(productSlice.actions.setIsLoading(true));
     const fetchThuocTinh = async () => {
       const data = await useSanPhamStore.actions.fetchThuocTinh();
       setThuocTinh(data.data);
@@ -313,7 +311,7 @@ function ThemSanPhamSuKien() {
               <Table
                 columns={columns}
                 dataSource={sanPham}
-                onChange={onChange}
+                // onChange={onChange}
                 pagination={{
                   position: ["bottomRight"],
                 }}

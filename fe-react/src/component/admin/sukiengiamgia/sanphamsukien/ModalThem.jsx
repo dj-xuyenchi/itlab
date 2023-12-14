@@ -74,6 +74,22 @@ function ModalView({ id }) {
         layDuLieu();
       }
     }, [isModalOpen]);
+    const [api, contextHolder] = notification.useNotification();
+    const openNotification = (type, title, des, placement) => {
+      if (type === "error") {
+        api.error({
+          message: title,
+          description: des,
+          placement,
+        });
+      } else {
+        api.success({
+          message: title,
+          description: des,
+          placement,
+        });
+      }
+    };
     const handleAdd = async () => {
       try {
         const response = await axiosIns.post("/api/sanphamsukien/add", null, {
@@ -82,6 +98,9 @@ function ModalView({ id }) {
               idSuKien: selectedSuKienGiamGiaId
             }
         });
+  
+        openNotification("success", "Hệ thống", "Thêm sản phẩm vào sự kiện thành công", "bottomRight");
+        handleCancel();
         console.log("Thêm thành công:", response.data);
         // Thực hiện cập nhật state hoặc hiển thị thông báo thành công tùy theo yêu cầu
       } catch (error) {
@@ -92,6 +111,7 @@ function ModalView({ id }) {
   
     return (
       <>
+      {contextHolder}
         <Tooltip title="Xem" onClick={showModal}>
           <Button
             style={{

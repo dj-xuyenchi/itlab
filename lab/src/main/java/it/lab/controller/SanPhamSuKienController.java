@@ -71,6 +71,7 @@ public class SanPhamSuKienController {
         sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
         sanPhamSuKien.setNgayTao(currentDate);
         sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
+        service.save(sanPhamSuKien);
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
 

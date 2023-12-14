@@ -28,7 +28,6 @@ public class SanPhamSuKien {
     private SanPham sanPham;
     @JoinColumn(name = "sukiengiamgiaid")
     @ManyToOne
-    @JsonIgnore
     private SuKienGiamGia suKienGiamGia;
     @Column(name = "ngaytao")
     private LocalDateTime ngayTao;

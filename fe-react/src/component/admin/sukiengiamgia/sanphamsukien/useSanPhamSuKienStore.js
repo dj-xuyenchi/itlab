@@ -6,6 +6,10 @@ export const useSanPhamSuKienStore = {
             return axiosIns.get('/api/sanphamsukien/get-all'
             )
         },
+        async fetchSuKienGiamGia() {
+            return axiosIns.get('/api/sanphamsukien/get-all-sukiengiamgia'
+            )
+        },
     },
 }
 
