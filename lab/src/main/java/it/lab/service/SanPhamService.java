@@ -10,6 +10,7 @@ import it.lab.enums.TrangThaiSanPham;
 import it.lab.enums.TrangThaiSanPhamChiTiet;
 import it.lab.iservice.ISanPhamService;
 import it.lab.modelcustom.request.FilterSanPham;
+import it.lab.modelcustom.request.NguoiDungRequest;
 import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
@@ -442,4 +443,30 @@ public class SanPhamService implements ISanPhamService {
     public SanPhamDTO laySanPhamById(Long sanPhamId) {
         return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());
     }
+
+    @Override
+    public ResponObject<String, APIStatus> capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile hinh1, MultipartFile hinh2) throws IOException {
+        Optional<SanPham> sp = _sanPhamRepository.findById(sanPhamRequest.getId());
+        if (sp.isEmpty()) {
+            return new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Thất bại");
+        }
+        SanPham sanPham = sp.get();
+        sanPham.setTenSanPham(sanPhamRequest.getTenSanPham());
+        sanPham.setGiaNhap(sanPhamRequest.getGiaNhap());
+        sanPham.setGiaBan(sanPhamRequest.getGiaBan());
+        sanPham.setTrangThai(sanPhamRequest.getTrangThai());
+        sanPham.setSoLuongTon(sanPhamRequest.getSoLuongTon());
+        sanPham.setSoLuongLoi(sanPhamRequest.getSoLuongLoi());
+        sanPham.setSoLuongTraHang(sanPhamRequest.getSoLuongTraHang());
+        sanPham.setSoLuongDaBan(sanPhamRequest.getSoLuongDaBan());
+        sanPham.setHinhAnh1(CloudinaryUpload.uploadFile(hinh1));
+        sanPham.setHinhAnh2(CloudinaryUpload.uploadFile(hinh2));
+        sanPham.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId()).get());
+        sanPham.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId()).get());
+        sanPham.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId()).get());
+        sanPham.setNgayCapNhat(LocalDateTime.now());
+        _sanPhamRepository.save(sanPham);
+        return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
+    }
+
 }

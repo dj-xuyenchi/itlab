@@ -89,25 +89,6 @@ public class NguoiDungService implements INguoiDungService {
         return layHetNguoiDung();
     }
 
-//    @Override
-//    public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung) {
-//        nguoiDung.setNgayTao(LocalDateTime.now());
-//        _nguoiDungRepo.save(nguoiDung);
-//        nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
-//        nguoiDung.setTen(nguoiDung.getTen());
-//        nguoiDung.setHo(nguoiDung.getHo());
-//        nguoiDung.setEmail(nguoiDung.getEmail());
-//        nguoiDung.setMatKhau(nguoiDung.getMatKhau());
-//        nguoiDung.setAnhDaiDien(nguoiDung.getAnhDaiDien());
-//        nguoiDung.setRankKhachHang(nguoiDung.getRankKhachHang());
-//        nguoiDung.setSoDienThoai(nguoiDung.getSoDienThoai());
-//        nguoiDung.setNgayCapNhat(nguoiDung.getNgayCapNhat());
-//        nguoiDung.setTrangThai(nguoiDung.getTrangThai());
-//        nguoiDung.setGioiTinh(nguoiDung.getGioiTinh());
-//        _nguoiDungRepo.save(nguoiDung);
-//        return layHetNguoiDung();
-//    }
-
     @Override
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDungRequest, MultipartFile anhdaidien) throws IOException {
         NguoiDung nguoiDung = new NguoiDung();

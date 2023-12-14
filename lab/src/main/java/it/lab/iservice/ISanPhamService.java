@@ -6,6 +6,7 @@ import it.lab.dto.*;
 import it.lab.entity.*;
 import it.lab.enums.APIStatus;
 import it.lab.modelcustom.request.FilterSanPham;
+import it.lab.modelcustom.request.NguoiDungRequest;
 import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
@@ -95,4 +96,6 @@ public interface ISanPhamService {
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException;
 
     public SanPhamDTO laySanPhamById(Long sanPhamId);
+
+    public ResponObject<String, APIStatus> capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile hinh1, MultipartFile hinh2) throws IOException;
 }

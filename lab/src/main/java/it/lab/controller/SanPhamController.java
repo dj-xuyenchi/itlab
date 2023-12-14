@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import it.lab.entity.*;
 import it.lab.iservice.ISanPhamService;
 import it.lab.modelcustom.request.FilterSanPham;
+import it.lab.modelcustom.request.NguoiDungRequest;
 import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,6 +242,12 @@ public class SanPhamController {
     @RequestMapping(value = "/laysanphamId", method = RequestMethod.GET)
     public ResponseEntity<?> laySanPhamBy(@RequestParam Long sanPhamId) {
         return ResponseEntity.ok(_sanPhamService.laySanPhamById(sanPhamId));
+    }
+
+    @RequestMapping(value = "/capnhatsanpham", method = RequestMethod.POST)
+    public ResponseEntity<?> suaSanPham(@RequestPart("file1") MultipartFile data1, @RequestPart("file2") MultipartFile data2, @RequestPart("data") String sanPham) throws IOException {
+        Gson gson = new Gson();
+        return ResponseEntity.ok(_sanPhamService.capNhatSanPham(gson.fromJson(sanPham, SanPhamRequest.class), data1, data2));
     }
 
 }
