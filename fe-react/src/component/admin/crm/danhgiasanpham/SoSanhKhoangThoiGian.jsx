@@ -3,45 +3,40 @@ import * as echarts from 'echarts';
 
 import { useEffect, useRef } from "react";
 import { Col, Row } from "antd";
-function SoSanhKhoangThoiGian({ title = "Tên biểu đồ", data = [{
-    soLuong: 1,
-    sanPhamChiTiet: {
-        tenSanPham: ""
-    }
-}] }) {
-    const arr = data.map((item) => {
-        return {
-            value: item.soLuong,
-            name: item.sanPhamChiTiet.tenSanPham
-        }
+function SoSanhKhoangThoiGian({ title = {
+    title: "Tên biểu đồ",
+    sub: '(Đơn vị: cái)',
+    nam: {
+        truoc: "2022",
+        sau: "2023"
+    },
+    type: false,
+},
+    data = [{
+        _2022: 0,
+        _2023: 0
+    }] }) {
+    const arr = data.map((item, index) => {
+        return [
+            "Tháng " + Number(index + 1), item._2022, item._2023
+        ]
     })
     const chartRef = useRef(null);
     useEffect(() => {
         const chart = echarts.init(chartRef.current);
         const option = {
             title: {
-                text: 'So sánh với năm ngoái',
-                subtext: '(Đơn vị: cái)',
-                top: 'bottom',
-                left: 'center'
+                text: title.title,
+                subtext: title.sub,
+                top: 'top',
+                left: 'left'
             },
             legend: {},
             tooltip: {},
             dataset: {
                 source: [
-                    ['product', '2022', '2023'],
-                    ['Tháng 1', 43.3, 85.8],
-                    ['Tháng 2', 83.1, 73.4],
-                    ['Tháng 3', 86.4, 65.2],
-                    ['Tháng 4', 72.4, 53.9],
-                    ['Tháng 5', 43.3, 85.8],
-                    ['Tháng 6', 83.1, 73.4],
-                    ['Tháng 7', 86.4, 65.2],
-                    ['Tháng 8', 72.4, 53.9],
-                    ['Tháng 9', 43.3, 85.8],
-                    ['Tháng 10', 83.1, 73.4],
-                    ['Tháng 11', 86.4, 65.2],
-                    ['Tháng 12', 72.4, 53.2],
+                    ['product', (title.type ? "Doanh số " : "Doanh thu ") + title.nam.truoc, (title.type ? "Doanh số " : "Doanh thu ") + title.nam.sau],
+                    ...arr
                 ]
             },
             xAxis: { type: 'category' },
@@ -67,13 +62,6 @@ function SoSanhKhoangThoiGian({ title = "Tên biểu đồ", data = [{
     return (
         <>
             <div ref={chartRef} style={{ marginLeft: "10%", width: '80%', height: '600px' }} />
-            <Row style={{
-                marginBottom: "40px"
-            }}>
-                <Col span={24}>
-                    <a href="">tải xuống báo cáo excel.</a>
-                </Col>
-            </Row>
         </>
     );
 }

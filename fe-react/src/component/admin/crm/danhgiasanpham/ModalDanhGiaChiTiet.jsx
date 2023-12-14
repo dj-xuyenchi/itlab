@@ -1,6 +1,10 @@
 // import MyComponent from './Example/MyComponent';
 import {
+    Col,
     Modal,
+    Row,
+    Select,
+    Spin,
     Tag,
     notification,
 } from "antd";
@@ -8,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { DatePicker } from "antd";
 import BieuDo12Thang from "./BieuDo12Thang";
 import { useGpt } from "../../../../plugins/gpt";
-import { danhGiaSanPham } from "../context";
+import { danhGiaSanPham, soSanhTheoNam } from "../context";
 import BieuDoTheoOption from "./BieuDoTheoOption";
 import { useCrm } from "../crmStore";
 import SoSanhKhoangThoiGian from "./SoSanhKhoangThoiGian";
@@ -17,16 +21,21 @@ function ModalDanhGiaChiTiet({ data }) {
     const [isShow, setIsShow] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     const [chiTietDoanhSo, setChiTietDoanhSo] = useState(undefined)
-    const [done, setDone] = useState([])
+    const [nam, setNam] = useState({
+        truoc: 2022,
+        sau: 2023
+    })
+    const [done, setDone] = useState(false)
     const showContentSpan1 = useRef(undefined)
     const showContentSpan2 = useRef(undefined)
-    function handleSetText(content, ref, set = () => { }, react = null) {
+    const showContentSpan3 = useRef(undefined)
+
+    function handleSetText(content, ref) {
         let i = 0
         let dataChat = ""
         const interval = setInterval(() => {
             if (i === content.length) {
                 clearInterval(interval)
-                set(react)
             }
             if (content[i] != undefined) {
                 dataChat = dataChat + content[i]
@@ -35,37 +44,50 @@ function ModalDanhGiaChiTiet({ data }) {
                 }
                 i++
             }
-        }, 1)
+        }, 3)
     }
     async function handleLayChiTiet() {
-        const data2 = await useCrm.actions.layChiTiet(data.sanPham.id)
+        const data2 = await useCrm.actions.layChiTiet({
+            sanPhamId: data.sanPham.id,
+            ...nam
+        })
         setChiTietDoanhSo(data2.data)
-        console.log(data2.data);
+        handleSendContext2GPT(danhGiaSanPham(data))
+        handleSendContext2GPT2(soSanhTheoNam(data2.data, nam, data))
     }
+
+
+
+    async function handleSendContext2GPT(context) {
+        const data2 = await useGpt.actions.chat(context)
+        handleSetText(data2.data.choices[0].message.content, showContentSpan2)
+    }
+    async function handleSendContext2GPT2(context) {
+        const data2 = await useGpt.actions.chat(context)
+        handleSetText(data2.data.choices[0].message.content, showContentSpan3)
+        setDone(true)
+    }
+    // useEffect(() => {
+    //     if (done) {
+    //         if (showContentSpan2) {
+    //             handleSendContext2GPT(danhGiaSanPham(data))
+    //             handleSendContext2GPT2(soSanhTheoNam(chiTietDoanhSo, nam, data))
+    //         }
+    //     }
+    // }, [done])
     useEffect(() => {
         if (isShow) {
             handleLayChiTiet()
             if (showContentSpan1) {
-                var arr = [...done];
-                arr[0] = true;
-                handleSetText("Dưới đây là đánh giá chi tiết về " + data.sanPham.tenSanPham + " của tôi.", showContentSpan1, setDone, arr)
+                handleSetText("Dưới đây là đánh giá chi tiết về " + data.sanPham.tenSanPham + " của tôi.", showContentSpan1)
             }
         }
     }, [isShow])
-    async function handleSendContext2GPT() {
-        const data2 = await useGpt.actions.chat(danhGiaSanPham(data))
-        var arr = [...done];
-        arr[1] = true;
-        handleSetText(data2.data.choices[0].message.content, showContentSpan2, setDone, arr)
-    }
     useEffect(() => {
-        if (done[0]) {
-            if (showContentSpan2) {
-                //   handleSendContext2GPT()
-            }
+        if (isShow) {
+            handleLayChiTiet()
         }
-    }, [done])
-
+    }, [nam])
     return (
         <>
             {contextHolder}
@@ -87,22 +109,99 @@ function ModalDanhGiaChiTiet({ data }) {
                 }}>
                 <p ref={showContentSpan1}></p>
                 <BieuDo12Thang data={data.doanhSo} />
+                <p ref={showContentSpan2}></p>
                 {
-                    done[0] && <p ref={showContentSpan2}></p>
+                    done ? "" : <div style={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}>  <Spin size="large" /></div>
                 }
                 {
-                    true && <BieuDoTheoOption data={chiTietDoanhSo} />
-                }
-                {
-                    true &&
-                    <>                    <p style={{
-                        color: "red"
-                    }}>Cụ thể hơn thì dưới đây là so sánh với doanh số của năm ngoái.</p>
-                        <SoSanhKhoangThoiGian />
-                    </>
-
-
-                }
+                    done && <> <BieuDoTheoOption data={chiTietDoanhSo && chiTietDoanhSo.thongKeChiTiet12} />
+                        <p style={{
+                            marginBottom: "0px",
+                            color: "red"
+                        }}>Cụ thể hơn thì dưới đây là so sánh doanh số và doanh thu với năm ngoái.</p>
+                        <p style={{
+                            marginBottom: "4px",
+                            color: "red"
+                        }}>Bạn cũng có thể lựa chọn so sánh theo năm khác.</p>
+                        <Row style={{
+                            marginBottom: "4px"
+                        }}>
+                            <Col span={24}>
+                                <Select
+                                    defaultValue={nam.truoc}
+                                    style={{
+                                        width: 120,
+                                    }}
+                                    onChange={(e) => {
+                                        setNam({
+                                            ...nam,
+                                            truoc: e
+                                        })
+                                    }}
+                                    options={[
+                                        {
+                                            value: 2022,
+                                            label: '2022',
+                                        },
+                                        {
+                                            value: 2023,
+                                            label: '2023',
+                                        },
+                                    ]}
+                                />
+                                <Select
+                                    defaultValue={nam.sau}
+                                    style={{
+                                        width: 120,
+                                        marginLeft: "4px"
+                                    }}
+                                    onChange={(e) => {
+                                        handleSendContext2GPT()
+                                        setNam({
+                                            ...nam,
+                                            sau: e
+                                        })
+                                    }}
+                                    options={[
+                                        {
+                                            value: 2022,
+                                            label: '2022',
+                                        },
+                                        {
+                                            value: 2023,
+                                            label: '2023',
+                                        },
+                                    ]}
+                                />
+                            </Col>
+                        </Row>
+                        <SoSanhKhoangThoiGian title={
+                            {
+                                title: "Doanh số " + nam.truoc + " và " + nam.sau,
+                                sub: '(Đơn vị: cái)',
+                                nam: nam,
+                                type: true
+                            }
+                        } data={chiTietDoanhSo && chiTietDoanhSo.soSanhDoanhSo} />
+                        <SoSanhKhoangThoiGian title={
+                            {
+                                title: "Doanh thu " + nam.truoc + " và " + nam.sau,
+                                sub: '(Đơn vị: đồng)',
+                                nam: nam,
+                                type: false
+                            }
+                        } data={chiTietDoanhSo && chiTietDoanhSo.soSanhDoanhThu} />
+                        <Row style={{
+                            marginBottom: "40px"
+                        }}>
+                            <p ref={showContentSpan3}></p>
+                            <Col span={24}>
+                                <a href="">tải xuống báo cáo excel.</a>
+                            </Col>
+                        </Row> </>}
             </Modal>
         </>
     );
