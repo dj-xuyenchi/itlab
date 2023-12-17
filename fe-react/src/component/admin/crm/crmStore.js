@@ -18,7 +18,7 @@ export const useCrm = {
             return axiosIns.get('/api/crm/laydoanhso10sanphamtop')
         },
         async layChiTiet(payload) {
-            return axiosIns.get('/api/crm/laydoanhsochitiet?sanPhamId=' + payload)
+            return axiosIns.get('/api/crm/laydoanhsochitiet?sanPhamId=' + payload.sanPhamId + "&truoc=" + payload.truoc + "&sau=" + payload.sau)
         },
     },
 }

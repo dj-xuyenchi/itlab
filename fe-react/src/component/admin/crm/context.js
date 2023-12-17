@@ -92,9 +92,12 @@ const suKien = {
 
 
 export const doanhSo10SanPhamDanhGia = (data) => {
-    var content = "Đây là doanh số top 10 sản phẩm bán chạy nhất trong 12 tháng \n";
+    var content = "Đây là doanh số sản phẩm bán chạy nhất trong 12 tháng \n";
     var i = 1;
     for (var item of data) {
+        if (i === 3) {
+            return content + "\n Hãy giúp tôi đánh giá tiềm năng của những sản phẩm này trong năm tới";
+        }
         content += i + ". " + item.sanPham.tenSanPham + "\n";
         var thang = 1;
         for (var item2 of item.doanhSo) {
@@ -115,4 +118,18 @@ export const danhGiaSanPham = (data) => {
         thang++;
     }
     return content + "\n Hãy giúp tôi đánh giá về doanh số của sản phẩm này tôi đang bán với giá " + data.sanPham.giaBan + 'đ/cái';
+}
+
+
+export const soSanhTheoNam = (data, nam, sp) => {
+    var content = "Đây là doanh số và doanh thu theo tháng của 2 năm " + nam.truoc + " và " + nam.sau + " của sản phẩm " + sp.sanPham.tenSanPham;
+    content += ". Năm " + nam.truoc;
+    for (let i = 0; i < 12; i++) {
+        content += ". Tháng " + Number(i + 1) + ": " + data.soSanhDoanhSo[i]["_2022"] + " cái được " + data.soSanhDoanhThu[i]["_2022"] + "đ"
+    }
+    content += ". Năm " + nam.sau;
+    for (let j = 0; j < 12; j++) {
+        content += ". Tháng " + Number(j + 1) + ": " + data.soSanhDoanhSo[j]["_2023"] + " cái được " + data.soSanhDoanhThu[j]["_2023"] + "đ"
+    }
+    return content + "\n. Hãy giúp tôi đánh giá về doanh số và doanh thu của 2 năm trên.";
 }

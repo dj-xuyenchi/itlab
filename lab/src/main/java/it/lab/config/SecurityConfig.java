@@ -48,18 +48,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(req -> req
-//                .requestMatchers(
-//                        "/api/employee/**",
-//                        "api/giohang/**",
-//                        "api/thanhtoan/**",
-//                        "api/nguoidung/**"
-//                        ).hasAnyRole(
-//                        "ADMIN",
-//                        "EMPLOYEE",
-//                        "CUSTOMER")
-//                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-//                .requestMatchers("/api/nhanvien/**").hasAnyRole("ADMIN", "EMPLOYEE")
-//                .requestMatchers("/api/crm/**").hasAnyRole("CRM","ADMIN")
+                .requestMatchers(
+                        "/api/employee/**",
+                        "api/giohang/**",
+                        "api/thanhtoan/**",
+                        "api/nguoidung/**"
+                        ).hasAnyRole(
+                        "ADMIN",
+                        "EMPLOYEE",
+                        "CUSTOMER")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/nhanvien/**").hasAnyRole("ADMIN", "EMPLOYEE")
+             //   .requestMatchers("/api/crm/**").hasAnyRole("CRM","ADMIN")
                 .anyRequest().permitAll()
         )
                 .csrf((csrf) -> csrf.disable())

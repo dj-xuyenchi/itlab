@@ -118,7 +118,7 @@ function ModalThemSua({ id, setData }) {
       setIsModalOpen(false);
     }
   }
-  
+
   async function layDuLieu2() {
     const data = await useNguoiDungStore.actions.layRankKhachHang();
     setRankKhachHang(data.data.data);
@@ -130,9 +130,9 @@ function ModalThemSua({ id, setData }) {
   useEffect(() => {
     async function layDuLieu() {
       const data = await useNguoiDungStore.actions.layNguoiDungId(id);
-      console.log("Lấy dữ liệu: ",data);
+      console.log("Lấy dữ liệu: ", data);
       setNguoiDung(data.data);
-      // setFileList([{ uid: '1', url: data.data.anhDaiDien, name: 'Ảnh đại diện' }]);
+      setFileList([{ uid: '1', url: data.data.anhDaiDien, name: 'Ảnh đại diện' }]);
       form.setFieldsValue({
         trangThai: data.data.trangThai === 'HOATDONG',
         gioiTinh: data.data.gioiTinh ? "Nam" : "Nữ",
@@ -153,7 +153,7 @@ function ModalThemSua({ id, setData }) {
             color: "green",
           }}
           shape="circle"
-          icon={<FaRegPenToSquare />} 
+          icon={<FaRegPenToSquare />}
         />
       </Tooltip>
       <Modal
@@ -194,12 +194,12 @@ function ModalThemSua({ id, setData }) {
             ]}
           >
             <Input value={nguoiDung.ho}
-            onChange={(e) => {
-              setNguoiDung({
-                ...nguoiDung,
-                ho: e.target.value,
-              });
-            }} />
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  ho: e.target.value,
+                });
+              }} />
           </Form.Item>
           <Form.Item label="Tên">
             <Input
@@ -213,26 +213,26 @@ function ModalThemSua({ id, setData }) {
             />
           </Form.Item>
           <Form.Item label="Ảnh đại diện">
-                    <Upload
-                      listType="picture-card"
-                      multiple
-                      customRequest={() => { }}
-                      {...props}
-                      maxCount={4}
-                      fileList={fileList}
-                    >
-                      <div>
-                        <PlusOutlined />
-                        <div
-                          style={{
-                            marginTop: 8,
-                          }}
-                        >
-                          Ảnh đại diện
-                        </div>
-                      </div>
-                    </Upload>
-                  </Form.Item>
+            <Upload
+              listType="picture-card"
+              multiple
+              customRequest={() => { }}
+              {...props}
+              maxCount={4}
+              fileList={fileList}
+            >
+              <div>
+                <PlusOutlined />
+                <div
+                  style={{
+                    marginTop: 8,
+                  }}
+                >
+                  Ảnh đại diện
+                </div>
+              </div>
+            </Upload>
+          </Form.Item>
           <Form.Item
             label="Email"
             rules={[
@@ -241,84 +241,84 @@ function ModalThemSua({ id, setData }) {
               },
             ]}
           >
-            <Input  value={nguoiDung.email}
-            onChange={(e) => {
-              setNguoiDung({
-                ...nguoiDung,
-                email: e.target.value,
-              });
-            }} />
+            <Input value={nguoiDung.email}
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  email: e.target.value,
+                });
+              }} />
           </Form.Item>
           <Form.Item
-                    label="Trạng Thái"
-                    name="trangThai"
-                    valuePropName="checked"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng chọn trạng thái!'
-                      },
-                    ]}
-                  >
-                    <Checkbox
-                        onChange={(e) => setNguoiDung({
-                          ...nguoiDung,
-                          trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
-                        })}
-                      >Hoạt động
-                    </Checkbox>
-                  </Form.Item>
-                  <Form.Item
-                    label="Điểm"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input  value={nguoiDung.diem}
-                    onChange={(e) => {
-                      setNguoiDung({
-                        ...nguoiDung,
-                        diem: e.target.value,
-                      });
-                    }} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Số Điện Thoại"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input  value={nguoiDung.soDienThoai}
-                    onChange={(e) => {
-                      setNguoiDung({
-                        ...nguoiDung,
-                        s: e.target.value,
-                      });
-                    }} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Giới Tính"
-                    name="gioiTinh"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng chọn giới tính!'
-                      },
-                    ]}
-                  >
-                    <Radio.Group 
-                      onChange={(e) => setNguoiDung({...nguoiDung, gioiTinh: e.target.value === "Nam"})} 
-                    >
-                      <Radio value="Nam">Nam</Radio>
-                      <Radio value="Nữ">Nữ</Radio>
-                    </Radio.Group>
-                  </Form.Item>
+            label="Trạng Thái"
+            name="trangThai"
+            valuePropName="checked"
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng chọn trạng thái!'
+              },
+            ]}
+          >
+            <Checkbox
+              onChange={(e) => setNguoiDung({
+                ...nguoiDung,
+                trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
+              })}
+            >Hoạt động
+            </Checkbox>
+          </Form.Item>
+          <Form.Item
+            label="Điểm"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input value={nguoiDung.diem}
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  diem: e.target.value,
+                });
+              }} />
+          </Form.Item>
+          <Form.Item
+            label="Số Điện Thoại"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input value={nguoiDung.soDienThoai}
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  s: e.target.value,
+                });
+              }} />
+          </Form.Item>
+          <Form.Item
+            label="Giới Tính"
+            name="gioiTinh"
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng chọn giới tính!'
+              },
+            ]}
+          >
+            <Radio.Group
+              onChange={(e) => setNguoiDung({ ...nguoiDung, gioiTinh: e.target.value === "Nam" })}
+            >
+              <Radio value="Nam">Nam</Radio>
+              <Radio value="Nữ">Nữ</Radio>
+            </Radio.Group>
+          </Form.Item>
 
-                  {/* <Form.Item
+          {/* <Form.Item
                     label="Rank Khách Hàng"
                     name="rankKhachHang"
                     rules={[

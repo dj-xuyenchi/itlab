@@ -11,5 +11,5 @@ import java.util.List;
 
 public interface ThongKeNguoiDungRepository extends JpaRepository<NguoiDung,Integer> {
     @Query("SELECT COUNT(nd) FROM NguoiDung nd WHERE nd.ngayTao >= :oneMonthAgo")
-    List<Object[]> countTaiKhoanMoiTrongThang(@Param("oneMonthAgo") LocalDateTime oneMonthAgo);
+    Long countTaiKhoanMoiTrongThang(@Param("oneMonthAgo") LocalDateTime oneMonthAgo);
 }

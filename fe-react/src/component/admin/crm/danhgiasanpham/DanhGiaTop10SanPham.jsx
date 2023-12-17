@@ -2,6 +2,7 @@
 import {
     Image,
     Modal,
+    Spin,
     Table,
     notification,
 } from "antd";
@@ -16,8 +17,7 @@ const { RangePicker } = DatePicker;
 function DanhGiaTop10SanPham() {
     const [isShow, setIsShow] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const [done, setDone] = useState(true)
-    const [loading, setLoading] = useState(true)
+    const [done, setDone] = useState(false)
     const showContentSpan = useRef(undefined)
     const showContentSpan2 = useRef(undefined)
     function handleSetText(content) {
@@ -26,7 +26,6 @@ function DanhGiaTop10SanPham() {
         const interval = setInterval(() => {
             if (i === content.length) {
                 clearInterval(interval)
-                setDone(true)
             }
             if (content[i] != undefined) {
                 dataChat = dataChat + content[i]
@@ -35,7 +34,7 @@ function DanhGiaTop10SanPham() {
                 }
                 i++
             }
-        }, 30)
+        }, 3)
     }
     function handleSetText2(content) {
         let i = 0
@@ -51,7 +50,7 @@ function DanhGiaTop10SanPham() {
                 }
                 i++
             }
-        }, 30)
+        }, 5)
     }
     const columns = [
         {
@@ -110,27 +109,26 @@ function DanhGiaTop10SanPham() {
             ),
         },
     ];
-    const [data, setData] = useState(undefined)
+    const [data, setData] = useState([])
     async function handleLayDoanhSo() {
         const data = await useCrm.actions.layTopDoanhSo12Thang();
         setData(data.data)
+        handleSendContext2GPT(data.data)
+
     }
-    async function handleSendContext2GPT() {
-        const data2 = await useGpt.actions.chat(doanhSo10SanPhamDanhGia(data))
+    async function handleSendContext2GPT(data3) {
+        const data2 = await useGpt.actions.chat(doanhSo10SanPhamDanhGia(data3))
         handleSetText2(data2.data.choices[0].message.content)
+        setDone(true)
     }
     useEffect(() => {
         if (isShow) {
             handleLayDoanhSo()
-            handleSetText("Dựa vào dữ liệu doanh số của cửa hàng đây là TOP 10 sản phẩm bán chạy nhất trong năm 2023")
+            handleSetText("Dựa vào dữ liệu doanh số của cửa hàng đây là TOP 10 sản phẩm bán chạy nhất trong năm 2023.")
+
         }
 
     }, [isShow])
-    useEffect(() => {
-        if (done) {
-            // handleSendContext2GPT()
-        }
-    }, [done])
     return (
         <>
             {contextHolder}
@@ -147,17 +145,13 @@ function DanhGiaTop10SanPham() {
                 } onCancel={() => {
                     setIsShow(false)
                 }}>
-                {loading &&
-                    <>
-                        <p ref={showContentSpan}></p>
-                        {done &&
-                            <>
-                                <Table columns={columns} dataSource={data} />
-                                <p ref={showContentSpan2}></p>
-                            </>
-                        }
-                    </>
-
+                <p ref={showContentSpan}></p>
+                <Table columns={columns} dataSource={data} />
+                {done ?
+                    <p ref={showContentSpan2}></p> : <div style={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}> <Spin size="large" /></div>
                 }
             </Modal>
         </>

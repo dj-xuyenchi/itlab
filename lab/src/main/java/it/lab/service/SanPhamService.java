@@ -125,8 +125,13 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<ChatLieuDTO> xoaChatLieu(Long chatLieuId) {
-        _chatLieuRepo.deleteById(chatLieuId);
-        return layHetChatLieu();
+        try {
+            _chatLieuRepo.deleteById(chatLieuId);
+            return layHetChatLieu();
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @Override
@@ -368,7 +373,7 @@ public class SanPhamService implements ISanPhamService {
         sanPhamMoi.setGiaNhap(sanPham.getGiaNhap());
         sanPhamMoi.setTrangThai(TrangThaiSanPhamChiTiet.CONHANG);
         sanPhamMoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
-        sanPham.setSoLuongTon(sanPham.getSoLuongTon()+sanPhamMoi.getSoLuongTon());
+        sanPham.setSoLuongTon(sanPham.getSoLuongTon() + sanPhamMoi.getSoLuongTon());
         sanPhamMoi.setSoLuongLoi(0);
         sanPhamMoi.setSoLuongDaBan(0);
         sanPhamMoi.setSoLuongTraHang(0);
