@@ -103,6 +103,9 @@ function GioHangThanhToan() {
     }
   }
   function handleChonDiaChi(e) {
+    if (!duLieuThanhToan.data.diaChiDTOList) {
+      return
+    }
     setDiaChiChon(
       duLieuThanhToan.data.diaChiDTOList.find((item) => {
         return item.id == e.target.value;

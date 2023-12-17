@@ -139,6 +139,7 @@ function BanTaiQuay() {
     });
   }
   async function handleChonDiaChiXa(e) {
+    console.log(e);
     setXa(e.key);
     setDiaChiMoi({
       ...diaChiMoi,
