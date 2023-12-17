@@ -2,13 +2,9 @@ import { useSelector } from "react-redux";
 import * as echarts from 'echarts';
 
 import { useEffect, useRef } from "react";
-function BieuDoTheoOption({ title = "Tên biểu đồ", data = [{
-    soLuong: 1,
-    sanPhamChiTiet: {
-        tenSanPham: ""
-    }
-}] }) {
-    const arr = data.map((item) => {
+import { Col, Row, Tag } from "antd";
+function BieuDoTheoOption({ title = "Tên biểu đồ", data }) {
+    const arr = data && data.map((item) => {
         return {
             value: item.soLuong,
             name: item.sanPhamChiTiet.tenSanPham
@@ -63,6 +59,22 @@ function BieuDoTheoOption({ title = "Tên biểu đồ", data = [{
     return (
         <>
             <div ref={chartRef} style={{ marginLeft: "10%", width: '80%', height: '600px' }} />
+            <Row style={{
+                marginBottom: "40px"
+            }}>
+                <ul style={{
+                    marginBottom: "unset"
+                }}>
+                    {data && data.map((item) => {
+                        return <li>{item.sanPhamChiTiet.tenSanPham} <span style={{
+                            color: "red"
+                        }}>số lượng đã bán:</span> {item.soLuong} cái</li>
+                    })}
+                </ul>
+                <Col span={24}>
+                    <a href="">tải xuống báo cáo excel.</a>
+                </Col>
+            </Row>
         </>
     );
 }

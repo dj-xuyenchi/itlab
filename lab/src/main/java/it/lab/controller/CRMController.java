@@ -46,7 +46,7 @@ public class CRMController {
     }
 
     @RequestMapping(value = "/laydoanhsochitiet", method = RequestMethod.GET)
-    public ResponseEntity<?> layDoanhSoChiTiet(@RequestParam Long sanPhamId) {
-        return ResponseEntity.ok(_crmService.thongKeChiTietCuaSanPham(sanPhamId));
+    public ResponseEntity<?> layDoanhSoChiTiet(@RequestParam Long sanPhamId,@RequestParam Long truoc,@RequestParam Long sau) {
+        return ResponseEntity.ok(_crmService.thongKeChiTietCuaSanPham(sanPhamId,truoc,sau));
     }
 }

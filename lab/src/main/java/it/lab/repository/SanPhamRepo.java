@@ -35,7 +35,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Long> {
                     join hoadonchitiet hdct on spct.id = hdct.sanphamchitietid
                     join hoadon hd on hd.id = hdct.hoadonid
                     join sanpham sp on sp.id = spct.sanphamid
-                    WHERE hd.trangthai in (1,8) 
+                    WHERE hd.trangthai in (1,8) and YEAR(hd.ngaytao) =2023
                     GROUP BY sp.id
                     ORDER BY  sum(hdct.soluong) desc
                     """, nativeQuery = true
@@ -47,7 +47,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Long> {
             join hoadonchitiet hdct on spct.id = hdct.sanphamchitietid
             join hoadon hd on hd.id = hdct.hoadonid
             join sanpham sp on sp.id = spct.sanphamid
-            WHERE hd.trangthai in (1,8) and MONTH(hd.ngaytao) = :thang
+            WHERE hd.trangthai in (1,8) and MONTH(hd.ngaytao) = :thang and YEAR(hd.ngaytao) =2023
             and sp.id = :spId
             ORDER BY  sum(hdct.soluong) desc
             """
@@ -62,7 +62,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Long> {
                                                                         join hoadonchitiet hdct on spct.id = hdct.sanphamchitietid
                                                                         join hoadon hd on hd.id = hdct.hoadonid
                                                                         join sanpham sp on sp.id = spct.sanphamid
-                                                                        WHERE hd.trangthai in (1,8) and sp.id = :spId
+                                                                        WHERE hd.trangthai in (1,8) and sp.id = :spId and YEAR(hd.ngaytao) =2023
                                                                         GROUP BY spct.id
                                                                         ORDER BY  sum(hdct.soluong) desc
                     """, nativeQuery = true

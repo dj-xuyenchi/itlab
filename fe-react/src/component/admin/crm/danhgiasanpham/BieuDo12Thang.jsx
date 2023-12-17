@@ -12,6 +12,18 @@ function BieuDo12Thang({ title = "Tên biểu đồ", data = [120, 200, 150, 80,
                 subtext: '(Đơn vị: cái)',
                 left: 'center'
             },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
             xAxis: {
                 type: 'category',
                 data: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]
@@ -22,10 +34,18 @@ function BieuDo12Thang({ title = "Tên biểu đồ", data = [120, 200, 150, 80,
             series: [
                 {
                     data: data,
-                    type: 'bar'
+                    type: 'bar',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c} cái',
+                        fontSize: 12
+                    }
                 }
+
             ]
         };
+
         chart.setOption(option);
         // Đảm bảo rằng biểu đồ được tự động thay đổi kích thước khi cửa sổ trình duyệt thay đổi
         window.addEventListener('resize', () => {

@@ -1,4 +1,6 @@
-.content {}
+.content {
+    padding: 12px;
+}
 
 .content .title {
     width: 100%;
@@ -36,8 +38,13 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+    border-radius: 15px;
 }
 
+.content .list .sanpham-item:hover {
+    cursor: pointer;
+    background-color: #cdcdcd;
+}
 
 ::-webkit-scrollbar {
     display: none;

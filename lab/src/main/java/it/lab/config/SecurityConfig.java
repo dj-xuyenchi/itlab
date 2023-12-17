@@ -59,7 +59,7 @@ public class SecurityConfig {
                         "CUSTOMER")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/nhanvien/**").hasAnyRole("ADMIN", "EMPLOYEE")
-//                .requestMatchers("/api/crm/**").hasAnyRole("CRM","ADMIN")
+             //   .requestMatchers("/api/crm/**").hasAnyRole("CRM","ADMIN")
                 .anyRequest().permitAll()
         )
                 .csrf((csrf) -> csrf.disable())

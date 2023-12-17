@@ -40,8 +40,8 @@ function HuyDon() {
                     marginTop: '14px',
 
                 }}>
-                    <div className="btn-transaction">Lịch sử giao dịch</div>
-                    <div className="btn-transaction">Tải biên lai</div>
+                    {/* <div className="btn-transaction">Lịch sử giao dịch</div>
+                    <div className="btn-transaction">Tải biên lai</div> */}
                 </div>
             </div> : ""}
             {vnp_TransactionStatus == 2 ? <div style={{

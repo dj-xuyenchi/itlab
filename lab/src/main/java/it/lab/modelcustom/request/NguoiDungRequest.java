@@ -22,6 +22,6 @@ public class NguoiDungRequest {
     private Boolean gioiTinh;
     private Integer diem;
     private Long rankKhachHangId;
-    private TrangThaiNguoiDung trangThaiNguoiDung;
+    private TrangThaiNguoiDung trangThai;
 
 }

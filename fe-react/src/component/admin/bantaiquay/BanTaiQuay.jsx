@@ -139,6 +139,7 @@ function BanTaiQuay() {
     });
   }
   async function handleChonDiaChiXa(e) {
+    console.log(e);
     setXa(e.key);
     setDiaChiMoi({
       ...diaChiMoi,
@@ -190,6 +191,9 @@ function BanTaiQuay() {
         <InputNumber
           defaultValue={soLuong}
           onChange={(e) => {
+            if (!e) {
+              return;
+            }
             handleCapNhatSoLuong(record.id, e);
             if (diaChiChon) {
               handleTinhGiaVanChuyen({

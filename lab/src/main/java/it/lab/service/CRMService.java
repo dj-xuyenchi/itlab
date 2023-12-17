@@ -1,9 +1,6 @@
 package it.lab.service;
 
-import it.lab.dto.ChiTietDoanhSoTheo12Thang;
-import it.lab.dto.DoanhSoSanPham12Thang;
-import it.lab.dto.SanPhamDTO;
-import it.lab.dto.SanPhamYeuThichDTO;
+import it.lab.dto.*;
 import it.lab.entity.NguoiDung;
 import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamYeuThich;
@@ -100,7 +97,8 @@ public class CRMService implements ICRMService {
     }
 
     @Override
-    public List<ChiTietDoanhSoTheo12Thang> thongKeChiTietCuaSanPham(long spId) {
+    public ThongKeChiTietSp thongKeChiTietCuaSanPham(long spId, long truoc, long sau) {
+        ThongKeChiTietSp data = new ThongKeChiTietSp();
         List<ChiTietDoanhSoTheo12Thang> res = new ArrayList<>();
         var sanPham = _sanPhamRepo.layChiTietIdBySp(spId);
         for (var item : sanPham) {
@@ -109,6 +107,19 @@ public class CRMService implements ICRMService {
             chiTiet.setSoLuong(item.getSoLuongBan());
             res.add(chiTiet);
         }
-        return res;
+        List<SoSanhDoanhSo> doanhSo = new ArrayList<>();
+        List<SoSanhDoanhThu> doanhThu = new ArrayList<>();
+        for (int i = 1; i < 13; i++) {
+            Long doanhSoData = _hoaDonChiTiet.doanhSoThangCuaSanPham(spId, truoc, i);
+            Long doanhSoData2 = _hoaDonChiTiet.doanhSoThangCuaSanPham(spId, sau, i);
+            Long doanhThuData = _hoaDonChiTiet.doanhThuThangCuaSanPham(spId, truoc, i);
+            Long doanhThuData2 = _hoaDonChiTiet.doanhThuThangCuaSanPham(spId, sau, i);
+            doanhSo.add(new SoSanhDoanhSo(doanhSoData == null ? 0 : doanhSoData, doanhSoData2 == null ? 0 : doanhSoData2));
+            doanhThu.add(new SoSanhDoanhThu(doanhThuData == null ? 0 : doanhThuData, doanhThuData2 == null ? 0 : doanhThuData2));
+        }
+        data.setSoSanhDoanhSo(doanhSo);
+        data.setSoSanhDoanhThu(doanhThu);
+        data.setThongKeChiTiet12(res);
+        return data;
     }
 }

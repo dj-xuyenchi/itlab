@@ -106,7 +106,7 @@ const items = [
     //   <TbPackages />
     // ),
     getItem(
-      <Link to={"/admin/crm"}>CRM</Link>,
+      <Link to={"/admin/crm"}>Sản phẩm doanh thu</Link>,
       "65",
       <FcIdea />
     ),

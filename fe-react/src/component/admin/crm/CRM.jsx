@@ -47,6 +47,7 @@ function CRM() {
         setIsFetching(false)
     }
 
+
     const onButtonPress = () => handleSendContext2GPT(cmr(profit))
 
 
@@ -66,7 +67,7 @@ function CRM() {
                 }
                 i++
             }
-        }, 1)
+        }, 3)
 
     }
     async function handleLayDoanhThu12Thang() {
@@ -110,18 +111,11 @@ function CRM() {
                             padding: "12px 12px"
                         }}>
                             <span ref={showContentSpan}></span>
-                            {true && <>
+                            {sussgest && <>
                                 <ModalTaoSuKien profit={profit} />
                                 -
                                 <DanhGiaTop10SanPham />
                             </>}
-                            {/* {sussgest && <>
-                                <ModalTaoSuKien profit={profit} />
-                                -
-                                <span onClick={() => {
-                                }} className="sussgest">  đánh giá những sản phẩm nên giảm giá theo doanh số bán ra</span>
-                            </>} */}
-
                         </Row>
                         <Row style={{
                             backgroundColor: "#ffffff",
