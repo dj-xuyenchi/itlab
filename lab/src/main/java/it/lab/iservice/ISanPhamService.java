@@ -95,4 +95,5 @@ public interface ISanPhamService {
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException;
 
     public SanPhamDTO laySanPhamById(Long sanPhamId);
+    public List<NhomSanPham> getAll();
 }

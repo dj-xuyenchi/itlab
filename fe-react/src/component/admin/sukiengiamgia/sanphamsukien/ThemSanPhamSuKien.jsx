@@ -10,6 +10,7 @@ import { Button, Image, Input, Space, Table, Tag } from "antd";
 import { useSanPhamStore } from "../../product/useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
 import ModalThem from "./ModalThem"
+import ModalThemNhom from "./ModalThemNhom"
 function ThemSanPhamSuKien() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();

@@ -6,25 +6,44 @@ import { selectLanguage } from "../../../../language/selectLanguage";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Image, Input, Space, Table, Tag } from "antd";
+import { Button, Image, Input, Space, Table, Tag, Col, Modal } from "antd";
 import { useSanPhamSuKienStore } from "./useSanPhamSuKienStore";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import axiosIns from "../../../../plugins/axios";
-import { Form, Modal, Row, Tooltip, notification } from "antd";
+import { Form, Row, Tooltip, notification } from "antd";
 import { Link } from "react-router-dom";
+import ModalThemNhom from "./ModalThemNhom";
+import ModalView from "./ModalThemNhom";
+import DungNhomSanPham from "./DungNhomSanPham";
+
 function Product() {
   const [sanPham, setSanPhamSuKien] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder={`Search maSanPham`}
+          placeholder={`Search ${dataIndex.join(".")}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{ width: 188, marginBottom: 8, display: "block" }}
         />
@@ -38,27 +57,35 @@ function Product() {
           >
             Search
           </Button>
-          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />,
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-      render: (text) =>
-      searchedColumn === dataIndex ? (
+      record[dataIndex[0]][dataIndex[1]]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    render: (text, record) =>
+      searchedColumn === dataIndex.join(".") ? (
         <Highlighter
           highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={(text && text.toString()) || ""}
+          textToHighlight={record[dataIndex[0]][dataIndex[1]].toString()}
         />
       ) : (
         text
       ),
-    
   });
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -73,10 +100,10 @@ function Product() {
   const columns = [
     {
       title: "Mã Sản Phẩm",
-      dataIndex: ["sanPham", "maSanPham"], 
+      dataIndex: ["sanPham", "maSanPham"],
       key: "maSanPham",
-      width: "20%",
-      //  ...getColumnSearchProps("sanPham", "maSanPham"),
+      width: "10%",
+      ...getColumnSearchProps(["sanPham", "maSanPham"]),
       render: (maSanPham) => (
         <>
           <Tag color="success"> {maSanPham}</Tag>
@@ -85,7 +112,7 @@ function Product() {
     },
     {
       title: "Hình Ảnh",
-      dataIndex: ["sanPham", "hinhAnh1"], 
+      dataIndex: ["sanPham", "hinhAnh1"],
       key: "hinhAnh",
       width: "20%",
       render: (hinhAnh) => (
@@ -94,10 +121,17 @@ function Product() {
     },
     {
       title: "Tên Sản Phẩm",
-      dataIndex: ["sanPham", "tenSanPham"], 
+      dataIndex: ["sanPham", "tenSanPham"],
       key: "tenSanPham",
       width: "20%",
       render: (tenSanPham) => <span>{tenSanPham}</span>,
+    },
+    {
+      title: "Nhóm Sản Phẩm",
+      dataIndex: ["sanPham", "nhomSanPham"],
+      key: "tenNhom",
+      width: "15%",
+      render: (nhomSanPham) => <span>{nhomSanPham}</span>,
     },
     {
       title: "Tên sự kiện",
@@ -109,25 +143,26 @@ function Product() {
       title: "Giá trị giảm",
       dataIndex: ["suKienGiamGia", "giaTriGiam"],
       key: "giaTriGiam",
-      width: "15%",
+      width: "5%",
+      render: (giaTriGiam) => <span>{giaTriGiam}%</span>,
     },
     {
       title: "Ngày Tạo",
       dataIndex: "ngayTao",
       key: "ngayTao",
-      width: "15%",
+      width: "20%",
     },
     {
       title: "Ngày Cập Nhật",
       dataIndex: "ngayCapNhat",
       key: "ngayCapNhat",
-      width: "15%",
+      width: "20%",
     },
     {
       title: "Trạng Thái",
       dataIndex: "trangThai",
       key: "trangThai",
-      width: "20%",
+      width: "15%",
     },
     {
       title: "Thao tác",
@@ -195,8 +230,10 @@ function Product() {
             maSanPham: item.sanPham?.maSanPham || "", // Sử dụng Optional Chaining (?.) để tránh lỗi nếu 'maSanPham' không tồn tại
             tenSanPham: item.sanPham?.tenSanPham || "", // Sử dụng Optional Chaining (?.) để tránh lỗi nếu 'maSanPham' không tồn tại
             hinhAnh1: item.sanPham?.hinhAnh1 || "", // Tương tự với 'hinhAnh1'
+            nhomSanPham: item.sanPham?.nhomSanPham.tenNhom || "",
             //Thêm các trường khác của 'sanPham' tương tự ở đây
           },
+
           suKienGiamGia: {
             tenSuKien: item.suKienGiamGia?.tenSuKien,
             giaTriGiam: item.suKienGiamGia?.giaTriGiam,
@@ -220,6 +257,36 @@ function Product() {
         <MenuAdmin />
         <div className="body-container">
           <div className="content">
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <Link to="/admin/sukiengiamgia/sanphamsukien/themsanphamsukien">
+                  <Button type="primary" block>
+                    Thêm Sản Phẩm Sự Kiện
+                  </Button>
+                </Link>
+              </Col>
+              <Col span={12}>
+                {<ModalThemNhom />}
+                {isModalVisible && (
+                  <ModalView setIsModalVisible={setIsModalVisible} />
+                )}
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col
+                span={24}
+                style={{ marginTop: "16px" }}
+                className="red-button"
+              >
+                {" "}
+                {/* Thêm margin-top */}
+                {<DungNhomSanPham />}
+                {isModalVisible && (
+                  <ModalView setIsModalVisible={setIsModalVisible} />
+                )}
+              </Col>
+            </Row>
+
             <div className="table-sanpham background-color">
               <Table
                 columns={columns}
@@ -229,9 +296,6 @@ function Product() {
                 }}
                 rowKey="id" // Sử dụng thuộc tính 'id' làm key cho mỗi hàng trong Table
               />
-              {/* <Link to="/themsanphamsukien">
-                <Button type="primary">Thêm Sản Phẩm Sự Kiện</Button>
-              </Link> */}
             </div>
           </div>
         </div>

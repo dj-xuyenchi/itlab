@@ -20,6 +20,7 @@ import { useSuKienGiamGiaStore } from "../useSuKienGiamGiaStore";
 import { useSelector } from "react-redux";
 import axiosIns from "../../../../plugins/axios"
 import { useSanPhamSuKienStore } from "./useSanPhamSuKienStore";
+import ModalThemNhom from "./ModalThemNhom"
 const { Option } = Select;
 function ModalView({ id }) {
     const language = useSelector(selectLanguage);

@@ -442,4 +442,9 @@ public class SanPhamService implements ISanPhamService {
     public SanPhamDTO laySanPhamById(Long sanPhamId) {
         return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());
     }
+
+    @Override
+    public List<NhomSanPham> getAll() {
+        return _nhomSanPhamRepo.findAll();
+    }
 }
