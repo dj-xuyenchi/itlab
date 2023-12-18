@@ -63,20 +63,20 @@ public class ThongKeController {
         // Lấy thời điểm hiện tại
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1); // Lấy thời điểm hiện tại và trừ đi 1 tháng
 
-        //thong ke tong so luong bị lỗi
-        Long TongSoLuongLoi = sanPhamRepo.sumSoluongloi();
-        result.put("TongSoLuongLoi", TongSoLuongLoi);
-
-        //thống kê sản phẩm bán được
-        Integer soLuongBanDuoc = repositoryHDCT.getTongSoLuongBanDuoc();
-        result.put("soLuongBanDuoc", soLuongBanDuoc);
-
-        //thống kê cửa hàng có bao nhiêu nhân viên
         Long tongSoLuongNhanVien = quyenNguoiDungRepo.tongSoNhanVien();
         result.put("tongSoLuongNhanVien", tongSoLuongNhanVien);
 
+        Long tongSoLuongKhachHang = quyenNguoiDungRepo.tongSoKhachHang();
+        result.put("tongSoLuongKhachHang", tongSoLuongKhachHang);
+
+        Long tongSoLuongAdmin = quyenNguoiDungRepo.tongSoAdmin();
+        result.put("tongSoLuongAdmin", tongSoLuongAdmin);
+
+        Long tongSoLuongCRM = quyenNguoiDungRepo.tongSoCRM();
+        result.put("tongSoLuongCRM", tongSoLuongCRM);
+
         // Thống kê tài khoản mới trong 1 tháng
-        Long taiKhoanMoiThang = repositoryNguoiDung.countTaiKhoanMoiTrongThang(oneMonthAgo);
+        Long taiKhoanMoiThang = quyenNguoiDungRepo.countTaiKhoanMoiTrongThang123(oneMonthAgo);
         result.put("taiKhoanMoiThang", taiKhoanMoiThang);
 
         return result;
@@ -214,6 +214,49 @@ public class ThongKeController {
         List<Object[]> topSellingProducts = repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
         return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/san-pham-ban-chay1")
+    public ResponseEntity<?> getSanPhamBanChayTrongThang(
+            @RequestParam(name = "selectedMonth", required = false) Integer selectedMonth,
+            @RequestParam(name = "selectedYear", required = false) Integer selectedYear) {
+
+        // If selectedMonth or selectedYear is not provided, use the current month and year
+        if (selectedMonth == null) {
+            selectedMonth = LocalDate.now().getMonthValue();
+        }
+
+        if (selectedYear == null) {
+            selectedYear = LocalDate.now().getYear();
+        }
+
+        List<Object[]> topSellingProducts = repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
+        return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/thong-ke-san-pham-tron")
+    public Map<String, Object> layDuLieuBanDoTron() {
+        Map<String, Object> result = new HashMap<>();
+
+        //thong ke tong so luong bị lỗi
+        Long TongSoLuongLoi = sanPhamRepo.sumSoluongloi();
+        result.put("TongSoLuongLoi", TongSoLuongLoi);
+
+        Long TongSoLuongTraHang = sanPhamRepo.sumSoTraHang();
+        result.put("TongSoLuongTraHang", TongSoLuongTraHang);
+
+        //thống kê sản phẩm bán được
+        Integer soLuongBanDuoc = repositoryHDCT.getTongSoLuongBanDuoc();
+        result.put("soLuongBanDuoc", soLuongBanDuoc);
+
+        //thống kê cửa hàng có bao nhiêu nhân viên
+
+
+
+
+        return result;
     }
 
 }

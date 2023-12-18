@@ -23,8 +23,8 @@ public interface ThongKeHDCTRepository extends JpaRepository<HoaDonChiTiet,Integ
     BigDecimal tinhTongDoanhThuNamSauKhiTruChiPhi(@Param("yearParam") int year, @Param("monthParam") int month);
 
 
-    //thông kê sản phẩm bán chạy nhất tháng
-    @Query("SELECT c.id AS idCTSP, c.sanPham.tenSanPham, CONVERT(VARCHAR(100), c.hinhAnh) AS image, SUM(a.soLuong) AS tongSoLuong " +
+//    thông kê sản phẩm bán chạy nhất tháng
+    @Query("SELECT c.id AS idCTSP, c.sanPham.tenSanPham, CONVERT(VARCHAR(100), c.hinhAnh) AS image, SUM(a.soLuong) AS tongSoLuong,c.sanPham.giaNhap,c.sanPham.giaBan " +
             "FROM HoaDonChiTiet a " +
             "JOIN  a.hoaDon  b " +
             "JOIN a.sanPhamChiTiet c " +
@@ -32,7 +32,9 @@ public interface ThongKeHDCTRepository extends JpaRepository<HoaDonChiTiet,Integ
             "AND YEAR(b.ngayTao) = :selectedYear " +
             "GROUP BY c.id, CONVERT(VARCHAR(100), c.hinhAnh), c.sanPham " +
             "ORDER BY SUM(a.soLuong) DESC")
-    List<Object[]> SanPhamBanChayTrongThang(@Param("selectedMonth") int selectedMonth, @Param("selectedYear") int selectedYear);
+    List<Object[]> SanPhamBanChayTrongThang(@Param("selectedMonth") int selectedMonth, @Param("selectedYear") int selectedYear);//thông kê sản phẩm bán chạy nhất tháng
+
+
     //thông kê sản phẩm bán chạy nhất tháng
     @Query("SELECT c.id AS idCTSP, c.sanPham.tenSanPham, CONVERT(VARCHAR(100), c.hinhAnh) AS image, SUM(a.soLuong) AS tongSoLuong " +
             "FROM HoaDonChiTiet a " +

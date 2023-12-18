@@ -29,6 +29,10 @@ import SuKienGiamGia from "./component/admin/sukiengiamgia/SuKienGiamGia";
 import NguoiDung from "./component/admin/nguoidung/NguoiDung";
 import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
 import CRM from "./component/admin/crm/CRM";
+import Voucher from "./component/admin/voucher/Voucher";
+
+
+
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -57,7 +61,7 @@ function App() {
   return (
     <>
       <Routes>
-
+        <Route path="/admin/voucher" element={<Voucher />} />
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
@@ -77,6 +81,7 @@ function App() {
         <Route path="/admin/sukiengiamgia" element={<SuKienGiamGia />} />
         <Route path="/admin/nguoidung" element={<NguoiDung />} />
         <Route path="/admin/sukiengiamgia/sanphamsukien" element={<SanPhamSuKien />} />
+
         <Route path="/admin/crm" element={<CRM />} />
         <Route
           path="/admin/sanpham/sanphamchitiet"

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { useEffect, useRef, useState } from "react";
 
-function BanhDonut() {
+function BanhDonut2() {
     const language = useSelector(selectLanguage);
     const chartRef = useRef(null);
     const [chartData, setChartData] = useState(null);
@@ -13,7 +13,7 @@ function BanhDonut() {
     useEffect(() => {
         const fetchDataAndInitializeChart = async () => {
             try {
-                const response = await axios.get("http://localhost:8089/api/thong-ke/thong-ke-thuoc-tinh");
+                const response = await axios.get("http://localhost:8089/api/thong-ke/thong-ke-san-pham-tron");
                 const data = response.data;
                 setChartData(data);
 
@@ -54,12 +54,10 @@ function BanhDonut() {
                                 show: false
                             },
                             data: [
-                                { value: data.taiKhoanMoiThang, name: 'Tài Khoản Mới Trong Tháng' },
-                                { value: data.tongSoLuongCRM, name: 'Số Lượng CRM' },
-                                { value: data.tongSoLuongNhanVien, name: 'Tổng Số Lượng Nhân Viên' },
-                                { value: data.tongSoLuongKhachHang, name: 'Tổng Số Lượng Khách Hàng' },
-                                { value: data.tongSoLuongAdmin, name: 'Tổng Số Lượng Admin' },
-
+                                { value: data.TongSoLuongLoi, name: 'Tổng Số Lượng Lỗi' },
+                                { value: data.soLuongBanDuoc, name: 'Số Lượng Bán Được' },
+                                { value: data.TongSoLuongTraHang, name: 'Tổng Số Lượng Trả Hàng' },
+                                // { value: data.TongSoLuongLoi, name: 'Tổng Số Lượng Lỗi' },
                             ]
                         }
                     ]
@@ -84,4 +82,4 @@ function BanhDonut() {
     );
 }
 
-export default BanhDonut;
+export default BanhDonut2;

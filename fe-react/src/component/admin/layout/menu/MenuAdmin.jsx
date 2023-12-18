@@ -105,6 +105,11 @@ const items = [
       "65",
       <FcIdea />
     ),
+    getItem(
+      <Link to={"/admin/voucher"}>Voucher</Link>,
+      "68",
+      <BsPercent />
+    ),
   ]),
 ];
 

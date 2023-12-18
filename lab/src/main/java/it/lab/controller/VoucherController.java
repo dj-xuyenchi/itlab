@@ -1,129 +1,97 @@
 package it.lab.controller;
+//import java.util.UUID;
+import java.util.List;
+import java.util.Random;
 
 import it.lab.entity.Voucher;
+import it.lab.enums.LoaiGiam;
 import it.lab.enums.TrangThaiVoucher;
+
+import it.lab.repository.NguoiDungRepo;
 import it.lab.repository.VoucherRepo;
-import it.lab.service.VoucherNguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.data.domain.Pageable;
-
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/voucher")
 public class VoucherController {
+    @Autowired
+    VoucherRepo voucherRepo;
 
     @Autowired
-    private VoucherRepo voucherRepository;
-
-    @Autowired
-    private VoucherNguoiDungService voucherNguoiDungService;
-
-    @GetMapping
-    public Page<Voucher> getAllVouchers(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "8") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return voucherRepository.findAll(pageable);
+    NguoiDungRepo nguoiDungRepo;
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ResponseEntity<?> layDuLieu() throws IOException {
+        return ResponseEntity.ok(voucherRepo.findAll());
     }
-
-//tìm kiếm theo tên
-
-    @GetMapping("/search")
-    public Page<Voucher> searchVouchersByTenVoucherPaged(@RequestParam(required = false, name = "tenVoucher") String tenVoucher,
-                                                         @RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return voucherRepository.searchByTenPage(tenVoucher, pageable);
-    }
+//
 
 
-    //them mới voucher
-    @PostMapping(value = "/add")
-    public Voucher createVoucher(@RequestBody Voucher voucher) {
+    @PostMapping(value = "/addVoucher")
+    public Voucher create(@RequestBody Voucher voucher) {
         if (voucher.getTrangThai() == null) {
             voucher.setTrangThai(TrangThaiVoucher.DIENRA);
+        }if (voucher.getLoaiGiam().equals(LoaiGiam.GIAMTHANG) ){
+            voucher.setLoaiGiam(LoaiGiam.GIAMTHANG);
+        }else {
+            voucher.setLoaiGiam(LoaiGiam.PHANTRAM);
         }
-        // Đặt giá trị cho trường ngayTao là thời điểm hiện tại
+        // Tạo một chuỗi random từ các ký tự số, chữ cái và ký tự đặc biệt
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder randomPart = new StringBuilder();
+        Random random = new Random();
+        int length = 8 + random.nextInt(3);  // Độ dài từ 8 đến 10 ký tự
+        for (int i = 0; i < length; i++) {
+            randomPart.append(characters.charAt(random.nextInt(characters.length())));
+        }
+
+        // Kết hợp với chuỗi thông thường
+        voucher.setMaVoucher( randomPart.toString());
+
+//        voucher.setMaVoucher("V" + System.currentTimeMillis());
+//        voucher.setMaVoucher(UUID.randomUUID().toString());
         voucher.setNgayTao(LocalDate.now());
-        return voucherRepository.save(voucher);
+        return voucherRepo.save(voucher);
     }
-
-
-    //put voucher
     @PutMapping("/{id}")
-    public ResponseEntity<Voucher> updateVoucher(@PathVariable Long id, @RequestBody Voucher updatedVoucher) {
-        Optional<Voucher> existingVoucherOptional = voucherRepository.findById(id);
+    public ResponseEntity<Voucher> update( @RequestBody Voucher newVoucher,@PathVariable Long id) {
+        Optional<Voucher> OV = voucherRepo.findById(id);
+        if (OV.isPresent()) {
+            Voucher oldVoucher = OV.get();
+            oldVoucher.setLoaiGiam(newVoucher.getLoaiGiam());
+            oldVoucher.setGiaTriGiam(newVoucher.getGiaTriGiam());
+            oldVoucher.setMaVoucher(newVoucher.getMaVoucher());
+            oldVoucher.setSoLuong(newVoucher.getSoLuong());
+            oldVoucher.setTenVoucher(newVoucher.getTenVoucher());
+            oldVoucher.setNgayCapNhat(LocalDate.now());
+            voucherRepo.save(oldVoucher);
 
-        if (existingVoucherOptional.isPresent()) {
-            Voucher existingVoucher = existingVoucherOptional.get();
-
-            // Cập nhật các trường cần thiết của Voucher
-            existingVoucher.setTenVoucher(updatedVoucher.getTenVoucher());
-            existingVoucher.setTrangThai(updatedVoucher.getTrangThai());
-            existingVoucher.setNgayCapNhat(LocalDate.now());
-            // Cập nhật trong cơ sở dữ liệu
-            voucherRepository.save(existingVoucher);
-
-            return new ResponseEntity<>(existingVoucher, HttpStatus.OK);
+            return new ResponseEntity<>(oldVoucher, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
+    }@PatchMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Optional<Voucher> voucher = voucherRepo.findById(id);
 
-
-    //    @PatchMapping("/ap-dung/{id}")
-//    public ResponseEntity<?> updateVoucherTrangThaiApDungHoatDong(@PathVariable Long id) {
-//        Optional<Voucher> existingVoucherOptional = voucherRepository.findById(id);
-//
-//        if (existingVoucherOptional.isPresent()) {
-//            Voucher existingVoucher = existingVoucherOptional.get();
-//
-//            // Kiểm tra xem trạng thái hiện tại có phải là CHUADIENRA hoặc APDUNG không
-//            if (existingVoucher.getTrangThai() == TrangThaiVoucher.CHUADIENRA || existingVoucher.getTrangThai() == TrangThaiVoucher.NGUNG) {
-//                // Cập nhật trạng thái thành NGUNGHOATDONG
-//                existingVoucher.setTrangThai(TrangThaiVoucher.APDUNG);
-//
-//                // Lưu cập nhật vào cơ sở dữ liệu
-//                voucherRepository.save(existingVoucher);
-//
-//                return new ResponseEntity<>(existingVoucher, HttpStatus.OK);
-//            } else {
-//                return new ResponseEntity<>("Không thể ngưng hoạt động cho voucher có trạng thái hiện tại.", HttpStatus.BAD_REQUEST);
-//            }
-//        } else {
-//            return new ResponseEntity<>("Voucher not found", HttpStatus.NOT_FOUND);
-//        }
-//    }
-    @PatchMapping("/ngung/{id}")
-    public ResponseEntity<?> updateVoucherTrangThaiNgungHoatDong(@PathVariable Long id) {
-        Optional<Voucher> existingVoucherOptional = voucherRepository.findById(id);
-
-        if (existingVoucherOptional.isPresent()) {
-            Voucher existingVoucher = existingVoucherOptional.get();
-
-            // Kiểm tra xem trạng thái hiện tại có phải là CHUADIENRA hoặc APDUNG không
-            if (existingVoucher.getTrangThai() == TrangThaiVoucher.DIENRA) {
-                // Cập nhật trạng thái thành NGUNGHOATDONG
+        if (voucher.isPresent()) {
+            Voucher existingVoucher = voucher.get();
+            if (  existingVoucher.getTrangThai() == TrangThaiVoucher.DIENRA ) {
                 existingVoucher.setTrangThai(TrangThaiVoucher.NGUNG);
-
-                // Lưu cập nhật vào cơ sở dữ liệu
-                voucherRepository.save(existingVoucher);
+                voucherRepo.save(existingVoucher);
 
                 return new ResponseEntity<>(existingVoucher, HttpStatus.OK);
             } else {
+                existingVoucher.setTrangThai(TrangThaiVoucher.DIENRA);
+                voucherRepo.save(existingVoucher);
                 return new ResponseEntity<>(existingVoucher, HttpStatus.OK);
             }
         } else {
@@ -131,34 +99,9 @@ public class VoucherController {
         }
     }
 
-    //them voucher
-    @PostMapping("/themVoucherChoNguoiDung")
-    public ResponseEntity<String> themVoucherChoNguoiDung(@RequestParam Long nguoiDungId, @RequestParam Long voucherId) {
-        try {
-            // Call the service method
-            voucherNguoiDungService.themVoucherChoNguoiDung(nguoiDungId, voucherId);
-
-            // If successful, return a success response
-            return new ResponseEntity<>("Voucher đã được thêm cho người dùng thành công.", HttpStatus.OK);
-
-        } catch (VoucherNguoiDungService.VoucherOutOfStockException e) {
-            // Return a bad request response with the specific message
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            // If it's another exception, return an internal server error response
-            return new ResponseEntity<>("Đã xảy ra lỗi: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-
-
+//    @GetMapping("/searchByName")
+//    public List<Voucher> searchByName(@RequestParam String tenVoucher) {
+//        return IvoucherService.searchByName(tenVoucher);
+//    }
 }
-
-
-
-
-
-
-
 
