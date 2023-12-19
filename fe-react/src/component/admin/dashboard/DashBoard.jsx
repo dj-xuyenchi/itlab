@@ -7,7 +7,7 @@ import BanhDonut from "./chart/BanhDonut";
 import BanhDonut2 from "./chart/BanhDonut2";
 import NgayThang from "./chart/NgayThang";
 // import React, { useRef, useState } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Input, Space, Table } from 'antd';
 import axios from 'axios';
 import { } from '@ant-design/icons';
@@ -15,39 +15,48 @@ import { } from '@ant-design/icons';
 function DashBoard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [selectedFilters, setSelectedFilters] = useState([]);
+
+
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 6, // Adjust as needed
   });
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('http://localhost:8089/api/thong-ke/san-pham-ban-chay1');
-      console.log('API Response:', response.data);
+  // ... (previous code)
 
-      // Assuming response.data is an array of arrays
-      setData(response.data.map(item => ({
-        idCTSP: item[0],
-        tenSanPham: item[1],
-        image: item[2],
-        tongSoLuong: item[3],
-        giaNhap: item[4],
-        giaBan: item[5],
+const fetchData = useCallback(async () => {
+  try {
+    const filterParams = selectedFilters.length > 0 ? `?filters=${selectedFilters.join(',')}` : '';
+    const response = await axios.get(`http://localhost:8089/api/thong-ke/san-pham-ban-chay1${filterParams}`);
+    console.log('API Response:', response.data);
 
+    // Assuming response.data is an array of arrays
+    setData(response.data.map(item => ({
+      idCTSP: item[0],
+      tenSanPham: item[1],
+      image: item[2],
+      tongSoLuong: item[3],
+      giaNhap: item[4],
+      giaBan: item[5],
+      // Add more properties as needed
+    })));
 
-        // Add more properties as needed
-      })));
+    setLoading(false);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    setLoading(false);
+  }
+},);
 
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
-    }
-  };
+useEffect(() => {
+  fetchData();
+}, [pagination, selectedFilters, fetchData]);
 
-  useEffect(() => {
-    fetchData();
-  }, [pagination]);
+// ... (rest of the code)
+
+  
 
   const handleTableChange = (pagination, filters, sorter) => {
     // Handle other table change events if needed (filters, sorter)
@@ -89,6 +98,8 @@ function DashBoard() {
       key: 'giaBan',
     },
   ];
+  // 
+  
 
 
   return (
@@ -102,7 +113,6 @@ function DashBoard() {
               backgroundColor: "#ffffff",
               padding: "12px 12px"
             }}>
-
               <ThongKeBar />
             </Row>
             <Row style={{
@@ -123,6 +133,9 @@ function DashBoard() {
                 <BanhDonut2 />
               </div>
             </Row>
+
+
+
             <div style={{
               marginTop: "12px",
               width: "100%",
@@ -133,7 +146,8 @@ function DashBoard() {
                 marginBottom: "10px"
               }}>
                 <Col span={12}>
-                  <Space
+
+                  {/* <Space
                     style={{
                       width: '100%',
                     }}
@@ -151,7 +165,19 @@ function DashBoard() {
                     // onChange={handleChange}
                     // options={options}
                     />
-                  </Space>
+                  </Space> */}
+                  <Select
+                    mode="multiple"
+                    size="large"
+                    allowClear
+                    style={{ width: '400px' }}
+                    placeholder="Cài đặt hiển thị"
+                    value={selectedFilters}
+                    onChange={value => setSelectedFilters(value)}
+                  />
+
+
+
                 </Col>
                 <Col span={2}></Col>
                 <Col span={10}>
@@ -174,6 +200,7 @@ function DashBoard() {
               </Row>
 
 
+
               <div>
                 <div>
                   <div style={{ marginTop: '12px', width: '100%', backgroundColor: '#ffffff', padding: '12px 12px' }}>
@@ -194,8 +221,8 @@ function DashBoard() {
                 </div>
               </div>
 
-         
-                      <NgayThang/>
+              <NgayThang />
+
 
             </div>
           </div>

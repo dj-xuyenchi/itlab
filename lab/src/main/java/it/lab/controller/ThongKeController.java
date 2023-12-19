@@ -1,4 +1,5 @@
 package it.lab.controller;
+import java.text.DecimalFormat;
 
 import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,14 +144,6 @@ public class ThongKeController {
     }
 
 
-//    @GetMapping("/tong-khoang-ngay")
-//    public BigDecimal tinhTongDoanhThuTrongKhoangNgay(
-//            @RequestParam(value = "selectedDateStart") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateStart,
-//            @RequestParam(value = "selectedDateEnd") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateEnd) {
-//
-//        return repositoryThongKe.tinhTongDoanhThuTrongKhoangNgay(selectedDateStart, selectedDateEnd);
-//    }
-
 
     // thong ke 12 thang bang bieu do doanh thu tung thang-yyyy
     @GetMapping("/bieu-do")
@@ -252,11 +245,65 @@ public class ThongKeController {
         result.put("soLuongBanDuoc", soLuongBanDuoc);
 
         //thống kê cửa hàng có bao nhiêu nhân viên
-
-
-
-
         return result;
+    }
+
+
+    @GetMapping("/doanh-thu-ngay1")
+    public BigDecimal tinhTongDoanhThuTrongNgay1(
+            @RequestParam(value = "selectedDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate selectedDate) {
+
+        // Nếu ngày không được truyền, sử dụng ngày hôm nay
+        if (selectedDate == null) {
+            selectedDate = LocalDate.now();
+        }
+
+        // Gọi phương thức xử lý doanh thu với ngày đã chọn hoặc ngày hôm nay
+        return repositoryThongKe.tinhTongDoanhThuTrongNgay(selectedDate);
+    }
+//
+//    @GetMapping("/tong-doanh-thu-trong-thang1")
+//    public String tinhTongDoanhThuTrongThang1(
+//            @RequestParam(value = "selectedDate", required = false)
+//            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) YearMonth selectedYearMonth) {
+//
+//        // Nếu tháng không được truyền, sử dụng tháng hiện tại
+//        if (selectedYearMonth == null) {
+//            selectedYearMonth = YearMonth.now();
+//        }
+//
+//        // Chuyển đổi YearMonth sang Date (chọn ngày đầu tháng)
+//        LocalDate firstDayOfMonth = selectedYearMonth.atDay(1);
+//        Date selectedDate = java.sql.Date.valueOf(firstDayOfMonth);
+//
+//        // Gọi phương thức xử lý doanh thu với tháng đã chọn hoặc tháng hiện tại
+//        BigDecimal totalRevenue = repositoryThongKe.tinhTongDoanhThuTrongThang(selectedDate);
+//
+//        // Sử dụng DecimalFormat để định dạng số
+//        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//        String formattedValue = decimalFormat.format(totalRevenue);
+//
+//        return formattedValue;
+//    }
+
+
+    @GetMapping("/tong-doanh-thu-trong-thang1")
+    public BigDecimal tinhTongDoanhThuTrongThang1(
+            @RequestParam(value = "selectedDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) YearMonth selectedYearMonth) {
+
+        // Nếu tháng không được truyền, sử dụng tháng hiện tại
+        if (selectedYearMonth == null) {
+            selectedYearMonth = YearMonth.now();
+        }
+
+        // Chuyển đổi YearMonth sang Date (chọn ngày đầu tháng)
+        LocalDate firstDayOfMonth = selectedYearMonth.atDay(1);
+        Date selectedDate = java.sql.Date.valueOf(firstDayOfMonth);
+
+        // Gọi phương thức xử lý doanh thu với tháng đã chọn hoặc tháng hiện tại
+        return repositoryThongKe.tinhTongDoanhThuTrongThang(selectedDate);
     }
 
 }

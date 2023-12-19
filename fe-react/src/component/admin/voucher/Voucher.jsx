@@ -152,6 +152,19 @@ export default function Voucher() {
                 </span>
             )
         },
+        {
+            title: 'Ngày Kết Thúc ',
+            dataIndex: 'ngayKetThuc',
+            key: 'ngayKetThuc',
+            ...getColumnSearchProps('ngayKetThuc'),
+            render: (ngayKetThuc) => (
+                <span >
+
+                    {moment(ngayKetThuc).format('DD/MM/YYYY')}
+
+                </span>
+            )
+        },
         // {
         //     title: 'Ngày hết hạn',
         //     dataIndex: 'ngayhethan',

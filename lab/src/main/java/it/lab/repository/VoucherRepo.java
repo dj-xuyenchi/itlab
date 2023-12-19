@@ -8,12 +8,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface VoucherRepo extends JpaRepository<Voucher, Long> {
 
     Voucher findVoucherById(Long id);
+
+    @Query("SELECT v FROM Voucher v WHERE v.ngayKetThuc < :currentDateTime")
+    List<Voucher> findVouchersWithEndDateAfter(@Param("currentDateTime") LocalDateTime currentDateTime);
 
 
     @Query("SELECT ctsp FROM Voucher ctsp WHERE ctsp.tenVoucher LIKE %:tenVoucher%")
