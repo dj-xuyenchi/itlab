@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Input, Table, Button, message, Tag, Space } from 'antd';
+import {  Table, Button, message, Tag, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+
+
 
 import axios from 'axios';
 import moment from 'moment';
@@ -10,7 +12,6 @@ import ModalA from './ModalA';
 import MenuAdmin from '../layout/menu/MenuAdmin';
 import Header from '../layout/header/Header';
 
-const { Search } = Input;
 
 export default function Voucher() {
     const searchInput = useRef(null);
@@ -43,7 +44,7 @@ export default function Voucher() {
             clearFilters,
         }) => (
             <div style={{ padding: 8 }}>
-                <Search
+                {/* <Search
                     ref={searchInput}
                     placeholder={`Search ${dataIndex}`}
                     value={selectedKeys[0]}
@@ -54,7 +55,7 @@ export default function Voucher() {
                         handleSearch(selectedKeys, confirm, dataIndex)
                     }
                     style={{ width: 188, marginBottom: 8, display: 'block' }}
-                />
+                /> */}
                 <Space>
                     <Button
                         type="primary"
@@ -165,19 +166,7 @@ export default function Voucher() {
                 </span>
             )
         },
-        // {
-        //     title: 'Ngày hết hạn',
-        //     dataIndex: 'ngayhethan',
-        //     key: 'ngayhethan',
-        //     render: (ngayhethan) => (
-        //         <span style={{ backgroundColor: 'yellow', fontWeight: 'bold' }}>
-
-        //             {moment(ngayhethan).format('DD/MM/YYYY')}
-
-        //         </span>
-
-        //     ),
-        // },
+        
         {
             title: "Ngày cập nhật",
             dataIndex: "ngayCapNhat",
@@ -244,6 +233,8 @@ export default function Voucher() {
         <div>
             <Header />
             <MenuAdmin />
+
+
             <div className="body-container">
                 <div className="button"
                     style={{

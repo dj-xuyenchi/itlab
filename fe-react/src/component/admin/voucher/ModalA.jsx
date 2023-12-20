@@ -9,6 +9,7 @@ import {
     Tooltip,
     notification,
 } from "antd";
+import { DatePicker } from 'antd';
 
 import React, { useState } from "react";
 const { Option } = Select;
@@ -17,6 +18,18 @@ function ModalA({ onActionSuccess }) {
     const [loaiGiam, setLoaiGiam] = useState('')
     const [giaTriGiam, setGiaTriGiam] = useState('')
     const [soLuong, setSoLuong] = useState('')
+    const [ngayKetThuc, setNgayKetThuc] = useState('')
+
+
+
+    const handleDateChange = (date) => {
+        // Format the date string to include the time component (00:00:00)
+        const formattedDate = `${date.toISOString().split('T')[0]}T00:00:00`;
+    
+        // Now you can use formattedDate when sending the data to the server
+        setNgayKetThuc(formattedDate);
+      };
+
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -55,7 +68,7 @@ function ModalA({ onActionSuccess }) {
 
         }
 
-        const voucher = { tenVoucher, loaiGiam, giaTriGiam, soLuong }
+        const voucher = { tenVoucher, loaiGiam, giaTriGiam, soLuong, ngayKetThuc }
 
         fetch("http://localhost:8089/api/voucher/addVoucher", {
             method: "POST",
@@ -207,6 +220,27 @@ function ModalA({ onActionSuccess }) {
                             />
                         </Form.Item>
 
+
+                        {/*  */}
+                        <Form.Item
+                            label="Ngày KT"
+                            name="Ngày KT"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select a date',
+                                },
+                            ]}
+                        >
+                                  <DatePicker value={ngayKetThuc} onChange={handleDateChange} />
+
+
+
+                        </Form.Item>
+
+
+
+
                         <Form.Item label=" ">
                             <Button
                                 type="primary"
@@ -217,6 +251,7 @@ function ModalA({ onActionSuccess }) {
                                 Thêm
                             </Button>
                         </Form.Item>
+
                     </Form>
                 </Modal>
             </div>

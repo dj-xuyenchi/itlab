@@ -99,9 +99,9 @@ public class VoucherController {
         }
     }
 
-//    @GetMapping("/searchByName")
-//    public List<Voucher> searchByName(@RequestParam String tenVoucher) {
-//        return IvoucherService.searchByName(tenVoucher);
-//    }
+    @GetMapping("/searchByName")
+    public List<Voucher> searchByName(@RequestParam String tenVoucher) {
+        return voucherRepo.searchByTen(tenVoucher);
+    }
 }
 

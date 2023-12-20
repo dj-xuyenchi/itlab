@@ -94,7 +94,7 @@ function ThongKeBar({ title = "Tên biểu đồ", subTitle = "fake-data" }) {
 
     return (
         <div>
-            <div ref={chartRef} style={{ width: '1200px', height: '400px' }} />
+            <div ref={chartRef} style={{ width: '1100px', height: '400px' }} />
         </div>
     );
 }
