@@ -13,6 +13,7 @@ import { Button, Input, Space, Table } from 'antd';
 import { } from '@ant-design/icons';
 import { TbSettingsSearch } from 'react-icons/tb';
 import { useDashBoardStore } from "./useDashBoardStore";
+import BanhDonut2 from "./chart/BanhDonut2";
 const data = [
   {
     key: '1',
@@ -331,7 +332,7 @@ function DashBoard() {
                 marginLeft: "2%", backgroundColor: "#ffffff"
               }}>
 
-                <BanhDonut />
+                <BanhDonut2 />
               </div>
             </Row>
             <div style={{
@@ -393,7 +394,11 @@ function DashBoard() {
                   </Space>
                 </Col>
               </Row>
-              <Table pagination={{ position: ['bottomCenter'] }} columns={columns} dataSource={data} />
+              <Table pagination={{ position: ['bottomCenter'] }} columns={columns} dataSource={[
+                {
+                  name: "QA"
+                }
+              ]} />
             </div>
           </div>
         </div>
@@ -403,3 +408,4 @@ function DashBoard() {
 }
 
 export default DashBoard;
+

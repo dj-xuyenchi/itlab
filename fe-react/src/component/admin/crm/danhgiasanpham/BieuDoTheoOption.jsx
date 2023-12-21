@@ -71,9 +71,6 @@ function BieuDoTheoOption({ title = "Tên biểu đồ", data }) {
                         }}>số lượng đã bán:</span> {item.soLuong} cái</li>
                     })}
                 </ul>
-                <Col span={24}>
-                    <a href="">tải xuống báo cáo excel.</a>
-                </Col>
             </Row>
         </>
     );
