@@ -57,6 +57,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     giaBan: 0,
     giaNhap: 0,
     soLuongTon: 0,
+    moTa: "",
   });
   const [fileList, setFileList] = useState([]);
   const [hinhAnh, setHinhAnh] = useState([]);
@@ -79,10 +80,10 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       giaNhap: e,
     });
   }
-  function handleSetMoTa(e, e1) {
+  function handleSetMoTa(e) {
     setSanPham({
       ...sanPham,
-      moTa: e1.getData(),
+      moTa: e.target.value,
     });
   }
   function handleSetSoLuong(e) {
@@ -404,22 +405,10 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               onChange={handleSetSoLuong}
             />
           </Form.Item> */}
-          <Form.Item label="Thông tin chi tiết"
-
-          >
-            <CKEditor
-              editor={ClassicEditor}
-              data={sanPham.moTa ? sanPham.moTa : ""}
-              onReady={editor => {
-                // You can store the "editor" and use when it is needed.
-              }}
-              onChange={handleSetMoTa}
-              onBlur={(event, editor) => {
-              }}
-              onFocus={(event, editor) => {
-              }}
-            />
+          <Form.Item label="Thông tin chi tiết">
+            <Input value={sanPham.moTa} onChange={handleSetMoTa} />
           </Form.Item>
+          
           <Form.Item label="Upload">
             <Upload
               listType="picture-card"

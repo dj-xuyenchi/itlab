@@ -57,10 +57,8 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
         nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
-        nguoiDung.setDiem(nguoiDungRequest.getDiem());
         nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
         nguoiDung.setTrangThai(nguoiDungRequest.getTrangThai());
-//        nguoiDung.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
         nguoiDung.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDung);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
@@ -95,10 +93,8 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setNgayTao(LocalDateTime.now());
         nguoiDung.setTen(nguoiDungRequest.getTen());
         nguoiDung.setHo(nguoiDungRequest.getHo());
-        nguoiDung.setDiem(nguoiDungRequest.getDiem());
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
         nguoiDung.setMatKhau(nguoiDungRequest.getMatKhau());
-        nguoiDung.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
         nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
         nguoiDung.setTrangThai(TrangThaiNguoiDung.HOATDONG);
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());

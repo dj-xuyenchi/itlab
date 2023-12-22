@@ -120,16 +120,6 @@ function ModalView({ id }) {
             <Input disabled value={nguoiDung.email} />
           </Form.Item>
           <Form.Item
-            label="Mật Khẩu"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={nguoiDung.matKhau} />
-          </Form.Item>
-          <Form.Item
             label="Trạng Thái"
             rules={[
               {
@@ -139,29 +129,6 @@ function ModalView({ id }) {
           >
              <Input disabled value={nguoiDung.trangThai === "HOATDONG" ? "Hoạt Động" : nguoiDung.trangThai === "BIKHOA" ? "Bị Khóa" : ""}/>
           </Form.Item>  
-          <Form.Item
-            label="Rank Khách Hàng"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input
-              disabled
-              value={nguoiDung.rankKhachHang ? nguoiDung.rankKhachHang.tenRank : ''}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Điểm"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={nguoiDung.diem} />
-          </Form.Item>
           <Form.Item
             label="Giới Tính"
             rules={[

@@ -318,29 +318,6 @@ function ModalThemSua({ id, setData }) {
             </Radio.Group>
           </Form.Item>
 
-          {/* <Form.Item
-                    label="Rank Khách Hàng"
-                    name="rankKhachHang"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng chọn rank khách hàng!'
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Chọn rank khách hàng"
-                      onChange={(value) => setNguoiDung({...nguoiDung, rankKhachHang: { id: value }})}
-                      value={nguoiDung.rankKhachHang?.id || null}
-                    >
-                    {rankKhachHang && rankKhachHang.map((rank) => (
-                      <Select.Option key={rank.id} value={rank.id}>
-                        {rank.tenRank}
-                      </Select.Option>
-                    ))}
-                    </Select>
-                  </Form.Item> */}
-
         </Form>
       </Modal>
     </>

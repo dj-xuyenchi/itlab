@@ -530,47 +530,6 @@ const props = {
                     </Radio.Group>
                   </Form.Item>
 
-                  <Form.Item
-                    label="Điểm"
-                    name="Điểm"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          diem: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.diem}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Rank khách hàng"
-                    name="rankKhachHang"
-                    rules={[{ required: true, message: 'Vui lòng chọn rank khách hàng!' }]}
-                    initialValue={undefined}
-                  >
-                    <Select
-                      labelInValue
-                      optionLabelProp="children"
-                      placeholder="Chọn rank khách hàng"
-                      style={{ width: "100%" }}
-                      onChange={handleSetRankKhachHang}
-                    >
-                      {rankKhachHang && rankKhachHang.map((option) => (
-                        <Select.Option key={option.id} value={option.id}>
-                          {option.tenRank}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-
-
                   <Form.Item label=" ">
                     <Button
                       type="primary"

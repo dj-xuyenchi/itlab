@@ -131,7 +131,6 @@ public class SanPhamService implements ISanPhamService {
         } catch (Exception e) {
             return null;
         }
-
     }
 
     @Override
@@ -159,8 +158,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<NhomSanPhamDTO> xoaNhomSanPham(Long nhomSanPhamId) {
-        _nhomSanPhamRepo.deleteById(nhomSanPhamId);
-        return layHetNhomSanPham();
+        try {
+            _nhomSanPhamRepo.deleteById(nhomSanPhamId);
+            return layHetNhomSanPham();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -203,8 +206,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<ThietKeDTO> xoaThietKe(Long thietKeId) {
-        _thietKeRepo.deleteById(thietKeId);
-        return layHetThietKe();
+        try {
+            _thietKeRepo.deleteById(thietKeId);
+            return layHetThietKe();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -237,8 +244,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<MauSacDTO> xoaMauSac(Long mauSacId) {
-        _mauSacRepo.deleteById(mauSacId);
-        return layHetMauSac();
+        try {
+            _mauSacRepo.deleteById(mauSacId);
+            return layHetMauSac();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -272,8 +283,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<KichThuocDTO> xoaKichThuoc(Long kichThuocId) {
-        _kichThuocRepo.deleteById(kichThuocId);
-        return layHetKichThuoc();
+        try {
+            _kichThuocRepo.deleteById(kichThuocId);
+            return layHetKichThuoc();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

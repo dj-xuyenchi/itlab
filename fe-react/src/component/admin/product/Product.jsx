@@ -11,6 +11,7 @@ import { useSanPhamStore } from "./useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
 import ModalThemSua from "./ModalThemSua";
 import ModalView from "./ModalView";
+import ModalSua from "./ModalSua";
 function Product() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -216,7 +217,11 @@ function Product() {
           }}
         >
           <ModalView id={id} />
-          {/* <ModalThemSua id={id} setData={setData} /> */}
+          <ModalSua
+                type={0}
+                thuocTinh={thuocTinh}
+                fetchData={fetchData}
+              />
         </div>
       ),
     },
