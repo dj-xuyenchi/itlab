@@ -23,11 +23,11 @@ function ModalDanhGiaChiTiet({ data }) {
     const generatePdf = () => {
         const content = document.getElementById('content-to-export');
         const pdfOptions = {
-            margin: 10,
+            margin: 0,
             filename: 'Đánh giá chi tiết sản phẩm.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } // Đặt orientation thành 'landscape'
+            jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' } // Đặt orientation thành 'landscape'
         };
         html2pdf(content, pdfOptions);
     };
