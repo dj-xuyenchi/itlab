@@ -215,10 +215,9 @@ function ModalThemSua({ id, setData }) {
           <Form.Item label="Ảnh đại diện">
             <Upload
               listType="picture-card"
-              multiple
               customRequest={() => { }}
               {...props}
-              maxCount={4}
+              maxCount={1}
               fileList={fileList}
             >
               <div>

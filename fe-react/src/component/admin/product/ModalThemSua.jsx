@@ -195,15 +195,6 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       );
       return;
     }
-    // if (sanPham.soLuongTon <= 0) {
-    //   openNotification(
-    //     "error",
-    //     "Hệ thống",
-    //     "Vui lòng nhập số lượng",
-    //     "bottomRight"
-    //   );
-    //   return;
-    // }
     if (hinhAnh.length < 2) {
       openNotification(
         "error",

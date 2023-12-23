@@ -217,11 +217,7 @@ function Product() {
           }}
         >
           <ModalView id={id} />
-          <ModalSua
-                type={0}
-                thuocTinh={thuocTinh}
-                fetchData={fetchData}
-              />
+          <ModalSua id={id} thuocTinh={thuocTinh} setData={fetchData} />
         </div>
       ),
     },

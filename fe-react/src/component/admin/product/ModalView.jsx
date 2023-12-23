@@ -102,20 +102,15 @@ function ModalView({ id }) {
           >
             <Input disabled value={sanPham.tenSanPham} />
           </Form.Item>
-          <Form.Item label="Hình ảnh 1" >
-            <img
-              alt="Hình ảnh sản phẩm"
-              src={sanPham.hinhAnh1}
-              style={{ width: '30%', height: '30%' }}
-            />
-          </Form.Item>
-          <Form.Item label="Hình ảnh 2">
-            <img
-              alt="Hình ảnh sản phẩm"
-              src={sanPham.hinhAnh2}
-              style={{ width: '30%', height: '30%', floa: "left" }}
-            />
-          </Form.Item>
+          <div style={{ display: 'flex' }}>
+            <Form.Item label="Hình ảnh 1">
+              <img alt="Hình ảnh sản phẩm" src={sanPham.hinhAnh1} style={{ width: '50%', height: '50%' }} />
+            </Form.Item>
+            <Form.Item label="Hình ảnh 2">
+              <img alt="Hình ảnh sản phẩm" src={sanPham.hinhAnh2} style={{ width: '50%', height: '50%' }} />
+            </Form.Item>
+          </div>
+
           <Form.Item
             label="Giá nhập"
             rules={[

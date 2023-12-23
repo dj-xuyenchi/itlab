@@ -58,6 +58,10 @@ export const useSanPhamStore = {
                 },
             })
         },
+        async suaSanPham(payload) {
+            return axiosIns.post('/api/sanpham/capnhatsanpham', payload
+            )
+        },
         async laySanPhamById(payload) {
             return axiosIns.get('/api/sanpham/laysanphamId?sanPhamId=' + payload
             )

@@ -184,9 +184,32 @@ const props = {
         title: "Ảnh đại diện",
         dataIndex: "anhDaiDien",
         key: "anhDaiDien",
-        width: "15%",
-        render: (anhDaiDien) => (
-          <Image src={anhDaiDien} style={{ width: "80px", height: "80px" }} />
+        width: "30%",
+        render: (anhDaiDien,record) => (
+          <>
+          <div style={{
+               display:"flex",
+               flexDirection:"row"
+          }}>
+
+          <div style={{
+            height:'40px',
+            width:"40px",
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            overflow:"hidden",
+            borderRadius:"50%",
+            border:"1px solid black"
+          }}>
+          <img src={anhDaiDien} style={{ width: "auto", height: "40px" }} />
+          </div>
+          <span style={{
+            lineHeight:"40px",
+            marginLeft:"4px"
+          }}>{record.ten}</span>
+            </div>
+          </>
         ),
       },
 
@@ -198,13 +221,7 @@ const props = {
         ...getColumnSearchProps("soDienThoai"),
       },
 
-      {
-        title: "Tên Người Dùng ",
-        dataIndex: "ten",
-        key: "ten",
-        width: "15%",
-        ...getColumnSearchProps("ten"),
-      },
+    
 
       {
         title: "Ngày tạo",
