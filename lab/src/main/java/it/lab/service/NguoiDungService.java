@@ -57,7 +57,9 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
         nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
-        nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
+        if(!(anhdaidien ==null)){
+            nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
+        }
         nguoiDung.setTrangThai(nguoiDungRequest.getTrangThai());
         nguoiDung.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDung);

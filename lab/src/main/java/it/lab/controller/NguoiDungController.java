@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/nguoi-dung")
@@ -36,9 +37,9 @@ public class NguoiDungController {
     }
 
     @RequestMapping(value = "/capnhatnguoidung", method = RequestMethod.POST)
-    public ResponseEntity<?> suaNguoiDung(@RequestPart("anhDaiDien") MultipartFile data, @RequestPart("data") String nguoiDung) throws IOException {
+    public ResponseEntity<?> suaNguoiDung(@RequestPart("anhDaiDien") Optional<MultipartFile> data, @RequestPart("data") String nguoiDung) throws IOException {
         Gson gson = new Gson();
-        return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(gson.fromJson(nguoiDung, NguoiDungRequest.class), data));
+        return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(gson.fromJson(nguoiDung, NguoiDungRequest.class),data.isPresent()? data.get():null));
     }
     @RequestMapping(value = "/doimatkhau", method = RequestMethod.POST)
     public ResponseEntity<?> doiMatKhau(
