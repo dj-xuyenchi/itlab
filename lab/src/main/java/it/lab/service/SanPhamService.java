@@ -10,6 +10,7 @@ import it.lab.enums.TrangThaiSanPham;
 import it.lab.enums.TrangThaiSanPhamChiTiet;
 import it.lab.iservice.ISanPhamService;
 import it.lab.modelcustom.request.FilterSanPham;
+import it.lab.modelcustom.request.NguoiDungRequest;
 import it.lab.modelcustom.request.SanPhamChiTietRequest;
 import it.lab.modelcustom.request.SanPhamRequest;
 import it.lab.modelcustom.respon.FullThuocTinh;
@@ -130,7 +131,6 @@ public class SanPhamService implements ISanPhamService {
         } catch (Exception e) {
             return null;
         }
-
     }
 
     @Override
@@ -158,8 +158,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<NhomSanPhamDTO> xoaNhomSanPham(Long nhomSanPhamId) {
-        _nhomSanPhamRepo.deleteById(nhomSanPhamId);
-        return layHetNhomSanPham();
+        try {
+            _nhomSanPhamRepo.deleteById(nhomSanPhamId);
+            return layHetNhomSanPham();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -202,8 +206,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<ThietKeDTO> xoaThietKe(Long thietKeId) {
-        _thietKeRepo.deleteById(thietKeId);
-        return layHetThietKe();
+        try {
+            _thietKeRepo.deleteById(thietKeId);
+            return layHetThietKe();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -236,8 +244,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<MauSacDTO> xoaMauSac(Long mauSacId) {
-        _mauSacRepo.deleteById(mauSacId);
-        return layHetMauSac();
+        try {
+            _mauSacRepo.deleteById(mauSacId);
+            return layHetMauSac();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -271,8 +283,12 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<KichThuocDTO> xoaKichThuoc(Long kichThuocId) {
-        _kichThuocRepo.deleteById(kichThuocId);
-        return layHetKichThuoc();
+        try {
+            _kichThuocRepo.deleteById(kichThuocId);
+            return layHetKichThuoc();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -447,4 +463,34 @@ public class SanPhamService implements ISanPhamService {
     public SanPhamDTO laySanPhamById(Long sanPhamId) {
         return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());
     }
+
+    @Override
+    public ResponObject<String, APIStatus> capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile hinh1, MultipartFile hinh2) throws IOException {
+        Optional<SanPham> sp = _sanPhamRepository.findById(sanPhamRequest.getId());
+        if (sp.isEmpty()) {
+            return new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Thất bại");
+        }
+        SanPham sanPham = sp.get();
+        sanPham.setTenSanPham(sanPhamRequest.getTenSanPham());
+        sanPham.setGiaNhap(sanPhamRequest.getGiaNhap());
+        sanPham.setGiaBan(sanPhamRequest.getGiaBan());
+        sanPham.setTrangThai(sanPhamRequest.getTrangThai());
+        sanPham.setSoLuongTon(sanPhamRequest.getSoLuongTon());
+        sanPham.setSoLuongLoi(sanPhamRequest.getSoLuongLoi());
+        sanPham.setSoLuongTraHang(sanPhamRequest.getSoLuongTraHang());
+        sanPham.setSoLuongDaBan(sanPhamRequest.getSoLuongDaBan());
+        if (hinh1 != null && !hinh1.isEmpty()) {
+            sanPham.setHinhAnh1(CloudinaryUpload.uploadFile(hinh1));
+        }
+        if (hinh2 != null && !hinh2.isEmpty()) {
+            sanPham.setHinhAnh2(CloudinaryUpload.uploadFile(hinh2));
+        }
+        sanPham.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId()).get());
+        sanPham.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId()).get());
+        sanPham.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId()).get());
+        sanPham.setNgayCapNhat(LocalDateTime.now());
+        _sanPhamRepository.save(sanPham);
+        return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
+    }
+
 }

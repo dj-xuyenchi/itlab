@@ -17,7 +17,6 @@ import dayjs from 'dayjs';
 import { PlusOutlined } from "@ant-design/icons";
 
 function NguoiDung() {
-  const [rankKhachHang, setRankKhachHang] = useState();
   const [form] = useForm()
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
@@ -28,7 +27,8 @@ function NguoiDung() {
   const [nguoiDung, setNguoiDung] = useState({
     id:"",
     ten: "",
-    rankKhachHang: undefined,
+    ho:"",
+    email:"",
     trangThai: "BIKHOA",
   });
   const [fileList, setFileList] = useState([]);
@@ -184,9 +184,32 @@ const props = {
         title: "Ảnh đại diện",
         dataIndex: "anhDaiDien",
         key: "anhDaiDien",
-        width: "15%",
-        render: (anhDaiDien) => (
-          <Image src={anhDaiDien} style={{ width: "80px", height: "80px" }} />
+        width: "30%",
+        render: (anhDaiDien,record) => (
+          <>
+          <div style={{
+               display:"flex",
+               flexDirection:"row"
+          }}>
+
+          <div style={{
+            height:'40px',
+            width:"40px",
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            overflow:"hidden",
+            borderRadius:"50%",
+            border:"1px solid black"
+          }}>
+          <img src={anhDaiDien} style={{ width: "auto", height: "40px" }} />
+          </div>
+          <span style={{
+            lineHeight:"40px",
+            marginLeft:"4px"
+          }}>{record.ten}</span>
+            </div>
+          </>
         ),
       },
 
@@ -198,13 +221,7 @@ const props = {
         ...getColumnSearchProps("soDienThoai"),
       },
 
-      {
-        title: "Tên Người Dùng ",
-        dataIndex: "ten",
-        key: "ten",
-        width: "15%",
-        ...getColumnSearchProps("ten"),
-      },
+    
 
       {
         title: "Ngày tạo",
@@ -273,14 +290,9 @@ const props = {
     setData(data.data.data);
   }
 
-  async function layDuLieu2() {
-    const data = await useNguoiDungStore.actions.layRankKhachHang();
-    setRankKhachHang(data.data.data);
-  }
 
   useEffect(() => {
     layDuLieu();
-    layDuLieu2()
   }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -310,10 +322,60 @@ const props = {
     }
   };
   async function handleThemNguoiDung() {
-    if (!nguoiDung.ten.trim()) {
-      openNotification("error", "Hệ thống", "Tên là bắt buộc", "bottomRight");
+    if (!nguoiDung.ho || !nguoiDung.ho.trim()) {
+      openNotification("error", "Hệ thống", "Vui lòng nhập họ", "bottomRight");
       return;
     }
+    if (/[\d!@#$%^&*()_+{}\[\]:;<>,.?~\\]/.test(nguoiDung.ho)) {
+      openNotification("error", "Hệ thống", "Tên họ không được chứa số và ký tự đặc biệt", "bottomRight");
+      return;
+    }    
+    
+    if (!nguoiDung.ten || !nguoiDung.ten.trim()) {
+      openNotification("error", "Hệ thống", "Vui lòng nhập tên", "bottomRight");
+      return;
+    }
+    if (/[\d!@#$%^&*()_+{}\[\]:;<>,.?~\\]/.test(nguoiDung.ten)) {
+      openNotification("error", "Hệ thống", "Tên không được chứa số và ký tự đặc biệt", "bottomRight");
+      return;
+    } 
+    if (!nguoiDung.email || !nguoiDung.email.trim()) {
+      openNotification("error", "Hệ thống", "Vui lòng nhập email", "bottomRight");
+      return;
+    }
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(nguoiDung.email.trim())) {
+      openNotification("error", "Hệ thống", "Email không hợp lệ", "bottomRight");
+      return;
+    }
+    if (!nguoiDung.matKhau || !nguoiDung.matKhau.trim()) {
+      openNotification("error", "Hệ thống", "Vui lòng nhập mật khẩu", "bottomRight");
+      return;
+    }
+    if (nguoiDung.matKhau.trim().length < 6) {
+      openNotification("error", "Hệ thống", "Mật khẩu phải có ít nhất 6 ký tự", "bottomRight");
+      return;
+    }
+    if (!nguoiDung.soDienThoai || !nguoiDung.soDienThoai.trim()) {
+      openNotification("error", "Hệ thống", "Vui lòng nhập số điện thoại", "bottomRight");
+      return;
+    }
+    const phoneNumberPattern = /^0\d{9}$/;
+      if (!phoneNumberPattern.test(nguoiDung.soDienThoai.trim())) {
+        openNotification("error", "Hệ thống", "Số điện thoại không hợp lệ", "bottomRight");
+        return;
+      }
+
+      if (!hinhAnh) {
+        openNotification(
+          "error",
+          "Hệ thống",
+          "Chọn hình ảnh",
+          "bottomRight"
+        );
+        return;
+      }
+      
     setIsLoading(true);
     const formData = new FormData();
     if (hinhAnh.length > 0) {
@@ -332,7 +394,7 @@ const props = {
     } catch (error) {
       openNotification("error", "Hệ thống", error.message, "bottomRight");
     } finally {
-      setNguoiDung({ ten: "", anhDaiDien: null });
+      setNguoiDung({ho:"", ten: "",email:"",matKhau:"",soDienThoai:"",gioiTinh:null, hinhAnh: null });
       setFileList([]);
       setHinhAnh([]);
       form.resetFields();
@@ -396,6 +458,25 @@ const props = {
                     maxWidth: 600,
                   }}
                 >
+                                    <Form.Item
+                    label="Họ"
+                    name="Họ"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Input
+                      onChange={(e) => {
+                        setNguoiDung({
+                          ...nguoiDung,
+                          ho: e.target.value,
+                        });
+                      }}
+                      value={nguoiDung.ho}
+                    />
+                  </Form.Item>
                   <Form.Item
                     label="Tên"
                     name="Tên "
@@ -415,46 +496,7 @@ const props = {
                       value={nguoiDung.ten}
                     />
                   </Form.Item>
-                  <Form.Item label="Upload">
-                    <Upload
-                      listType="picture-card"
-                      multiple
-                      customRequest={() => { }}
-                      {...props}
-                      maxCount={4}
-                      fileList={fileList}
-                    >
-                      <div>
-                        <PlusOutlined />
-                        <div
-                          style={{
-                            marginTop: 8,
-                          }}
-                        >
-                          Upload
-                        </div>
-                      </div>
-                    </Upload>
-                  </Form.Item>
-                  <Form.Item
-                    label="Họ"
-                    name="Họ"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          ho: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.ho}
-                    />
-                  </Form.Item>
+
                   <Form.Item
                     label="Email"
                     name="Email"
@@ -529,47 +571,27 @@ const props = {
                       <Radio value="Nữ">Nữ</Radio>
                     </Radio.Group>
                   </Form.Item>
-
-                  <Form.Item
-                    label="Điểm"
-                    name="Điểm"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setNguoiDung({
-                          ...nguoiDung,
-                          diem: e.target.value,
-                        });
-                      }}
-                      value={nguoiDung.diem}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Rank khách hàng"
-                    name="rankKhachHang"
-                    rules={[{ required: true, message: 'Vui lòng chọn rank khách hàng!' }]}
-                    initialValue={undefined}
-                  >
-                    <Select
-                      labelInValue
-                      optionLabelProp="children"
-                      placeholder="Chọn rank khách hàng"
-                      style={{ width: "100%" }}
-                      onChange={handleSetRankKhachHang}
+                  <Form.Item label="Upload">
+                    <Upload
+                      listType="picture-card"
+                      multiple
+                      customRequest={() => { }}
+                      {...props}
+                      maxCount={4}
+                      fileList={fileList}
                     >
-                      {rankKhachHang && rankKhachHang.map((option) => (
-                        <Select.Option key={option.id} value={option.id}>
-                          {option.tenRank}
-                        </Select.Option>
-                      ))}
-                    </Select>
+                      <div>
+                        <PlusOutlined />
+                        <div
+                          style={{
+                            marginTop: 8,
+                          }}
+                        >
+                          Upload
+                        </div>
+                      </div>
+                    </Upload>
                   </Form.Item>
-
 
                   <Form.Item label=" ">
                     <Button

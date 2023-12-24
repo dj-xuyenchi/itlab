@@ -1,67 +1,33 @@
+import { useState, useEffect } from "react";
 import {
   Button,
-  Cascader,
-  Checkbox,
-  DatePicker,
   Form,
   Input,
-  InputNumber,
   Modal,
+  Tooltip,
+  notification,
+  Checkbox,
   Radio,
   Select,
-  Switch,
-  message,
   Upload,
-  notification,
+  message,
+  InputNumber,
 } from "antd";
-import "./style.css";
-import { PlusOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
-import TextArea from "antd/es/input/TextArea";
-import { Option } from "antd/es/mentions";
-import { useSanPhamStore } from "./useSanPhamStore";
 import { useForm } from "antd/es/form/Form";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-function ModalThemSua({ type, thuocTinh, fetchData }) {
-  const [form] = useForm()
-  const [api, contextHolder] = notification.useNotification();
-  const openNotification = (type, title, des, placement) => {
-    if (type === "error") {
-      api.error({
-        message: title,
-        description: des,
-        placement,
-      });
-    } else {
-      api.success({
-        message: title,
-        description: des,
-        placement,
-      });
-    }
-  };
+import { FaRegPenToSquare } from "react-icons/fa6";
+import { useSanPhamStore } from "./useSanPhamStore";
+import { PlusOutlined } from "@ant-design/icons";
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  const [sanPham, setSanPham] = useState({
-    tenSanPham: "",
-    giaBan: 0,
-    giaNhap: 0,
-    soLuongTon: 0,
-    moTa: "",
-  });
-  const [fileList, setFileList] = useState([]);
-  const [hinhAnh, setHinhAnh] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+function ModalSua({ id,thuocTinh, setData }) {
+  const [form] = useForm()
+  const { Option } = Select;
+  const [sanPham, setSanPham] = useState(undefined);
+  const trangThaiOptions = [
+    { value: 'DANGBAN', label: 'Đang bán' },
+    { value: 'HETHANG', label: 'Hết hàng' },
+    { value: 'NGUNGBAN', label: 'Ngừng bán' },
+    { value: 'CHAYSUKIEN', label: 'Chạy sự kiện' },
+  ];
   function handleSetTenSP(e) {
     setSanPham({
       ...sanPham,
@@ -86,18 +52,29 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       moTa: e.target.value,
     });
   }
-  function handleSetSoLuong(e) {
-    setSanPham({
-      ...sanPham,
-      soLuongTon: e,
-    });
+  function handleSetTrangThai(selectedOption) {
+    setSanPham(prevSanPham => ({
+      ...prevSanPham,
+      trangThai: selectedOption.value
+    }));
   }
+  // function handleSetThietKe(selectedOption) {
+  //   setThietKeSelected(selectedOption);
+  //   setSanPham((prevSanPham) => ({
+  //     ...prevSanPham,
+  //     thietKeId: selectedOption.value, // Chỉ cần dùng thietKeId
+  //   }));
+  // }
+
   function handleSetThietKe(e) {
     setSanPham({
       ...sanPham,
       thietKeId: e.value,
     });
   }
+  
+  
+  
   function handleSetNhom(e) {
     setSanPham({
       ...sanPham,
@@ -110,6 +87,9 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       chatLieuId: e.value,
     });
   }
+  const [fileList, setFileList] = useState([]);
+  const [hinhAnh, setHinhAnh] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const props = {
     beforeUpload: (file) => {
       return false;
@@ -141,7 +121,34 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     },
   };
 
-  async function handleThemSanPham() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (type, title, des, placement) => {
+    if (type === "error") {
+      api.error({
+        message: title,
+        description: des,
+        placement,
+      });
+    } else {
+      api.success({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+  };
+  async function handleSuaSanPham() {
     if (sanPham.tenSanPham == "") {
       openNotification(
         "error",
@@ -190,16 +197,16 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
       openNotification(
         "error",
         "Hệ thống",
-        "Cần tối thiểu 2 hình ảnh",
+        "Cần 2 hình ảnh",
         "bottomRight"
       );
       return;
     }
-    if (hinhAnh.length < 2) {
+    if (hinhAnh && hinhAnh.length< 2) {
       openNotification(
         "error",
         "Hệ thống",
-        "Cần tối thiểu 2 hình ảnh",
+        "Cần 2 hình ảnh",
         "bottomRight"
       );
       return;
@@ -210,28 +217,26 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
     form2.append("file1", hinhAnh[0]);
     form2.append("file2", hinhAnh[1]);
     form2.append("data", JSON.stringify(sanPham));
-    const data = await useSanPhamStore.actions.themSanPham(form2);
+    
+
+    const data = await useSanPhamStore.actions.suaSanPham(form2);
+    console.log("Toàn bộ dữ liệu sản phẩm sẽ được gửi đi:", form2);
     if (data.data.status == "THANHCONG") {
       form.resetFields();
       openNotification(
         "success",
         "Hệ thống",
-        "Thêm sản phẩm thành công",
+        "Sửa sản phẩm thành công",
         "bottomRight"
       );
-
-      fetchData();
       setSanPham({
-        tenSanPham: "",
-        giaBan: 0,
-        giaNhap: 0,
-        soLuong: 0,
+       ...sanPham
       });
     } else {
       openNotification(
         "error",
         "Hệ thống",
-        "Thêm sản phẩm thất bại",
+        "Sửa sản phẩm thất bại",
         "bottomRight"
       );
       setSanPham({
@@ -241,43 +246,83 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
         soLuong: 0,
       });
     }
+    setData(data.data.data);
     setFileList([]);
     setIsModalOpen(false);
     setIsLoading(false);
   }
+  useEffect(() => {
+    async function layDuLieu() {
+      const data = await useSanPhamStore.actions.laySanPhamById(id);
+      console.log("Lấy dữ liệu: ", data);
+      setSanPham({
+        ...data.data,
+        thietKeId: data.data.thietKe.id,
+        nhomSanPhamId: data.data.nhomSanPham.id,
+        chatLieuId: data.data.chatLieu.id,
+        id: data.data.id,
+      });
+      setFileList([
+        { uid: '1', url: data.data.hinhAnh1, name: 'Hình ảnh 1' },
+        { uid: '2', url: data.data.hinhAnh2, name: 'Hình ảnh 2' }
+      ]);
+      // if(data.data.thietKe && data.data.thietKe.id) {
+      //   setThietKeSelected({ value: data.data.thietKe.id, label: data.data.thietKe.tenThietKe });
+      // }
+    }
+  
+    if (isModalOpen) {
+      layDuLieu();
+    }
+  }, [id, isModalOpen]);
+  
+
   return (
     <>
       {contextHolder}
-      <Button type="primary" onClick={showModal}>
-        Thêm sản phẩm
-      </Button>
+      <Tooltip title="Cập nhật" onClick={showModal}>
+        <Button
+          style={{
+            color: "green",
+          }}
+          shape="circle"
+          icon={<FaRegPenToSquare />}
+        />
+      </Tooltip>
       <Modal
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
-        width={768}
-        title={type == 1 ? " Thêm sản phẩm" : "Sửa sản phẩm"}
-        open={isModalOpen}
-        onOk={handleOk}
+        title="Sửa sản phẩm"
+        visible={isModalOpen}
         onCancel={handleCancel}
         centered
+        footer={[
+          <Button key="submit" type="primary" onClick={handleSuaSanPham}>
+            Sửa
+          </Button>,
+        ]}
       >
+         {sanPham ? (
         <Form
           form={form}
+          name="wrap"
           labelCol={{
-            span: 4,
+            flex: "110px",
           }}
+          labelAlign="left"
+          labelWrap
           wrapperCol={{
-            span: 18,
+            flex: 1,
           }}
-          layout="horizontal"
+          colon={false}
           style={{
-            maxWidth: 768,
+            maxWidth: 600,
           }}
         >
+
           <Form.Item label="Tên sản phẩm">
             <Input value={sanPham.tenSanPham} onChange={handleSetTenSP} />
           </Form.Item>
-
           <Form.Item label="Giá nhập">
             <InputNumber
               formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -312,33 +357,50 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               onChange={handleSetGiaBan}
             />
           </Form.Item>
+          <Form.Item label="Thông tin chi tiết">
+            <Input value={sanPham.moTa} onChange={handleSetMoTa} />
+          </Form.Item>
+          <Form.Item label="Trạng thái sản phẩm">
+          <Select
+          labelInValue
+          value={sanPham.trangThai ? { value: sanPham.trangThai } : undefined} 
+          style={{ width: "100%" }}
+          onChange={(selectedOption) => handleSetTrangThai(selectedOption)}
+        >
+          {trangThaiOptions.map((option) => (
+            <Select.Option key={option.value} value={option.value}>
+              {option.label}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
           <Form.Item label="Thiết kế">
             <Select
               labelInValue
               optionLabelProp="children"
-              style={{
-                width: "100%",
+              style={{ width: "100%" }}
+              rules={[{ required: true }]}
+              defaultValue={sanPham.thietKe.tenThietKe}
+              onChange={(e) => {
+                setSanPham({
+                  ...sanPham,
+                  thietKeId: e.value,
+                });
               }}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              onChange={handleSetThietKe}
             >
-              {thuocTinh
-                ? thuocTinh.thietKeList.map((option) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.tenThietKe}
-                  </Select.Option>
-                ))
-                : ""}
+              {thuocTinh?.thietKeList.map((option) => (
+                <Select.Option key={option.id} value={option.id}>
+                  {option.tenThietKe}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
+
           <Form.Item label="Chất liệu">
             <Select
               labelInValue
               optionLabelProp="children"
+              defaultValue={sanPham.chatLieu.tenChatLieu}
               style={{
                 width: "100%",
               }}
@@ -362,6 +424,7 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
             <Select
               labelInValue
               optionLabelProp="children"
+              defaultValue={sanPham.nhomSanPham.tenNhom}
               style={{
                 width: "100%",
               }}
@@ -381,10 +444,6 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                 : ""}
             </Select>
           </Form.Item>
-          <Form.Item label="Thông tin chi tiết">
-            <Input.TextArea value={sanPham.moTa} onChange={handleSetMoTa} />
-          </Form.Item>
-
           <Form.Item label="Upload">
             <Upload
               listType="picture-card"
@@ -406,22 +465,14 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
               </div>
             </Upload>
           </Form.Item>
-          <Form.Item label="Action">
-            <Button
-              loading={isLoading}
-              onClick={() => {
-                if (type == 1) {
-                  handleThemSanPham();
-                }
-              }}
-            >
-              {type == 1 ? "Thêm sản phẩm" : "Sửa sản phẩm"}
-            </Button>
-          </Form.Item>
+
         </Form>
+        ) : (
+          ""
+        )}
       </Modal>
     </>
   );
 }
 
-export default ModalThemSua;
+export default ModalSua;

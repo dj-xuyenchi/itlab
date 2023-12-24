@@ -14,6 +14,7 @@ import { selectUser } from "../../login/selectUser";
 import { selectLanguage } from "../../../language/selectLanguage";
 import QuantityField from "./QuantityField";
 import ChonSize from "./ChonSize";
+import Footer from "../footer/footer";
 function ProductDetail() {
   const language = useSelector(selectLanguage);
   const [api, contextHolder] = notification.useNotification();
@@ -481,6 +482,7 @@ function ProductDetail() {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

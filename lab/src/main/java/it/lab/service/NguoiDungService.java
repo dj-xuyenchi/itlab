@@ -57,10 +57,10 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
         nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
-        nguoiDung.setDiem(nguoiDungRequest.getDiem());
-        nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
+        if(!(anhdaidien ==null)){
+            nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
+        }
         nguoiDung.setTrangThai(nguoiDungRequest.getTrangThai());
-//        nguoiDung.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
         nguoiDung.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDung);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
@@ -89,35 +89,14 @@ public class NguoiDungService implements INguoiDungService {
         return layHetNguoiDung();
     }
 
-//    @Override
-//    public Page<NguoiDungDTO> themNguoiDung(NguoiDung nguoiDung) {
-//        nguoiDung.setNgayTao(LocalDateTime.now());
-//        _nguoiDungRepo.save(nguoiDung);
-//        nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
-//        nguoiDung.setTen(nguoiDung.getTen());
-//        nguoiDung.setHo(nguoiDung.getHo());
-//        nguoiDung.setEmail(nguoiDung.getEmail());
-//        nguoiDung.setMatKhau(nguoiDung.getMatKhau());
-//        nguoiDung.setAnhDaiDien(nguoiDung.getAnhDaiDien());
-//        nguoiDung.setRankKhachHang(nguoiDung.getRankKhachHang());
-//        nguoiDung.setSoDienThoai(nguoiDung.getSoDienThoai());
-//        nguoiDung.setNgayCapNhat(nguoiDung.getNgayCapNhat());
-//        nguoiDung.setTrangThai(nguoiDung.getTrangThai());
-//        nguoiDung.setGioiTinh(nguoiDung.getGioiTinh());
-//        _nguoiDungRepo.save(nguoiDung);
-//        return layHetNguoiDung();
-//    }
-
     @Override
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDungRequest, MultipartFile anhdaidien) throws IOException {
         NguoiDung nguoiDung = new NguoiDung();
         nguoiDung.setNgayTao(LocalDateTime.now());
         nguoiDung.setTen(nguoiDungRequest.getTen());
         nguoiDung.setHo(nguoiDungRequest.getHo());
-        nguoiDung.setDiem(nguoiDungRequest.getDiem());
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
         nguoiDung.setMatKhau(nguoiDungRequest.getMatKhau());
-        nguoiDung.setRankKhachHang(_rankKhachHangRepo.findById(nguoiDungRequest.getRankKhachHangId()).get());
         nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
         nguoiDung.setTrangThai(TrangThaiNguoiDung.HOATDONG);
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());

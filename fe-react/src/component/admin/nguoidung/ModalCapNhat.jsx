@@ -151,6 +151,7 @@ function ModalThemSua({ id, setData }) {
         <Button
           style={{
             color: "green",
+            margin: "0 10px",
           }}
           shape="circle"
           icon={<FaRegPenToSquare />}
@@ -215,10 +216,9 @@ function ModalThemSua({ id, setData }) {
           <Form.Item label="Ảnh đại diện">
             <Upload
               listType="picture-card"
-              multiple
               customRequest={() => { }}
               {...props}
-              maxCount={4}
+              maxCount={1}
               fileList={fileList}
             >
               <div>
@@ -317,29 +317,6 @@ function ModalThemSua({ id, setData }) {
               <Radio value="Nữ">Nữ</Radio>
             </Radio.Group>
           </Form.Item>
-
-          {/* <Form.Item
-                    label="Rank Khách Hàng"
-                    name="rankKhachHang"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng chọn rank khách hàng!'
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Chọn rank khách hàng"
-                      onChange={(value) => setNguoiDung({...nguoiDung, rankKhachHang: { id: value }})}
-                      value={nguoiDung.rankKhachHang?.id || null}
-                    >
-                    {rankKhachHang && rankKhachHang.map((rank) => (
-                      <Select.Option key={rank.id} value={rank.id}>
-                        {rank.tenRank}
-                      </Select.Option>
-                    ))}
-                    </Select>
-                  </Form.Item> */}
 
         </Form>
       </Modal>
