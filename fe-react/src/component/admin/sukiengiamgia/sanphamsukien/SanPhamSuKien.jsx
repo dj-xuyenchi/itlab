@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import ModalThemNhom from "./ModalThemNhom";
 import ModalView from "./ModalThemNhom";
 import DungNhomSanPham from "./DungNhomSanPham";
-
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 function Product() {
   const [sanPham, setSanPhamSuKien] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -147,22 +147,27 @@ function Product() {
       render: (giaTriGiam) => <span>{giaTriGiam}%</span>,
     },
     {
-      title: "Ngày Tạo",
-      dataIndex: "ngayTao",
-      key: "ngayTao",
-      width: "20%",
-    },
-    {
       title: "Ngày Cập Nhật",
       dataIndex: "ngayCapNhat",
       key: "ngayCapNhat",
       width: "20%",
+      render: (ngayCapNhat) => (
+        <>{ngayCapNhat ? fixNgayThang(ngayCapNhat) : <Tag color="processing">Mới</Tag>}</>
+      ),
     },
     {
       title: "Trạng Thái",
       dataIndex: "trangThai",
       key: "trangThai",
       width: "15%",
+      render: (text) => {
+        if (text === "Chay_Su_Kien") {
+          return <span style={{ color: "green" }}>Chạy sự kiện</span>;
+        } else {
+          return <span style={{ color: "red" }}>Ngừng sự kiện</span>;
+        }
+      },
+  
     },
     {
       title: "Thao tác",

@@ -1,7 +1,5 @@
 package it.lab.service;
 
-import it.lab.common.Email;
-import it.lab.common.Template;
 import it.lab.enums.TrangThaiSuKienGiamGia;
 import it.lab.iservice.Cron;
 import it.lab.repository.SuKienGiamGiaRepo;
@@ -9,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @Service
 public class CronTask implements Cron {

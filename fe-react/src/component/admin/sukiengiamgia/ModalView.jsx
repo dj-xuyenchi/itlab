@@ -64,7 +64,7 @@ function ModalView({ id }) {
           wrapperCol={{
             flex: 1,
           }}
-          colon={false}
+          // colon={false}
           style={{
             maxWidth: 600,
           }}

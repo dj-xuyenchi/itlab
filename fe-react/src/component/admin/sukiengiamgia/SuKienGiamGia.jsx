@@ -1,28 +1,57 @@
-
 import { useDispatch, useSelector } from "react-redux";
 import { selectLanguage } from "../../../language/selectLanguage";
 import "./style.css";
 import Header from "../layout/header/Header";
 import MenuAdmin from "../layout/menu/MenuAdmin";
-import { Form, Modal, Row, Table, Tag, notification } from "antd";
+import {
+  Form,
+  Modal,
+  Row,
+  Table,
+  Tag,
+  notification,
+  Upload,
+  message,
+} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Input, Space ,Image} from "antd";
+import { Button, Input, Space, Image } from "antd";
 import { useSuKienGiamGiaStore } from "./useSuKienGiamGiaStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
 import ModalView from "./ModalView";
 import { useForm } from "antd/es/form/Form";
+import { PlusOutlined } from "@ant-design/icons";
+import { DatePicker } from "antd";
+import axiosIns from "../../../plugins/axios";
+import moment from "moment";
+import { fixNgayThang } from "../../../extensions/fixNgayThang";
 function SuKienGiamGia() {
-  const [form] = useForm()
-  const language = useSelector(selectLanguage);
-  const dispath = useDispatch();
+  const [form] = useForm();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [suKienGiamGia, setSuKienGiamGia] = useState({
-    tenSuKien: "",
-  });
+  const [suKienGiamGia, setSuKienGiamGia] = useState({});
+  const [data, setData] = useState([]);
+  const [fileList, setFileList] = useState([]);
+  const [hinhAnh, setHinhAnh] = useState([]);
+  const props = {
+    beforeUpload: (file) => {
+      return false;
+    },
+    onChange: (file) => {
+      setFileList(file.fileList);
+      if (file.fileList.length == 0) {
+        return;
+      }
+      if (file.fileList[0]) {
+        setHinhAnh([file.fileList[0].originFileObj]);
+      } else {
+        setHinhAnh([file.fileList[0].originFileObj]);
+      }
+    },
+  };
+
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -135,6 +164,7 @@ function SuKienGiamGia() {
         text
       ),
   });
+
   const columns = [
     {
       title: "Tên sự kiện",
@@ -149,35 +179,35 @@ function SuKienGiamGia() {
       ),
     },
     {
-        title: "Logo sự kiện",
-        dataIndex: "logoSuKien",
-        key: "logoSuKien",
-        width: "10%",
-        render: (logoSuKien) => (
-          <Image src={logoSuKien} style={{ width: "80px", height: "80px" }} />
-        ),
-      },
+      title: "Logo sự kiện",
+      dataIndex: "logoSuKien",
+      key: "logoSuKien",
+      width: "10%",
+      render: (logoSuKien) => (
+        <Image src={logoSuKien} style={{ width: "80px", height: "80px" }} />
+      ),
+    },
+    {
+      title: "Giá trị giảm(%)",
+      dataIndex: "giaTriGiam",
+      key: "giaTriGiam",
+      width: "10%",
+      // ...getColumnSearchProps("giaTriGiam"),
+    },
     {
       title: "Mô tả",
       dataIndex: "moTa",
       key: "moTa",
-      width: "20%",
-      ...getColumnSearchProps("moTa"),
+      width: "15%",
     },
     {
-        title: "Ngày bắt đầu",
-        dataIndex: "ngayBatDau",
-        key: "ngayBatDau",
-        width: "20%",
-        ...getColumnSearchProps("ngayBatDau"),
-      },
-    {
-      title: "Ngày cập nhật",
-      dataIndex: "ngayCapNhat",
-      key: "ngayCapNhat",
-      width: "15%",
-      render: (ngayCapNhat) => (
-        <>{ngayCapNhat ? ngayCapNhat : <Tag color="processing">Mới</Tag>}</>
+      title: "Ngày bắt đầu",
+      dataIndex: "ngayBatDau",
+      key: "ngayBatDau",
+      width: "20%",
+      ...getColumnSearchProps("ngayBatDau"),
+      render: (ngayBatDau) => (
+        <>{ngayBatDau ? fixNgayThang(ngayBatDau) : ""}</>
       ),
     },
     {
@@ -185,15 +215,26 @@ function SuKienGiamGia() {
       dataIndex: "ngayKetThuc",
       key: "ngayKetThuc",
       width: "15%",
+      render: (ngayKetThuc) => (
+        <>{ngayKetThuc ? fixNgayThang(ngayKetThuc) : ""}</>
+      ),
     },
     {
-        title: "Trạng thái",
-        dataIndex: "trangThai",
-        key: "trangThai",
-        width: "20%",
-        ...getColumnSearchProps("trangThai"),
-      },
-    
+      title: "Ngày cập nhật",
+      dataIndex: "ngayCapNhat",
+      key: "ngayCapNhat",
+      width: "15%",
+      render: (ngayCapNhat) => (
+        <>{ngayCapNhat ? fixNgayThang(ngayCapNhat) : <Tag color="processing">Mới</Tag>}</>
+      ),
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "trangThai",
+      key: "trangThai",
+      width: "20%",
+    },
+
     {
       title: "Thao tác",
       dataIndex: "id",
@@ -208,17 +249,24 @@ function SuKienGiamGia() {
           }}
         >
           <ModalView id={id} />
-          <ModalCapNhat id={id} setData={setData} />
-          <ModalXoa id={id} setData={setData} />
+          <ModalCapNhat id={id} setData={setSuKienGiamGia} />
+          <ModalXoa id={id} setData={setSuKienGiamGia} />
         </div>
       ),
     },
   ];
 
-  const [data, setData] = useState([]);
+
   async function layDuLieu() {
-    const data = await useSuKienGiamGiaStore.actions.fetchSuKienGiamGia();
-    setData(data.data.data);
+    try {
+      const response = await useSuKienGiamGiaStore.actions.fetchSuKienGiamGia();
+      if (response && response.data && Array.isArray(response.data)) {
+        setData(response.data)
+      }
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }
 
   useEffect(() => {
@@ -251,26 +299,87 @@ function SuKienGiamGia() {
       });
     }
   };
-  async function handleThemSuKienGiamGia() {
-    if (suKienGiamGia.tenSuKien == "" ) {
+  const handleThemSuKienGiamGia = async () => {
+    if (
+      !suKienGiamGia.tenSuKien ||
+      !suKienGiamGia.giaTriGiam ||
+      !suKienGiamGia.ngayBatDau ||
+      !suKienGiamGia.ngayKetThuc ||
+      !suKienGiamGia.moTa
+    ) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Vui lòng điền đầy đủ thông tin",
+        "bottomRight"
+      );
       return;
     }
-    const data = await useSuKienGiamGiaStore.actions.themSuKienGiamGia(suKienGiamGia);
-    openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-    setData(data.data.data);
+
+    if (fileList.length === 0 || !fileList[0].originFileObj) {
+      openNotification("error", "Hệ thống", "Vui lòng chọn ảnh", "bottomRight");
+      return;
+    }
+
+    const formattedStartDate = moment(suKienGiamGia.ngayBatDau).toISOString();
+    const formattedEndDate = moment(suKienGiamGia.ngayKetThuc).toISOString();
+
+    const formData = new FormData();
+    formData.append("logoSuKien", fileList[0].originFileObj);
+
+    const suKienData = {
+      tenSuKien: suKienGiamGia.tenSuKien,
+      giaTriGiam:suKienGiamGia.giaTriGiam,
+      ngayBatDau: formattedStartDate,
+      ngayKetThuc: formattedEndDate,
+      moTa: suKienGiamGia.moTa,
+    };
+
+    formData.append("data", JSON.stringify(suKienData));
+
+    try {
+      const response = await fetch(
+        "http://localhost:8089/api/sukiengiamgia/themsukiengg",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const responseData = await response.json();
+      layDuLieu();
+      if (response.ok) {
+        form.resetFields();
+        openNotification(
+          "success",
+          "Hệ thống",
+          "Thêm sự kiện thành công",
+          "bottomRight"
+        );
+        setIsModalOpen(false);
+      } else {
+        throw new Error(
+          responseData.message || "Có lỗi xảy ra khi thêm sự kiện giảm giá"
+        );
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm sự kiện giảm giá:", error);
+      openNotification(
+        "error",
+        "Hệ thống",
+        error.message || "Có lỗi xảy ra khi thêm sự kiện giảm giá",
+        "bottomRight"
+      );
+    }
+  };
+
+  const handleDateChange = (date, dateString, field) => {
     setSuKienGiamGia({
       ...suKienGiamGia,
-      tenSuKien: "",
-      logoSuKien: "",
-      mota: "",
-      ngayBatDau: "",
-      ngayCapNhat: "",
-      ngayKetThuc: "",
-      ngayTao: "",
+      [field]: date, // Chuyển đổi ngày tháng thành chuỗi đúng định dạng
     });
-    form.resetFields()
-    setIsModalOpen(false);
-  }
+  };
+
   return (
     <>
       {contextHolder}
@@ -322,42 +431,84 @@ function SuKienGiamGia() {
                 >
                   <Form.Item
                     label="Tên sự kiện"
-                    name="Tên sự kiện"
+                    name="tenSuKien"
                     rules={[
-                      {
-                        required: true,
-                      },
+                      { required: true, message: "Vui lòng nhập tên sự kiện" },
                     ]}
                   >
                     <Input
-                      onChange={(e) => {
+                      onChange={(e) =>
                         setSuKienGiamGia({
                           ...suKienGiamGia,
                           tenSuKien: e.target.value,
-                        });
-                      }}
-                      value={suKienGiamGia.tenSuKien}
+                        })
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item label="Upload">
+                    <Upload
+                      listType="picture-card"
+                      maxCount={1}
+                      fileList={fileList}
+                      {...props}
+                    >
+                      {fileList.length >= 1 ? null : ( // Hiển thị nút Upload nếu chưa chọn ảnh hoặc đã chọn đủ số lượng
+                        <div>
+                          <PlusOutlined />
+                          <div style={{ marginTop: 8 }}>Upload</div>
+                        </div>
+                      )}
+                    </Upload>
+                  </Form.Item>
+                  <Form.Item
+                    label="Giá trị giảm"
+                    name="giaTriGiam"
+                    rules={[
+                      { required: true, message: "Vui lòng nhập giá trị giảm " },
+                    ]}
+                  >
+                    <Input 
+                      onChange={(e) =>
+                        setSuKienGiamGia({
+                          ...suKienGiamGia,
+                          giaTriGiam: e.target.value,
+                        })
+                      }
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Logo sự kiện"
-                    name="Logo sự kiện"
+                    label="Ngày bắt đầu"
+                    name="ngayBatDau"
+                    rules={[
+                      { required: true, message: "Vui lòng chọn ngày bắt đầu" },
+                    ]}
+                  >
+                    <DatePicker
+                      style={{ width: "100%" }}
+                      onChange={(date, dateString) =>
+                        handleDateChange(date, dateString, "ngayBatDau")
+                      }
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Ngày kết thúc"
+                    name="ngayKetThuc"
                     rules={[
                       {
                         required: true,
+                        message: "Vui lòng chọn ngày kết thúc",
                       },
                     ]}
                   >
-                    <Input
-                      onChange={(e) => {
-                        setSuKienGiamGia({
-                          ...suKienGiamGia,
-                          logoSuKien: e.target.value,
-                        });
-                      }}
-                      value={suKienGiamGia.logoSuKien}
+                    <DatePicker
+                      style={{ width: "100%" }}
+                      onChange={(date, dateString) =>
+                        handleDateChange(date, dateString, "ngayKetThuc")
+                      }
                     />
                   </Form.Item>
+
                   <Form.Item
                     label="Mô tả"
                     name="Mô tả"
@@ -374,7 +525,6 @@ function SuKienGiamGia() {
                           moTa: e.target.value,
                         });
                       }}
-                      value={suKienGiamGia.moTa}
                     />
                   </Form.Item>
                   <Form.Item label=" ">
@@ -392,6 +542,7 @@ function SuKienGiamGia() {
                 columns={columns}
                 dataSource={data}
                 pagination={{ pageSize: 10 }}
+                rowKey="id"
               />
             </div>
           </div>
