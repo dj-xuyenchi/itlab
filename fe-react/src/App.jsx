@@ -29,6 +29,9 @@ import SuKienGiamGia from "./component/admin/sukiengiamgia/SuKienGiamGia";
 import NguoiDung from "./component/admin/nguoidung/NguoiDung";
 import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
 import CRM from "./component/admin/crm/CRM";
+import GioiThieu from "./component/policy/GioiThieu";
+import ChinhSachBaoMat from "./component/policy/ChinhSachBaoMat";
+
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -83,6 +86,8 @@ function App() {
           element={<SanPhamChiTiet />}
         />
         <Route path="/admin/bantaiquay" element={<BanTaiQuay />} />
+        <Route path="/gioi-thieu" element={<GioiThieu />} />
+        <Route path="/chinh-sach-bao-mat" element={<ChinhSachBaoMat />} />
       </Routes>
       
 

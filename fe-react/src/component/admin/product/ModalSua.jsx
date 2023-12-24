@@ -20,20 +20,8 @@ import { PlusOutlined } from "@ant-design/icons";
 
 function ModalSua({ id,thuocTinh, setData }) {
   const [form] = useForm()
-  const [rankKhachHang, setRankKhachHang] = useState();
   const { Option } = Select;
-  const [sanPham, setSanPham] = useState({
-    id: id,
-    tenSanPham: "",
-    // ho: "",
-    // email: "",
-    // matKhau: "",
-    // rankKhachHang: "",
-    // diem: "",
-    // gioiTinh: "",
-    // soDienThoai: "",
-    // anhDaiDien: "",
-  });
+  const [sanPham, setSanPham] = useState(undefined);
   const trangThaiOptions = [
     { value: 'DANGBAN', label: 'Đang bán' },
     { value: 'HETHANG', label: 'Hết hàng' },
@@ -67,15 +55,25 @@ function ModalSua({ id,thuocTinh, setData }) {
   function handleSetTrangThai(selectedOption) {
     setSanPham(prevSanPham => ({
       ...prevSanPham,
-      trangThai: selectedOption.value // chỉ lấy value
+      trangThai: selectedOption.value
     }));
   }
+  // function handleSetThietKe(selectedOption) {
+  //   setThietKeSelected(selectedOption);
+  //   setSanPham((prevSanPham) => ({
+  //     ...prevSanPham,
+  //     thietKeId: selectedOption.value, // Chỉ cần dùng thietKeId
+  //   }));
+  // }
+
   function handleSetThietKe(e) {
     setSanPham({
       ...sanPham,
       thietKeId: e.value,
     });
   }
+  
+  
   
   function handleSetNhom(e) {
     setSanPham({
@@ -231,13 +229,8 @@ function ModalSua({ id,thuocTinh, setData }) {
         "Sửa sản phẩm thành công",
         "bottomRight"
       );
-
-      setData();
       setSanPham({
-        tenSanPham: "",
-        giaBan: 0,
-        giaNhap: 0,
-        soLuong: 0,
+       ...sanPham
       });
     } else {
       openNotification(
@@ -253,6 +246,7 @@ function ModalSua({ id,thuocTinh, setData }) {
         soLuong: 0,
       });
     }
+    setData(data.data.data);
     setFileList([]);
     setIsModalOpen(false);
     setIsLoading(false);
@@ -261,11 +255,20 @@ function ModalSua({ id,thuocTinh, setData }) {
     async function layDuLieu() {
       const data = await useSanPhamStore.actions.laySanPhamById(id);
       console.log("Lấy dữ liệu: ", data);
-      setSanPham(data.data);
+      setSanPham({
+        ...data.data,
+        thietKeId: data.data.thietKe.id,
+        nhomSanPhamId: data.data.nhomSanPham.id,
+        chatLieuId: data.data.chatLieu.id,
+        id: data.data.id,
+      });
       setFileList([
         { uid: '1', url: data.data.hinhAnh1, name: 'Hình ảnh 1' },
         { uid: '2', url: data.data.hinhAnh2, name: 'Hình ảnh 2' }
       ]);
+      // if(data.data.thietKe && data.data.thietKe.id) {
+      //   setThietKeSelected({ value: data.data.thietKe.id, label: data.data.thietKe.tenThietKe });
+      // }
     }
   
     if (isModalOpen) {
@@ -299,6 +302,7 @@ function ModalSua({ id,thuocTinh, setData }) {
           </Button>,
         ]}
       >
+         {sanPham ? (
         <Form
           form={form}
           name="wrap"
@@ -359,7 +363,7 @@ function ModalSua({ id,thuocTinh, setData }) {
           <Form.Item label="Trạng thái sản phẩm">
           <Select
           labelInValue
-          value={sanPham.trangThai ? { value: sanPham.trangThai } : undefined} // Cần phải có giá trị hoặc là undefined
+          value={sanPham.trangThai ? { value: sanPham.trangThai } : undefined} 
           style={{ width: "100%" }}
           onChange={(selectedOption) => handleSetTrangThai(selectedOption)}
         >
@@ -375,9 +379,14 @@ function ModalSua({ id,thuocTinh, setData }) {
               labelInValue
               optionLabelProp="children"
               style={{ width: "100%" }}
-              value={{ value: sanPham.thietKe?.id }}
               rules={[{ required: true }]}
-              onChange={handleSetThietKe}
+              defaultValue={sanPham.thietKe.tenThietKe}
+              onChange={(e) => {
+                setSanPham({
+                  ...sanPham,
+                  thietKeId: e.value,
+                });
+              }}
             >
               {thuocTinh?.thietKeList.map((option) => (
                 <Select.Option key={option.id} value={option.id}>
@@ -391,7 +400,7 @@ function ModalSua({ id,thuocTinh, setData }) {
             <Select
               labelInValue
               optionLabelProp="children"
-              value={{ value: sanPham.chatLieu?.id }}
+              defaultValue={sanPham.chatLieu.tenChatLieu}
               style={{
                 width: "100%",
               }}
@@ -415,7 +424,7 @@ function ModalSua({ id,thuocTinh, setData }) {
             <Select
               labelInValue
               optionLabelProp="children"
-              value={{ value: sanPham.nhomSanPham?.id }}
+              defaultValue={sanPham.nhomSanPham.tenNhom}
               style={{
                 width: "100%",
               }}
@@ -458,6 +467,9 @@ function ModalSua({ id,thuocTinh, setData }) {
           </Form.Item>
 
         </Form>
+        ) : (
+          ""
+        )}
       </Modal>
     </>
   );

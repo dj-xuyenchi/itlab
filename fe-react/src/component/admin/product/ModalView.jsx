@@ -49,6 +49,7 @@ function ModalView({ id }) {
         <Button
           style={{
             color: "blue",
+            margin: "0 10px",
           }}
           shape="circle"
           icon={<IoEyeSharp />}
@@ -151,7 +152,7 @@ function ModalView({ id }) {
               },
             ]}
           >
-            <Input disabled value={sanPham.moTa} />
+            <Input.TextArea disabled value={sanPham.moTa} autoSize={{ minRows: 3, maxRows: 5 }} />
           </Form.Item>
           <Form.Item
             label="Trạng Thái"

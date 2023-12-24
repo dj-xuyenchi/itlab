@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -23,7 +24,7 @@ const Footer = () => {
           <div className="link-category company">
             <h3>CÔNG TY</h3>
             <ul>
-              <li><a href="gioi-thieu.html">Giới thiệu về ROUTINE</a></li>
+            <li><Link to="/gioi-thieu">Giới thiệu về ROUTINE</Link></li>
               <li><a href="tuyen-dung.html">Tuyển dụng</a></li>
               <li><a href="tin-thoi-trang.html">Tin thời trang</a></li>
               <li><a href="hop-tac.html">Hợp tác nhượng quyền</a></li>
@@ -53,7 +54,7 @@ const Footer = () => {
                     <li><a href="chinh-sach-khach-hang-than-thiet.html">Chính sách khách hàng thân thiết</a></li>
                     <li><a href="chinh-sach-doi-tra.html">Chính sách đổi trả</a></li>
                     <li><a href="chinh-sach-bao-hanh.html">Chính sách bảo hành</a></li>
-                    <li><a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a></li>
+                    <li><Link to="/chinh-sach-bao-mat">Chính sách bảo mật</Link></li>
                     <li><a href="cau-hoi-thuong-gap.html">Câu hỏi thường gặp</a></li>
                     <li><a href="huong-dan-mua-hang-online.html">Hướng dẫn mua hàng online</a></li>
                 </ul>

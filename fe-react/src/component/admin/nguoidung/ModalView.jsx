@@ -46,6 +46,7 @@ function ModalView({ id }) {
         <Button
           style={{
             color: "blue",
+            
           }}
           shape="circle"
           icon={<IoEyeSharp />}
@@ -76,7 +77,7 @@ function ModalView({ id }) {
           <Form.Item label="Ảnh Đại Diện" >
             <img
               src={nguoiDung.anhDaiDien} 
-              style={{ width: '30%', height: '30%', float: "left" }} 
+              style={{ width: '20%', height: '20%', float: "left" }} 
             />
           </Form.Item>
           <Form.Item

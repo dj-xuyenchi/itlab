@@ -151,6 +151,7 @@ function ModalThemSua({ id, setData }) {
         <Button
           style={{
             color: "green",
+            margin: "0 10px",
           }}
           shape="circle"
           icon={<FaRegPenToSquare />}
