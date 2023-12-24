@@ -164,6 +164,38 @@ function ModalView({ id }) {
             <Input disabled value={sanPham.trangThai === "DANGBAN" ? "Đang bán" : sanPham.trangThai === "HETHANG" ? "Hết hàng" : ""} />
           </Form.Item>
           <Form.Item
+            label="Chất liệu"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input disabled value={sanPham.chatLieu.tenChatLieu} />
+          </Form.Item>
+
+          <Form.Item
+            label="Thiết kế"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input disabled value={sanPham.thietKe.tenThietKe} />
+          </Form.Item>
+
+          <Form.Item
+            label="Nhóm sản phẩm"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input disabled value={sanPham.nhomSanPham.tenNhom} />
+          </Form.Item>
+          <Form.Item
             label="Số lượng tồn"
             rules={[
               {
@@ -203,28 +235,9 @@ function ModalView({ id }) {
           >
             <Input disabled value={sanPham.soLuongLoi} />
           </Form.Item>
-          <Form.Item
-            label="Chất liệu"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={sanPham.chatLieu.tenChatLieu} />
-          </Form.Item>
-
-          <Form.Item
-            label="Thiết kế"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={sanPham.thietKe.tenThietKe} />
-          </Form.Item>
         </Form>
+
+        
         
       </Modal>
     </>

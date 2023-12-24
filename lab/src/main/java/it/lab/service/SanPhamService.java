@@ -479,8 +479,12 @@ public class SanPhamService implements ISanPhamService {
         sanPham.setSoLuongLoi(sanPhamRequest.getSoLuongLoi());
         sanPham.setSoLuongTraHang(sanPhamRequest.getSoLuongTraHang());
         sanPham.setSoLuongDaBan(sanPhamRequest.getSoLuongDaBan());
-        sanPham.setHinhAnh1(CloudinaryUpload.uploadFile(hinh1));
-        sanPham.setHinhAnh2(CloudinaryUpload.uploadFile(hinh2));
+        if (hinh1 != null && !hinh1.isEmpty()) {
+            sanPham.setHinhAnh1(CloudinaryUpload.uploadFile(hinh1));
+        }
+        if (hinh2 != null && !hinh2.isEmpty()) {
+            sanPham.setHinhAnh2(CloudinaryUpload.uploadFile(hinh2));
+        }
         sanPham.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId()).get());
         sanPham.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId()).get());
         sanPham.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId()).get());

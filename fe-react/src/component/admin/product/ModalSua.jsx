@@ -64,19 +64,18 @@ function ModalSua({ id,thuocTinh, setData }) {
       moTa: e.target.value,
     });
   }
-  function handleSetThietKe(e) {
-    setSanPham({
-      ...sanPham,
-      thietKeId: e.value,
-    });
-  }
   function handleSetTrangThai(selectedOption) {
     setSanPham(prevSanPham => ({
       ...prevSanPham,
       trangThai: selectedOption.value // chỉ lấy value
     }));
   }
-  
+  function handleSetThietKe(e) {
+    setSanPham({
+      ...sanPham,
+      thietKeId: e.value,
+    });
+  }
   
   function handleSetNhom(e) {
     setSanPham({
@@ -200,16 +199,16 @@ function ModalSua({ id,thuocTinh, setData }) {
       openNotification(
         "error",
         "Hệ thống",
-        "Cần tối thiểu 2 hình ảnh",
+        "Cần 2 hình ảnh",
         "bottomRight"
       );
       return;
     }
-    if (hinhAnh.length < 2) {
+    if (hinhAnh && hinhAnh.length< 2) {
       openNotification(
         "error",
         "Hệ thống",
-        "Cần tối thiểu 2 hình ảnh",
+        "Cần 2 hình ảnh",
         "bottomRight"
       );
       return;
@@ -220,7 +219,10 @@ function ModalSua({ id,thuocTinh, setData }) {
     form2.append("file1", hinhAnh[0]);
     form2.append("file2", hinhAnh[1]);
     form2.append("data", JSON.stringify(sanPham));
+    
+
     const data = await useSanPhamStore.actions.suaSanPham(form2);
+    console.log("Toàn bộ dữ liệu sản phẩm sẽ được gửi đi:", form2);
     if (data.data.status == "THANHCONG") {
       form.resetFields();
       openNotification(
@@ -255,30 +257,22 @@ function ModalSua({ id,thuocTinh, setData }) {
     setIsModalOpen(false);
     setIsLoading(false);
   }
-
-  // async function layDuLieu2() {
-  //   const data = await useNguoiDungStore.actions.layRankKhachHang();
-  //   setRankKhachHang(data.data.data);
-  // }
-  async function layDuLieu3() {
-    const data = await useSanPhamStore.actions.fetchSanPham();
-    setData(data.data.data);
-  }
   useEffect(() => {
     async function layDuLieu() {
       const data = await useSanPhamStore.actions.laySanPhamById(id);
       console.log("Lấy dữ liệu: ", data);
       setSanPham(data.data);
-      setFileList([{ uid: '1', url: data.data.hinhAnh1, name: 'Hình ảnh 1' }]);
-      form.setFieldsValue({
-        thietKe: sanPham.thietKe,
-      });
+      setFileList([
+        { uid: '1', url: data.data.hinhAnh1, name: 'Hình ảnh 1' },
+        { uid: '2', url: data.data.hinhAnh2, name: 'Hình ảnh 2' }
+      ]);
     }
+  
     if (isModalOpen) {
       layDuLieu();
-      // layDuLieu2();
     }
   }, [id, isModalOpen]);
+  
 
   return (
     <>
@@ -376,34 +370,28 @@ function ModalSua({ id,thuocTinh, setData }) {
           ))}
         </Select>
       </Form.Item>
-
           <Form.Item label="Thiết kế">
             <Select
               labelInValue
               optionLabelProp="children"
-              style={{
-                width: "100%",
-              }}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+              style={{ width: "100%" }}
+              value={{ value: sanPham.thietKe?.id }}
+              rules={[{ required: true }]}
               onChange={handleSetThietKe}
             >
-              {thuocTinh
-                ? thuocTinh.thietKeList.map((option) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.tenThietKe}
-                  </Select.Option>
-                ))
-                : ""}
+              {thuocTinh?.thietKeList.map((option) => (
+                <Select.Option key={option.id} value={option.id}>
+                  {option.tenThietKe}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
+
           <Form.Item label="Chất liệu">
             <Select
               labelInValue
               optionLabelProp="children"
+              value={{ value: sanPham.chatLieu?.id }}
               style={{
                 width: "100%",
               }}
@@ -427,6 +415,7 @@ function ModalSua({ id,thuocTinh, setData }) {
             <Select
               labelInValue
               optionLabelProp="children"
+              value={{ value: sanPham.nhomSanPham?.id }}
               style={{
                 width: "100%",
               }}
@@ -452,7 +441,7 @@ function ModalSua({ id,thuocTinh, setData }) {
               multiple
               customRequest={() => { }}
               {...props}
-              maxCount={4}
+              maxCount={2}
               fileList={fileList}
             >
               <div>

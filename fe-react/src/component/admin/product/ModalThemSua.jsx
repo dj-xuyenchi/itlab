@@ -381,32 +381,17 @@ function ModalThemSua({ type, thuocTinh, fetchData }) {
                 : ""}
             </Select>
           </Form.Item>
-          {/* <Form.Item label="Số lượng">
-            <InputNumber
-              style={{
-                width: "100%",
-              }}
-              value={sanPham.soLuong}
-              min={0}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              onChange={handleSetSoLuong}
-            />
-          </Form.Item> */}
           <Form.Item label="Thông tin chi tiết">
-            <Input value={sanPham.moTa} onChange={handleSetMoTa} />
+            <Input.TextArea value={sanPham.moTa} onChange={handleSetMoTa} />
           </Form.Item>
-          
+
           <Form.Item label="Upload">
             <Upload
               listType="picture-card"
               multiple
               customRequest={() => { }}
               {...props}
-              maxCount={4}
+              maxCount={2}
               fileList={fileList}
             >
               <div>
