@@ -16,6 +16,7 @@ import ModalThemNhom from "./ModalThemNhom";
 import ModalView from "./ModalThemNhom";
 import DungNhomSanPham from "./DungNhomSanPham";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+import Modalxoa from "./Modalxoa";
 function Product() {
   const [sanPham, setSanPhamSuKien] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -161,7 +162,7 @@ function Product() {
       key: "trangThai",
       width: "15%",
       render: (text) => {
-        if (text === "Chay_Su_Kien") {
+        if (text === "CHAY_SU_KIEN") {
           return <span style={{ color: "green" }}>Chạy sự kiện</span>;
         } else {
           return <span style={{ color: "red" }}>Ngừng sự kiện</span>;
@@ -175,13 +176,7 @@ function Product() {
       key: "action",
       width: "10%",
       render: (id) => (
-        <Button
-          onClick={() => handleUpdate(id)}
-          type="primary"
-          icon={<FaRegPenToSquare />}
-        >
-          Update
-        </Button>
+        <Modalxoa id={id}/>
       ),
     },
   ];

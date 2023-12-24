@@ -26,12 +26,15 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
 
     @Override
     public Page<SuKienGiamGiaDTO> layHetSuKienGiamGia() {
-        return new Page<SuKienGiamGiaDTO>(SuKienGiamGiaDTO.fromCollection(suKienGiamGiaRepo.findAllByOrderByNgayCapNhatDesc()), 0, 10000);
+        return new Page<SuKienGiamGiaDTO>(SuKienGiamGiaDTO.fromCollection(suKienGiamGiaRepo.getAll()), 0, 10000);
     }
 
     @Override
     public Page<SuKienGiamGiaDTO> xoaSuKienGiamGia(Long suKienGiamGiaId) {
-        suKienGiamGiaRepo.deleteById(suKienGiamGiaId);
+        SuKienGiamGia suKienGiamGiaGoc = suKienGiamGiaRepo.findById(suKienGiamGiaId).orElse(null);
+        assert suKienGiamGiaGoc != null;
+        suKienGiamGiaGoc.setTrangThai(TrangThaiSuKienGiamGia.DANGUNG);
+        suKienGiamGiaRepo.save(suKienGiamGiaGoc);
         return layHetSuKienGiamGia();
     }
 
@@ -70,7 +73,7 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
         suKienGiamGia1.setGiaTriGiam(suKienGiamGia.getGiaTriGiam());
         suKienGiamGia1.setMoTa(suKienGiamGia.getMoTa());
         if(suKienGiamGia.getNgayBatDau().isAfter(LocalDateTime.now())){
-            suKienGiamGia1.setTrangThai(TrangThaiSuKienGiamGia.UNACTIVE);
+            suKienGiamGia1.setTrangThai(TrangThaiSuKienGiamGia.CHUADIENRA);
         }else {
             suKienGiamGia1.setTrangThai(TrangThaiSuKienGiamGia.HOATDONG);
 
@@ -91,7 +94,7 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
             existingSuKien.setGiaTriGiam(suKienGiamGia.getGiaTriGiam());
             existingSuKien.setMoTa(suKienGiamGia.getMoTa());
             if(suKienGiamGia.getNgayBatDau().isAfter(LocalDateTime.now())){
-                existingSuKien.setTrangThai(TrangThaiSuKienGiamGia.UNACTIVE);
+                existingSuKien.setTrangThai(TrangThaiSuKienGiamGia.CHUADIENRA);
             }else {
                 existingSuKien.setTrangThai(TrangThaiSuKienGiamGia.HOATDONG);
 
@@ -121,6 +124,6 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
 
     @Override
     public List<SuKienGiamGia> getAll() {
-        return suKienGiamGiaRepo.findAllByOrderByNgayCapNhatDesc();
+        return suKienGiamGiaRepo.getAll();
     }
 }

@@ -25,7 +25,7 @@ public class CronTask implements Cron {
     }
 
     private void doiTrangThaiSuKien() {
-        var suKien = _suKienGiamGiaRepo.findAll().stream().filter(x -> x.getTrangThai() == TrangThaiSuKienGiamGia.UNACTIVE).toList();
+        var suKien = _suKienGiamGiaRepo.findAll().stream().filter(x -> x.getTrangThai() == TrangThaiSuKienGiamGia.CHUADIENRA).toList();
         for (var item : suKien) {
             if (item.getNgayBatDau().isAfter(LocalDateTime.now())) {
                 System.out.println("đã kích hoạt sự kiện" + item.getTenSuKien());

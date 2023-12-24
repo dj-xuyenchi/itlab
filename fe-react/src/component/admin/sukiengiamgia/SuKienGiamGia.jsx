@@ -206,9 +206,7 @@ function SuKienGiamGia() {
       key: "ngayBatDau",
       width: "20%",
       ...getColumnSearchProps("ngayBatDau"),
-      render: (ngayBatDau) => (
-        <>{ngayBatDau ? fixNgayThang(ngayBatDau) : ""}</>
-      ),
+      render: (ngayBatDau) => <>{ngayBatDau ? fixNgayThang(ngayBatDau) : ""}</>,
     },
     {
       title: "Ngày kết thúc",
@@ -225,7 +223,13 @@ function SuKienGiamGia() {
       key: "ngayCapNhat",
       width: "15%",
       render: (ngayCapNhat) => (
-        <>{ngayCapNhat ? fixNgayThang(ngayCapNhat) : <Tag color="processing">Mới</Tag>}</>
+        <>
+          {ngayCapNhat ? (
+            fixNgayThang(ngayCapNhat)
+          ) : (
+            <Tag color="processing">Mới</Tag>
+          )}
+        </>
       ),
     },
     {
@@ -233,6 +237,13 @@ function SuKienGiamGia() {
       dataIndex: "trangThai",
       key: "trangThai",
       width: "20%",
+      render: (text) => {
+        if (text === "HOATDONG") {
+          return <span style={{ color: "green" }}>Hoạt động</span>;
+        } else {
+          return <span style={{ color: "red" }}>Chưa diễn ra</span>;
+        }
+      },
     },
 
     {
@@ -256,14 +267,12 @@ function SuKienGiamGia() {
     },
   ];
 
-
   async function layDuLieu() {
     try {
       const response = await useSuKienGiamGiaStore.actions.fetchSuKienGiamGia();
       if (response && response.data && Array.isArray(response.data)) {
-        setData(response.data)
+        setData(response.data);
       }
-      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -315,6 +324,30 @@ function SuKienGiamGia() {
       );
       return;
     }
+    const currentDate = new Date().toISOString().split("T")[0];
+    if (
+      suKienGiamGia.ngayBatDau < currentDate 
+  
+    ) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Ngày bắt đầu nhỏ hơn ngày hiện tại",
+        "bottomRight"
+      );
+      return; // Không gửi yêu cầu nếu dữ liệu không hợp lệ
+    }
+    if (
+      suKienGiamGia.ngayKetThuc <= suKienGiamGia.ngayBatDau
+    ) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Ngày kết thúc nhỏ hơn ngày bắt đầu ",
+        "bottomRight"
+      );
+      return; 
+    }
 
     if (fileList.length === 0 || !fileList[0].originFileObj) {
       openNotification("error", "Hệ thống", "Vui lòng chọn ảnh", "bottomRight");
@@ -329,7 +362,7 @@ function SuKienGiamGia() {
 
     const suKienData = {
       tenSuKien: suKienGiamGia.tenSuKien,
-      giaTriGiam:suKienGiamGia.giaTriGiam,
+      giaTriGiam: suKienGiamGia.giaTriGiam,
       ngayBatDau: formattedStartDate,
       ngayKetThuc: formattedEndDate,
       moTa: suKienGiamGia.moTa,
@@ -347,6 +380,7 @@ function SuKienGiamGia() {
       );
 
       const responseData = await response.json();
+      setIsModalOpen(false);
       layDuLieu();
       if (response.ok) {
         form.resetFields();
@@ -356,7 +390,7 @@ function SuKienGiamGia() {
           "Thêm sự kiện thành công",
           "bottomRight"
         );
-        setIsModalOpen(false);
+      
       } else {
         throw new Error(
           responseData.message || "Có lỗi xảy ra khi thêm sự kiện giảm giá"
@@ -372,7 +406,14 @@ function SuKienGiamGia() {
       );
     }
   };
-
+  const formattedDate = moment(
+    suKienGiamGia.ngayBatDau,
+    "YYYY-MM-DDTHH:mm"
+  ).format("YYYY-MM-DDTHH:mm");
+  const formattedDateEnd = moment(
+    suKienGiamGia.ngayKetThuc,
+    "YYYY-MM-DDTHH:mm"
+  ).format("YYYY-MM-DDTHH:mm");
   const handleDateChange = (date, dateString, field) => {
     setSuKienGiamGia({
       ...suKienGiamGia,
@@ -464,10 +505,13 @@ function SuKienGiamGia() {
                     label="Giá trị giảm"
                     name="giaTriGiam"
                     rules={[
-                      { required: true, message: "Vui lòng nhập giá trị giảm " },
+                      {
+                        required: true,
+                        message: "Vui lòng nhập giá trị giảm ",
+                      },
                     ]}
                   >
-                    <Input 
+                    <Input
                       onChange={(e) =>
                         setSuKienGiamGia({
                           ...suKienGiamGia,
@@ -478,33 +522,35 @@ function SuKienGiamGia() {
                   </Form.Item>
                   <Form.Item
                     label="Ngày bắt đầu"
-                    name="ngayBatDau"
                     rules={[
                       { required: true, message: "Vui lòng chọn ngày bắt đầu" },
                     ]}
                   >
-                    <DatePicker
-                      style={{ width: "100%" }}
-                      onChange={(date, dateString) =>
-                        handleDateChange(date, dateString, "ngayBatDau")
-                      }
+                    <Input
+                      type="datetime-local"
+                      value={formattedDate}
+                      onChange={(e) => {
+                        setSuKienGiamGia({
+                          ...suKienGiamGia,
+                          ngayBatDau: e.target.value,
+                        });
+                      }}
                     />
                   </Form.Item>
-
                   <Form.Item
                     label="Ngày kết thúc"
-                    name="ngayKetThuc"
                     rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng chọn ngày kết thúc",
-                      },
+                      { required: true, message: "Vui lòng chọn ngày bắt đầu" },
                     ]}
                   >
-                    <DatePicker
-                      style={{ width: "100%" }}
-                      onChange={(date, dateString) =>
-                        handleDateChange(date, dateString, "ngayKetThuc")
+                    <Input
+                      type="datetime-local"
+                      value={formattedDateEnd}
+                      onChange={(e) =>
+                        setSuKienGiamGia({
+                          ...suKienGiamGia,
+                          ngayKetThuc: e.target.value, // Cập nhật giá trị ngày tháng khi thay đổi
+                        })
                       }
                     />
                   </Form.Item>

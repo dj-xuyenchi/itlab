@@ -46,6 +46,7 @@ function ModalView({ id }) {
         <Button
           style={{
             color: "blue",
+            
           }}
           shape="circle"
           icon={<IoEyeSharp />}
@@ -76,7 +77,7 @@ function ModalView({ id }) {
           <Form.Item label="Ảnh Đại Diện" >
             <img
               src={nguoiDung.anhDaiDien} 
-              style={{ width: '80px', height: '120px' }} 
+              style={{ width: '20%', height: '20%', float: "left" }} 
             />
           </Form.Item>
           <Form.Item
@@ -120,16 +121,6 @@ function ModalView({ id }) {
             <Input disabled value={nguoiDung.email} />
           </Form.Item>
           <Form.Item
-            label="Mật Khẩu"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={nguoiDung.matKhau} />
-          </Form.Item>
-          <Form.Item
             label="Trạng Thái"
             rules={[
               {
@@ -139,29 +130,6 @@ function ModalView({ id }) {
           >
              <Input disabled value={nguoiDung.trangThai === "HOATDONG" ? "Hoạt Động" : nguoiDung.trangThai === "BIKHOA" ? "Bị Khóa" : ""}/>
           </Form.Item>  
-          <Form.Item
-            label="Rank Khách Hàng"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input
-              disabled
-              value={nguoiDung.rankKhachHang ? nguoiDung.rankKhachHang.tenRank : ''}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Điểm"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input disabled value={nguoiDung.diem} />
-          </Form.Item>
           <Form.Item
             label="Giới Tính"
             rules={[

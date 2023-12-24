@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { useEffect, useRef, useState } from "react";
 
-function BanhDonut() {
+function BanhDonut2() {
     const language = useSelector(selectLanguage);
     const chartRef = useRef(null);
     const [chartData, setChartData] = useState(null);
@@ -54,9 +54,7 @@ function BanhDonut() {
                                 show: false
                             },
                             data: [
-                                { value: data.taiKhoanMoiThang, name: 'Tài Khoản Mới Trong Tháng' },
                                 { value: data.soLuongBanDuoc, name: 'Số Lượng Bán Được' },
-                                { value: data.tongSoLuongNhanVien, name: 'Tổng Số Lượng Nhân Viên' },
                                 { value: data.TongSoLuongLoi, name: 'Tổng Số Lượng Lỗi' },
                             ]
                         }
@@ -81,4 +79,4 @@ function BanhDonut() {
     );
 }
 
-export default BanhDonut;
+export default BanhDonut2;

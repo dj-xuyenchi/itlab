@@ -8,6 +8,8 @@ import {
     Tag,
     notification,
 } from "antd";
+
+import html2pdf from "html2pdf.js";
 import { useEffect, useRef, useState } from "react";
 import { DatePicker } from "antd";
 import BieuDo12Thang from "./BieuDo12Thang";
@@ -18,6 +20,17 @@ import { useCrm } from "../crmStore";
 import SoSanhKhoangThoiGian from "./SoSanhKhoangThoiGian";
 const { RangePicker } = DatePicker;
 function ModalDanhGiaChiTiet({ data }) {
+    const generatePdf = () => {
+        const content = document.getElementById('content-to-export');
+        const pdfOptions = {
+            margin: 0,
+            filename: 'Đánh giá chi tiết sản phẩm.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' } // Đặt orientation thành 'landscape'
+        };
+        html2pdf(content, pdfOptions);
+    };
     const [isShow, setIsShow] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     const [chiTietDoanhSo, setChiTietDoanhSo] = useState(undefined)
@@ -103,105 +116,120 @@ function ModalDanhGiaChiTiet({ data }) {
                 onOk={() => {
                     setIsShow(false)
                 }
+
                 }
                 onCancel={() => {
                     setIsShow(false)
                 }}>
-                <p ref={showContentSpan1}></p>
-                <BieuDo12Thang data={data.doanhSo} />
-                <p ref={showContentSpan2}></p>
-                {
-                    done ? "" : <div style={{
-                        display: 'flex',
-                        justifyContent: 'center'
-                    }}>  <Spin size="large" /></div>
-                }
-                {
-                    done && <> <BieuDoTheoOption data={chiTietDoanhSo && chiTietDoanhSo.thongKeChiTiet12} />
-                        <p style={{
-                            marginBottom: "0px",
-                            color: "red"
-                        }}>Cụ thể hơn thì dưới đây là so sánh doanh số và doanh thu với năm ngoái.</p>
-                        <p style={{
-                            marginBottom: "4px",
-                            color: "red"
-                        }}>Bạn cũng có thể lựa chọn so sánh theo năm khác.</p>
-                        <Row style={{
-                            marginBottom: "4px"
-                        }}>
-                            <Col span={24}>
-                                <Select
-                                    defaultValue={nam.truoc}
-                                    style={{
-                                        width: 120,
-                                    }}
-                                    onChange={(e) => {
-                                        setNam({
-                                            ...nam,
-                                            truoc: e
-                                        })
-                                    }}
-                                    options={[
-                                        {
-                                            value: 2022,
-                                            label: '2022',
-                                        },
-                                        {
-                                            value: 2023,
-                                            label: '2023',
-                                        },
-                                    ]}
-                                />
-                                <Select
-                                    defaultValue={nam.sau}
-                                    style={{
-                                        width: 120,
-                                        marginLeft: "4px"
-                                    }}
-                                    onChange={(e) => {
-                                        handleSendContext2GPT()
-                                        setNam({
-                                            ...nam,
-                                            sau: e
-                                        })
-                                    }}
-                                    options={[
-                                        {
-                                            value: 2022,
-                                            label: '2022',
-                                        },
-                                        {
-                                            value: 2023,
-                                            label: '2023',
-                                        },
-                                    ]}
-                                />
-                            </Col>
-                        </Row>
-                        <SoSanhKhoangThoiGian title={
-                            {
-                                title: "Doanh số " + nam.truoc + " và " + nam.sau,
-                                sub: '(Đơn vị: cái)',
-                                nam: nam,
-                                type: true
-                            }
-                        } data={chiTietDoanhSo && chiTietDoanhSo.soSanhDoanhSo} />
-                        <SoSanhKhoangThoiGian title={
-                            {
-                                title: "Doanh thu " + nam.truoc + " và " + nam.sau,
-                                sub: '(Đơn vị: đồng)',
-                                nam: nam,
-                                type: false
-                            }
-                        } data={chiTietDoanhSo && chiTietDoanhSo.soSanhDoanhThu} />
-                        <Row style={{
-                            marginBottom: "40px"
-                        }}>
-                            <p ref={showContentSpan3}></p>
-                            <Col span={24}>
-                                <a href="">tải xuống báo cáo excel.</a>
-                            </Col>
-                        </Row> </>}
+                <div
+                    id="content-to-export"
+
+                >
+                    <p ref={showContentSpan1}></p>
+                    <BieuDo12Thang data={data.doanhSo} />
+                    <p ref={showContentSpan2} style={{
+                        marginBottom: "140px"
+                    }}></p>
+                    {
+                        done ? "" : <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                        }}>  <Spin size="large" /></div>
+                    }
+                    {
+                        done && <> <BieuDoTheoOption data={chiTietDoanhSo && chiTietDoanhSo.thongKeChiTiet12} />
+                            <p style={{
+                                marginBottom: "0px",
+                                color: "red"
+                            }}>Cụ thể hơn thì dưới đây là so sánh doanh số và doanh thu với năm ngoái.</p>
+                            <p style={{
+                                marginBottom: "4px",
+                                color: "red"
+                            }}>Bạn cũng có thể lựa chọn so sánh theo năm khác.</p>
+                            <Row style={{
+                                marginBottom: "4px"
+                            }}>
+                                <Col span={24}>
+                                    <Select
+                                        defaultValue={nam.truoc}
+                                        style={{
+                                            width: 120,
+                                        }}
+                                        onChange={(e) => {
+                                            setNam({
+                                                ...nam,
+                                                truoc: e
+                                            })
+                                        }}
+                                        options={[
+                                            {
+                                                value: 2022,
+                                                label: '2022',
+                                            },
+                                            {
+                                                value: 2023,
+                                                label: '2023',
+                                            },
+                                        ]}
+                                    />
+                                    <Select
+                                        defaultValue={nam.sau}
+                                        style={{
+                                            width: 120,
+                                            marginLeft: "4px"
+                                        }}
+                                        onChange={(e) => {
+                                            handleSendContext2GPT()
+                                            setNam({
+                                                ...nam,
+                                                sau: e
+                                            })
+                                        }}
+                                        options={[
+                                            {
+                                                value: 2022,
+                                                label: '2022',
+                                            },
+                                            {
+                                                value: 2023,
+                                                label: '2023',
+                                            },
+                                        ]}
+                                    />
+                                </Col>
+                            </Row>
+                            <SoSanhKhoangThoiGian title={
+                                {
+                                    title: "Doanh số " + nam.truoc + " và " + nam.sau,
+                                    sub: '(Đơn vị: cái)',
+                                    nam: nam,
+                                    type: true
+                                }
+                            } data={chiTietDoanhSo && chiTietDoanhSo.soSanhDoanhSo} />
+                            <p style={{
+                                marginTop: "60px"
+                            }}></p>
+                            <SoSanhKhoangThoiGian title={
+                                {
+                                    title: "Doanh thu " + nam.truoc + " và " + nam.sau,
+                                    sub: '(Đơn vị: đồng)',
+                                    nam: nam,
+                                    type: false
+                                }
+                            } data={chiTietDoanhSo && chiTietDoanhSo.soSanhDoanhThu} />
+                            <Row style={{
+                                marginBottom: "40px"
+                            }}>
+                                <p ref={showContentSpan3} style={{
+                                    marginTop: "90px"
+                                }}></p>
+                                <Col span={24}>
+                                    <a href="#" onClick={() => {
+                                        generatePdf()
+                                    }}>tải xuống báo cáo pdf.</a>
+                                </Col>
+                            </Row> </>}
+                </div>
             </Modal>
         </>
     );
