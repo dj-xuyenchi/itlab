@@ -1,5 +1,7 @@
 package it.lab.common;
 
+import it.lab.entity.HoaDonChiTiet;
+
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.logging.Level;
@@ -163,5 +165,4 @@ public class Email {
         }
         return true;
     }
-
 }

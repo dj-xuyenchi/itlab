@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatLieuDTO {
+public class ChatLieuDTO  {
     private Long id;
     private String maChatLieu;
     private String tenChatLieu;

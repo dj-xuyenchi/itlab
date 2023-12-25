@@ -25,8 +25,6 @@ function ModalTaoSuKien({ profit }) {
     const [text, setText] = useState(undefined);
     const [dataSus, setDataSus] = useState({
         tenSuKien: "Đang chờ",
-        ngayBatDau: "11/11/2023",
-        ngayKetThuc: "30/11/2023",
         moTa: "Sự kiện giảm giá",
     });
     const [isFetching, setIsFetching] = useState(false);

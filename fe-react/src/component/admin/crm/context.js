@@ -15,8 +15,6 @@ export const modal = (profit) => {
 Dựa vào doanh số 12 tháng trên hãy tạo cho tôi 1 ví dụ về sự kiện giảm giá cho các tháng còn lại của năm 2024 theo dạng
 const suKien = {
 "tenSuKien": ...,
-"ngayBatDau": DD/MM/YYYY,
-"ngayKetThuc": DD/MM/YYYY,
 "moTa": ...,
 "giaTriGiam": ...
 }
@@ -82,8 +80,6 @@ export const taoSuKien = (suKien) => {
    Hãy tạo giúp tôi sự kiện giảm giá ${suKien} áo nam theo dạng
 const suKien = {
 "tenSuKien": ...,
-"ngayBatDau": DD/MM/YYYY,
-"ngayKetThuc": DD/MM/YYYY,
 "moTa": ...,
 "giaTriGiam": ...
 }

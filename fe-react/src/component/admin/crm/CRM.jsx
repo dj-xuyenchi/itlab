@@ -101,8 +101,9 @@ function CRM() {
                                     type="primary"
                                     onClick={onButtonPress}
                                     loading={isFetching}
+                                    disabled={isFetching}
                                 >
-                                    Đánh giá doanh số 12 tháng
+                                    Đánh giá doanh thu doanh số năm 2023
                                 </Button></Col>
                         </Row>
 
