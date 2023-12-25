@@ -30,7 +30,7 @@ import NguoiDung from "./component/admin/nguoidung/NguoiDung";
 import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
 import CRM from "./component/admin/crm/CRM";
 import Voucher from "./component/admin/voucher/Voucher";
-
+import GiftVoucher from "./component/admin/giftvoucher/GiftVoucher";
 
 
 function App() {
@@ -62,6 +62,8 @@ function App() {
     <>
       <Routes>
         <Route path="/admin/voucher" element={<Voucher />} />
+        <Route path="/admin/giftvoucher" element={<GiftVoucher />} />
+
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />

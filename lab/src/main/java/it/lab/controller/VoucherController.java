@@ -1,17 +1,21 @@
 package it.lab.controller;
 //import java.util.UUID;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+import it.lab.entity.NguoiDung;
 import it.lab.entity.Voucher;
 import it.lab.enums.LoaiGiam;
 import it.lab.enums.TrangThaiVoucher;
 
 import it.lab.repository.NguoiDungRepo;
 import it.lab.repository.VoucherRepo;
+import it.lab.service.GoogleCloudService;
+import it.lab.service.VoucherNguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +32,19 @@ public class VoucherController {
 
     @Autowired
     NguoiDungRepo nguoiDungRepo;
+
+    @Autowired
+    GoogleCloudService googleCloudService;
+
+    @Autowired
+    VoucherNguoiDungService voucherNguoiDungService;
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<?> layDuLieu() throws IOException {
         return ResponseEntity.ok(voucherRepo.findAll());
     }
 //
+
 
 
     @PostMapping(value = "/addVoucher")
@@ -61,9 +73,27 @@ public class VoucherController {
         voucher.setNgayTao(LocalDate.now());
         return voucherRepo.save(voucher);
     }
-    @PutMapping("/{id}")
+
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Voucher> viewUpdate(@PathVariable("id") Long id) {
+        Optional<Voucher> voucherOptional = voucherRepo.findById(id);
+
+        if (voucherOptional.isPresent()) {
+            Voucher voucher = voucherOptional.get();
+            return new ResponseEntity<>(voucher, HttpStatus.OK);
+        } else {
+            // Handle the case where the voucher with the given ID is not found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/update/{id}")
     public ResponseEntity<Voucher> update( @RequestBody Voucher newVoucher,@PathVariable Long id) {
         Optional<Voucher> OV = voucherRepo.findById(id);
+        LocalDate currentDate = LocalDate.now();
+
         if (OV.isPresent()) {
             Voucher oldVoucher = OV.get();
             oldVoucher.setLoaiGiam(newVoucher.getLoaiGiam());
@@ -71,14 +101,15 @@ public class VoucherController {
             oldVoucher.setMaVoucher(newVoucher.getMaVoucher());
             oldVoucher.setSoLuong(newVoucher.getSoLuong());
             oldVoucher.setTenVoucher(newVoucher.getTenVoucher());
-            oldVoucher.setNgayCapNhat(LocalDate.now());
+            oldVoucher.setNgayCapNhat(currentDate);
             voucherRepo.save(oldVoucher);
 
             return new ResponseEntity<>(oldVoucher, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }@PatchMapping("/delete/{id}")
+    }
+    @PatchMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<Voucher> voucher = voucherRepo.findById(id);
 
@@ -103,5 +134,97 @@ public class VoucherController {
     public List<Voucher> searchByName(@RequestParam String tenVoucher) {
         return voucherRepo.searchByTen(tenVoucher);
     }
+
+
+
+
+    //them voucher
+    @PostMapping("/themVoucherChoNguoiDung")
+    public ResponseEntity<String> themVoucherChoNguoiDung(@RequestParam Long nguoiDungId, @RequestParam Long voucherId) {
+        try {
+            // Call the service method
+            voucherNguoiDungService.themVoucherChoNguoiDung(nguoiDungId, voucherId);
+
+            // If successful, return a success response
+            return new ResponseEntity<>("Voucher đã được thêm cho người dùng thành công.", HttpStatus.OK);
+
+        } catch (VoucherNguoiDungService.VoucherOutOfStockException e) {
+            // Return a bad request response with the specific message
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            // If it's another exception, return an internal server error response
+            return new ResponseEntity<>("Đã xảy ra lỗi: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    //get bảng tặng voucher cho người dung
+
+@GetMapping("/giftvoucher")
+public ResponseEntity<?> layGiftVoucher() throws IOException {
+    return ResponseEntity.ok(nguoiDungRepo.getAllTangVoucher());
 }
+
+
+
+//
+@GetMapping("/voucher-combox")
+public ResponseEntity<List<Voucher>> getAllVouchers() {
+    List<Voucher> vouchers = voucherRepo.getVouCherHD();
+    return new ResponseEntity<>(vouchers, HttpStatus.OK);
+}
+
+    // Endpoint to add a voucher for all users
+
+
+
+
+    @PostMapping("/addVoucherForAllUsers")
+    public ResponseEntity<?> addVoucherForAllUsers(@RequestParam(name = "voucherId", required = false) Long voucherId) {
+        try {
+            if (voucherId == null) {
+                // If voucherId is not provided in the request, try to get it from the /voucher-combox endpoint
+                ResponseEntity<List<Voucher>> voucherResponse = getAllVouchers();
+
+                if (voucherResponse.getStatusCode() == HttpStatus.OK && !voucherResponse.getBody().isEmpty()) {
+                    // Use the first voucher's ID
+                    voucherId = voucherResponse.getBody().get(0).getId();
+                    System.out.println("Received voucherId: " + voucherId);
+                } else {
+                    return new ResponseEntity<>("No vouchers available.", HttpStatus.BAD_REQUEST);
+                }
+            }
+            // Now, you have the voucherId, proceed to add it for all users
+            voucherNguoiDungService.themVoucherChoTatCaNguoiDung(voucherId);
+
+            return new ResponseEntity<>("Voucher added for all users successfully."+voucherId, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to add voucher for all users: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("/add-nguoidung")
+    public ResponseEntity<?> addVoucherForSelectedUsers(@RequestParam(name = "nguoiDungId",required = false) Long voucherId,
+                                                        @RequestParam(name = "voucherId",required = false) Long nguoiDungId) {
+        try {
+            if (voucherId == null || nguoiDungId == null ) {
+                return new ResponseEntity<>("Please provide a voucher and at least one user.", HttpStatus.BAD_REQUEST);
+            }
+
+
+
+            voucherNguoiDungService.themVoucherChoNguoiDung(voucherId, nguoiDungId);
+            return new ResponseEntity<>("Voucher added nguoidung."+nguoiDungId, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to add voucher for selected users: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+}
+
+
+
+
 

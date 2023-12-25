@@ -87,13 +87,13 @@ function NgayThang() {
       <Col span={8}>
         <h3 style={{ display: 'flex', alignItems: 'center' }}>
           <Statistic title="Doanh số trong ngày" value={totalRevenue} formatter={formatter} />
-          <DollarOutlined style={{ marginTop: '25px' }} />
+          <DollarOutlined style={{ marginTop: '25px' ,color:'gold'}} />
         </h3>
       </Col>
       <Col span={8}>
         <h3 style={{ display: 'flex', alignItems: 'center' }}>
           <Statistic title="Doanh số trong tháng(hiện tại)" value={totalThang} formatter={formatter} />
-          <DollarOutlined style={{ marginTop: '25px' }} />
+          <DollarOutlined style={{ marginTop: '25px' ,color:'gold' }} />
         </h3>
       </Col>
       <Col span={8}>
@@ -109,7 +109,7 @@ function NgayThang() {
             <div>
               <h5 style={{ display: 'flex', alignItems: 'center' }}>
                 <Statistic title="Doanh số trong khoảng" value={totalKhoang} formatter={formatter} />
-                <DollarOutlined style={{ marginTop: '25px' }} />
+                <DollarOutlined style={{ marginTop: '25px',color:'gold' }} />
               </h5>
             </div>
           )}

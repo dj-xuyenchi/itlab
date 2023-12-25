@@ -110,6 +110,12 @@ const items = [
       "68",
       <BsPercent />
     ),
+    getItem(
+      <Link to={"/admin/giftvoucher"}>Gift Voucher</Link>,
+      "68",
+      <BsPercent />
+    ),
+
   ]),
 ];
 

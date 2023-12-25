@@ -103,7 +103,7 @@ const ModalU = ({ recordId, onActionSuccess }) => {
 
     const updateVoucher = async (id, data) => {
         try {
-            await axios.put(`http://localhost:8080/api/voucher/${id}`, data);
+            await axios.put(`http://localhost:8089/api/voucher/update/${id}`, data);
             openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
 
         } catch (error) {
@@ -134,6 +134,8 @@ const ModalU = ({ recordId, onActionSuccess }) => {
             console.error(`Error fetching voucher with id ${id}:`, error);
         }
     };
+
+
     return (
         <>{contextHolder}
             <Space>

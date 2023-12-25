@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {  Table, Button, message, Tag, Space } from 'antd';
+import { Table, Button, message, Tag, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { PauseCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 
 
@@ -166,7 +167,7 @@ export default function Voucher() {
                 </span>
             )
         },
-        
+
         {
             title: "Ngày cập nhật",
             dataIndex: "ngayCapNhat",
@@ -181,6 +182,11 @@ export default function Voucher() {
             title: 'Trạng thái',
             dataIndex: 'trangThai',
             key: 'trangThai',
+            render: (text) => (
+                <span style={{ color: text.toLowerCase() === 'ngung' ? 'red' : 'green' }}>
+                     {text.toLowerCase() === 'ngung' ? <CloseCircleOutlined /> : (text.toLowerCase() === 'dienra' ? <PauseCircleOutlined /> : text)}
+                </span>
+            ),
         },
 
         {
@@ -227,7 +233,7 @@ export default function Voucher() {
     };
 
 
-
+      
 
     return (
         <div>
@@ -248,8 +254,7 @@ export default function Voucher() {
 
 
                 </div>
-                <div>
-
+               
                     <Table
                         columns={columns}
                         dataSource={searchResults}
@@ -259,7 +264,7 @@ export default function Voucher() {
                         style={{ margin: '10px' }} />
                 </div>
             </div>
-        </div>
+       
     );
 }
 

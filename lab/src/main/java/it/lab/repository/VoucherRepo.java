@@ -20,6 +20,8 @@ public interface VoucherRepo extends JpaRepository<Voucher, Long> {
     @Query("SELECT v FROM Voucher v WHERE v.ngayKetThuc < :currentDateTime")
     List<Voucher> findVouchersWithEndDateAfter(@Param("currentDateTime") LocalDateTime currentDateTime);
 
+    @Query("SELECT ctsp FROM Voucher ctsp WHERE ctsp.trangThai =0")
+    List<Voucher> getVouCherHD();
 
     @Query("SELECT ctsp FROM Voucher ctsp WHERE ctsp.tenVoucher LIKE %:tenVoucher%")
     List<Voucher> searchByTen(@Param("tenVoucher") String keyword);
