@@ -1,13 +1,21 @@
 package it.lab.service;
 
+import it.lab.entity.SanPham;
+import it.lab.entity.SanPhamSuKien;
+import it.lab.entity.SuKienGiamGia;
+import it.lab.enums.TrangThaiSanPhamSuKien;
 import it.lab.enums.TrangThaiSuKienGiamGia;
 import it.lab.iservice.Cron;
+import it.lab.repository.SanPhamSuKienRepo;
 import it.lab.repository.SuKienGiamGiaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CronTask implements Cron {
@@ -16,9 +24,12 @@ public class CronTask implements Cron {
 //
     @Autowired
     private SuKienGiamGiaRepo _suKienGiamGiaRepo;
+    @Autowired
+    private SanPhamSuKienRepo sanPhamSuKienRepo;
+
     @Scheduled(cron = "15 * * * * ?")
     public void guiBaoCaoHangNgay() {
-     //   doiTrangThaiSuKien();
+        //   doiTrangThaiSuKien();
 //       Excel.taoBaoCaoNgay();
 //
 //        email.sendContentAndMultipartToVer2("anhdqph19418@fpt.edu.vn", "ss","ss", Arrays.stream(new String[]{"/Users/quanganhdo/Documents/it/Template.xlsx"}).toList());
@@ -39,6 +50,35 @@ public class CronTask implements Cron {
                 System.out.println("đã ngừng sự kiện" + item.getTenSuKien());
                 item.setTrangThai(TrangThaiSuKienGiamGia.DANGUNG);
                 _suKienGiamGiaRepo.save(item);
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0 24 ***")
+    private void updateTrangThaiSuKienAuTo() {
+        List<SuKienGiamGia> suKienGiamGiaList = _suKienGiamGiaRepo.findAll();
+        for (SuKienGiamGia suKienGiamGia : suKienGiamGiaList) {
+            if (suKienGiamGia.getTrangThai() == TrangThaiSuKienGiamGia.HOATDONG || suKienGiamGia.getTrangThai() == TrangThaiSuKienGiamGia.CHUADIENRA) {
+                if (suKienGiamGia.getNgayBatDau().isBefore(LocalDateTime.now()) || suKienGiamGia.getNgayBatDau().isEqual(LocalDateTime.now())) {
+                    suKienGiamGia.setTrangThai(TrangThaiSuKienGiamGia.HOATDONG);
+                    _suKienGiamGiaRepo.save(suKienGiamGia);
+                }
+                if (suKienGiamGia.getNgayKetThuc().isBefore(LocalDateTime.now())) {
+                    suKienGiamGia.setTrangThai(TrangThaiSuKienGiamGia.DANGUNG);
+                    _suKienGiamGiaRepo.save(suKienGiamGia);
+                }
+            }
+        }
+    }
+    @Scheduled(cron = "00 03 24 ***")
+    public void updateTrangThaiSPSuKienAuTo(){
+        List<SanPhamSuKien> sanPhamSuKienList=sanPhamSuKienRepo.findAll();
+        for(SanPhamSuKien sanPhamSuKien:sanPhamSuKienList){
+            if(sanPhamSuKien.getTrangThai()== TrangThaiSanPhamSuKien.CHAY_SU_KIEN){
+                if(sanPhamSuKien.getSuKienGiamGia().getTrangThai() == TrangThaiSuKienGiamGia.DANGUNG){
+                    sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+                    sanPhamSuKienRepo.save(sanPhamSuKien);
+                }
             }
         }
     }
