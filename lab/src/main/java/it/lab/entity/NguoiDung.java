@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiNguoiDung;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -20,13 +22,15 @@ public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "email")
+    @Column(name = "manguoidung", unique = true)
+    private String maNguoiDung;
+    @Column(name = "email", columnDefinition = "nvarchar(max)")
     private String email;
-    @Column(name = "matkhau")
+    @Column(name = "matkhau", columnDefinition = "nvarchar(max)")
     private String matKhau;
-    @Column(name = "ten")
+    @Column(name = "ten", columnDefinition = "nvarchar(max)")
     private String ten;
-    @Column(name = "ho")
+    @Column(name = "ho", columnDefinition = "nvarchar(max)")
     private String ho;
     @Column(name = "anhdaidien")
     private String anhDaiDien;
@@ -39,28 +43,35 @@ public class NguoiDung {
     @Column(name = "trangthai")
     private TrangThaiNguoiDung trangThai;
     @Column(name = "ngaytao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayCapNhat;
     @JoinColumn(name = "rankkhachhang")
     @ManyToOne
+    @JsonIgnore
     private RankKhachHang rankKhachHang;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
     @OneToMany(mappedBy = "nguoiDung")
-    private List<DanhGiaSao> danhGiaSaoList;
-    @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<DiaChi> diaChiList;
     @OneToMany(mappedBy = "nguoiMua")
+    @JsonIgnore
     private List<GioHang> gioHangList;
     @OneToMany(mappedBy = "nguoiMua")
+    @JsonIgnore
     private List<HoaDon> danhSachMua;
     @OneToMany(mappedBy = "nhanVien")
+    @JsonIgnore
     private List<HoaDon> danhSachHoaDonXacNhan;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<NguoiDungVoucher> nguoiDungVoucherList;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<QuyenNguoiDung> quyenNguoiDungList;
     @OneToMany(mappedBy = "nguoiDung")
+    @JsonIgnore
     private List<SanPhamYeuThich> sanPhamYeuThichList;
 }
