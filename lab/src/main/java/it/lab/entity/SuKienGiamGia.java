@@ -34,7 +34,6 @@ public class SuKienGiamGia {
     @Column(name = "logosukien")
     private String logoSuKien;
     @Column(name = "trangthai")
-    @JsonIgnore
     private TrangThaiSuKienGiamGia trangThai;
     @OneToMany(mappedBy = "suKienGiamGia")
     @JsonIgnore

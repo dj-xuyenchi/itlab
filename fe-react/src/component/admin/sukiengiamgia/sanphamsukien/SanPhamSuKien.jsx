@@ -1,32 +1,35 @@
-
 import { useDispatch, useSelector } from "react-redux";
-import { selectLanguage } from "../../../../language/selectLanguage";
 import "./style.css";
 import Header from "../../layout/header/Header";
 import MenuAdmin from "../../layout/menu/MenuAdmin";
-import { Form, Modal, Row, Table, Tag, notification } from "antd";
+import { selectLanguage } from "../../../../language/selectLanguage";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Input, Space ,Image} from "antd";
+import { Button, Image, Input, Space, Table, Tag, Col, Modal } from "antd";
 import { useSanPhamSuKienStore } from "./useSanPhamSuKienStore";
-import { useForm } from "antd/es/form/Form";
-function SanPhamSuKien() {
-  const [form] = useForm()
-  const language = useSelector(selectLanguage);
-  const dispath = useDispatch();
+import { FaRegPenToSquare } from "react-icons/fa6";
+import axiosIns from "../../../../plugins/axios";
+import { Form, Row, Tooltip, notification } from "antd";
+import { Link } from "react-router-dom";
+import ModalThemNhom from "./ModalThemNhom";
+import ModalView from "./ModalThemNhom";
+import DungNhomSanPham from "./DungNhomSanPham";
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+import Modalxoa from "./Modalxoa";
+function Product() {
+  const [sanPham, setSanPhamSuKien] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-
   const searchInput = useRef(null);
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
   };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText("");
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
@@ -34,26 +37,16 @@ function SanPhamSuKien() {
       selectedKeys,
       confirm,
       clearFilters,
-      close,
     }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
+      <div style={{ padding: 8 }}>
         <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Search ${dataIndex.join(".")}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: "block",
-          }}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
@@ -61,145 +54,133 @@ function SanPhamSuKien() {
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{
-              width: 90,
-            }}
+            style={{ width: 90 }}
           >
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => handleReset(clearFilters)}
             size="small"
-            style={{
-              width: 90,
-            }}
+            style={{ width: 90 }}
           >
             Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
           </Button>
         </Space>
       </div>
     ),
     filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1677ff" : undefined,
-        }}
-      />
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
+      record[dataIndex[0]][dataIndex[1]]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    render: (text, record) =>
+      searchedColumn === dataIndex.join(".") ? (
         <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ""}
+          textToHighlight={record[dataIndex[0]][dataIndex[1]].toString()}
         />
       ) : (
         text
       ),
   });
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
   const columns = [
     {
-      title: "Mã sản phẩm",
-      dataIndex: "sanPhamSuKien.sanPham.maSanPham",
+      title: "Mã Sản Phẩm",
+      dataIndex: ["sanPham", "maSanPham"],
       key: "maSanPham",
-      width: "15%",
-      ...getColumnSearchProps("maSanPham"),
-      render: (maNhom) => (
+      width: "10%",
+      ...getColumnSearchProps(["sanPham", "maSanPham"]),
+      render: (maSanPham) => (
         <>
-          <Tag color="success"> {maNhom}</Tag>
+          <Tag color="success"> {maSanPham}</Tag>
         </>
       ),
     },
-
     {
-        title: "Sự kiện giảm giá",
-        dataIndex: "suKienGiamGia.tenSuKien",
-        key: "suKienGiamGia",
-        width: "20%",
-        ...getColumnSearchProps("suKienGiamGia"),
+      title: "Hình Ảnh",
+      dataIndex: ["sanPham", "hinhAnh1"],
+      key: "hinhAnh",
+      width: "20%",
+      render: (hinhAnh) => (
+        <Image src={hinhAnh} style={{ width: "100px", height: "100px" }} />
+      ),
+    },
+    {
+      title: "Tên Sản Phẩm",
+      dataIndex: ["sanPham", "tenSanPham"],
+      key: "tenSanPham",
+      width: "20%",
+      render: (tenSanPham) => <span>{tenSanPham}</span>,
+    },
+    {
+      title: "Nhóm Sản Phẩm",
+      dataIndex: ["sanPham", "nhomSanPham"],
+      key: "tenNhom",
+      width: "15%",
+      render: (nhomSanPham) => <span>{nhomSanPham}</span>,
+    },
+    {
+      title: "Tên sự kiện",
+      dataIndex: ["suKienGiamGia", "tenSuKien"],
+      key: "tenSuKien",
+      width: "15%",
+    },
+    {
+      title: "Giá trị giảm",
+      dataIndex: ["suKienGiamGia", "giaTriGiam"],
+      key: "giaTriGiam",
+      width: "5%",
+      render: (giaTriGiam) => <span>{giaTriGiam}%</span>,
+    },
+    {
+      title: "Ngày Cập Nhật",
+      dataIndex: "ngayCapNhat",
+      key: "ngayCapNhat",
+      width: "20%",
+      render: (ngayCapNhat) => (
+        <>{ngayCapNhat ? fixNgayThang(ngayCapNhat) : <Tag color="processing">Mới</Tag>}</>
+      ),
+    },
+    {
+      title: "Trạng Thái",
+      dataIndex: "trangThai",
+      key: "trangThai",
+      width: "15%",
+      render: (text) => {
+        if (text === "CHAY_SU_KIEN") {
+          return <span style={{ color: "green" }}>Chạy sự kiện</span>;
+        } else {
+          return <span style={{ color: "red" }}>Ngừng sự kiện</span>;
+        }
       },
-      {
-        title: "Ngày tạo",
-        dataIndex: "ngayTao",
-        key: "ngayTao",
-        width: "20%",
-        ...getColumnSearchProps("ngayTao"),
-      },
-    
+  
+    },
     {
       title: "Thao tác",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
-      width: "15%",
+      dataIndex: "id", // Sử dụng dataIndex là 'id' vì chúng ta muốn truy cập 'id' của mỗi hàng
+      key: "action",
+      width: "10%",
       render: (id) => (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          {/* <ModalView id={id} />
-          <ModalCapNhat id={id} setData={setData} />
-          <ModalXoa id={id} setData={setData} /> */}
-        </div>
+        <Modalxoa id={id}/>
       ),
     },
   ];
-
-  const [data, setData] = useState([]);
-  async function layDuLieu() {
-    const data = await useSanPhamSuKienStore.actions.fetchSanPhamSuKien();
-    setData(data.data.content);
-  }
-
-  useEffect(() => {
-    layDuLieu();
-  }, []);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
+  // thông báo
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -216,26 +197,58 @@ function SanPhamSuKien() {
       });
     }
   };
-  // async function handleThemSuKienGiamGia() {
-  //   if (suKienGiamGia.tenSuKien == "" ) {
-  //     return;
-  //   }
-  //   const data = await useSuKienGiamGiaStore.actions.themSuKienGiamGia(suKienGiamGia);
-  //   openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
-  //   setData(data.data.data);
-  //   setSuKienGiamGia({
-  //     ...suKienGiamGia,
-  //     tenSuKien: "",
-  //     logoSuKien: "",
-  //     mota: "",
-  //     ngayBatDau: "",
-  //     ngayCapNhat: "",
-  //     ngayKetThuc: "",
-  //     ngayTao: "",
-  //   });
-  //   form.resetFields()
-  //   setIsModalOpen(false);
-  // }
+  // update
+  const handleUpdate = async (id) => {
+    try {
+      const response = await axiosIns.put(`/api/sanphamsukien/update/${id}`);
+      fetchData();
+      openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
+      console.log("Cập nhật thành công:", response.data);
+
+      // Cập nhật lại dữ liệu trên giao diện hoặc thực hiện các hành động cần thiết khi cập nhật thành công
+    } catch (error) {
+      alert("Error: " + error.message);
+      console.error("Lỗi khi cập nhật:", error);
+
+      // Xử lý lỗi nếu có
+    }
+  };
+  // getall
+  const fetchData = async () => {
+    try {
+      const { data } = await useSanPhamSuKienStore.actions.fetchSanPhamSuKien();
+      // Kiểm tra dữ liệu nhận được từ API
+      console.log(data);
+
+      if (Array.isArray(data) && data.length > 0) {
+        const formattedData = data.map((item) => ({
+          key: item.id.toString(),
+          id: item.id,
+          ngayTao: item.ngayTao,
+          ngayCapNhat: item.ngayCapNhat,
+          sanPham: {
+            maSanPham: item.sanPham?.maSanPham || "", // Sử dụng Optional Chaining (?.) để tránh lỗi nếu 'maSanPham' không tồn tại
+            tenSanPham: item.sanPham?.tenSanPham || "", // Sử dụng Optional Chaining (?.) để tránh lỗi nếu 'maSanPham' không tồn tại
+            hinhAnh1: item.sanPham?.hinhAnh1 || "", // Tương tự với 'hinhAnh1'
+            nhomSanPham: item.sanPham?.nhomSanPham.tenNhom || "",
+            //Thêm các trường khác của 'sanPham' tương tự ở đây
+          },
+
+          suKienGiamGia: {
+            tenSuKien: item.suKienGiamGia?.tenSuKien,
+            giaTriGiam: item.suKienGiamGia?.giaTriGiam,
+          },
+          trangThai: item.trangThai,
+        }));
+        setSanPhamSuKien(formattedData);
+      }
+    } catch (error) {
+      console.error("Lỗi data error:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <>
       {contextHolder}
@@ -244,119 +257,44 @@ function SanPhamSuKien() {
         <MenuAdmin />
         <div className="body-container">
           <div className="content">
-            <div
-              style={{
-                backgroundColor: "#ffffff",
-                padding: "12px 12px",
-              }}
-            >
-              {/* <Row
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginBottom: "10px",
-                }}
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <Link to="/admin/sukiengiamgia/sanphamsukien/themsanphamsukien">
+                  <Button type="primary" block>
+                    Thêm Sản Phẩm Sự Kiện
+                  </Button>
+                </Link>
+              </Col>
+              <Col span={12}>
+                {<ModalThemNhom />}
+                {isModalVisible && (
+                  <ModalView setIsModalVisible={setIsModalVisible} />
+                )}
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col
+                span={24}
+                style={{ marginTop: "16px" }}
+                className="red-button"
               >
-                <Button type="primary" size="large" onClick={showModal}>
-                  Thêm dữ liệu
-                </Button>
-              </Row> */}
-              {/* <Modal
-                okButtonProps={{ style: { display: "none" } }}
-                cancelButtonProps={{ style: { display: "none" } }}
-                title="Thêm sản phẩm sự kiện"
-                open={isModalOpen}
-                onCancel={handleCancel}
-                centered
-              >
-                <Form
-                  form={form}
-                  name="wrap"
-                  labelCol={{
-                    flex: "110px",
-                  }}
-                  labelAlign="left"
-                  labelWrap
-                  wrapperCol={{
-                    flex: 1,
-                  }}
-                  colon={false}
-                  style={{
-                    maxWidth: 600,
-                  }}
-                >
-                  <Form.Item
-                    label="Tên sự kiện"
-                    name="Tên sự kiện"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setSuKienGiamGia({
-                          ...suKienGiamGia,
-                          tenSuKien: e.target.value,
-                        });
-                      }}
-                      value={suKienGiamGia.tenSuKien}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Logo sự kiện"
-                    name="Logo sự kiện"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setSuKienGiamGia({
-                          ...suKienGiamGia,
-                          logoSuKien: e.target.value,
-                        });
-                      }}
-                      value={suKienGiamGia.logoSuKien}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Mô tả"
-                    name="Mô tả"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input
-                      onChange={(e) => {
-                        setSuKienGiamGia({
-                          ...suKienGiamGia,
-                          moTa: e.target.value,
-                        });
-                      }}
-                      value={suKienGiamGia.moTa}
-                    />
-                  </Form.Item>
-                  <Form.Item label=" ">
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      onClick={handleThemSuKienGiamGia}
-                    >
-                      Thêm mới
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Modal> */}
+                {" "}
+                {/* Thêm margin-top */}
+                {<DungNhomSanPham />}
+                {isModalVisible && (
+                  <ModalView setIsModalVisible={setIsModalVisible} />
+                )}
+              </Col>
+            </Row>
+
+            <div className="table-sanpham background-color">
               <Table
                 columns={columns}
-                dataSource={data}
-                pagination={{ pageSize: 10 }}
+                dataSource={sanPham}
+                pagination={{
+                  position: ["bottomRight"],
+                }}
+                rowKey="id" // Sử dụng thuộc tính 'id' làm key cho mỗi hàng trong Table
               />
             </div>
           </div>
@@ -366,4 +304,4 @@ function SanPhamSuKien() {
   );
 }
 
-export default SanPhamSuKien;
+export default Product;

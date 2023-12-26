@@ -2,8 +2,15 @@ import axiosIns from "../../../plugins/axios"
 
 export const useSuKienGiamGiaStore = {
     actions: {
+        async themSuKienGG(payload) {
+            return axiosIns.post('/api/sukiengiamgia/themsukiengg', payload, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+        },
         async fetchSuKienGiamGia() {
-            return axiosIns.get('/api/sukiengiamgia/laysukiengiamgia'
+            return axiosIns.get('/api/sanphamsukien/get-all-sukiengiamgia'
             )
         },
         async themSuKienGiamGia(payload) {
@@ -11,7 +18,7 @@ export const useSuKienGiamGiaStore = {
             )
         },
         async suaSuKienGiamGia(payload) {
-            return axiosIns.post('/api/sukiengiamgia/suasukiengiamgia', payload
+            return axiosIns.put('/api/sukiengiamgia/suasukiengiamgia', payload
             )
         },
         async laySuKienGiamGiaById(payload) {

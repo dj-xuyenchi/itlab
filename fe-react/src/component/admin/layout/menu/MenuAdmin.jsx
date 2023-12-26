@@ -100,6 +100,11 @@ const items = [
       "67",
       <TbPackages />
     ),
+    // getItem(
+    //   <Link to={"/admin/sukiengiamgia/sanphamsukien/themsanphamsukien"}> Thêm sản phẩm sự kiện</Link>,
+    //   "67",
+    //   <TbPackages />
+    // ),
     getItem(
       <Link to={"/admin/crm"}>Sản phẩm doanh thu</Link>,
       "65",
