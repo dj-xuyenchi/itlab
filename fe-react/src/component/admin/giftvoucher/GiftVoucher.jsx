@@ -182,16 +182,19 @@ export default function Voucher() {
             <MenuAdmin />
 
 
-            <div className="body-container">
+            <div className="body-container" >
                 <div className="button"
                     style={{
                         display: 'flex',
                         justifyContent: "flex-end",
                         margin: "10px",
+
                     }}>
 
-<ModalU/>
-                    {/* <ModalA onActionSuccess={reloadVouchers} /> */}
+                    <ModalU />
+                    <br />
+                    -
+                    <br />
                     <AddGift/>
 
                 </div>

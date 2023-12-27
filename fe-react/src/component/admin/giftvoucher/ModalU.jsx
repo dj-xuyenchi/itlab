@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { Select, Checkbox, Button, Spin,notification } from 'antd';
+import { Select, Checkbox, Button, Spin, notification, Modal } from 'antd';
 
 const { Option } = Select;
 
@@ -20,6 +20,7 @@ const YourComponent = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +67,7 @@ const YourComponent = () => {
       // Optionally, you can reset the selected voucher and users after successful addition
       setSelectedVoucherId('');
       setSelectedUserIds([]);
+      setModalVisible(false);
     } catch (error) {
       console.error('Failed to add voucher for selected users:', error.response ? error.response.data : error.message);
     }
@@ -85,47 +87,62 @@ const YourComponent = () => {
     });
   };
 
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
+
   return (
     <div>
-      <h1>Vouchers</h1>
-      {loading ? (
-        <Spin tip="Loading data..." />
-      ) : (
-        <>
-          <label>Select a Voucher:</label>
-          <Select
-            style={{ width: '200px' }}
-            placeholder="Select a voucher"
-            onChange={handleSelectChange}
-            value={selectedVoucherId}
-          >
-            {vouchers.map((voucher) => (
-              <Option key={voucher.id} value={voucher.id}>
-                {voucher.tenVoucher}
-              </Option>
-            ))}
-          </Select>
+      {/* <h1>Vouchers</h1> */}
+      <Button type="primary" onClick={showModal}>
+        Open Voucher người dùng
+      </Button>
+      <Modal
+        title="Tặng người dùng"
+        visible={modalVisible}
+        onOk={handleAddVoucher}
+        onCancel={handleCancel}
+        okButtonProps={{ disabled: buttonDisabled }}
+      >
+        {loading ? (
+          <Spin tip="Loading data..." />
+        ) : (
+          <>
+            <label>Chọn Voucher:</label>
+            <Select
+              style={{ width: '200px' }}
+              placeholder="Select a voucher"
+              onChange={handleSelectChange}
+              value={selectedVoucherId}
+            >
+              {vouchers.map((voucher) => (
+                <Option key={voucher.id} value={voucher.id}>
+                  {voucher.tenVoucher}
+                </Option>
+              ))}
+            </Select>
 
-          <div>
-            <h2>Select Users:</h2>
-            {allUsers.map((user) => (
-              <div key={user.id}>
-                <Checkbox
-                  id={`user-${user.id}`}
-                  checked={selectedUserIds.includes(user.id)}
-                  onChange={() => handleUserCheckboxChange(user.id)}
-                >
-                  {user.maNguoiDung}
-                </Checkbox>
-              </div>
-            ))}
-          </div>
-
-          <Button type="primary" onClick={handleAddVoucher} disabled={buttonDisabled}>
-            Tặng người dùng
-          </Button>
-        </>
-      )}
+            <div>
+              <h2>Chọn người dùng:</h2>
+              {allUsers.map((user) => (
+                <div key={user.id}>
+                  <Checkbox
+                    id={`user-${user.id}`}
+                    checked={selectedUserIds.includes(user.id)}
+                    onChange={() => handleUserCheckboxChange(user.id)}
+                  >
+                    {user.maNguoiDung}
+                  </Checkbox>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

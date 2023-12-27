@@ -4,20 +4,19 @@ import { Col, Row, Statistic } from 'antd';
 import axios from 'axios';
 import { DollarOutlined } from '@ant-design/icons';
 
-import { DatePicker, Button } from 'antd';
+import { DatePicker, Button,message } from 'antd';
 
 
 const formatter = (value) => <CountUp end={value} separator="," />;
 
+
+
+
+
+
 function NgayThang() {
   const [totalRevenue, setTotalRevenue] = useState(null);
   const [totalThang, setTotalThang] = useState(null);
-
-
-  // khai báo theo khoảng
-  // const [selectedDateStart, setSelectedDateStart] = useState('');
-  // const [selectedDateEnd, setSelectedDateEnd] = useState('');
-  // const [totalKhoang, setTotalKhoang] = useState(null);
 
   const { RangePicker } = DatePicker;
 
@@ -55,10 +54,12 @@ function NgayThang() {
   };
 
   const handleCalculateTotalRevenue = () => {
-    if (dateRange.length !== 2) {
-      // Date range not selected, handle accordingly
+    if (!Array.isArray(dateRange) || dateRange.length < 2) {
+      // Date range not selected, show error message or take appropriate action
+      message.error('Không được để trống');
       return;
     }
+
 
     const [selectedDateStart, selectedDateEnd] = dateRange;
 

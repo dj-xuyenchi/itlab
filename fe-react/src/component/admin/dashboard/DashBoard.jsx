@@ -7,7 +7,7 @@ import BanhDonut from "./chart/BanhDonut";
 import BanhDonut2 from "./chart/BanhDonut2";
 import NgayThang from "./chart/NgayThang";
 // import React, { useRef, useState } from 'react';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Space, Table } from 'antd';
 import axios from 'axios';
 import { } from '@ant-design/icons';
@@ -24,39 +24,34 @@ function DashBoard() {
     pageSize: 6, // Adjust as needed
   });
 
-  // ... (previous code)
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8089/api/thong-ke/san-pham-ban-chay1');
+      console.log('API Response:', response.data);
 
-const fetchData = useCallback(async () => {
-  try {
-    const filterParams = selectedFilters.length > 0 ? `?filters=${selectedFilters.join(',')}` : '';
-    const response = await axios.get(`http://localhost:8089/api/thong-ke/san-pham-ban-chay1${filterParams}`);
-    console.log('API Response:', response.data);
+      // Assuming response.data is an array of arrays
+      setData(response.data.map(item => ({
+        idCTSP: item[0],
+        tenSanPham: item[1],
+        image: item[2],
+        tongSoLuong: item[3],
+        giaNhap: item[4],
+        giaBan: item[5],
 
-    // Assuming response.data is an array of arrays
-    setData(response.data.map(item => ({
-      idCTSP: item[0],
-      tenSanPham: item[1],
-      image: item[2],
-      tongSoLuong: item[3],
-      giaNhap: item[4],
-      giaBan: item[5],
-      // Add more properties as needed
-    })));
 
-    setLoading(false);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    setLoading(false);
-  }
-},);
+        // Add more properties as needed
+      })));
 
-useEffect(() => {
-  fetchData();
-}, [pagination, selectedFilters, fetchData]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  };
 
-// ... (rest of the code)
-
-  
+  useEffect(() => {
+    fetchData();
+  }, [pagination]);
 
   const handleTableChange = (pagination, filters, sorter) => {
     // Handle other table change events if needed (filters, sorter)
@@ -166,7 +161,7 @@ useEffect(() => {
                     // options={options}
                     />
                   </Space> */}
-                  <Select
+                  {/* <Select
                     mode="multiple"
                     size="large"
                     allowClear
@@ -174,7 +169,7 @@ useEffect(() => {
                     placeholder="Cài đặt hiển thị"
                     value={selectedFilters}
                     onChange={value => setSelectedFilters(value)}
-                  />
+                  /> */}
 
 
 
@@ -189,12 +184,6 @@ useEffect(() => {
                     }}
                     direction="horizontal"
                   >
-
-                    <Input style={{
-                      width: "240px"
-                    }}
-                    // size="large" placeholder="Tìm kiếm" prefix={<SearchOutlined />}
-                    />
                   </Space>
                 </Col>
               </Row>
