@@ -139,23 +139,7 @@ public class VoucherController {
 
 
     //them voucher
-    @PostMapping("/themVoucherChoNguoiDung")
-    public ResponseEntity<String> themVoucherChoNguoiDung(@RequestParam Long nguoiDungId, @RequestParam Long voucherId) {
-        try {
-            // Call the service method
-            voucherNguoiDungService.themVoucherChoNguoiDung(nguoiDungId, voucherId);
 
-            // If successful, return a success response
-            return new ResponseEntity<>("Voucher đã được thêm cho người dùng thành công.", HttpStatus.OK);
-
-        } catch (VoucherNguoiDungService.VoucherOutOfStockException e) {
-            // Return a bad request response with the specific message
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            // If it's another exception, return an internal server error response
-            return new ResponseEntity<>("Đã xảy ra lỗi: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
     //get bảng tặng voucher cho người dung
 
 @GetMapping("/giftvoucher")
@@ -203,22 +187,22 @@ public ResponseEntity<List<Voucher>> getAllVouchers() {
 
 
     @PostMapping("/add-nguoidung")
-    public ResponseEntity<?> addVoucherForSelectedUsers(@RequestParam(name = "nguoiDungId",required = false) Long voucherId,
-                                                        @RequestParam(name = "voucherId",required = false) Long nguoiDungId) {
+    public ResponseEntity<?> addVoucherForSelectedUsers(
+            @RequestParam(name = "nguoiDungId", required = false) List<Long> nguoiDungIds,
+            @RequestParam(name = "voucherId", required = false) Long voucherId) {
         try {
-            if (voucherId == null || nguoiDungId == null ) {
+            if (nguoiDungIds == null || nguoiDungIds.isEmpty() || voucherId == null) {
                 return new ResponseEntity<>("Please provide a voucher and at least one user.", HttpStatus.BAD_REQUEST);
             }
 
-
-
-            voucherNguoiDungService.themVoucherChoNguoiDung(voucherId, nguoiDungId);
-            return new ResponseEntity<>("Voucher added nguoidung."+nguoiDungId, HttpStatus.OK);
+            voucherNguoiDungService.themVoucherChoNguoiDung(nguoiDungIds, voucherId);
+            return new ResponseEntity<>("Voucher added for nguoidung.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to add voucher for selected users: " + e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 

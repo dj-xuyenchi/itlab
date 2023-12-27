@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { Select, Button, Spin,notification } from 'antd';
 import axios from 'axios';
+
+const { Option } = Select;
+
+const openNotification = (type, message, description, placement) => {
+  notification[type]({
+    message,
+    description,
+    placement,
+  });
+};
 
 const YourComponent = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -33,6 +44,8 @@ const YourComponent = () => {
       await axios.post(`http://localhost:8089/api/voucher/addVoucherForAllUsers?voucherId=${selectedVoucherId}`);
 
       console.log('Voucher added for all users successfully.');
+      openNotification("success", "Hệ thống", "Thêm Thành công", "bottomRight");
+
       // Optionally, you can reset the selected voucher after successful addition
       setSelectedVoucherId('');
     } catch (error) {
@@ -40,27 +53,30 @@ const YourComponent = () => {
     }
   };
 
-  const handleSelectChange = (e) => {
-    setSelectedVoucherId(e.target.value); // Update selected voucher ID when the selection changes
+  const handleSelectChange = (value) => {
+    setSelectedVoucherId(value); // Update selected voucher ID when the selection changes
   };
 
   return (
     <div>
       <h1>Vouchers</h1>
       {loading ? (
-        <p>Loading vouchers...</p>
+        <Spin tip="Loading vouchers..." />
       ) : (
         <>
           <label>Select a Voucher:</label>
-          <select onChange={handleSelectChange} value={selectedVoucherId}>
-            <option value="">Select a voucher</option>
+          <Select style={{ width: 200 }} onChange={handleSelectChange} value={selectedVoucherId}>
+            <Option value="">Select a voucher</Option>
             {vouchers.map((voucher) => (
-              <option key={voucher.id} value={voucher.id}>
+              <Option key={voucher.id} value={voucher.id}>
                 {voucher.tenVoucher}
-              </option>
+              </Option>
             ))}
-          </select>
-          <button onClick={handleAddVoucher}>Add Voucher for All Users</button>
+          </Select>
+          <br />
+          <Button type="primary" onClick={handleAddVoucher} disabled={!selectedVoucherId}>
+            Tặng tất cả 
+          </Button>
         </>
       )}
     </div>
