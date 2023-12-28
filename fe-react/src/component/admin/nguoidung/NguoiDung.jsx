@@ -30,6 +30,7 @@ function NguoiDung() {
     ho:"",
     email:"",
     trangThai: "BIKHOA",
+    gioiTinh: null,
   });
   const [fileList, setFileList] = useState([]);
   const [hinhAnh, setHinhAnh] = useState([]);
@@ -364,17 +365,21 @@ const props = {
       if (!phoneNumberPattern.test(nguoiDung.soDienThoai.trim())) {
         openNotification("error", "Hệ thống", "Số điện thoại không hợp lệ", "bottomRight");
         return;
+      }if (nguoiDung.gioiTinh === null) {
+        openNotification("error", "Hệ thống", "Vui lòng chọn giới tính", "bottomRight");
+        return;
       }
 
-      if (!hinhAnh) {
+      if (!hinhAnh || hinhAnh.length === 0) {
         openNotification(
           "error",
           "Hệ thống",
-          "Chọn hình ảnh",
+          "Vui lòng chọn hình ảnh",
           "bottomRight"
         );
         return;
       }
+      
       
     setIsLoading(true);
     const formData = new FormData();
