@@ -2,8 +2,6 @@ package it.lab.service;
 
 import it.lab.dto.*;
 import it.lab.entity.NguoiDung;
-import it.lab.entity.SanPham;
-import it.lab.entity.SanPhamYeuThich;
 import it.lab.entity.SuKienGiamGia;
 import it.lab.enums.APIStatus;
 import it.lab.enums.TrangThaiHoaDon;

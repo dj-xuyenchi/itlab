@@ -47,7 +47,7 @@ public class SanPhamSuKienService implements ISanPhamSuKienService {
 
     @Override
     public List<SanPhamSuKien> getAll() {
-        return repo.findAll();
+        return repo.findAllByOrderByTrangThaiAscNgayTaoDesc();
     }
 
 //    @Override

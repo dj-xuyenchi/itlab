@@ -29,9 +29,13 @@ import SuKienGiamGia from "./component/admin/sukiengiamgia/SuKienGiamGia";
 import NguoiDung from "./component/admin/nguoidung/NguoiDung";
 import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
 import CRM from "./component/admin/crm/CRM";
+<<<<<<< HEAD
+import ThemSanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/ThemSanPhamSuKien";
+=======
 import GioiThieu from "./component/policy/GioiThieu";
 import ChinhSachBaoMat from "./component/policy/ChinhSachBaoMat";
 
+>>>>>>> 5ac053f51c4e5cf9e6db5ce46a55d3063bd513b0
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -80,6 +84,7 @@ function App() {
         <Route path="/admin/sukiengiamgia" element={<SuKienGiamGia />} />
         <Route path="/admin/nguoidung" element={<NguoiDung />} />
         <Route path="/admin/sukiengiamgia/sanphamsukien" element={<SanPhamSuKien />} />
+        <Route path="/admin/sukiengiamgia/sanphamsukien/themsanphamsukien" element={<ThemSanPhamSuKien />} />
         <Route path="/admin/crm" element={<CRM />} />
         <Route
           path="/admin/sanpham/sanphamchitiet"
