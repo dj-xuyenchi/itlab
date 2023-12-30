@@ -10,6 +10,7 @@ import it.lab.enums.LoaiGiam;
 import it.lab.enums.TrangThaiVoucher;
 
 import it.lab.repository.NguoiDungRepo;
+import it.lab.repository.NguoiDungVoucherRepo;
 import it.lab.repository.VoucherRepo;
 import it.lab.service.GoogleCloudService;
 import it.lab.service.VoucherNguoiDungService;
@@ -34,7 +35,8 @@ public class VoucherController {
     NguoiDungRepo nguoiDungRepo;
 
     @Autowired
-    GoogleCloudService googleCloudService;
+    NguoiDungVoucherRepo nguoiDungVoucherRepo;
+
 
     @Autowired
     VoucherNguoiDungService voucherNguoiDungService;
@@ -44,7 +46,10 @@ public class VoucherController {
         return ResponseEntity.ok(voucherRepo.findAll());
     }
 //
-
+@RequestMapping(value = "/123", method = RequestMethod.GET)
+public ResponseEntity<?> layDuLieu123() throws IOException {
+    return ResponseEntity.ok(nguoiDungVoucherRepo.getAllTang());
+}
 
 
     @PostMapping(value = "/addVoucher")
@@ -118,7 +123,6 @@ public class VoucherController {
             if (  existingVoucher.getTrangThai() == TrangThaiVoucher.DIENRA ) {
                 existingVoucher.setTrangThai(TrangThaiVoucher.NGUNG);
                 voucherRepo.save(existingVoucher);
-
                 return new ResponseEntity<>(existingVoucher, HttpStatus.OK);
             } else {
                 existingVoucher.setTrangThai(TrangThaiVoucher.DIENRA);
@@ -162,7 +166,9 @@ public ResponseEntity<List<Voucher>> getAllVouchers() {
 
 
     @PostMapping("/addVoucherForAllUsers")
-    public ResponseEntity<?> addVoucherForAllUsers(@RequestParam(name = "voucherId", required = false) Long voucherId) {
+    public ResponseEntity<?> addVoucherForAllUsers(
+            @RequestParam(name = "voucherId", required = false) Long voucherId,
+            @RequestParam(name = "userIdToExclude", required = false) Long userIdToExclude) {
         try {
             if (voucherId == null) {
                 // If voucherId is not provided in the request, try to get it from the /voucher-combox endpoint
@@ -176,32 +182,36 @@ public ResponseEntity<List<Voucher>> getAllVouchers() {
                     return new ResponseEntity<>("No vouchers available.", HttpStatus.BAD_REQUEST);
                 }
             }
-            // Now, you have the voucherId, proceed to add it for all users
-            voucherNguoiDungService.themVoucherChoTatCaNguoiDung(voucherId);
 
-            return new ResponseEntity<>("Voucher added for all users successfully."+voucherId, HttpStatus.OK);
+            // Now, you have the voucherId and userIdToExclude, proceed to add it for all users
+            voucherNguoiDungService.themVoucherChoTatCaNguoiDung(voucherId, userIdToExclude);
+
+            return new ResponseEntity<>("Voucher added for all users successfully. Voucher ID: " + voucherId, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to add voucher for all users: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
+
     @PostMapping("/add-nguoidung")
     public ResponseEntity<?> addVoucherForSelectedUsers(
             @RequestParam(name = "nguoiDungId", required = false) List<Long> nguoiDungIds,
-            @RequestParam(name = "voucherId", required = false) Long voucherId) {
+            @RequestParam(name = "voucherId", required = false) Long voucherId,
+            @RequestParam(name = "userIdToExclude", required = false) Long userIdToExclude) {
         try {
             if (nguoiDungIds == null || nguoiDungIds.isEmpty() || voucherId == null) {
                 return new ResponseEntity<>("Please provide a voucher and at least one user.", HttpStatus.BAD_REQUEST);
             }
 
-            voucherNguoiDungService.themVoucherChoNguoiDung(nguoiDungIds, voucherId);
+            voucherNguoiDungService.themVoucherChoNguoiDung(nguoiDungIds, voucherId, userIdToExclude);
             return new ResponseEntity<>("Voucher added for nguoidung.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to add voucher for selected users: " + e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 

@@ -129,7 +129,7 @@ export default function Voucher() {
         },
 
         {
-            title: 'Action',
+            title: 'Các voucher',
             dataIndex: '',
             key: 'x',
             render: (record) => <div>

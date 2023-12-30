@@ -123,7 +123,14 @@ export default function Voucher() {
             title: 'Loại giảm',
             dataIndex: 'loaiGiam',
             key: 'loaiGiam',
-        }, {
+            render: (text) => (
+              <span style={{ color: text.toLowerCase() === 'ngung' ? 'red' : 'green' }}>
+                {text.toLowerCase() === 'giamthang' ? 'Giảm thẳng' : (text.toLowerCase() === 'phantram' ? 'Phần trăm' : text)}
+              </span>
+            ),
+          }
+          
+        , {
             title: 'Mức giảm',
             dataIndex: 'giaTriGiam',
             key: 'giaTriGiamDisplay',
@@ -190,11 +197,19 @@ export default function Voucher() {
         },
 
         {
-            title: 'Action',
+            title: 'Cập nhật',
             dataIndex: '',
             key: 'x',
             render: (record) => <div>
                 <ModalU recordId={record.id} onActionSuccess={reloadVouchers} />
+            </div>
+
+        },
+        {
+            title: 'Thay trạng thái',
+            dataIndex: '',
+            key: 'x',
+            render: (record) => <div>
                 <ModalD recordId={record.id} onActionSuccess={reloadVouchers} />
             </div>
 
@@ -261,7 +276,7 @@ export default function Voucher() {
                         loading={loading}
                         pagination={{ pageSize: 10 }}
                         key={resetTable ? 'reset' : 'table'}
-                        style={{ margin: '10px' }} />
+                        style={{ margin: '10px' ,display: 'inline-block'}} />
                 </div>
             </div>
        
