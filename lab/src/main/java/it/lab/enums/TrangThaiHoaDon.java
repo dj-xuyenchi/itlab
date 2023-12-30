@@ -13,3 +13,5 @@ public enum TrangThaiHoaDon {
     DADOITRA,//9
     TUCHOIDOI//10
 }
+
+

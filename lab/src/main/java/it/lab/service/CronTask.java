@@ -54,34 +54,6 @@ public class CronTask implements Cron {
         }
     }
 
-    @Scheduled(cron = "0 0 24 ***")
-    private void updateTrangThaiSuKienAuTo() {
-        List<SuKienGiamGia> suKienGiamGiaList = _suKienGiamGiaRepo.findAll();
-        for (SuKienGiamGia suKienGiamGia : suKienGiamGiaList) {
-            if (suKienGiamGia.getTrangThai() == TrangThaiSuKienGiamGia.HOATDONG || suKienGiamGia.getTrangThai() == TrangThaiSuKienGiamGia.CHUADIENRA) {
-                if (suKienGiamGia.getNgayBatDau().isBefore(LocalDateTime.now()) || suKienGiamGia.getNgayBatDau().isEqual(LocalDateTime.now())) {
-                    suKienGiamGia.setTrangThai(TrangThaiSuKienGiamGia.HOATDONG);
-                    _suKienGiamGiaRepo.save(suKienGiamGia);
-                }
-                if (suKienGiamGia.getNgayKetThuc().isBefore(LocalDateTime.now())) {
-                    suKienGiamGia.setTrangThai(TrangThaiSuKienGiamGia.DANGUNG);
-                    _suKienGiamGiaRepo.save(suKienGiamGia);
-                }
-            }
-        }
-    }
-    @Scheduled(cron = "00 03 24 ***")
-    public void updateTrangThaiSPSuKienAuTo(){
-        List<SanPhamSuKien> sanPhamSuKienList=sanPhamSuKienRepo.findAll();
-        for(SanPhamSuKien sanPhamSuKien:sanPhamSuKienList){
-            if(sanPhamSuKien.getTrangThai()== TrangThaiSanPhamSuKien.CHAY_SU_KIEN){
-                if(sanPhamSuKien.getSuKienGiamGia().getTrangThai() == TrangThaiSuKienGiamGia.DANGUNG){
-                    sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
-                    sanPhamSuKienRepo.save(sanPhamSuKien);
-                }
-            }
-        }
-    }
 
     @Override
     public void guiBaoCaoHangTuan() {

@@ -1,4 +1,4 @@
-body {
+/* body {
     display: flex;
     margin: 0;
     font-family: Arial, sans-serif;
@@ -45,7 +45,7 @@ body {
     width: 60%;
     box-sizing: border-box;
     background-color: white /* Màu nền cho nội dung chính */
-  }
+/* }
   img{
     width: 100%;
   }
@@ -56,4 +56,4 @@ body {
     font-size: 13px;
     line-height: 1.8;
   }
-  
+   */
