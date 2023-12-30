@@ -23,19 +23,12 @@ import MauSac from "./component/admin/product/mausac/MauSac";
 import KichThuoc from "./component/admin/product/kichthuoc/KichThuoc";
 import SanPhamChiTiet from "./component/admin/product/sanphamchitiet/SanPhamChiTiet";
 import BanTaiQuay from "./component/admin/bantaiquay/BanTaiQuay";
-import { QRCode } from "antd";
 import DoiTra from "./component/admin/doitra/DoiTra";
-import SuKienGiamGia from "./component/admin/sukiengiamgia/SuKienGiamGia";
 import NguoiDung from "./component/admin/nguoidung/NguoiDung";
-import SanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/SanPhamSuKien";
 import CRM from "./component/admin/crm/CRM";
-<<<<<<< HEAD
-import ThemSanPhamSuKien from "./component/admin/sukiengiamgia/sanphamsukien/ThemSanPhamSuKien";
-=======
 import GioiThieu from "./component/policy/GioiThieu";
 import ChinhSachBaoMat from "./component/policy/ChinhSachBaoMat";
 
->>>>>>> 5ac053f51c4e5cf9e6db5ce46a55d3063bd513b0
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -81,10 +74,7 @@ function App() {
         <Route path="/admin/sanpham/mausac" element={<MauSac />} />
         <Route path="/admin/sanpham/kichthuoc" element={<KichThuoc />} />
         <Route path="/admin/doitra" element={<DoiTra />} />
-        <Route path="/admin/sukiengiamgia" element={<SuKienGiamGia />} />
         <Route path="/admin/nguoidung" element={<NguoiDung />} />
-        <Route path="/admin/sukiengiamgia/sanphamsukien" element={<SanPhamSuKien />} />
-        <Route path="/admin/sukiengiamgia/sanphamsukien/themsanphamsukien" element={<ThemSanPhamSuKien />} />
         <Route path="/admin/crm" element={<CRM />} />
         <Route
           path="/admin/sanpham/sanphamchitiet"
@@ -94,7 +84,7 @@ function App() {
         <Route path="/gioi-thieu" element={<GioiThieu />} />
         <Route path="/chinh-sach-bao-mat" element={<ChinhSachBaoMat />} />
       </Routes>
-      
+
 
     </>
   );

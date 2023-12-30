@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import "./style.css";
 import { selectLanguage } from "../../../language/selectLanguage";
 import GioHang from "../../home/giohang/GioHang";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MenuLeft from "../menuleft/MenuLeft";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { FiSearch, FiHeart } from "react-icons/fi";
@@ -10,9 +10,10 @@ import { LuShoppingCart } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import Search from "../search/Search";
 import YeuThich from "../../home/yeuthich/YeuThich";
-import { Breadcrumb, notification } from "antd";
+import { Badge, Breadcrumb, notification } from "antd";
 import { Link } from "react-router-dom";
 import { selectUser } from "../../login/selectUser";
+import { useGioHang } from "./useGioHang";
 function Header() {
   const language = useSelector(selectLanguage);
   const user = useSelector(selectUser);
@@ -54,10 +55,20 @@ function Header() {
     window.location.href =
       process.env.REACT_APP_FRONTEND_URL + "profile/" + user.nguoiDung.id;
   }
+  const [gioHang, setGioHang] = useState(undefined)
+  async function handleLayGioHang() {
+    if (user.nguoiDung.id !== -1) {
+      const data = await useGioHang.actions.layGioHang(user.nguoiDung.id)
+      setGioHang(data.data.data)
+    }
+  }
+  useEffect(() => {
+    handleLayGioHang()
+  }, [])
   return (
     <>
       {contextHolder}
-      <GioHang open={openGioHang} setOpen={setOpenGioHang} />
+      <GioHang gioHang={gioHang} open={openGioHang} setOpen={setOpenGioHang} />
       <YeuThich open={openYeuThich} setOpen={setOpenYeuThich} />
       <MenuLeft open={openMenuLeft} setOpen={setOpenMenuLeft} />
       <Search open={openSearch} setOpen={setOpenSearch} />
@@ -108,6 +119,9 @@ function Header() {
             </div>
             <div className="icon-right">
               <div
+                style={{
+                  height: "20px"
+                }}
                 onClick={() => {
                   var nguoiDung = JSON.parse(localStorage.getItem("user"));
                   if (nguoiDung) {
@@ -121,19 +135,27 @@ function Header() {
                 <FaRegUser />
               </div>
               <div
+                style={{
+                  height: "20px"
+                }}
                 onClick={() => {
                   setOpenYeuThich(true);
                 }}
               >
                 <FiHeart />
               </div>
-              <div
-                onClick={() => {
-                  setOpenGioHang(true);
-                }}
-              >
-                <LuShoppingCart />
-              </div>
+              <Badge count={gioHang ? gioHang.length : 0}>
+                <div
+                  style={{
+                    height: "20px"
+                  }}
+                  onClick={() => {
+                    setOpenGioHang(true);
+                  }}
+                >
+                  <LuShoppingCart />
+                </div>
+              </Badge>
             </div>
           </div>
         </div>

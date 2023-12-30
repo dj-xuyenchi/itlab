@@ -1,4 +1,4 @@
-body {
+/* body {
   display: flex;
   margin: 0;
   font-family: Arial, sans-serif;
@@ -45,28 +45,32 @@ body {
   width: 60%;
   padding-left: 50px;
   box-sizing: border-box;
-  background-color: white /* Màu nền cho nội dung chính */
-}
+  background-color: white
+    Màu nền cho nội dung chính */
+/* }
 
 
 .content h3 {
   margin-top: 0;
 }
-.content h5{
+
+.content h5 {
   font-size: 15px;
   text-align: justify;
   font-family: arial, helvetica, sans-serif;
 }
-.content p{
+
+.content p {
   line-height: 1.3;
   font-size: 14px;
   font-family: arial, helvetica, sans-serif;
   margin-top: 2px;
   margin-bottom: 2px;
 }
-img{
+
+img {
   margin-top: 10px;
   width: 100%;
-}
+} */
 
 /* Các phong cách bổ sung dựa trên nội dung mới có trong ảnh bạn cung cấp */

@@ -4,8 +4,9 @@ import { selectLanguage } from "../../../language/selectLanguage";
 import { AiOutlineClose } from "react-icons/ai";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { InputNumber } from "antd";
-function GioHangItem({ open, setOpen }) {
+function GioHangItem({ item }) {
   const language = useSelector(selectLanguage);
+  console.log(item);
   return (
     <>
       <div
@@ -25,21 +26,23 @@ function GioHangItem({ open, setOpen }) {
             display: "flex",
             justifyItems: "center",
             alignItems: "center",
-            borderRadius: "10px",
           }}
         >
           <img
-            src="https://routine.vn/media/catalog/product/cache/5de180fdba0e830d350bd2803a0413e8/1/0/10f22jacw020_light_grey_1__2.jpg"
+            src={item.sanPhamChiTiet.hinhAnh}
             alt="anh"
             style={{
               height: "180px",
               width: "auto",
+              borderRadius: "10px",
+
             }}
           />
         </div>
         <div
           style={{
             marginLeft: "4px",
+            width: "176px"
           }}
         >
           <div
@@ -60,7 +63,7 @@ function GioHangItem({ open, setOpen }) {
                 fontWeight: 500,
               }}
             >
-              Áo choàng póng tối danhf cho as
+              {item.sanPhamChiTiet.tenSanPham}
             </div>
             <div
               style={{
@@ -78,11 +81,11 @@ function GioHangItem({ open, setOpen }) {
           </div>
           <div>
             <p>
-              {fixMoney(20000)} - <del>{fixMoney(20000)}</del>
+              {fixMoney(item.sanPhamChiTiet.giaBan)}
             </p>
           </div>
           <div>
-            <InputNumber />
+            <InputNumber value={item.soLuong} />
           </div>
         </div>
       </div>
