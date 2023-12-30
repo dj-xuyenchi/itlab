@@ -46,6 +46,10 @@ function ModalXoa({ id, setData }) {
   };
   async function handleXoaNguoiDung() {
     const data = await useNguoiDungStore.actions.xoaNguoiDungId(id);
+    if (!data.data) {
+      openNotification("error", "Hệ thống", "Người dùng đang được sử dụng xóa thất bại", "bottomRight");
+      return
+    }
     openNotification("success", "Hệ thống", "Xóa thành công", "bottomRight");
     setData(data.data.data);
     setIsModalOpen(false);

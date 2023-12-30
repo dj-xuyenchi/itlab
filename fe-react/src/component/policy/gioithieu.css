@@ -41,26 +41,25 @@ body {
   font-weight: bolder
 }
 
-.content {
-  /* width: 60%;
+.content-hungnv {
+  width: 60%;
   padding-left: 50px;
   box-sizing: border-box;
-  background-color: white */
-  /* Màu nền cho nội dung chính */
+  background-color: white
 }
 
-/* 
-.content h3 {
+
+.content-hungnv h3 {
   margin-top: 0;
-}
+} 
 
-.content h5 {
+.content-hungnvh5 {
   font-size: 15px;
   text-align: justify;
   font-family: arial, helvetica, sans-serif;
 }
 
-.content p {
+.content-hungnv p {
   line-height: 1.3;
   font-size: 14px;
   font-family: arial, helvetica, sans-serif;
@@ -68,9 +67,8 @@ body {
   margin-bottom: 2px;
 }
 
-img {
+.content-hungnv img {
   margin-top: 10px;
   width: 100%;
-} */
+} 
 
-/* Các phong cách bổ sung dựa trên nội dung mới có trong ảnh bạn cung cấp */

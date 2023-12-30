@@ -85,8 +85,12 @@ public class NguoiDungService implements INguoiDungService {
 
     @Override
     public Page<NguoiDungDTO> xoaNguoiDung(Long nguoiDungId) {
-        _nguoiDungRepo.deleteById(nguoiDungId);
-        return layHetNguoiDung();
+        try {
+            _nguoiDungRepo.deleteById(nguoiDungId);
+            return layHetNguoiDung();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

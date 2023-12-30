@@ -83,8 +83,33 @@ function ModalThemSua({ id, setData }) {
     }
   };
   async function handleSuaNguoiDung() {
-    if (!nguoiDung.ten.trim()) {
+    if (!nguoiDung.ho || !nguoiDung.ho.trim()) {
+      openNotification("error", "Hệ thống", "Họ là bắt buộc", "bottomRight");
+      return;
+    }
+  
+    if (!nguoiDung.ten || !nguoiDung.ten.trim()) {
       openNotification("error", "Hệ thống", "Tên là bắt buộc", "bottomRight");
+      return;
+    }
+  
+    if (!nguoiDung.email || !nguoiDung.email.trim()) {
+      openNotification("error", "Hệ thống", "Email là bắt buộc", "bottomRight");
+      return;
+    }
+  
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(nguoiDung.email.trim())) {
+      openNotification("error", "Hệ thống", "Email không hợp lệ", "bottomRight");
+      return;
+    }
+    if (!hinhAnh) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Vui lòng chọn hình ảnh",
+        "bottomRight"
+      );
       return;
     }
     setIsLoading(true);
@@ -250,41 +275,6 @@ function ModalThemSua({ id, setData }) {
               }} />
           </Form.Item>
           <Form.Item
-            label="Trạng Thái"
-            name="trangThai"
-            valuePropName="checked"
-            rules={[
-              {
-                required: true,
-                message: 'Vui lòng chọn trạng thái!'
-              },
-            ]}
-          >
-            <Checkbox
-              onChange={(e) => setNguoiDung({
-                ...nguoiDung,
-                trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
-              })}
-            >Hoạt động
-            </Checkbox>
-          </Form.Item>
-          <Form.Item
-            label="Điểm"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input value={nguoiDung.diem}
-              onChange={(e) => {
-                setNguoiDung({
-                  ...nguoiDung,
-                  diem: e.target.value,
-                });
-              }} />
-          </Form.Item>
-          <Form.Item
             label="Số Điện Thoại"
             rules={[
               {
@@ -316,6 +306,25 @@ function ModalThemSua({ id, setData }) {
               <Radio value="Nam">Nam</Radio>
               <Radio value="Nữ">Nữ</Radio>
             </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            label="Trạng Thái"
+            name="trangThai"
+            valuePropName="checked"
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng chọn trạng thái!'
+              },
+            ]}
+          >
+            <Checkbox
+              onChange={(e) => setNguoiDung({
+                ...nguoiDung,
+                trangThai: e.target.checked ? "HOATDONG" : "BIKHOA",
+              })}
+            >Hoạt động
+            </Checkbox>
           </Form.Item>
 
         </Form>
