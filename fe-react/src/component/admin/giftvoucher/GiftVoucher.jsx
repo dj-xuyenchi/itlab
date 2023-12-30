@@ -1,17 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Table, Button, message, Tag, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-// import { PauseCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-
 import AddGift from './AddGift';
 import ModalU from './ModalU';
-
 import axios from 'axios';
-
 import MenuAdmin from '../layout/menu/MenuAdmin';
 import Header from '../layout/header/Header';
-
-
 
 export default function Voucher() {
     const searchInput = useRef(null);
@@ -21,11 +15,6 @@ export default function Voucher() {
     const [searchText, setSearchTextGift] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [resetTable, setResetTableGift] = useState(false);
-
-
-    // 
-
-    // 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -49,13 +38,10 @@ export default function Voucher() {
             clearFilters,
         }) => (
             <div style={{ padding: 8 }}>
-
                 <Space>
                     <Button
                         type="primary"
-                        onClick={() =>
-                            handleSearch(selectedKeys, confirm, dataIndex)
-                        }
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
                         icon={<SearchOutlined />}
                         size="small"
                         style={{ width: 90 }}
@@ -95,7 +81,7 @@ export default function Voucher() {
 
     const columns = [
         {
-            title: 'Id',
+            title: 'ID',
             dataIndex: 'id',
             key: 'id',
             ...getColumnSearchProps('id'),
@@ -106,37 +92,33 @@ export default function Voucher() {
             key: 'maNguoiDung',
             ...getColumnSearchProps('maNguoiDung'),
         },
-
         {
-            title: "Ảnh đại diện",
-            dataIndex: "anhDaiDien",
-            key: "anhDaiDien",
-            width: "15%",
-            render: (anhDaiDien) => (
-                <img src={anhDaiDien} style={{ width: "80px", height: "80px" }} />
-            ),
+            title: 'Ảnh đại diện',
+            dataIndex: 'anhDaiDien',
+            key: 'anhDaiDien',
+            render: (anhDaiDien) => <img src={anhDaiDien} alt="Ảnh đại diện" style={{ width: '50px', height: '50px' }} />,
         },
-
         {
             title: 'Số điện thoại',
             dataIndex: 'soDienThoai',
             key: 'soDienThoai',
         },
         {
-            title: 'Tên ',
-            dataIndex: 'ten',
-            key: 'ten',
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
         },
-
         {
             title: 'Các voucher',
-            dataIndex: '',
-            key: 'x',
-            render: (record) => <div>
-                {/* <ModalU recordId={record.id} onActionSuccess={reloadVouchers} />
-                <ModalD recordId={record.id} onActionSuccess={reloadVouchers} /> */}
-            </div>
-
+            dataIndex: 'voucherList',
+            key: 'voucherList',
+            render: (voucherList) => (
+                <Space size="middle">
+                    {voucherList && voucherList.split(',').map((voucher, index) => (
+                        <Tag key={index}>{voucher}</Tag>
+                    ))}
+                </Space>
+            ),
         },
     ];
 
@@ -147,75 +129,59 @@ export default function Voucher() {
     const loadGiftVouchers = async () => {
         try {
             setLoading(true);
-            const result = await axios.get('http://localhost:8089/api/voucher/giftvoucher');
+            const result = await axios.get('http://localhost:8089/api/voucher/123');
             setGiftVouchers(result.data);
             setSearchResults(result.data);
+            console.log(result.data); // Log the data to the console
         } catch (error) {
             console.error('Error loading vouchers:', error);
         } finally {
             setLoading(false);
         }
-
+    
         setResetTableGift(false);
     };
-    // const reloadVouchers = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const result = await axios.get('http://localhost:8089/api/voucher/giftvoucher');
-    //         setGiftVouchers(result.data);
-    //         setSearchResults(result.data);
-    //     } catch (error) {
-    //         console.error('Error reloading vouchers:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    // them tất cả người dùng có voucher
 
-
-
-
+    const dataSource = giftvouchers.map((voucher, index) => ({
+        key: index,
+        id: voucher[0],
+        maNguoiDung: voucher[1],
+        anhDaiDien: voucher[2],
+        soDienThoai: voucher[3],
+        email: voucher[4],
+        voucherList: voucher[5],
+    }));
 
     return (
         <div>
             <Header />
             <MenuAdmin />
 
-
-            <div className="body-container" >
-                <div className="button"
+            <div className="body-container">
+                <div
+                    className="button"
                     style={{
                         display: 'flex',
-                        justifyContent: "flex-end",
-                        margin: "10px",
-
-                    }}>
-
+                        justifyContent: 'flex-end',
+                        margin: '10px',
+                    }}
+                >
                     <ModalU />
                     <br />
                     -
                     <br />
-                    <AddGift/>
-
+                    <AddGift />
                 </div>
 
                 <Table
                     columns={columns}
-                    dataSource={searchResults}
+                    dataSource={dataSource}
                     loading={loading}
                     pagination={{ pageSize: 10 }}
                     key={resetTable ? 'reset' : 'table'}
-                    style={{ margin: '10px' }} />
+                    style={{ margin: '10px' }}
+                />
             </div>
-        </div >
-
+        </div>
     );
 }
-
-
-
-
-
-
-
-

@@ -11,12 +11,20 @@ import java.util.List;
 @Repository
 public interface NguoiDungVoucherRepo extends JpaRepository<NguoiDungVoucher, Long> {
 
-    @Query("SELECT b.id, b.email, b.maNguoiDung, STRING_AGG(c.tenVoucher, ',') " +
-            "FROM NguoiDungVoucher  a " +
-            "JOIN  a.nguoiDung b " +
-            "JOIN a.voucher c " +
-            "GROUP BY b.id, b.email, b.maNguoiDung")
-    List<Object[]> getAllTang();
+//    @Query("SELECT b.id,b.maNguoiDung,b.anhDaiDien,b.soDienThoai, b.email,  STRING_AGG(c.tenVoucher, ',') " +
+//            "FROM NguoiDungVoucher  a " +
+//            "JOIN  a.nguoiDung b " +
+//            "JOIN a.voucher c " +
+//            "GROUP BY b.id,b.maNguoiDung,b.anhDaiDien,b.soDienThoai, b.email")
+//    List<Object[]> getAllTang();
+@Query("SELECT b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email, " +
+        "STRING_AGG(CONCAT(c.tenVoucher, ' (KT: ',c.ngayKetThuc, ')'), ', ') " +
+        "FROM NguoiDungVoucher a " +
+        "JOIN a.nguoiDung b " +
+        "JOIN a.voucher c " +
+        "GROUP BY b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email")
+List<Object[]> getAllTang();
+
 
 
 
