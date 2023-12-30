@@ -1,9 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './gioithieu.css'; // Đảm bảo bạn đã có CSS cho component này
+import './gioithieu.css';
+import Header from '../admin/layout/header/Header'
 
 const GioiThieu = () => {
   return (
+    <>
+    <Header />
+    <div>
     <div className="wrapper">
       <div className="sidebar">
         <ul>
@@ -17,7 +21,7 @@ const GioiThieu = () => {
         </ul>
       </div>
       
-      <div className="content">
+      <div className="content-hungnv">
         <h3>Giới thiệu về Routine</h3>
         <h5>“Routine đang tạo ra những bộ trang phục sản xuất trong nước hoàn toàn có thể sánh ngang với
              các thương hiệu thời trang nam đến từ nước ngoài về kiểu dáng, chất lượng lẫn phong cách thời trang.” - CEO Routine.</h5>
@@ -28,6 +32,8 @@ const GioiThieu = () => {
         <img src="https://file.hstatic.net/1000341789/file/1200px_routine.jpg" alt="Giới thiệu về Routine" />
       </div>
     </div>
+    </div>
+    </>
   );
 };
 

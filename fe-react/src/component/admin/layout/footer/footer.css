@@ -77,14 +77,14 @@ h3{
     text-decoration: underline;
 }
 .social-icons img {
-    width: 24px; /* Đặt chiều rộng mong muốn */
-    height: 24px; /* Đặt chiều cao mong muốn */
-    margin-right: 10px; /* Khoảng cách giữa các biểu tượng, điều chỉnh nếu cần */
-    vertical-align: middle; /* Để biểu tượng cùng đường với text nếu cần */
+    width: 24px;
+    height: 24px; 
+    margin-right: 10px; 
+    vertical-align: middle; 
 }
 .social-icons i {
-    font-size: 24px; /* Đặt kích thước font mong muốn */
-    margin-right: 10px; /* Khoảng cách giữa các biểu tượng, điều chỉnh nếu cần */
+    font-size: 24px; 
+    margin-right: 10px; 
 }
 
 
