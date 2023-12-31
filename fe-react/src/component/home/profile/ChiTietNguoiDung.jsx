@@ -206,25 +206,17 @@ function ChiTietNguoiDung({ user }) {
               marginTop: "12px",
             }}
           >
-            <Col span={13}>
-              <p>Xếp hạng</p>
-              <p
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                {nguoiDung.rankKhachHang.tenRank}
-              </p>
-            </Col>
-          </Row>
-          <Row
-            style={{
-              marginTop: "12px",
-            }}
-          >
             <Col span={4}>
               <Button onClick={handleCapNhatThongTin} type="primary">
                 Cập nhật
+              </Button>
+            </Col>
+            <Col span={4} >
+              <Button onClick={() => {
+                localStorage.removeItem("user")
+                window.location = "http://localhost:3000/"
+              }}>
+                Đăng xuất
               </Button>
             </Col>
           </Row>

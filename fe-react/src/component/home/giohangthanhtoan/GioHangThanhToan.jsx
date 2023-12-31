@@ -15,7 +15,6 @@ import {
   notification,
 } from "antd";
 import { useEffect, useState } from "react";
-import { selectLanguage } from "../../../language/selectLanguage";
 import { useGioHangStore } from "./useGioHangStore";
 import { BsCart2 } from "react-icons/bs";
 import { GrMapLocation } from "react-icons/gr";
@@ -24,11 +23,9 @@ import { FaMoneyCheck } from "react-icons/fa";
 import { selectThanhToan } from "./selectThanhToan";
 import SanPhamItem from "./SanPhamItem";
 import { fixMoney } from "../../../extensions/fixMoney";
-import { redirect2VnPay } from "../../../plugins/vnpay";
 import { useGHN } from "../../../plugins/ghnapi";
 import { Option } from "antd/es/mentions";
 function GioHangThanhToan() {
-  const language = useSelector(selectLanguage);
   const thanhToan = useSelector(selectThanhToan);
   const [duLieuThanhToan, setDuLieuThanhToan] = useState(undefined);
   const [soTienPhaiTra, setSoTienPhaiTra] = useState(0);
@@ -37,14 +34,11 @@ function GioHangThanhToan() {
   const [ghiChu, setGhiChu] = useState("");
   const [diaChiChon, setDiaChiChon] = useState(undefined);
   const [tinh, setTinh] = useState(undefined);
-  const [huyen, setHuyen] = useState(undefined);
-  const [xa, setXa] = useState(undefined);
-  const [phuongThucThanhThoanChon, setPhuongThucThanhToanChon] =
-    useState(undefined);
-  const [phuongThucVanChuyen, setPhuongThucVanChuyen] = useState(undefined);
-  const [api, contextHolder] = notification.useNotification();
+  const [phuongThucThanhToan, setPhuongThucThanhToan] =
+    useState(0);
   const options = [];
   const size = "large";
+  const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
       api.error({
@@ -65,15 +59,6 @@ function GioHangThanhToan() {
       openNotification("error", "Hệ thống", "Giỏ hàng trống", "bottomRight");
       return;
     }
-    if (!phuongThucVanChuyen) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Chọn phương thức vận chuyển",
-        "bottomRight"
-      );
-      return;
-    }
     for (var item of duLieuThanhToan.data.sanPhamList) {
       if (item.soLuong > item.sanPhamChiTiet.soLuongTon) {
         openNotification(
@@ -90,11 +75,11 @@ function GioHangThanhToan() {
       }
     }
 
-    if (phuongThucThanhThoanChon.maPhuongThuc == "VNPAY") {
+    if (phuongThucThanhToan === 1) {
       const request = await useGioHangStore.actions.vnPay({
         ghiChu: ghiChu,
         diaChiId: diaChiChon.id,
-        phuongThucThanhToanId: phuongThucThanhThoanChon.id,
+        phuongThucThanhToanId: phuongThucThanhToan.id,
         phuongThucVanChuyenId: 1,
         gia: soTienPhaiTra,
         phiVanChuyen: phiVanChuyen,
@@ -108,34 +93,21 @@ function GioHangThanhToan() {
     }
     setDiaChiChon(
       duLieuThanhToan.data.diaChiDTOList.find((item) => {
-        return item.id == e.target.value;
+        return item.id === e.target.value;
       })
     );
   }
-  function handleChonPhuongThucThanhToan(e) {
-    setPhuongThucThanhToanChon(
-      duLieuThanhToan.data.phuongThucThanhToanDTOList.find((item) => {
-        return item.id == e.target.value;
-      })
-    );
-  }
-  async function handleChonPhuongThucGiao(e) {
-    setPhuongThucVanChuyen(
-      duLieuThanhToan.data.phuongThucVanChuyenDTOList.find((item) => {
-        return item.id == e.target.value;
-      })
-    );
-    if (e.target.value == 1) {
-      const giaShip = await useGHN.actions.layGia({
-        gia: soTienPhaiTra,
-        denXa: diaChiChon.xaId,
-        denHuyen: diaChiChon.huyenId,
-      });
-      setPhiVanChuyen(giaShip.data.data.total);
+  //giao hàng
+  async function handleTinhGiaVanChuyen() {
+    if (!diaChiChon || soTienPhaiTra === 0) {
+      return
     }
-    if (e.target.value == 2) {
-      setPhiVanChuyen(0);
-    }
+    const giaShip = await useGHN.actions.layGia({
+      gia: soTienPhaiTra,
+      denXa: diaChiChon.xaId,
+      denHuyen: diaChiChon.huyenId,
+    });
+    setPhiVanChuyen(giaShip.data.data.total);
   }
   function handleSetSoTienPhaiTra() {
     var chuaTinhChiPhi = duLieuThanhToan.data.sanPhamList.reduce((pre, cur) => {
@@ -153,7 +125,7 @@ function GioHangThanhToan() {
         JSON.parse(localStorage.getItem("user")).data.nguoiDung.id
       );
       setDuLieuThanhToan(data.data);
-      setPhuongThucThanhToanChon(data.data.data.phuongThucThanhToanDTOList[0]);
+      setPhuongThucThanhToan(data.data.data.phuongThucThanhToanDTOList[0]);
     }
     async function handleLayTinh() {
       const data = await useGHN.actions.layTinh();
@@ -168,16 +140,7 @@ function GioHangThanhToan() {
       gioHangId: gioHangId,
       soLuongMoi: soLuongMoi,
     });
-    if (phuongThucVanChuyen) {
-      if (phuongThucVanChuyen.maPhuongThuc == "GHN") {
-        const giaShip = await useGHN.actions.layGia({
-          gia: soTienPhaiTra,
-          denXa: diaChiChon.xaId,
-          denHuyen: diaChiChon.huyenId,
-        });
-        setPhiVanChuyen(giaShip.data.data.total);
-      }
-    }
+    handleTinhGiaVanChuyen();
     setDuLieuThanhToan(data.data);
   }
   useEffect(() => {
@@ -499,43 +462,6 @@ function GioHangThanhToan() {
                       }}
                     />
                     <span className="app">Áp dụng</span>
-                    <Divider></Divider>
-                    <p
-                      className="title"
-                      style={{
-                        height: "20px",
-                      }}
-                    >
-                      Ưu đãi khách hàng VIP
-                      <span
-                        style={{
-                          fontWeight: 400,
-                          fontSize: "15px",
-                          textTransform: "none",
-                        }}
-                      >
-                        {" " + " (Nếu có)"}
-                      </span>
-                    </p>
-                    <p
-                      style={{
-                        marginTop: "2px",
-                        textDecoration: "underline",
-                        fontSize: "13px",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Hướng dẫn sử dụng ưu đãi VIP
-                    </p>
-                    <Input
-                      size="large"
-                      placeholder="Nhập mã giảm giá"
-                      style={{
-                        backgroundColor: "white",
-                        width: "70%",
-                      }}
-                    />
-                    <span className="app">Áp dụng</span>
                   </div>
                   <div className="checkout">
                     <p className="title">Tạm tính</p>
@@ -641,8 +567,7 @@ function GioHangThanhToan() {
                         style={{
                           marginLeft: "14px",
                         }}
-                        value={phuongThucVanChuyen ? phuongThucVanChuyen.id : 0}
-                        onChange={handleChonPhuongThucGiao}
+                        value={1}
                       >
                         <Space direction="vertical">
                           <Radio value={1} key={1}>
@@ -668,11 +593,11 @@ function GioHangThanhToan() {
                       </p>
                       <Radio.Group
                         value={
-                          phuongThucThanhThoanChon
-                            ? phuongThucThanhThoanChon.id
-                            : 0
+                          phuongThucThanhToan
                         }
-                        onChange={handleChonPhuongThucThanhToan}
+                        onChange={(e) => {
+                          setPhuongThucThanhToan(e.target.value)
+                        }}
                         style={{
                           marginLeft: "14px",
                         }}

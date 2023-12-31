@@ -32,22 +32,24 @@ public class AuthController {
     private JwtTokenProvider _provider;
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @RequestMapping(value = "/dangky", method = RequestMethod.POST)
     public ResponseEntity<?> themNguoiDung(@RequestBody NguoiDung nguoiDung) {
         return ResponseEntity.ok(_authService.dangKyTaiKhoan(nguoiDung));
     }
+
     @RequestMapping(value = "/dangnhap", method = RequestMethod.POST)
     public ResponseEntity<?> dangNhap(@RequestBody LoginRequest login) throws Exception {
-       Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUserName(),login.getPassword()));
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUserName(), login.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         NguoiDungUserDetails nd = (NguoiDungUserDetails) auth.getPrincipal();
         String jwt = _provider.taoToken(nd);
-        List<String> roles = nd.getAuthorities().stream().map(x->x.getAuthority()).collect(Collectors.toList());
+        List<String> roles = nd.getAuthorities().stream().map(x -> x.getAuthority()).collect(Collectors.toList());
         Optional<NguoiDung> ng = _nguoiDungRepo.findNguoiDungByEmailEquals(login.getUserName());
-        if(ng.isEmpty()){
+        if (ng.isEmpty()) {
             ResponseEntity.ok(1);
         }
-        NguoiDungData re = new NguoiDungData(NguoiDungDTO.fromEntity(ng.get()),jwt,roles);
+        NguoiDungData re = new NguoiDungData(NguoiDungDTO.fromEntity(ng.get()), jwt, roles);
         return ResponseEntity.ok(re);
     }
 

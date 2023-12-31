@@ -89,22 +89,7 @@ const items = [
     "64",
     <RiRefundFill />
   ),
-  getItem("Quản lý sự kiện", "sub5", <FaTag />, [
-    getItem(
-      <Link to={"/admin/sukiengiamgia"}>Sự kiện giảm giá</Link>,
-      "66",
-      <BsPercent />
-    ),
-    getItem(
-      <Link to={"/admin/sukiengiamgia/sanphamsukien"}>Sản phẩm sự kiện</Link>,
-      "67",
-      <TbPackages />
-    ),
-    // getItem(
-    //   <Link to={"/admin/sukiengiamgia/sanphamsukien/themsanphamsukien"}> Thêm sản phẩm sự kiện</Link>,
-    //   "67",
-    //   <TbPackages />
-    // ),
+  getItem("Đánh giá doanh số", "sub5", <FaTag />, [
     getItem(
       <Link to={"/admin/crm"}>Sản phẩm doanh thu</Link>,
       "65",

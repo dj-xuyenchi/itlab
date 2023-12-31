@@ -31,7 +31,9 @@ public class SanPhamController {
             Optional<Long> thuongHieuId,
             Optional<Long> mauSacId,
             Optional<Long> loaiSanPhamId,
-            Optional<Long> kichThuocId) {
+            Optional<Long> kichThuocId,
+            String keyWord
+            ) {
         return ResponseEntity.ok(_sanPhamService.phanTrangSanPhamTrangChu(
                 page,
                 pageSize,
@@ -40,7 +42,9 @@ public class SanPhamController {
                 thuongHieuId.orElse(null),
                 mauSacId.orElse(null),
                 loaiSanPhamId.orElse(null),
-                kichThuocId.orElse(null))
+                kichThuocId.orElse(null),
+                keyWord
+                )
         );
     }
 

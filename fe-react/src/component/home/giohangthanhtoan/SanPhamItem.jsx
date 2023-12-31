@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import QuantityField from "../productdetail/QuantityField";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { useState } from "react";
+import { InputNumber } from "antd";
 function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
   const language = useSelector(selectLanguage);
   const [soLuong, setSoLuong] = useState(item.soLuong);
@@ -84,20 +85,13 @@ function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
                 marginTop: "8px",
               }}
             >
-              <QuantityField
-                max={max}
-                quantity={soLuong}
-                setQuantity={setSoLuong}
-                gioHangId={item.id}
-                handleCapNhatSoLuongSanPhamGioHang={
-                  handleCapNhatSoLuongSanPhamGioHang
+              <InputNumber min={0} max={max} defaultValue={soLuong} value={soLuong} onChange={(e) => {
+                if (isNaN(e)) {
+                  return
                 }
-                style={{
-                  height: "40px",
-                  width: "40px",
-                  size: "12px",
-                }}
-              />
+                handleCapNhatSoLuongSanPhamGioHang(item.id, e)
+                setSoLuong(e)
+              }} />
             </div>
             <div
               style={{

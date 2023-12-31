@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Input } from "antd";
+import { Button, Card, Divider, Input, notification } from "antd";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import { selectLanguage } from "../../language/selectLanguage";
 import { useLoginStore } from "./useLoginStore";
 import userSlice from "./userSlice";
 function Login() {
+  const [api, contextHolder] = notification.useNotification();
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [typeError, setTypeError] = useState(undefined);
@@ -20,9 +21,15 @@ function Login() {
       userName: "",
       password: "",
     });
-    if (!login) {
+    if (login.data == 1) {
       localStorage.removeItem("user");
-      window.location.href = process.env.REACT_APP_FRONTEND_URL + "login";
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Sai tên tài khoản hoặc mật khẩu",
+        "bottomRight"
+      );
+      // window.location.href = process.env.REACT_APP_FRONTEND_URL + "login";
       return;
     }
     localStorage.setItem("user", JSON.stringify(login));
@@ -59,9 +66,24 @@ function Login() {
   //     };
   //     getUser();
   // }
-
+  const openNotification = (type, title, des, placement) => {
+    if (type === "error") {
+      api.error({
+        message: title,
+        description: des,
+        placement,
+      });
+    } else {
+      api.success({
+        message: title,
+        description: des,
+        placement,
+      });
+    }
+  };
   return (
     <>
+      {contextHolder}
       <div className="login-container">
         <div className="login-banner">
           <div className="login-pannel">
@@ -72,8 +94,8 @@ function Login() {
           <div className="login-option-site">
             <div className="login-option-header">
               <img src={require("../../assets/login/logo-noname.png")} alt="" />
-              <h3>{language.login.company}</h3>
-              <p>{language.login.subTitle}</p>
+              <h3>Routine</h3>
+              <p>Áo nam</p>
               <label htmlFor="">{language.login.userName}</label>
               <Input
                 onChange={handleUpdateUserName}
@@ -112,7 +134,7 @@ function Login() {
               <Button size="large" onClick={handleLogin}>
                 {language.login.loginBtn}
               </Button>
-              <Divider className="span"> {language.login.or}</Divider>
+              {/* <Divider className="span"> {language.login.or}</Divider>
               <div className="social-oauth">
                 <div>
                   <img
@@ -120,7 +142,7 @@ function Login() {
                     alt=""
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

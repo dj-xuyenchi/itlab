@@ -77,12 +77,8 @@ public class GioHangService implements IGioHangService {
     }
 
     @Override
-    public ResponObject<String, APIStatus> xoaGioHang(Long gioHangId) {
+    public void xoaGioHang(Long gioHangId) {
         Optional<GioHang> gh = _gioHangRepo.findById(gioHangId);
-        if (gh.isEmpty()) {
-            return new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Giỏ hàng không tồn tại!");
-        }
         _gioHangRepo.delete(gh.get());
-        return new ResponObject<String, APIStatus>(null, APIStatus.THANHCONG, "Xóa thành công!");
     }
 }

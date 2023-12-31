@@ -51,6 +51,10 @@ function ModalCapNhat({ id, setData }) {
       return;
     }
     const data = await useNhomSanPhamStore.actions.suaChatLieu(chatLieu);
+    if (!data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại tên " + chatLieu.tenMau, "bottomRight");
+      return
+    }
     openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
     setChatLieu({
       ...chatLieu,

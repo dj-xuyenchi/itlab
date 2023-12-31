@@ -30,7 +30,6 @@ public class NguoiDungService implements INguoiDungService {
     private NguoiDungRepo _nguoiDungRepo;
     @Autowired
     private PasswordEncoder _bcrypt;
-
     @Autowired
     private RankKhachHangRepo _rankKhachHangRepo;
 
@@ -45,7 +44,7 @@ public class NguoiDungService implements INguoiDungService {
     }
 
     @Override
-    public ResponObject<String, APIStatus> capNhatNguoiDung(NguoiDungRequest nguoiDungRequest,MultipartFile anhdaidien) throws IOException {
+    public ResponObject<String, APIStatus> capNhatNguoiDung(NguoiDungRequest nguoiDungRequest, MultipartFile anhdaidien) throws IOException {
         Optional<NguoiDung> ng = _nguoiDungRepo.findById(nguoiDungRequest.getId());
         if (ng.isEmpty()) {
             return new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Thất bại");
@@ -53,11 +52,11 @@ public class NguoiDungService implements INguoiDungService {
         NguoiDung nguoiDung = ng.get();
         nguoiDung.setTen(nguoiDungRequest.getTen());
         nguoiDung.setHo(nguoiDungRequest.getHo());
-        nguoiDung.setMatKhau(nguoiDungRequest.getMatKhau());
+        nguoiDung.setMatKhau(_bcrypt.encode(nguoiDungRequest.getMatKhau()));
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
         nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
-        if(!(anhdaidien ==null)){
+        if (!(anhdaidien == null)) {
             nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
         }
         nguoiDung.setTrangThai(nguoiDungRequest.getTrangThai());
@@ -85,12 +84,19 @@ public class NguoiDungService implements INguoiDungService {
 
     @Override
     public Page<NguoiDungDTO> xoaNguoiDung(Long nguoiDungId) {
-        _nguoiDungRepo.deleteById(nguoiDungId);
-        return layHetNguoiDung();
+        try {
+            _nguoiDungRepo.deleteById(nguoiDungId);
+            return layHetNguoiDung();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDungRequest, MultipartFile anhdaidien) throws IOException {
+        if (_nguoiDungRepo.existsByEmailContains(nguoiDungRequest.getEmail())) {
+            return new ResponObject<String, APIStatus>("Thành công", APIStatus.THATBAI, "Đã tồn tại email");
+        }
         NguoiDung nguoiDung = new NguoiDung();
         nguoiDung.setNgayTao(LocalDateTime.now());
         nguoiDung.setTen(nguoiDungRequest.getTen());

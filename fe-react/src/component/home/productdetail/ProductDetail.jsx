@@ -204,6 +204,37 @@ function ProductDetail() {
     }
     handleLayDuLieu();
   }, []);
+
+  async function handleThemYeuThich() {
+    if (sanPhamDangTim == null) {
+      openNotification(
+        "error",
+        language.systemNotification.system,
+        language.chiTietSanPham.chonSanPham,
+        "bottomRight"
+      );
+      return
+    }
+    if (user.nguoiDung.id === -1) {
+      openNotification(
+        "error",
+        language.systemNotification.system,
+        language.chiTietSanPham.chuaDangNhap,
+        "bottomRight"
+      );
+      return;
+    }
+    const data = await useSanPhamChiTiet.actions.themYeuThich({
+      nguoiDungId: user.nguoiDung.id,
+      sanPhamChiTietId: sanPhamDangTim.id,
+    })
+    openNotification(
+      "success",
+      language.systemNotification.system,
+      "Thêm thành công",
+      "bottomRight"
+    );
+  }
   return (
     <>
       {contextHolder}
@@ -411,6 +442,8 @@ function ProductDetail() {
                 <span>Thêm vào giỏ hàng</span>
               </div>
               <div
+                onClick={handleThemYeuThich}
+                className="heart-like"
                 style={{
                   fontSize: "36px",
                   marginLeft: "20px",
@@ -418,6 +451,7 @@ function ProductDetail() {
                   display: "flex",
                   alignItems: "center",
                   justifyItems: "center",
+                  cursor: "pointer"
                 }}
               >
                 <AiOutlineHeart />
@@ -482,7 +516,7 @@ function ProductDetail() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }

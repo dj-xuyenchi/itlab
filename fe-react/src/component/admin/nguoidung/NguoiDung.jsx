@@ -3,11 +3,11 @@ import { selectLanguage } from "../../../language/selectLanguage";
 import "./style.css";
 import Header from "../layout/header/Header";
 import MenuAdmin from "../layout/menu/MenuAdmin";
-import { Form, Modal, Row, Table, Tag, notification,message,Upload } from "antd";
+import { Form, Modal, Row, Table, Tag, notification, message, Upload } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Input, Space ,Image,Radio,Checkbox,DatePicker,Select } from "antd";
+import { Button, Input, Space, Image, Radio, Checkbox, DatePicker, Select } from "antd";
 import { useNguoiDungStore } from "./useNguoiDungStore";
 import ModalCapNhat from "./ModalCapNhat";
 import ModalXoa from "./ModalXoa";
@@ -25,34 +25,34 @@ function NguoiDung() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const { Option } = Select;
   const [nguoiDung, setNguoiDung] = useState({
-    id:"",
+    id: "",
     ten: "",
-    ho:"",
-    email:"",
+    ho: "",
+    email: "",
     trangThai: "BIKHOA",
   });
   const [fileList, setFileList] = useState([]);
   const [hinhAnh, setHinhAnh] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-const props = {
-  beforeUpload: (file) => {
-    return false;
-  },
-  onChange: (file) => {
-    setFileList(file.fileList);
-    if (file.fileList.length === 0) {
-      setHinhAnh([]);
-      return;
-    }
-    const isImage = file.file.type === "image/png" || file.file.type === "image/jpg" || file.file.type === "image/jpeg";
-    if (!isImage) {
-      message.error(`${file.file.name} không phải file hình ảnh`);
-      return;
-    }
-    setHinhAnh([file.fileList[0].originFileObj]);
-  },
-};
+  const props = {
+    beforeUpload: (file) => {
+      return false;
+    },
+    onChange: (file) => {
+      setFileList(file.fileList);
+      if (file.fileList.length === 0) {
+        setHinhAnh([]);
+        return;
+      }
+      const isImage = file.file.type === "image/png" || file.file.type === "image/jpg" || file.file.type === "image/jpeg";
+      if (!isImage) {
+        message.error(`${file.file.name} không phải file hình ảnh`);
+        return;
+      }
+      setHinhAnh([file.fileList[0].originFileObj]);
+    },
+  };
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -181,71 +181,71 @@ const props = {
     },
 
     {
-        title: "Ảnh đại diện",
-        dataIndex: "anhDaiDien",
-        key: "anhDaiDien",
-        width: "30%",
-        render: (anhDaiDien,record) => (
-          <>
+      title: "Ảnh đại diện",
+      dataIndex: "anhDaiDien",
+      key: "anhDaiDien",
+      width: "30%",
+      render: (anhDaiDien, record) => (
+        <>
           <div style={{
-               display:"flex",
-               flexDirection:"row"
+            display: "flex",
+            flexDirection: "row"
           }}>
 
-          <div style={{
-            height:'40px',
-            width:"40px",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            overflow:"hidden",
-            borderRadius:"50%",
-            border:"1px solid black"
-          }}>
-          <img src={anhDaiDien} style={{ width: "auto", height: "40px" }} />
-          </div>
-          <span style={{
-            lineHeight:"40px",
-            marginLeft:"4px"
-          }}>{record.ten}</span>
+            <div style={{
+              height: '40px',
+              width: "40px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              overflow: "hidden",
+              borderRadius: "50%",
+              border: "1px solid black"
+            }}>
+              <img src={anhDaiDien} style={{ width: "auto", height: "40px" }} />
             </div>
-          </>
-        ),
-      },
+            <span style={{
+              lineHeight: "40px",
+              marginLeft: "4px"
+            }}>{record.ten}</span>
+          </div>
+        </>
+      ),
+    },
 
-      {
-        title: "Số Điện Thoại ",
-        dataIndex: "soDienThoai",
-        key: "soDienThoai",
-        width: "15%",
-        ...getColumnSearchProps("soDienThoai"),
-      },
+    {
+      title: "Số Điện Thoại ",
+      dataIndex: "soDienThoai",
+      key: "soDienThoai",
+      width: "15%",
+      ...getColumnSearchProps("soDienThoai"),
+    },
 
-    
 
-      {
-        title: "Ngày tạo",
-        dataIndex: "ngayTao",
-        key: "ngayTao",
-        width: "15%",
-        ...getColumnSearchProps("ngayTao"),
-        render: (text) => {
-          return text ? dayjs(text).format('DD/MM/YYYY HH:mm:ss') : "Mới";
-        },
-      }
-      ,
-      {
-        title: "Ngày cập nhật",
-        dataIndex: "ngayCapNhat",
-        key: "ngayCapNhat",
-        width: "15%",
-        render: (ngayCapNhat) => (
-          <>
-            {ngayCapNhat ? dayjs(ngayCapNhat).format('DD/MM/YYYY HH:mm:ss') : <Tag color="processing">Mới</Tag>}
-          </>
-        ),
+
+    {
+      title: "Ngày tạo",
+      dataIndex: "ngayTao",
+      key: "ngayTao",
+      width: "15%",
+      ...getColumnSearchProps("ngayTao"),
+      render: (text) => {
+        return text ? dayjs(text).format('DD/MM/YYYY HH:mm:ss') : "Mới";
       },
-      
+    }
+    ,
+    {
+      title: "Ngày cập nhật",
+      dataIndex: "ngayCapNhat",
+      key: "ngayCapNhat",
+      width: "15%",
+      render: (ngayCapNhat) => (
+        <>
+          {ngayCapNhat ? dayjs(ngayCapNhat).format('DD/MM/YYYY HH:mm:ss') : <Tag color="processing">Mới</Tag>}
+        </>
+      ),
+    },
+
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
@@ -261,27 +261,27 @@ const props = {
         return text;
       },
     },
-    
-    
-      {
-        title: "Thao tác",
-        dataIndex: "id",
-        key: "id",
-        align: "center",
-        width: "15%",
-        render: (id) => (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <ModalView id={id} />
-            <ModalCapNhat id={id} setData={setData} />
-            <ModalXoa id={id} setData={setData} />
-          </div>
-        ),
-      },
+
+
+    {
+      title: "Thao tác",
+      dataIndex: "id",
+      key: "id",
+      align: "center",
+      width: "15%",
+      render: (id) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ModalView id={id} />
+          <ModalCapNhat id={id} setData={setData} />
+          <ModalXoa id={id} setData={setData} />
+        </div>
+      ),
+    },
   ];
 
   const [data, setData] = useState([]);
@@ -329,8 +329,8 @@ const props = {
     if (/[\d!@#$%^&*()_+{}\[\]:;<>,.?~\\]/.test(nguoiDung.ho)) {
       openNotification("error", "Hệ thống", "Tên họ không được chứa số và ký tự đặc biệt", "bottomRight");
       return;
-    }    
-    
+    }
+
     if (!nguoiDung.ten || !nguoiDung.ten.trim()) {
       openNotification("error", "Hệ thống", "Vui lòng nhập tên", "bottomRight");
       return;
@@ -338,7 +338,7 @@ const props = {
     if (/[\d!@#$%^&*()_+{}\[\]:;<>,.?~\\]/.test(nguoiDung.ten)) {
       openNotification("error", "Hệ thống", "Tên không được chứa số và ký tự đặc biệt", "bottomRight");
       return;
-    } 
+    }
     if (!nguoiDung.email || !nguoiDung.email.trim()) {
       openNotification("error", "Hệ thống", "Vui lòng nhập email", "bottomRight");
       return;
@@ -361,30 +361,32 @@ const props = {
       return;
     }
     const phoneNumberPattern = /^0\d{9}$/;
-      if (!phoneNumberPattern.test(nguoiDung.soDienThoai.trim())) {
-        openNotification("error", "Hệ thống", "Số điện thoại không hợp lệ", "bottomRight");
-        return;
-      }
+    if (!phoneNumberPattern.test(nguoiDung.soDienThoai.trim())) {
+      openNotification("error", "Hệ thống", "Số điện thoại không hợp lệ", "bottomRight");
+      return;
+    }
 
-      if (!hinhAnh) {
-        openNotification(
-          "error",
-          "Hệ thống",
-          "Chọn hình ảnh",
-          "bottomRight"
-        );
-        return;
-      }
-      
+    if (!hinhAnh) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Chọn hình ảnh",
+        "bottomRight"
+      );
+      return;
+    }
     setIsLoading(true);
     const formData = new FormData();
     if (hinhAnh.length > 0) {
       formData.append("anhDaiDien", hinhAnh[0]);
     }
     formData.append("data", JSON.stringify(nguoiDung));
-  
     try {
       const response = await useNguoiDungStore.actions.themNguoiDung(formData);
+      if (response.data.status === "THAIBAI") {
+        openNotification("error", "Hệ thống", "Đã tồn tại người dùng có email trên", "bottomRight");
+        return
+      }
       if (response && response.data && response.data.status === "THANHCONG") {
         openNotification("success", "Hệ thống", "Thêm người dùng thành công", "bottomRight");
         await layDuLieu();
@@ -394,7 +396,7 @@ const props = {
     } catch (error) {
       openNotification("error", "Hệ thống", error.message, "bottomRight");
     } finally {
-      setNguoiDung({ho:"", ten: "",email:"",matKhau:"",soDienThoai:"",gioiTinh:null, hinhAnh: null });
+      setNguoiDung({ ho: "", ten: "", email: "", matKhau: "", soDienThoai: "", gioiTinh: null, hinhAnh: null });
       setFileList([]);
       setHinhAnh([]);
       form.resetFields();
@@ -402,7 +404,7 @@ const props = {
       setIsModalOpen(false);
     }
   }
-  
+
   function handleSetRankKhachHang(e) {
     setNguoiDung({
       ...nguoiDung,
@@ -458,7 +460,7 @@ const props = {
                     maxWidth: 600,
                   }}
                 >
-                                    <Form.Item
+                  <Form.Item
                     label="Họ"
                     name="Họ"
                     rules={[
@@ -525,7 +527,7 @@ const props = {
                       },
                     ]}
                   >
-                    <Input
+                    <Input.Password
                       onChange={(e) => {
                         setNguoiDung({
                           ...nguoiDung,
@@ -564,8 +566,8 @@ const props = {
                       },
                     ]}
                   >
-                    <Radio.Group 
-                      onChange={(e) => setNguoiDung({...nguoiDung, gioiTinh: e.target.value === "Nam"})} 
+                    <Radio.Group
+                      onChange={(e) => setNguoiDung({ ...nguoiDung, gioiTinh: e.target.value === "Nam" })}
                     >
                       <Radio value="Nam">Nam</Radio>
                       <Radio value="Nữ">Nữ</Radio>

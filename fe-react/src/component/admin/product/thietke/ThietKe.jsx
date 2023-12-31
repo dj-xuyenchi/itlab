@@ -229,10 +229,14 @@ function ThietKe() {
     }
   };
   async function handleThemChatLieu() {
-    if (chatLieu.tenChatLieu == "") {
+    if (chatLieu.tenThietKe == "") {
       return;
     }
     const data = await useNhomSanPhamStore.actions.themChatLieu(chatLieu);
+    if (!data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại thiết kế " + chatLieu.tenThietKe, "bottomRight");
+      return
+    }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setData(data.data.data);
     setChatLieu({

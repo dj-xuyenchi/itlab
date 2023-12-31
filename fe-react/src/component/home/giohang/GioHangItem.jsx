@@ -1,12 +1,26 @@
-import { useSelector } from "react-redux";
 import "./style.css";
-import { selectLanguage } from "../../../language/selectLanguage";
 import { AiOutlineClose } from "react-icons/ai";
 import { fixMoney } from "../../../extensions/fixMoney";
-import { InputNumber } from "antd";
-function GioHangItem({ item }) {
-  const language = useSelector(selectLanguage);
-  console.log(item);
+import { InputNumber, notification } from "antd";
+import { useGioHangStore } from "../giohangthanhtoan/useGioHangStore";
+import { useState } from "react";
+function GioHangItem({ handleLayGioHang, item }) {
+  const user = JSON.parse(localStorage.getItem("user"))?.data.nguoiDung
+  const [soLuong, setSoLuong] = useState(item.soLuong)
+  async function handleXoaGioHang() {
+    const data = await useGioHangStore.actions.xoaGioHang(item.id)
+    handleLayGioHang()
+  }
+  async function handleSuaSoLuong(soLuong) {
+    setSoLuong(soLuong)
+    const data = await useGioHangStore.actions.capNhatSoLuongSanPhamGioHang({
+      nguoiDungId: user.id,
+      gioHangId: item.id,
+      soLuongMoi: soLuong
+    })
+    handleLayGioHang()
+  }
+
   return (
     <>
       <div
@@ -75,6 +89,7 @@ function GioHangItem({ item }) {
                 fontSize: "24px",
               }}
               className="hover-yeuthich"
+              onClick={handleXoaGioHang}
             >
               <AiOutlineClose />
             </div>
@@ -85,7 +100,7 @@ function GioHangItem({ item }) {
             </p>
           </div>
           <div>
-            <InputNumber value={item.soLuong} />
+            <InputNumber onChange={handleSuaSoLuong} defaultValue={item.soLuong} value={soLuong} />
           </div>
         </div>
       </div>

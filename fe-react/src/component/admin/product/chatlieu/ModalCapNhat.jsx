@@ -51,6 +51,10 @@ function ModalCapNhat({ id, setData }) {
       return;
     }
     const data = await useChatLieuStore.actions.suaChatLieu(chatLieu);
+    if (!data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại chất liệu tên " + chatLieu.tenChatLieu, "bottomRight");
+      return
+    }
     openNotification("success", "Hệ thống", "Sửa thành công", "bottomRight");
     setChatLieu({
       ...chatLieu,

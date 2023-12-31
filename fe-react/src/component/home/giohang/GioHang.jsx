@@ -5,7 +5,7 @@ import { Divider, Drawer } from "antd";
 import { useState } from "react";
 import GioHangItem from "./GioHangItem";
 import { fixMoney } from "../../../extensions/fixMoney";
-function GioHang({ gioHang, open, setOpen }) {
+function GioHang({ handleLayGioHang, gioHang, open, setOpen }) {
   const language = useSelector(selectLanguage);
   const [placement, setPlacement] = useState("right");
   function handleCloseGioHang() {
@@ -22,7 +22,7 @@ function GioHang({ gioHang, open, setOpen }) {
         key={placement}
       >
         {gioHang && gioHang.map((item) => {
-          return <GioHangItem item={item} />
+          return <GioHangItem handleLayGioHang={handleLayGioHang} item={item} />
         })}
         <Divider />
         <div>

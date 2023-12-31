@@ -39,7 +39,6 @@ function Filter({ handleFilter, page, pageSize }) {
   }, []);
 
   const onChange = (e) => {
-    console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
   const formatter = (value) => {

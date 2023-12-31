@@ -113,8 +113,8 @@ function CRM() {
                         }}>
                             <span ref={showContentSpan}></span>
                             {sussgest && <>
-                                <ModalTaoSuKien profit={profit} />
-                                -
+                                {/* <ModalTaoSuKien profit={profit} />
+                                - */}
                                 <DanhGiaTop10SanPham />
                             </>}
                         </Row>

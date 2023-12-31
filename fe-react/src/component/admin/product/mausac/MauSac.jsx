@@ -242,6 +242,10 @@ function MauSac() {
       return;
     }
     const data = await useNhomSanPhamStore.actions.themChatLieu(chatLieu);
+    if (!data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại tên " + chatLieu.tenMau, "bottomRight");
+      return
+    }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setData(data.data.data);
     setChatLieu({

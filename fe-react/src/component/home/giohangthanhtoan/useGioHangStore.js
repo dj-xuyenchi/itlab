@@ -6,6 +6,10 @@ export const useGioHangStore = {
             const response = await axiosIns.get(`/api/giohang/laysanphamtugiohang?nguoiDungId=${payload}`)
             return response
         },
+        async xoaGioHang(payload) {
+            const response = await axiosIns.get(`/api/giohang/xoagiohang?gioHangId=${payload}`)
+            return response
+        },
         async layDuLieuThanhToan(payload) {
             const response = await axiosIns.get(`/api/thanhtoan/thanhtoan?nguoiDungId=${payload}`)
             return response

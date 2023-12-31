@@ -157,3 +157,7 @@
 .huongdan:hover {
     cursor: pointer;
 }
+
+.heart-like:hover {
+    color: pink;
+}

@@ -231,10 +231,14 @@ function KichThuoc() {
     }
   };
   async function handleThemChatLieu() {
-    if (chatLieu.tenChatLieu == "") {
+    if (chatLieu.tenKichThuoc == "") {
       return;
     }
     const data = await useNhomSanPhamStore.actions.themChatLieu(chatLieu);
+    if (!data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại tên " + chatLieu.tenKichThuoc, "bottomRight");
+      return
+    }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setData(data.data.data);
     setChatLieu({

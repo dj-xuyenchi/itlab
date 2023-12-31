@@ -16,4 +16,5 @@ public class FilterSanPham {
     private Long[] nhomSanPham={};
     private Long min;
     private Long max;
+    private String keyWord;
 }

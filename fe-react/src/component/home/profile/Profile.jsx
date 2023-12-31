@@ -11,6 +11,7 @@ import { BiUser } from "react-icons/bi";
 import { MdOutlineLocalShipping, MdSecurity } from "react-icons/md";
 import { RiBillLine } from "react-icons/ri";
 import DoiMatKhau from "./DoiMatKhau";
+import DiaChiNhanHang from "./DiaChiNhanHang";
 
 const items = [
   {
@@ -44,7 +45,6 @@ function Profile() {
   return (
     <>
       <Header />
-
       <div
         style={{
           width: "1028px",
@@ -58,8 +58,9 @@ function Profile() {
           <Menu onClick={onClick} selectedKeys={[current]} items={items} />
         </div>
         <div className="content-profile">
-          {current == "profile" ? <ChiTietNguoiDung /> : ""}
-          {current == "security" ? <DoiMatKhau /> : ""}
+          {current === "profile" ? <ChiTietNguoiDung /> : ""}
+          {current === "security" ? <DoiMatKhau /> : ""}
+          {current === "address" ? <DiaChiNhanHang /> : ""}
         </div>
       </div>
     </>

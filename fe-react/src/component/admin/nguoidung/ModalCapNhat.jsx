@@ -213,6 +213,24 @@ function ModalThemSua({ id, setData }) {
               }}
             />
           </Form.Item>
+          <Form.Item
+            label="Mật Khẩu"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input.Password
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  matKhau: e.target.value,
+                });
+              }}
+              value={nguoiDung.matKhau}
+            />
+          </Form.Item>
           <Form.Item label="Ảnh đại diện">
             <Upload
               listType="picture-card"
@@ -234,22 +252,6 @@ function ModalThemSua({ id, setData }) {
             </Upload>
           </Form.Item>
           <Form.Item
-            label="Email"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input value={nguoiDung.email}
-              onChange={(e) => {
-                setNguoiDung({
-                  ...nguoiDung,
-                  email: e.target.value,
-                });
-              }} />
-          </Form.Item>
-          <Form.Item
             label="Trạng Thái"
             name="trangThai"
             valuePropName="checked"
@@ -267,22 +269,6 @@ function ModalThemSua({ id, setData }) {
               })}
             >Hoạt động
             </Checkbox>
-          </Form.Item>
-          <Form.Item
-            label="Điểm"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input value={nguoiDung.diem}
-              onChange={(e) => {
-                setNguoiDung({
-                  ...nguoiDung,
-                  diem: e.target.value,
-                });
-              }} />
           </Form.Item>
           <Form.Item
             label="Số Điện Thoại"

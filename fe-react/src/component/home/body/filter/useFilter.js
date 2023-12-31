@@ -14,7 +14,12 @@ export const useFilterStore = {
             if (payload.pageSize) {
                 url += 'pageSize=' + payload.pageSize + "&";
             }
-            const response = await axiosIns.post(url, payload.filter)
+            const search = localStorage.getItem("search")
+            localStorage.removeItem("search")
+            const response = await axiosIns.post(url, {
+                ...payload.filter,
+                keyWord: search
+            })
             return response
         },
     },

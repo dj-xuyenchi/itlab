@@ -235,6 +235,10 @@ function ChatLieu() {
       return;
     }
     const data = await useChatLieuStore.actions.themChatLieu(chatLieu);
+    if (!data.data) {
+      openNotification("error", "Hệ thống", "Đã tồn tại chất liệu tên " + chatLieu.tenChatLieu, "bottomRight");
+      return
+    }
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setData(data.data.data);
     setChatLieu({
