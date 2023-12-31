@@ -96,6 +96,16 @@ const items = [
       <FcIdea />
     ),
   ]),
+  getItem(
+    <Link to={"/admin/voucher"}>Voucher</Link>,
+    "68",
+    <BsPercent />
+  ),
+  getItem(
+    <Link to={"/admin/giftvoucher"}>Gift Voucher</Link>,
+    "68",
+    <BsPercent />
+  ),
 ];
 
 const rootSubmenuKeys = ["sub1", "sub2", "sub4"];

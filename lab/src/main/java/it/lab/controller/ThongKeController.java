@@ -1,4 +1,5 @@
 package it.lab.controller;
+import java.text.DecimalFormat;
 
 import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,20 +64,20 @@ public class ThongKeController {
         // Lấy thời điểm hiện tại
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1); // Lấy thời điểm hiện tại và trừ đi 1 tháng
 
-        //thong ke tong so luong bị lỗi
-        Long TongSoLuongLoi = sanPhamRepo.sumSoluongloi();
-        result.put("TongSoLuongLoi", TongSoLuongLoi);
-
-        //thống kê sản phẩm bán được
-        Integer soLuongBanDuoc = repositoryHDCT.getTongSoLuongBanDuoc();
-        result.put("soLuongBanDuoc", soLuongBanDuoc);
-
-        //thống kê cửa hàng có bao nhiêu nhân viên
         Long tongSoLuongNhanVien = quyenNguoiDungRepo.tongSoNhanVien();
         result.put("tongSoLuongNhanVien", tongSoLuongNhanVien);
 
+        Long tongSoLuongKhachHang = quyenNguoiDungRepo.tongSoKhachHang();
+        result.put("tongSoLuongKhachHang", tongSoLuongKhachHang);
+
+        Long tongSoLuongAdmin = quyenNguoiDungRepo.tongSoAdmin();
+        result.put("tongSoLuongAdmin", tongSoLuongAdmin);
+
+        Long tongSoLuongCRM = quyenNguoiDungRepo.tongSoCRM();
+        result.put("tongSoLuongCRM", tongSoLuongCRM);
+
         // Thống kê tài khoản mới trong 1 tháng
-        Long taiKhoanMoiThang = repositoryNguoiDung.countTaiKhoanMoiTrongThang(oneMonthAgo);
+        Long taiKhoanMoiThang = quyenNguoiDungRepo.countTaiKhoanMoiTrongThang123(oneMonthAgo);
         result.put("taiKhoanMoiThang", taiKhoanMoiThang);
 
         return result;
@@ -143,14 +144,6 @@ public class ThongKeController {
     }
 
 
-//    @GetMapping("/tong-khoang-ngay")
-//    public BigDecimal tinhTongDoanhThuTrongKhoangNgay(
-//            @RequestParam(value = "selectedDateStart") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateStart,
-//            @RequestParam(value = "selectedDateEnd") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDateEnd) {
-//
-//        return repositoryThongKe.tinhTongDoanhThuTrongKhoangNgay(selectedDateStart, selectedDateEnd);
-//    }
-
 
     // thong ke 12 thang bang bieu do doanh thu tung thang-yyyy
     @GetMapping("/bieu-do")
@@ -214,6 +207,103 @@ public class ThongKeController {
         List<Object[]> topSellingProducts = repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
         return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/san-pham-ban-chay1")
+    public ResponseEntity<?> getSanPhamBanChayTrongThang(
+            @RequestParam(name = "selectedMonth", required = false) Integer selectedMonth,
+            @RequestParam(name = "selectedYear", required = false) Integer selectedYear) {
+
+        // If selectedMonth or selectedYear is not provided, use the current month and year
+        if (selectedMonth == null) {
+            selectedMonth = LocalDate.now().getMonthValue();
+        }
+
+        if (selectedYear == null) {
+            selectedYear = LocalDate.now().getYear();
+        }
+
+        List<Object[]> topSellingProducts = repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
+        return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/thong-ke-san-pham-tron")
+    public Map<String, Object> layDuLieuBanDoTron() {
+        Map<String, Object> result = new HashMap<>();
+
+        //thong ke tong so luong bị lỗi
+        Long TongSoLuongLoi = sanPhamRepo.sumSoluongloi();
+        result.put("TongSoLuongLoi", TongSoLuongLoi);
+
+        Long TongSoLuongTraHang = sanPhamRepo.sumSoTraHang();
+        result.put("TongSoLuongTraHang", TongSoLuongTraHang);
+
+        //thống kê sản phẩm bán được
+        Integer soLuongBanDuoc = repositoryHDCT.getTongSoLuongBanDuoc();
+        result.put("soLuongBanDuoc", soLuongBanDuoc);
+
+        //thống kê cửa hàng có bao nhiêu nhân viên
+        return result;
+    }
+
+
+    @GetMapping("/doanh-thu-ngay1")
+    public BigDecimal tinhTongDoanhThuTrongNgay1(
+            @RequestParam(value = "selectedDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate selectedDate) {
+
+        // Nếu ngày không được truyền, sử dụng ngày hôm nay
+        if (selectedDate == null) {
+            selectedDate = LocalDate.now();
+        }
+
+        // Gọi phương thức xử lý doanh thu với ngày đã chọn hoặc ngày hôm nay
+        return repositoryThongKe.tinhTongDoanhThuTrongNgay(selectedDate);
+    }
+//
+//    @GetMapping("/tong-doanh-thu-trong-thang1")
+//    public String tinhTongDoanhThuTrongThang1(
+//            @RequestParam(value = "selectedDate", required = false)
+//            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) YearMonth selectedYearMonth) {
+//
+//        // Nếu tháng không được truyền, sử dụng tháng hiện tại
+//        if (selectedYearMonth == null) {
+//            selectedYearMonth = YearMonth.now();
+//        }
+//
+//        // Chuyển đổi YearMonth sang Date (chọn ngày đầu tháng)
+//        LocalDate firstDayOfMonth = selectedYearMonth.atDay(1);
+//        Date selectedDate = java.sql.Date.valueOf(firstDayOfMonth);
+//
+//        // Gọi phương thức xử lý doanh thu với tháng đã chọn hoặc tháng hiện tại
+//        BigDecimal totalRevenue = repositoryThongKe.tinhTongDoanhThuTrongThang(selectedDate);
+//
+//        // Sử dụng DecimalFormat để định dạng số
+//        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//        String formattedValue = decimalFormat.format(totalRevenue);
+//
+//        return formattedValue;
+//    }
+
+
+    @GetMapping("/tong-doanh-thu-trong-thang1")
+    public BigDecimal tinhTongDoanhThuTrongThang1(
+            @RequestParam(value = "selectedDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) YearMonth selectedYearMonth) {
+
+        // Nếu tháng không được truyền, sử dụng tháng hiện tại
+        if (selectedYearMonth == null) {
+            selectedYearMonth = YearMonth.now();
+        }
+
+        // Chuyển đổi YearMonth sang Date (chọn ngày đầu tháng)
+        LocalDate firstDayOfMonth = selectedYearMonth.atDay(1);
+        Date selectedDate = Date.valueOf(firstDayOfMonth);
+
+        // Gọi phương thức xử lý doanh thu với tháng đã chọn hoặc tháng hiện tại
+        return repositoryThongKe.tinhTongDoanhThuTrongThang(selectedDate);
     }
 
 }

@@ -28,8 +28,14 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Long> {
     @Query("select s from SanPham s where s.nhomSanPham.id = :id")
     List<SanPham> getSanPhamTheoNhom(@Param("id") long id);
 
+
+
+    //thong ke san pham
     @Query("SELECT SUM(s.soLuongLoi) FROM SanPham s")
     Long sumSoluongloi();
+
+    @Query("SELECT SUM(s.soLuongTraHang) FROM SanPham s")
+    Long sumSoTraHang();
 
     @Query(
             value = """
