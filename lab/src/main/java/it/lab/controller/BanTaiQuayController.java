@@ -23,9 +23,6 @@ public class BanTaiQuayController {
     @Autowired
     private IMuaTaiQuayService _muaTaiQuay;
 
-
-
-
     @RequestMapping(value = "/layhoadontaiquay", method = RequestMethod.GET)
     public ResponseEntity<?> layHetHoaDonCho() {
         return ResponseEntity.ok(_muaTaiQuay.layDanhSachTaiCuaHang());

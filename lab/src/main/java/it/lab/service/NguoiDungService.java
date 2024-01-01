@@ -3,6 +3,7 @@ package it.lab.service;
 import it.lab.common.CloudinaryUpload;
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
+import it.lab.dto.DiaChiDTO;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
 import it.lab.enums.APIStatus;
@@ -11,6 +12,7 @@ import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.iservice.INguoiDungService;
 import it.lab.modelcustom.request.DoiMatKhau;
 import it.lab.modelcustom.request.NguoiDungRequest;
+import it.lab.repository.DiaChiRepo;
 import it.lab.repository.NguoiDungRepo;
 import it.lab.repository.RankKhachHangRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class NguoiDungService implements INguoiDungService {
     private PasswordEncoder _bcrypt;
     @Autowired
     private RankKhachHangRepo _rankKhachHangRepo;
+    @Autowired
+    private DiaChiRepo _diaChiRepo;
 
     @Override
     public Page<NguoiDungDTO> layHetNguoiDung() {
@@ -90,6 +94,12 @@ public class NguoiDungService implements INguoiDungService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId) {
+        NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
+        return DiaChiDTO.fromCollection(_diaChiRepo.findDiaChisByNguoiDung(ng));
     }
 
     @Override
