@@ -11,6 +11,8 @@ import it.lab.repository.VoucherRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 
 public class VoucherNguoiDungService {
@@ -21,89 +23,135 @@ public class VoucherNguoiDungService {
     @Autowired
     private NguoiDungRepo nguoiDungRepo;
 
-//    public void themVoucherChoNguoiDung(Long nguoiDungId, Long voucherId) {
-//        // Kiểm tra xem người dùng và voucher có tồn tại không
-//        NguoiDung nguoiDung = nguoiDungRepo.findById(nguoiDungId).orElse(null);
-//        Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
-//
-//
-//        if (nguoiDung != null && voucher != null ) {
-//            // Tạo mối quan hệ giữa người dùng và voucher
-//            NguoiDungVoucher nguoiDungVoucher = new NguoiDungVoucher();
-//            nguoiDungVoucher.setNguoiDung(nguoiDung);
-//            nguoiDungVoucher.setVoucher(voucher);
-//            nguoiDungVoucher.setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
-//            nguoiDungVoucher.setHanSuDung(voucher.getNgayKetThuc());
-//            nguoiDungVoucher.setLoaiGiam(voucher.getLoaiGiam());
-//            nguoiDungVoucher.setGiaTriGiam(voucher.getGiaTriGiam());
-//            // Thêm voucher cho người dùng
-//            nguoiDungVoucherRepo.save(nguoiDungVoucher);
-//
-//            // Giảm số lượng của voucher đi 1 nếu soLuong không phải là null
-//            Integer soLuong = voucher.getSoLuong();
-//
-//            if (soLuong != null && soLuong > 0) {
-//                voucher.setSoLuong(soLuong - 1);
-//                voucherRepo.save(voucher);
-//            System.out.println("Updated voucher quantity: " + voucher.getSoLuong());
-//
-//            }
-////            else {
-////                // Xử lý trường hợp số lượng voucher không hợp lệ
-////                // Có thể ném một exception hoặc thực hiện các xử lý khác tùy thuộc vào yêu cầu
-////            }
-//        } else {
-//            // Xử lý trường hợp người dùng hoặc voucher không tồn tại
-//            // Có thể ném một exception hoặc thực hiện các xử lý khác tùy thuộc vào yêu cầu
-//        }
-//    }
-
-
-
-    public void themVoucherChoNguoiDung(Long nguoiDungId, Long voucherId) {
-        // Kiểm tra xem người dùng và voucher có tồn tại không
-        NguoiDung nguoiDung = nguoiDungRepo.findById(nguoiDungId).orElse(null);
+    public void themVoucherChoTatCaNguoiDung(Long voucherId, Long userIdToExclude) {
+        // Get the voucher with the specified ID
         Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
 
-        if (nguoiDung != null && voucher != null) {
+        if (voucher != null) {
             // Log the current quantity before decrementing
             System.out.println("Current voucher quantity: " + voucher.getSoLuong());
 
             // Giảm số lượng của voucher đi 1 nếu soLuong không phải là null và lớn hơn 0
             Integer soLuong = voucher.getSoLuong();
             if (soLuong != null && soLuong > 0) {
-                voucher.setSoLuong(voucher.getSoLuong() - 1);
+                // Iterate through all users and apply the voucher
+                List<NguoiDung> allUsers = nguoiDungRepo.getAllTangVoucher();
+                int usersAffected = 0;
 
-                // Log the updated quantity before saving
-                System.out.println("Updated voucher quantity: " + voucher.getSoLuong());
+                // Move the voucherRepo.save(voucher) outside the loop
+                try {
+                    for (NguoiDung nguoiDung : allUsers) {
+                        if (nguoiDung.getId().equals(userIdToExclude)) {
+                            // Exclude the specified user from voucher decrement
+                            continue;
+                        }
 
-                voucherRepo.save(voucher); // Save the updated voucher after decrementing the quantity
+                        // Log the updated quantity before saving
+                        System.out.println("Updated voucher quantity: " + voucher.getSoLuong());
 
-                // Tạo mối quan hệ giữa người dùng và voucher
-                NguoiDungVoucher nguoiDungVoucher = new NguoiDungVoucher();
-                nguoiDungVoucher.setNguoiDung(nguoiDung);
-                nguoiDungVoucher.setVoucher(voucher);
-                nguoiDungVoucher.setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
+                        // Tạo mối quan hệ giữa người dùng và voucher
+                        NguoiDungVoucher nguoiDungVoucher = new NguoiDungVoucher();
+                        nguoiDungVoucher.setNguoiDung(nguoiDung);
+                        nguoiDungVoucher.setVoucher(voucher);
+                        nguoiDungVoucher.setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
 
-                // Set other properties from the voucher to nguoiDungVoucher
-            nguoiDungVoucher.setHanSuDung(voucher.getNgayKetThuc());
-            nguoiDungVoucher.setLoaiGiam(voucher.getLoaiGiam());
-            nguoiDungVoucher.setGiaTriGiam(voucher.getGiaTriGiam());
+                        // Set other properties from the voucher to nguoiDungVoucher
+                        nguoiDungVoucher.setHanSuDung(voucher.getNgayKetThuc());
+                        nguoiDungVoucher.setLoaiGiam(voucher.getLoaiGiam());
+                        nguoiDungVoucher.setGiaTriGiam(voucher.getGiaTriGiam());
 
-                // Thêm voucher cho người dùng
-                nguoiDungVoucherRepo.save(nguoiDungVoucher);
-            } else if(soLuong==0){
+                        // Thêm voucher cho người dùng
+                        nguoiDungVoucherRepo.save(nguoiDungVoucher);
+                        usersAffected++;
+                    }
+
+                    // Save the updated voucher after decrementing the quantity
+                    voucher.setSoLuong(soLuong - usersAffected);
+                    voucherRepo.save(voucher);
+                } catch (VoucherOutOfStockException e) {
+                    // Handle the exception for a specific user (optional)
+                    // You may want to log the error or take other actions for individual users
+                }
+            } else if (soLuong == 0) {
                 voucher.setTrangThai(TrangThaiVoucher.NGUNG);
                 voucherRepo.save(voucher);
-                System.out.println("Voucher đã hết ,chúc bạn may mắn lần sau !!! ");
+                System.out.println("Voucher đã hết, chúc bạn may mắn lần sau !!! ");
                 throw new VoucherOutOfStockException("Voucher đã hết, chúc bạn may mắn lần sau !!! ");
-
             }
         } else {
-
-            System.out.println("Người dùng hoặc voucher không tồn tại");
+            System.out.println("Voucher không tồn tại");
         }
     }
+
+
+
+
+
+
+
+    public void themVoucherChoNguoiDung(List<Long> nguoiDungIds, Long voucherId, Long userIdToExclude) {
+        try {
+            // Kiểm tra xem voucher có tồn tại không
+            Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
+
+            if (voucher != null) {
+                // Log the current quantity before decrementing
+                System.out.println("Current voucher quantity: " + voucher.getSoLuong());
+
+                // Giảm số lượng của voucher đi 1 nếu soLuong không phải là null và lớn hơn 0
+                Integer soLuong = voucher.getSoLuong();
+                if (soLuong != null && soLuong > 0) {
+                    int usersAddedCount = 0; // Counter for the number of users for whom the voucher was added
+
+                    // Tạo danh sách người dùng từ danh sách ID
+                    List<NguoiDung> nguoiDungs = nguoiDungRepo.findAllById(nguoiDungIds);
+
+                    // Thêm voucher cho từng người dùng
+                    for (NguoiDung nguoiDung : nguoiDungs) {
+                        // Exclude the specified user from voucher decrement
+                        if (nguoiDung.getId().equals(userIdToExclude)) {
+                            continue;
+                        }
+
+                        // Log the updated quantity before saving for each user
+                        System.out.println("Updated voucher quantity for user " + nguoiDung.getId() + ": " + voucher.getSoLuong());
+
+                        // Save the updated voucher after decrementing the quantity for each user
+                        voucher.setSoLuong(soLuong - 1);
+                        voucherRepo.save(voucher);
+
+                        NguoiDungVoucher nguoiDungVoucher = new NguoiDungVoucher();
+                        nguoiDungVoucher.setNguoiDung(nguoiDung);
+                        nguoiDungVoucher.setVoucher(voucher);
+                        nguoiDungVoucher.setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
+
+                        // Set other properties from the voucher to nguoiDungVoucher
+                        nguoiDungVoucher.setHanSuDung(voucher.getNgayKetThuc());
+                        nguoiDungVoucher.setLoaiGiam(voucher.getLoaiGiam());
+                        nguoiDungVoucher.setGiaTriGiam(voucher.getGiaTriGiam());
+
+                        nguoiDungVoucherRepo.save(nguoiDungVoucher);
+                        usersAddedCount++;
+                    }
+
+                    // Log the total number of users for whom the voucher was added
+                    System.out.println("Voucher added for " + usersAddedCount + " users.");
+
+                } else if (soLuong == 0) {
+                    voucher.setTrangThai(TrangThaiVoucher.NGUNG);
+                    voucherRepo.save(voucher);
+                    System.out.println("Voucher đã hết, chúc bạn may mắn lần sau !!! ");
+                    throw new VoucherOutOfStockException("Voucher đã hết, chúc bạn may mắn lần sau !!! ");
+                }
+            } else {
+                System.out.println("Voucher không tồn tại");
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to add voucher for selected users: " + e.getMessage());
+        }
+    }
+
+
 
     public class VoucherOutOfStockException extends RuntimeException {
         public VoucherOutOfStockException(String message) {
