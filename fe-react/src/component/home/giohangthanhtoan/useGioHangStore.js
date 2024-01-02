@@ -19,11 +19,15 @@ export const useGioHangStore = {
             return response
         },
         async taoHoaDonOnline(payload) {
-            const response = await axiosIns.post(`/api/thanhtoan/taohoadononline`)
+            const response = await axiosIns.post(`/api/thanhtoan/taohoadononline`, payload)
             return response
         },
         async vnPay(payload) {
             const response = await axiosIns.post(`/api/vnpay/thanhtoan`, payload)
+            return response
+        },
+        async checkThanhToan(payload) {
+            const response = await axiosIns.get(`/api/vnpay/checkthanhtoan?maHd=` + payload.maHd + "&status=" + payload.status)
             return response
         },
     },

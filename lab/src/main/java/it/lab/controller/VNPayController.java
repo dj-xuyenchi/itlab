@@ -21,6 +21,15 @@ public class VNPayController {
     @Autowired
     private IThanhToan _thanhToanService;
 
+    @RequestMapping("/checkthanhtoan")
+    public ResponseEntity<?> checkThanhToan(
+            @RequestParam String maHd,
+            @RequestParam Long status
+    ) {
+        _thanhToanService.checkThanhToanVNPay(maHd, status);
+        return ResponseEntity.ok("");
+    }
+
     @RequestMapping(value = "/thanhtoan", method = RequestMethod.POST)
     public ResponseEntity<?> thanhToan(@RequestBody TaoHoaDonOnline yeuCau) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
@@ -30,7 +39,7 @@ public class VNPayController {
         String vnp_TxnRef = _thanhToanService.taoHoaDonOnlineVnPay(yeuCau);
         String vnp_IpAddr = "42.114.34.177";
         String vnp_TmnCode = "MXWCJ2KO";
-        int amount = yeuCau.getGia()*100;
+        int amount = yeuCau.getGia() * 100;
         Map vnp_Params = new HashMap();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);

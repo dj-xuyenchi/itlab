@@ -31,7 +31,8 @@ import AddSanPham from "./AddSanPham";
 import { useGHN } from "../../../../plugins/ghnapi";
 import { IoMdPrint } from "react-icons/io";
 import InHoaDon from "../InHoaDon";
-function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false }) {
+import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false, tuChoi = false }) {
 
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
@@ -602,7 +603,7 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
             <Col style={{
               marginTop: "4px"
             }} span={24}>
-              <InHoaDon data={hoaDonChiTiet} />
+              {!type && <InHoaDon data={hoaDonChiTiet} />}
             </Col>
 
           </Row>
@@ -646,7 +647,7 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
               <Input
                 disabled
                 value={
-                  hoaDonChiTiet.ngayGiao ? hoaDonChiTiet.ngayGiao : "Chưa giao"
+                  hoaDonChiTiet.ngayGiao ? fixNgayThang(hoaDonChiTiet.ngayGiao) : "Chưa giao"
                 }
               />
             </Col>
@@ -662,13 +663,13 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
               Ngày tạo:
             </Col>
             <Col span={8}>
-              <Input placeholder="" disabled value={hoaDonChiTiet.ngayTao} />
+              <Input placeholder="" disabled value={hoaDonChiTiet.ngayTao && fixNgayThang(hoaDonChiTiet.ngayTao)} />
             </Col>
             <Col span={3} offset={1}>
               Ngày cập nhật:
             </Col>
             <Col span={8}>
-              <Input disabled value={hoaDonChiTiet.ngayCapNhat} />
+              <Input disabled value={hoaDonChiTiet.ngayCapNhat && fixNgayThang(hoaDonChiTiet.ngayCapNhat)} />
             </Col>
           </Row>
           <Row
@@ -744,27 +745,7 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
               <Input disabled value={hoaDonChiTiet.nguoiMua.soDienThoai} />
             </Col>
           </Row>
-          <Row
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginTop: "14px",
-              marginBottom: "14px",
-            }}
-          >
-            <Col span={3} style={{}}>
-              Điểm:
-            </Col>
-            <Col span={8}>
-              <Input disabled value={hoaDonChiTiet.nguoiMua.diem} />
-            </Col>
-            <Col span={3} offset={1}>
-              Bậc:
-            </Col>
-            <Col span={8}>
-              <Input disabled value={hoaDonChiTiet.nguoiMua.maKhachHang} />
-            </Col>
-          </Row>
+
           <Row>
             <h6>Thông tin giao hàng</h6>
           </Row>
@@ -930,7 +911,7 @@ function ChiTietHoaDon({ hoaDonId, type = false, showDoi = false, tuChoi = false
               <Col span={11}>
                 <h6>Thông tin sản phẩm </h6>
               </Col>
-              {type ? (
+              {type2 ? (
                 <Col
                   span={12}
                   style={{

@@ -220,7 +220,7 @@ function HoaDonHuy() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon hoaDonId={id} />,
+      render: (id) => <ChiTietHoaDon hoaDonId={id} type={true} />,
     },
   ];
   const [data, setData] = useState([
