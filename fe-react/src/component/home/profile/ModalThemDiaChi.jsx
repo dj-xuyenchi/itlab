@@ -32,7 +32,6 @@ function ModalThemDiaChi({ id, setData, handle }) {
             });
         }
     };
-
     return (
         <>
             {contextHolder}
@@ -42,7 +41,7 @@ function ModalThemDiaChi({ id, setData, handle }) {
                     marginRight: "4px",
                 }}
             >
-                <Tooltip title="Thêm địa chỉ nhận hàng" >
+                <Tooltip title="Thêm địa chỉ nhận hàng">
                     <Button
                         style={{
                             color: "green",
@@ -57,7 +56,7 @@ function ModalThemDiaChi({ id, setData, handle }) {
                 <Modal
                     okButtonProps={{ style: { display: "none" } }}
                     cancelButtonProps={{ style: { display: "none" } }}
-                    title="Sửa chất liệu"
+                    title="Thêm địa chỉ"
                     open={isModalOpen}
                     onCancel={() => {
                         setIsModalOpen(false)
@@ -80,8 +79,8 @@ function ModalThemDiaChi({ id, setData, handle }) {
                         }}
                     >
                         <Form.Item
-                            label="Tên chất liệu"
-                            name="Tên chất liệu"
+                            label="Tỉnh/TP"
+                            name="Tỉnh/TP"
                             rules={[
                                 {
                                     required: true,

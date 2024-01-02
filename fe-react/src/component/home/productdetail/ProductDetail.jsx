@@ -18,7 +18,6 @@ import Footer from "../footer/footer";
 function ProductDetail() {
   const language = useSelector(selectLanguage);
   const [api, contextHolder] = notification.useNotification();
-
   const user = useSelector(selectUser);
   const { id } = useParams();
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
