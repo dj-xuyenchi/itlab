@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { Select, Checkbox, Button, Spin, notification, Modal } from 'antd';
+import { Select, Checkbox, Button, Spin, notification, Modal, Table,Input } from 'antd';
 
 const { Option } = Select;
 
@@ -13,16 +13,21 @@ const openNotification = (type, message, description, placement) => {
   });
 };
 
+// ... (existing imports)
+
 const YourComponent = () => {
   const [vouchers, setVouchers] = useState([]);
   const [selectedVoucherId, setSelectedVoucherId] = useState('');
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    // Fetch voucher and user data when the component mounts
     const fetchData = async () => {
       try {
         const voucherResponse = await axios.get('http://localhost:8089/api/voucher/voucher-combox');
@@ -30,6 +35,7 @@ const YourComponent = () => {
 
         setVouchers(voucherResponse.data);
         setAllUsers(usersResponse.data);
+        setFilteredUsers(usersResponse.data); // Initialize filtered users with all users
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -87,6 +93,42 @@ const YourComponent = () => {
     });
   };
 
+  const handleSearch = () => {
+    // Filter users based on the search term
+    const filtered = allUsers.filter((user) =>
+      user.maNguoiDung.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Mã Người Dùng',
+      dataIndex: 'maNguoiDung',
+      key: 'maNguoiDung',
+    },
+    {
+      title: 'Chọn người dùng',
+      dataIndex: 'id',
+      key: 'selectUser',
+      render: (userId) => (
+        <Checkbox
+          checked={selectedUserIds.includes(userId)}
+          onChange={() => handleUserCheckboxChange(userId)}
+        />
+      ),
+    },
+  ];
+
   const showModal = () => {
     setModalVisible(true);
   };
@@ -97,7 +139,6 @@ const YourComponent = () => {
 
   return (
     <div>
-      {/* <h1>Vouchers</h1> */}
       <Button type="primary" onClick={showModal}>
         Open Voucher người dùng
       </Button>
@@ -127,18 +168,19 @@ const YourComponent = () => {
             </Select>
 
             <div>
-              <h2>Chọn người dùng:</h2>
-              {allUsers.map((user) => (
-                <div key={user.id}>
-                  <Checkbox
-                    id={`user-${user.id}`}
-                    checked={selectedUserIds.includes(user.id)}
-                    onChange={() => handleUserCheckboxChange(user.id)}
-                  >
-                    {user.maNguoiDung}
-                  </Checkbox>
-                </div>
-              ))}
+              <h4>Chọn người dùng:</h4>
+              <Input
+                placeholder="Tìm kiếm mã người dùng"
+                value={searchTerm}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                onPressEnter={handleSearch}
+              />
+              <Table
+                dataSource={filteredUsers}
+                columns={columns}
+                rowKey="id"
+                pagination={false}
+              />
             </div>
           </>
         )}
@@ -148,3 +190,4 @@ const YourComponent = () => {
 };
 
 export default YourComponent;
+

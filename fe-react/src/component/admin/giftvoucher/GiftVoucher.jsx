@@ -114,12 +114,22 @@ export default function Voucher() {
             key: 'voucherList',
             render: (voucherList) => (
                 <Space size="middle">
-                    {voucherList && voucherList.split(',').map((voucher, index) => (
-                        <Tag key={index}>{voucher}</Tag>
-                    ))}
+                    <ul>
+                        {voucherList &&
+                            voucherList.split(',').map((voucher, index) => (
+                                <li key={index}>
+                                    <Tag>{voucher}</Tag>
+                                </li>
+                            ))
+                        }
+                    </ul>
                 </Space>
             ),
         },
+        
+        
+        
+        
     ];
 
     useEffect(() => {
@@ -166,11 +176,12 @@ export default function Voucher() {
                         margin: '10px',
                     }}
                 >
+                    <Space>
                     <ModalU />
-                    <br />
-                    -
-                    <br />
+                    
                     <AddGift />
+                    </Space>
+                   
                 </div>
 
                 <Table
