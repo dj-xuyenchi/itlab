@@ -30,6 +30,7 @@ import GioiThieu from "./component/policy/GioiThieu";
 import ChinhSachBaoMat from "./component/policy/ChinhSachBaoMat";
 import Voucher from "./component/admin/voucher/Voucher";
 import GiftVoucher from "./component/admin/giftvoucher/GiftVoucher";
+import ThanhToanVnPay from "./component/admin/bantaiquay/ThanhToanVnPay";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -83,6 +84,7 @@ function App() {
           element={<SanPhamChiTiet />}
         />
         <Route path="/admin/bantaiquay" element={<BanTaiQuay />} />
+        <Route path="/admin/vnpaytrangthai" element={<ThanhToanVnPay />} />
         <Route path="/gioi-thieu" element={<GioiThieu />} />
         <Route path="/chinh-sach-bao-mat" element={<ChinhSachBaoMat />} />
       </Routes>
