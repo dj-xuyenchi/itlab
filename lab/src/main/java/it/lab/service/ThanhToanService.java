@@ -156,8 +156,8 @@ public class ThanhToanService implements IThanhToan {
         hd.setMaHoaDon("HD" + hd.getId());
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _hoaDonRepo.save(hd);
-        _gioHangRepo.deleteAll(ghList);
-        thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
+      //  _gioHangRepo.deleteAll(ghList);
+      //  thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
         return hd.getMaHoaDon();
     }
 
@@ -168,7 +168,10 @@ public class ThanhToanService implements IThanhToan {
             return;
         }
         if (trangThai == 0) {
-            hoaDon.get().setTrangThai(TrangThaiHoaDon.DANGGIAO);
+            List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(hoaDon.get().getNguoiMua());
+            _gioHangRepo.deleteAll(ghList);
+            thayDoiSoLuongKhiConfirmHoaDon(hoaDon.get().getId());
+            hoaDon.get().setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
             _hoaDonRepo.save(hoaDon.get());
         } else {
             hoaDon.get().setTrangThai(TrangThaiHoaDon.CUAHANGHUY);

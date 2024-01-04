@@ -60,7 +60,7 @@ function BanTaiQuay() {
     });
     layDanhSachChiTiet();
     if (selectDiaChi !== -2) {
-      handleTinhGiaVanChuyen()
+      handleTinhGiaVanChuyen();
     }
   }
   const [diaChiMoi, setDiaChiMoi] = useState({
@@ -79,25 +79,49 @@ function BanTaiQuay() {
   const [danhSachXa, setDanhSachXa] = useState(undefined);
   const [selectDiaChi, setSelectDiaChi] = useState(-2);
   function handleChonDiaChi(e) {
-    var value = e.target.value
+    var value = e.target.value;
     setSelectDiaChi(value);
     if (value === -1) {
-      setPhiVanChuyen(0)
-      return
+      setPhiVanChuyen(0);
+      setHoaDonRequest({
+        ...hoaDonRequest,
+        taoDiaChi: 1,
+      });
+      return;
     }
     if (value === -2) {
-      setPhiVanChuyen(0)
-      return
+      setPhiVanChuyen(0);
+      setHoaDonRequest({
+        ...hoaDonRequest,
+        taoDiaChi: 0,
+        diaChiId: -1,
+      });
+      return;
     }
     var diaChiNguoiDungChon = danhSachDiaChi.find((item) => {
-      return item.id === value
-    })
-    handleTinhGiaVanChuyen()
+      return item.id === value;
+    });
+    setHoaDonRequest({
+      ...hoaDonRequest,
+      taoDiaChi: 2,
+      diaChiId: diaChiNguoiDungChon.id,
+    });
+    handleTinhGiaVanChuyen();
   }
   async function layDiaChiNguoiDung(e) {
     if (e.value === 2) {
-      return
+      setHoaDonRequest({
+        ...hoaDonRequest,
+        khachHang: e.label,
+        khachHangId: 2,
+      });
+      return;
     }
+    setHoaDonRequest({
+      ...hoaDonRequest,
+      khachHang: e.label,
+      khachHangId: e.key,
+    });
     const data = await useBanTaiQuayStore.actions.layDiaChiKhachHang(e.value);
     setDanhSachDiaChi(data.data);
   }
@@ -106,27 +130,82 @@ function BanTaiQuay() {
     setDanhSachTinh(data.data.data);
   }
   async function handleChonHuyen(e) {
+    setDiaChiMoi({
+      ...diaChiMoi,
+      tinhId: e.key,
+      tinh: e.label,
+    });
     const data = await useGHN.actions.layHuyen(e.value);
     setDanhSachHuyen(data.data.data);
   }
   async function handleChonXa(e) {
+    setDiaChiMoi({
+      ...diaChiMoi,
+      huyenId: e.key,
+      huyen: e.label,
+    });
     const data = await useGHN.actions.layXa(e.value);
     setDanhSachXa(data.data.data);
   }
-  function handleTaoHoaDonTaiQuay() {
-    if (hoaDonRequest.thanhToanBangVnpay === 0) {
+  async function handleChonXaChiTiet(e) {
+    setDiaChiMoi({
+      ...diaChiMoi,
+      xaId: e.key,
+      xa: e.label,
+    });
+  }
+  function handleCheckDiaChiMoi() {
+    if (!diaChiMoi.tinhId) {
+      openNotification(
+        "warning",
+        "Hệ thống",
+        "Vui lòng chọn tỉnh/TP",
+        "bottomRight"
+      );
+      return false;
+    }
+    if (!diaChiMoi.huyenId) {
+      openNotification(
+        "warning",
+        "Hệ thống",
+        "Vui lòng chọn quận/huyện",
+        "bottomRight"
+      );
+      return false;
+    }
+    if (!diaChiMoi.xaId) {
+      openNotification(
+        "warning",
+        "Hệ thống",
+        "Vui lòng chọn xã/phường",
+        "bottomRight"
+      );
+      return false;
+    }
+    return true;
+  }
+  async function handleTaoHoaDonTaiQuay() {
+    if (hoaDonRequest.thanhToanBang === 0) {
       openNotification(
         "warning",
         "Hệ thống",
         "Vui lòng chọn phương thức thanh toán",
         "bottomRight"
       );
-      return
+      return;
     }
-    if (hoaDonRequest.thanhToanBangVnpay === 1) {
+    if (hoaDonRequest.taoDiaChi === 1) {
+      if (!handleCheckDiaChiMoi()) {
+        return;
+      }
+    }
 
+    const data = await useBanTaiQuayStore.actions.thanhToanTaiQuay({
+      ...hoaDonRequest,
+      diaChiMoi: diaChiMoi,
+    });
+    if (hoaDonRequest.thanhToanBang === 1) {
     } else {
-
     }
   }
 
@@ -165,15 +244,33 @@ function BanTaiQuay() {
 
   useEffect(() => {
     handleLayHoaDon();
+    const ob = {};
     setHoaDonRequest({
-      taoDiaChi: false,
+      ...ob,
+      taoDiaChi: 0,
+      khachHang: "Chọn khách hàng",
+      ghiChu: "",
+      phuongThucThanhToan: "Phương thức thanh toán",
       thanhToanBang: 0,
       hoaDonId: hoaDonHienTai ? hoaDonHienTai.id : null,
     });
+    setDiaChiMoi({
+      tinhId: undefined,
+      huyenId: undefined,
+      xaId: undefined,
+      tinh: "Chọn tỉnh",
+      huyen: "Chọn huyện",
+      xa: "Chọn xã",
+      soDienThoai: "",
+      ten: "",
+      ho: "",
+      chiTietDiaChi: "",
+    });
+    setSelectDiaChi(-2);
     if (current) {
       layDanhSachChiTiet();
     }
-  }, [current]);
+  }, [current, hoaDonHienTai]);
 
   async function handleTaoMoiHoaDon() {
     if (danhSachHoaDon.length > 9) {
@@ -195,7 +292,7 @@ function BanTaiQuay() {
   const [isOpen, setIsOpen] = useState(false);
   async function handleChonSanPham(e) {
     const sanPhamChon = sanPhamChiTiet.find((item) => {
-      return item.id === e.key;
+      return item.id == e.key;
     });
     if (sanPhamChon.soLuongTon <= 0) {
       openNotification("error", "Hệ thống", "Sản phẩm hết hàng", "bottomRight");
@@ -232,12 +329,7 @@ function BanTaiQuay() {
       "bottomRight"
     );
   }
-  async function taoHoaDonVNPAY() {
 
-  }
-  async function taoHoaDonTienMat() {
-
-  }
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
   async function handleTinhGiaVanChuyen() {
     const data = await useGHN.actions.layGia({
@@ -284,10 +376,17 @@ function BanTaiQuay() {
       width: "10%",
       render: (soLuong, record) => (
         <InputNumber
-          defaultValue={soLuong}
-          min={0}
+          max={record.sanPhamChiTiet.soLuongTon}
+          value={soLuong}
           onChange={(e) => {
+            if (!e && e !== 0) {
+              return;
+            }
             if (isNaN(e)) {
+              return;
+            }
+            if (e <= 0) {
+              handleCapNhatSoLuong(record.id, 0);
               return;
             }
             handleCapNhatSoLuong(record.id, e);
@@ -308,15 +407,15 @@ function BanTaiQuay() {
       key: "age",
       width: "15%",
       render: (donGia, record) => <>{fixMoney(donGia * record.soLuong)}</>,
-    }
+    },
   ];
   const onClick = (e) => {
     setCurrent(e.key);
     setHoaDonHienTai(
       danhSachHoaDon
         ? danhSachHoaDon.find((item) => {
-          return item.key == e.key;
-        })
+            return item.key == e.key;
+          })
         : undefined
     );
   };
@@ -444,8 +543,8 @@ function BanTaiQuay() {
                             value={
                               hoaDonHienTai
                                 ? hoaDonHienTai.nhanVien.ho +
-                                " " +
-                                hoaDonHienTai.nhanVien.ten
+                                  " " +
+                                  hoaDonHienTai.nhanVien.ten
                                 : ""
                             }
                           />
@@ -497,6 +596,7 @@ function BanTaiQuay() {
                         }}
                         showSearch
                         labelInValue
+                        value={hoaDonRequest.khachHang}
                         defaultValue={"Chọn khách hàng"}
                         onChange={layDiaChiNguoiDung}
                         filterOption={(input, option) =>
@@ -507,10 +607,10 @@ function BanTaiQuay() {
                       >
                         {danhSachKhachHang
                           ? danhSachKhachHang.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.ho + " " + option.ten}
-                            </Select.Option>
-                          ))
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.ho + " " + option.ten}
+                              </Select.Option>
+                            ))
                           : ""}
                       </Select>
                     </Col>
@@ -537,12 +637,12 @@ function BanTaiQuay() {
                       <Space direction="vertical">
                         {danhSachDiaChi
                           ? danhSachDiaChi.map((item) => {
-                            return (
-                              <Radio value={item.id}>
-                                {item.xa + " " + item.huyen + " " + item.tinh}
-                              </Radio>
-                            );
-                          })
+                              return (
+                                <Radio value={item.id}>
+                                  {item.xa + " " + item.huyen + " " + item.tinh}
+                                </Radio>
+                              );
+                            })
                           : ""}
                         <Radio value={-1}>Tạo mới</Radio>
                         <Radio value={-2}>Không dùng</Radio>
@@ -586,8 +686,13 @@ function BanTaiQuay() {
                                 <Col span={24}>
                                   <Input
                                     placeholder="Họ"
-                                    value={""
-                                    }
+                                    value={diaChiMoi.ho}
+                                    onChange={(e) => {
+                                      setDiaChiMoi({
+                                        ...diaChiMoi,
+                                        ho: e.target.value,
+                                      });
+                                    }}
                                   />
                                 </Col>
                               </Row>
@@ -613,10 +718,13 @@ function BanTaiQuay() {
                                 <Col span={24}>
                                   <Input
                                     placeholder="Tên"
-                                    value={
-                                      ""
-                                    }
-
+                                    value={diaChiMoi.ten}
+                                    onChange={(e) => {
+                                      setDiaChiMoi({
+                                        ...diaChiMoi,
+                                        ten: e.target.value,
+                                      });
+                                    }}
                                   />
                                 </Col>
                               </Row>
@@ -656,9 +764,7 @@ function BanTaiQuay() {
                                 }}
                                 showSearch
                                 labelInValue
-                                value={
-                                  ""
-                                }
+                                value={diaChiMoi.tinh}
                                 onChange={handleChonHuyen}
                                 filterOption={(input, option) =>
                                   option.children
@@ -668,13 +774,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachTinh
                                   ? danhSachTinh.map((option) => (
-                                    <Select.Option
-                                      key={option.ProvinceID}
-                                      value={option.ProvinceID}
-                                    >
-                                      {option.NameExtension[0]}
-                                    </Select.Option>
-                                  ))
+                                      <Select.Option
+                                        key={option.ProvinceID}
+                                        value={option.ProvinceID}
+                                      >
+                                        {option.NameExtension[0]}
+                                      </Select.Option>
+                                    ))
                                   : ""}
                               </Select>
                             </Col>
@@ -705,9 +811,7 @@ function BanTaiQuay() {
                                 }}
                                 showSearch
                                 labelInValue
-                                value={
-                                  ""
-                                }
+                                value={diaChiMoi.huyen}
                                 onChange={handleChonXa}
                                 filterOption={(input, option) =>
                                   option.children
@@ -717,13 +821,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachHuyen
                                   ? danhSachHuyen.map((option) => (
-                                    <Select.Option
-                                      key={option.DistrictID}
-                                      value={option.DistrictID}
-                                    >
-                                      {option.DistrictName}
-                                    </Select.Option>
-                                  ))
+                                      <Select.Option
+                                        key={option.DistrictID}
+                                        value={option.DistrictID}
+                                      >
+                                        {option.DistrictName}
+                                      </Select.Option>
+                                    ))
                                   : ""}
                               </Select>
                             </Col>
@@ -762,9 +866,8 @@ function BanTaiQuay() {
                                 }}
                                 showSearch
                                 labelInValue
-                                value={
-                                  ""
-                                }
+                                value={diaChiMoi.xa}
+                                onChange={handleChonXaChiTiet}
                                 filterOption={(input, option) =>
                                   option.children
                                     .toLowerCase()
@@ -773,13 +876,13 @@ function BanTaiQuay() {
                               >
                                 {danhSachXa
                                   ? danhSachXa.map((option) => (
-                                    <Select.Option
-                                      key={option.WardCode}
-                                      value={option.WardCode}
-                                    >
-                                      {option.NameExtension[0]}
-                                    </Select.Option>
-                                  ))
+                                      <Select.Option
+                                        key={option.WardCode}
+                                        value={option.WardCode}
+                                      >
+                                        {option.NameExtension[0]}
+                                      </Select.Option>
+                                    ))
                                   : ""}
                               </Select>
                             </Col>
@@ -806,15 +909,13 @@ function BanTaiQuay() {
                             <Col span={24}>
                               <Input
                                 placeholder="Số điện thoại"
+                                value={diaChiMoi.soDienThoai}
                                 onChange={(e) => {
-                                  setHoaDonRequest({
-                                    ...hoaDonRequest,
+                                  setDiaChiMoi({
+                                    ...diaChiMoi,
                                     soDienThoai: e.target.value,
                                   });
                                 }}
-                                value={
-                                  ""
-                                }
                               />
                             </Col>
                           </Row>
@@ -838,16 +939,14 @@ function BanTaiQuay() {
                         <Col span={23}>
                           <TextArea
                             onChange={(e) => {
-                              setHoaDonRequest({
-                                ...hoaDonRequest,
+                              setDiaChiMoi({
+                                ...diaChiMoi,
                                 chiTietDiaChi: e.target.value,
                               });
                             }}
                             rows={4}
                             placeholder={"Chi tiết địa chỉ"}
-                            value={
-                              ""
-                            }
+                            value={diaChiMoi.chiTietDiaChi}
                           />
                         </Col>
                       </Row>
@@ -888,10 +987,12 @@ function BanTaiQuay() {
                             showSearch
                             labelInValue
                             defaultValue={"Phương thức thanh toán"}
+                            value={hoaDonRequest.phuongThucThanhToan}
                             onChange={(e) => {
                               setHoaDonRequest({
                                 ...hoaDonRequest,
                                 thanhToanBang: e.key,
+                                phuongThucThanhToan: e.label,
                               });
                             }}
                             filterOption={(input, option) =>
@@ -997,8 +1098,8 @@ function BanTaiQuay() {
                             value={fixMoney(
                               gioHangHienTai
                                 ? gioHangHienTai.reduce((a, b) => {
-                                  return a + b.soLuong * b.donGia;
-                                }, 0)
+                                    return a + b.soLuong * b.donGia;
+                                  }, 0)
                                 : 0
                             )}
                           />
@@ -1029,6 +1130,7 @@ function BanTaiQuay() {
                                 ghiChu: e.target.value,
                               });
                             }}
+                            value={hoaDonRequest.ghiChu}
                             rows={4}
                             placeholder="Ghi chú"
                           />
@@ -1064,6 +1166,15 @@ function BanTaiQuay() {
                             type="primary"
                             block
                             onClick={() => {
+                              if (!hoaDonRequest.khachHangId) {
+                                openNotification(
+                                  "error",
+                                  "Hệ thống",
+                                  "Chưa chọn khách hàng",
+                                  "bottomRight"
+                                );
+                                return;
+                              }
                               if (gioHangHienTai.length === 0) {
                                 openNotification(
                                   "error",
@@ -1079,14 +1190,14 @@ function BanTaiQuay() {
                                     "error",
                                     "Hệ thống",
                                     "Sản phẩm " +
-                                    item.sanPhamChiTiet.tenSanPham +
-                                    " số lượng không phù hợp",
+                                      item.sanPhamChiTiet.tenSanPham +
+                                      " số lượng không phù hợp",
                                     "bottomRight"
                                   );
                                   return;
                                 }
                               }
-                              handleTaoHoaDonTaiQuay()
+                              handleTaoHoaDonTaiQuay();
                             }}
                           >
                             Xác nhận
@@ -1159,29 +1270,29 @@ function BanTaiQuay() {
                       >
                         {sanPhamChiTiet
                           ? sanPhamChiTiet.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenSanPham}
-                              <Tag
-                                color="success"
-                                style={{
-                                  marginLeft: "4px",
-                                }}
-                              >
-                                {option.mauSac.tenMau}
-                              </Tag>
-                              <Tag color="processing">
-                                {option.kichThuoc.tenKichThuoc}
-                              </Tag>
-                              <span
-                                style={{
-                                  fontWeight: "700",
-                                  marginLeft: "12px",
-                                }}
-                              >
-                                Số lượng còn: {option.soLuongTon}
-                              </span>
-                            </Select.Option>
-                          ))
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.tenSanPham}
+                                <Tag
+                                  color="success"
+                                  style={{
+                                    marginLeft: "4px",
+                                  }}
+                                >
+                                  {option.mauSac.tenMau}
+                                </Tag>
+                                <Tag color="processing">
+                                  {option.kichThuoc.tenKichThuoc}
+                                </Tag>
+                                <span
+                                  style={{
+                                    fontWeight: "700",
+                                    marginLeft: "12px",
+                                  }}
+                                >
+                                  Số lượng còn: {option.soLuongTon}
+                                </span>
+                              </Select.Option>
+                            ))
                           : ""}
                       </Select>
                     </Col>

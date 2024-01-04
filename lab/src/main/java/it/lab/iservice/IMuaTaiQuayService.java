@@ -2,6 +2,7 @@ package it.lab.iservice;
 
 import it.lab.dto.*;
 import it.lab.enums.TrangThaiQuetMa;
+import it.lab.modelcustom.request.MuaTaiQuay2;
 import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
 
@@ -30,4 +31,5 @@ public interface IMuaTaiQuayService {
     public String[] taoHoaDonTaiQuayThanhToanVNPAY(MuaTaiQuayRequest muaTaiQuayRequest);
 
     public TrangThaiQuetMa quetMa(String maSp, Long hoaDonId);
+    public String muaTaiQuay2(MuaTaiQuay2 muaTaiQuay2);
 }

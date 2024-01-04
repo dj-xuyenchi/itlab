@@ -10,7 +10,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MuaTaiQuay2 {
-    public Integer thanhToanBang;
-    public Boolean taoDiaChi;
-    public Long hoaDonId;
+    /// 0 là chưa chọn
+    /// 1 là VN Pay
+    /// 2 là tiền mặt
+    private Integer thanhToanBang;
+    /// 0 là không dùng
+    /// 1 là tạo mới
+    /// 2 là sử dụng địa chỉ có sẵn
+    private Integer taoDiaChi;
+    private Long hoaDonId;
+    private Long diaChiId;
+    private DiaChiMoi diaChiMoi;
+    private String ghiChu;
 }

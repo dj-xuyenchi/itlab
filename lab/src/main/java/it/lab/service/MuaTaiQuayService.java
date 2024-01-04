@@ -9,6 +9,7 @@ import it.lab.enums.TrangThaiHoaDon;
 import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.enums.TrangThaiQuetMa;
 import it.lab.iservice.IMuaTaiQuayService;
+import it.lab.modelcustom.request.MuaTaiQuay2;
 import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
 import it.lab.repository.*;
@@ -266,5 +267,10 @@ private SanPhamRepo _sanPhamRepo;
         _hoaDonChiTietRepo.save(hoaDonNew);
         _hoaDonRepo.save(hoaDon);
         return TrangThaiQuetMa.THANHCONG;
+    }
+
+    @Override
+    public String muaTaiQuay2(MuaTaiQuay2 muaTaiQuay2) {
+        return null;
     }
 }

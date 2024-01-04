@@ -3,9 +3,12 @@ package it.lab.service;
 import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamSuKien;
 import it.lab.entity.SuKienGiamGia;
+import it.lab.enums.TrangThaiHoaDon;
 import it.lab.enums.TrangThaiSanPhamSuKien;
 import it.lab.enums.TrangThaiSuKienGiamGia;
 import it.lab.iservice.Cron;
+import it.lab.repository.HoaDonChiTietRepo;
+import it.lab.repository.HoaDonRepo;
 import it.lab.repository.SanPhamSuKienRepo;
 import it.lab.repository.SuKienGiamGiaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +27,11 @@ public class CronTask implements Cron {
 //
     @Autowired
     private SuKienGiamGiaRepo _suKienGiamGiaRepo;
-    @Autowired
-    private SanPhamSuKienRepo sanPhamSuKienRepo;
 
+    @Autowired
+    private HoaDonRepo _hoaDonRepo;
+    @Autowired
+    private HoaDonChiTietRepo _hoaDonChiTietRepo;
     @Scheduled(cron = "15 * * * * ?")
     public void guiBaoCaoHangNgay() {
         //   doiTrangThaiSuKien();
@@ -34,6 +39,18 @@ public class CronTask implements Cron {
 //
 //        email.sendContentAndMultipartToVer2("anhdqph19418@fpt.edu.vn", "ss","ss", Arrays.stream(new String[]{"/Users/quanganhdo/Documents/it/Template.xlsx"}).toList());
     }
+
+    //  @Scheduled(cron = "0 0 3 * * ?")
+    //  @Scheduled(cron = "15 * * * * ?")
+    public void xoaHoaDonRac() {
+        var hoaDonRac = _hoaDonRepo.findAllByTrangThaiEquals(TrangThaiHoaDon.CHOTHANHTOANBANKING);
+        for(var item : hoaDonRac){
+            var hoaDonChiTiet = _hoaDonChiTietRepo.findHoaDonChiTietsByHoaDon(item);
+            _hoaDonChiTietRepo.deleteAll(hoaDonChiTiet);
+        }
+        _hoaDonRepo.deleteAll(hoaDonRac);
+    }
+
 
     private void doiTrangThaiSuKien() {
         var suKien = _suKienGiamGiaRepo.findAll().stream().filter(x -> x.getTrangThai() == TrangThaiSuKienGiamGia.CHUADIENRA).toList();
