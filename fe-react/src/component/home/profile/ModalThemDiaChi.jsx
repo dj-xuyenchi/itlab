@@ -1,112 +1,121 @@
-import "./style.css";
-import {
-    Button,
-    Form,
-    Input,
-    Modal,
-    Tooltip,
-    notification,
-} from "antd";
 import React, { useState } from "react";
-import { FaRegPenToSquare } from "react-icons/fa6";
-function ModalThemDiaChi({ id, setData, handle }) {
-    const [chatLieu, setChatLieu] = useState({
-        id: id,
-        tenChatLieu: "",
-    });
+import { Modal, Form, Input, Button, Switch, notification } from "antd";
+import { useNguoiDungStore } from "./useNguoiDungStore";
+import { useSelector } from 'react-redux';
+
+function ModalThemDiaChi({ setData }) {
+    const nguoiDungId = useSelector(state => state.user.id);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [api, contextHolder] = notification.useNotification();
-    const openNotification = (type, title, des, placement) => {
-        if (type === "error") {
-            api.error({
-                message: title,
-                description: des,
-                placement,
-            });
-        } else {
-            api.success({
-                message: title,
-                description: des,
-                placement,
-            });
-        }
+    const [form] = Form.useForm();
+    const [diaChi, setDiaChi] = useState({
+        nguoiDungId: "3",
+        nguoiNhan: "",
+        hoNguoiNhan: "",
+        xa: "",
+        huyen: "",
+        tinh: "",
+        soDienThoai: "",
+        chiTietDiaChi: "",
+    });
+
+    const showModal = () => {
+        setIsModalOpen(true);
     };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+      };
+    
+      const [api, contextHolder] = notification.useNotification();
+      const openNotification = (type, title, des, placement) => {
+        if (type === "error") {
+          api.error({
+            message: title,
+            description: des,
+            placement,
+          });
+        } else {
+          api.success({
+            message: title,
+            description: des,
+            placement,
+          });
+        }
+      };
+
+    const handleOk = async () => {
+          const data = await useNguoiDungStore.actions.themDiaChiNguoiDung(diaChi);
+          openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
+          setData(data.data.data);
+          setDiaChi({
+            ...diaChi,
+            nguoiNhan: "",
+          });
+          setIsModalOpen(false);
+    };
+
     return (
         <>
-            {contextHolder}
-            <div
-                style={{
-                    marginLeft: "4px",
-                    marginRight: "4px",
-                }}
+            <Button type="primary" onClick={showModal}>
+                Thêm Địa Chỉ
+            </Button>
+            <Modal
+                title="Thêm Địa Chỉ Mới"
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
             >
-                <Tooltip title="Thêm địa chỉ nhận hàng">
-                    <Button
-                        style={{
-                            color: "green",
-                        }}
-                        shape="circle"
-                        onClick={() => {
-                            setIsModalOpen(true)
-                        }}
-                        icon={<FaRegPenToSquare />}
-                    />
-                </Tooltip>
-                <Modal
-                    okButtonProps={{ style: { display: "none" } }}
-                    cancelButtonProps={{ style: { display: "none" } }}
-                    title="Thêm địa chỉ"
-                    open={isModalOpen}
-                    onCancel={() => {
-                        setIsModalOpen(false)
-                    }}
-                    centered
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleOk}
                 >
-                    <Form
-                        name="wrap"
-                        labelCol={{
-                            flex: "110px",
-                        }}
-                        labelAlign="left"
-                        labelWrap
-                        wrapperCol={{
-                            flex: 1,
-                        }}
-                        colon={false}
-                        style={{
-                            maxWidth: 600,
-                        }}
+                    <Form.Item
+                        label="Người nhận"
+                        name="nguoiNhan"
+                        rules={[
+                        {
+                            required: true,
+                        },
+                        ]}
                     >
-                        <Form.Item
-                            label="Tỉnh/TP"
-                            name="Tỉnh/TP"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input
-                                onChange={(e) => {
-                                    setChatLieu({
-                                        ...chatLieu,
-                                        tenChatLieu: e.target.value,
-                                    });
-                                }}
-                                value={chatLieu.tenChatLieu}
-                            />
-                        </Form.Item>
-                        <Form.Item label=" ">
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                            >
-                                Thêm mới
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Modal>
-            </div>
+                        <Input
+                        onChange={(e) => {
+                            setDiaChi({
+                            ...diaChi,
+                            nguoiNhan: e.target.value,
+                            });
+                        }}
+                        value={diaChi.nguoiNhan}
+                        />
+                  </Form.Item>
+
+                  <Form.Item
+                        label="Họ người nhận"
+                        name="hoNguoiNhan"
+                        rules={[
+                        {
+                            required: true,
+                        },
+                        ]}
+                    >
+                        <Input
+                        onChange={(e) => {
+                            setDiaChi({
+                            ...diaChi,
+                            hoNguoiNhan: e.target.value,
+                            });
+                        }}
+                        value={diaChi.hoNguoiNhan}
+                        />
+                  </Form.Item>
+
+                    <Form.Item>
+                        {/* <Button type="primary" htmlType="submit">
+              Thêm
+            </Button> */}
+                    </Form.Item>
+                </Form>
+            </Modal>
         </>
     );
 }

@@ -10,9 +10,14 @@ import ModalThemDiaChi from "./ModalThemDiaChi";
 
 function DiaChiNhanHang() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const handleOpenModal = () => {
-        console.log('Opening modal');
-        setIsModalOpen(true);
+    const showModal = () => {
+      setIsModalOpen(true);
+    };
+    const handleOk = () => {
+      setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+      setIsModalOpen(false);
     };
     
     const param = useParams();
@@ -33,6 +38,7 @@ function DiaChiNhanHang() {
             });
         }
     };
+
     const handleCapNhatDiaChiMacDinh = async (diaChiId) => {
         try {
             const response = await useNguoiDungStore.actions.capNhatDiaChiMacDinh(param.id, diaChiId);
@@ -46,9 +52,11 @@ function DiaChiNhanHang() {
             openNotification('error', 'Lỗi kỹ thuật', error.message, 'topRight');
         }
     };
+    const [data, setData] = useState([]);
     async function handleLayDiaChi() {
         const data = await useNguoiDungStore.actions.layDiaChiNguoiDung(param.id)
         setDiaChi(data.data)
+        setData(data.data.data);
         console.log(data.data);
     }
     useEffect(() => {
@@ -71,9 +79,15 @@ function DiaChiNhanHang() {
                     </h4>
                 </Col>
                 <Col>
-                    <Button type="primary" onClick={handleOpenModal}>Thêm địa chỉ</Button>
+                <ModalThemDiaChi
+                id={param.id}
+                setData={handleLayDiaChi} 
+                handleCancel={handleCancel} 
+                isModalOpen={isModalOpen} 
+            />
                 </Col>
             </Row>
+
             <Divider />
             {diaChi && diaChi.map((item) => {
                 return <>
@@ -115,10 +129,10 @@ function DiaChiNhanHang() {
                 
             })}
            <ModalThemDiaChi
-                id={param.id} // Giả sử rằng bạn muốn truyền id người dùng
-                setData={handleLayDiaChi} // Hàm để cập nhật danh sách địa chỉ
-                handle={() => setIsModalOpen(false)} // Hàm để đóng modal
-                isModalOpen={isModalOpen} // Trạng thái hiển thị của modal
+                id={param.id}
+                setData={handleLayDiaChi}
+                handle={() => setIsModalOpen(false)}
+                isModalOpen={isModalOpen}
             />
         </>
     );

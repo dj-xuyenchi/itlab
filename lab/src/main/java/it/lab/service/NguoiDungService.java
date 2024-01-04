@@ -9,6 +9,7 @@ import it.lab.entity.DiaChi;
 import it.lab.entity.NguoiDung;
 import it.lab.enums.APIStatus;
 import it.lab.enums.CapNhat;
+import it.lab.enums.TrangThaiDiaChi;
 import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.iservice.INguoiDungService;
 import it.lab.modelcustom.request.DiaChiRequest;
@@ -150,6 +151,7 @@ public class NguoiDungService implements INguoiDungService {
             diaChi.setSoDienThoai(diaChiRequest.getSoDienThoai());
             diaChi.setChiTietDiaChi(diaChiRequest.getChiTietDiaChi());
             diaChi.setLaDiaChiChinh(diaChiRequest.getLaDiaChiChinh());
+            diaChi.setTrangThai(TrangThaiDiaChi.HOATDONG);
             _diaChiRepo.save(diaChi);
 
             return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thêm địa chỉ thành công");

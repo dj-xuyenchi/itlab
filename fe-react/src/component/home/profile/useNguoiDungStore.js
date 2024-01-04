@@ -27,11 +27,8 @@ export const useNguoiDungStore = {
             });
             return response;
         },
-        async themDiaChiNguoiDung(diaChi, nguoiDungId) {
-            const response = await axiosIns.post(`/api/nguoi-dung/themdiachinguoidung`, {
-                ...diaChi,
-                nguoiDung: { id: nguoiDungId }
-            });
+        async themDiaChiNguoiDung(payload ) {
+            const response = await axiosIns.post(`/api/nguoi-dung/themdiachinguoidung`,payload);
             return response;
         },
     },
