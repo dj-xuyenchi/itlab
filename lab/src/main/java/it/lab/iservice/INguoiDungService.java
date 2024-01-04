@@ -2,8 +2,11 @@ package it.lab.iservice;
 
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
+import it.lab.dto.ChatLieuDTO;
 import it.lab.dto.DiaChiDTO;
 import it.lab.dto.NguoiDungDTO;
+import it.lab.entity.ChatLieu;
+import it.lab.entity.DiaChi;
 import it.lab.entity.NguoiDung;
 import it.lab.enums.APIStatus;
 import it.lab.enums.CapNhat;
@@ -26,6 +29,10 @@ public interface INguoiDungService {
     public Page<NguoiDungDTO> xoaNguoiDung(Long nguoiDungId);
 
     public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId);
+
+    public List<DiaChiDTO> themDiaChi(DiaChi diaChi, Long nguoiDungId);
+
+    ResponObject<String, APIStatus> capNhatDiaChiMacDinh(Long nguoiDungId, Long diaChiId);
 
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDung, MultipartFile anhdaidien) throws IOException;
 }

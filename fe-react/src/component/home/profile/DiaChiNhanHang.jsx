@@ -37,6 +37,8 @@ function DiaChiNhanHang() {
     return (
         <>
             {contextHolder}
+            <Row justify="space-between" align="middle">
+            <Col>
             <h4
                 style={{
                     fontStyle: "normal",
@@ -47,6 +49,11 @@ function DiaChiNhanHang() {
             >
                 Địa chỉ nhận hàng
             </h4>
+            </Col>
+            <Col>
+                    <Button type="primary">Thêm địa chỉ</Button>
+                </Col>
+                </Row>
             <Divider />
             {diaChi && diaChi.map((item) => {
                 return <>

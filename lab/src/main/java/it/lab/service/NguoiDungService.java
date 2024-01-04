@@ -5,6 +5,7 @@ import it.lab.common.Page;
 import it.lab.common.ResponObject;
 import it.lab.dto.DiaChiDTO;
 import it.lab.dto.NguoiDungDTO;
+import it.lab.entity.DiaChi;
 import it.lab.entity.NguoiDung;
 import it.lab.enums.APIStatus;
 import it.lab.enums.CapNhat;
@@ -15,14 +16,15 @@ import it.lab.modelcustom.request.NguoiDungRequest;
 import it.lab.repository.DiaChiRepo;
 import it.lab.repository.NguoiDungRepo;
 import it.lab.repository.RankKhachHangRepo;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,6 +103,41 @@ public class NguoiDungService implements INguoiDungService {
         NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
         return DiaChiDTO.fromCollection(_diaChiRepo.findDiaChisByNguoiDung(ng));
     }
+
+    @Override
+    public List<DiaChiDTO> themDiaChi(DiaChi diaChi, Long nguoiDungId) {
+        // Đảm bảo rằng diaChi chứa tham chiếu đến NguoiDung hợp lệ
+        NguoiDung nguoiDung = _nguoiDungRepo.findById(nguoiDungId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với ID: " + nguoiDungId));
+        diaChi.setNguoiDung(nguoiDung);
+        diaChi.setNgayTao(LocalDateTime.now());
+        _diaChiRepo.save(diaChi);
+        return layDiaChiNguoiDung(nguoiDungId);
+    }
+
+    @Transactional
+    @Override
+    public ResponObject<String, APIStatus> capNhatDiaChiMacDinh(Long nguoiDungId, Long diaChiId) {
+        NguoiDung nguoiDung = _nguoiDungRepo.findById(nguoiDungId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với ID: " + nguoiDungId));
+        List<DiaChi> diaChiList = _diaChiRepo.findDiaChisByNguoiDung(nguoiDung);
+        DiaChi diaChiMacDinhHienTai = diaChiList.stream()
+                .filter(DiaChi::getLaDiaChiChinh)
+                .findFirst()
+                .orElse(null);
+        if (diaChiMacDinhHienTai != null && !diaChiMacDinhHienTai.getId().equals(diaChiId)) {
+            diaChiMacDinhHienTai.setLaDiaChiChinh(false);
+            _diaChiRepo.save(diaChiMacDinhHienTai);
+        }
+        DiaChi diaChiMoi = _diaChiRepo.findById(diaChiId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy địa chỉ với ID: " + diaChiId));
+
+        diaChiMoi.setLaDiaChiChinh(true);
+        _diaChiRepo.save(diaChiMoi);
+
+        return new ResponObject<String, APIStatus>("Cập nhật thành công", APIStatus.THANHCONG,"Thành công");
+    }
+
 
     @Override
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDungRequest, MultipartFile anhdaidien) throws IOException {

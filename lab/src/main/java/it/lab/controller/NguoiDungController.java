@@ -1,8 +1,8 @@
 package it.lab.controller;
 
 import com.google.gson.Gson;
-import it.lab.dto.NguoiDungDTO;
-import it.lab.entity.NguoiDung;
+import it.lab.dto.DiaChiDTO;
+import it.lab.entity.DiaChi;
 import it.lab.iservice.INguoiDungService;
 import it.lab.iservice.IRankKhachHang;
 import it.lab.modelcustom.request.DoiMatKhau;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -68,5 +69,15 @@ public class NguoiDungController {
     @RequestMapping(value = "/laydiachinguoidung", method = RequestMethod.GET)
     public ResponseEntity<?> layDiaChi(@RequestParam Long nguoiDungId) {
         return ResponseEntity.ok(_nguoiDungService.layDiaChiNguoiDung(nguoiDungId));
+    }
+
+    @RequestMapping(value = "/themdiachinguoidung", method = RequestMethod.POST)
+    public ResponseEntity<?> themDiaChiNguoiDung(@RequestBody DiaChi diaChi) {
+        if (diaChi.getNguoiDung() == null || diaChi.getNguoiDung().getId() == null) {
+            return ResponseEntity.badRequest().body("Thông tin người dùng không đầy đủ.");
+        }
+        Long nguoiDungId = diaChi.getNguoiDung().getId();
+        List<DiaChiDTO> diaChiDTOS = _nguoiDungService.themDiaChi(diaChi, nguoiDungId);
+        return ResponseEntity.ok(diaChiDTOS);
     }
 }
