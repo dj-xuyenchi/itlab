@@ -1,10 +1,13 @@
 package it.lab.controller;
 
 import com.google.gson.Gson;
+import it.lab.common.ResponObject;
 import it.lab.dto.DiaChiDTO;
 import it.lab.entity.DiaChi;
+import it.lab.enums.APIStatus;
 import it.lab.iservice.INguoiDungService;
 import it.lab.iservice.IRankKhachHang;
+import it.lab.modelcustom.request.DiaChiRequest;
 import it.lab.modelcustom.request.DoiMatKhau;
 import it.lab.modelcustom.request.NguoiDungRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,13 +74,35 @@ public class NguoiDungController {
         return ResponseEntity.ok(_nguoiDungService.layDiaChiNguoiDung(nguoiDungId));
     }
 
-    @RequestMapping(value = "/themdiachinguoidung", method = RequestMethod.POST)
-    public ResponseEntity<?> themDiaChiNguoiDung(@RequestBody DiaChi diaChi) {
-        if (diaChi.getNguoiDung() == null || diaChi.getNguoiDung().getId() == null) {
-            return ResponseEntity.badRequest().body("Thông tin người dùng không đầy đủ.");
+    @RequestMapping(value = "/capnhatdiachimacdinh", method = RequestMethod.POST)
+    public ResponseEntity<?> capNhatDiaChiMacDinh(
+            @RequestParam Long nguoiDungId,
+            @RequestParam Long diaChiId) {
+        try {
+            ResponObject<String, APIStatus> response = _nguoiDungService.capNhatDiaChiMacDinh(nguoiDungId, diaChiId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Có lỗi xảy ra: " + e.getMessage());
         }
-        Long nguoiDungId = diaChi.getNguoiDung().getId();
-        List<DiaChiDTO> diaChiDTOS = _nguoiDungService.themDiaChi(diaChi, nguoiDungId);
-        return ResponseEntity.ok(diaChiDTOS);
+    }
+
+    @RequestMapping(value = "/themdiachi", method = RequestMethod.POST)
+    public ResponseEntity<?> themDiaChi(@RequestBody DiaChiRequest diaChiRequest) {
+        try {
+            ResponObject<String, APIStatus> response = _nguoiDungService.themDiaChi(diaChiRequest);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Có lỗi xảy ra: " + e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/capnhatdiachi", method = RequestMethod.POST)
+    public ResponseEntity<?> capNhatDiaChi(@RequestBody DiaChiRequest diaChiRequest) {
+        try {
+            ResponObject<String, APIStatus> response = _nguoiDungService.capNhatDiaChi(diaChiRequest);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Có lỗi xảy ra: " + e.getMessage()));
+        }
     }
 }

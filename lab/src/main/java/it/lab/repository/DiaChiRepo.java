@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface DiaChiRepo extends JpaRepository<DiaChi, Long> {
     public List<DiaChi> findDiaChisByNguoiDung(NguoiDung nguoiDung);
+
+
 }

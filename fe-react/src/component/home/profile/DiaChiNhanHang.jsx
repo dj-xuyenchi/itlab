@@ -26,6 +26,19 @@ function DiaChiNhanHang() {
             });
         }
     };
+    const handleCapNhatDiaChiMacDinh = async (diaChiId) => {
+        try {
+            const response = await useNguoiDungStore.actions.capNhatDiaChiMacDinh(param.id, diaChiId);
+            if (response.status === 200) {
+                openNotification('success', 'Thành công', 'Địa chỉ mặc định đã được cập nhật.', 'topRight');
+                handleLayDiaChi();
+            } else {
+                openNotification('error', 'Lỗi', 'Không thể cập nhật địa chỉ mặc định.', 'topRight');
+            }
+        } catch (error) {
+            openNotification('error', 'Lỗi kỹ thuật', error.message, 'topRight');
+        }
+    };
     async function handleLayDiaChi() {
         const data = await useNguoiDungStore.actions.layDiaChiNguoiDung(param.id)
         setDiaChi(data.data)
@@ -78,10 +91,16 @@ function DiaChiNhanHang() {
                             <Tag color="#2db7f5">
                                 {fixNgayThang(item.ngayTao)}
                             </Tag>
-                            {item.laDiaChiChinh ? <Tag color="#f50">Là địa chỉ chính</Tag> : <Button size="small">Set mặc định</Button>}
-                            <Button style={{
-                                color: "blue"
-                            }} type="text" size="small">Chỉnh sửa</Button>
+                            {item.laDiaChiChinh ? (
+                            <Tag color="#f50">Là địa chỉ chính</Tag>
+                        ) : (
+                            <Button size="small" onClick={() => handleCapNhatDiaChiMacDinh(item.id)}>
+                                Set mặc định
+                            </Button>
+                        )}
+                        <Button style={{ color: "blue" }} type="text" size="small">
+                            Chỉnh sửa
+                        </Button>
                         </Col>
                     </Row>
                     <Divider />
@@ -94,3 +113,5 @@ function DiaChiNhanHang() {
 }
 
 export default DiaChiNhanHang;
+
+

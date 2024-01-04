@@ -18,5 +18,21 @@ export const useNguoiDungStore = {
             const response = await axiosIns.get(`/api/nguoi-dung/laydiachinguoidung?nguoiDungId=` + payload)
             return response
         },
+        async capNhatDiaChiMacDinh(nguoiDungId, diaChiId) {
+            const response = await axiosIns.post(`/api/nguoi-dung/capnhatdiachimacdinh`, null, {
+                params: {
+                    nguoiDungId,
+                    diaChiId
+                }
+            });
+            return response;
+        },
+        // async themDiaChiNguoiDung(diaChi, nguoiDungId) {
+        //     const response = await axiosIns.post(`/api/nguoi-dung/themdiachinguoidung`, {
+        //         ...diaChi,
+        //         nguoiDung: { id: nguoiDungId }
+        //     });
+        //     return response;
+        // },
     },
 }

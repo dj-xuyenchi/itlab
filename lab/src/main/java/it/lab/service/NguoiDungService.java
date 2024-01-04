@@ -11,6 +11,7 @@ import it.lab.enums.APIStatus;
 import it.lab.enums.CapNhat;
 import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.iservice.INguoiDungService;
+import it.lab.modelcustom.request.DiaChiRequest;
 import it.lab.modelcustom.request.DoiMatKhau;
 import it.lab.modelcustom.request.NguoiDungRequest;
 import it.lab.repository.DiaChiRepo;
@@ -104,16 +105,6 @@ public class NguoiDungService implements INguoiDungService {
         return DiaChiDTO.fromCollection(_diaChiRepo.findDiaChisByNguoiDung(ng));
     }
 
-    @Override
-    public List<DiaChiDTO> themDiaChi(DiaChi diaChi, Long nguoiDungId) {
-        // Đảm bảo rằng diaChi chứa tham chiếu đến NguoiDung hợp lệ
-        NguoiDung nguoiDung = _nguoiDungRepo.findById(nguoiDungId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với ID: " + nguoiDungId));
-        diaChi.setNguoiDung(nguoiDung);
-        diaChi.setNgayTao(LocalDateTime.now());
-        _diaChiRepo.save(diaChi);
-        return layDiaChiNguoiDung(nguoiDungId);
-    }
 
     @Transactional
     @Override
@@ -135,7 +126,62 @@ public class NguoiDungService implements INguoiDungService {
         diaChiMoi.setLaDiaChiChinh(true);
         _diaChiRepo.save(diaChiMoi);
 
-        return new ResponObject<String, APIStatus>("Cập nhật thành công", APIStatus.THANHCONG,"Thành công");
+        return new ResponObject<String, APIStatus>("Cập nhật thành công", APIStatus.THANHCONG, "Thành công");
+    }
+
+
+    @Override
+    public ResponObject<String, APIStatus> themDiaChi(DiaChiRequest diaChiRequest) {
+        try {
+            if (!_nguoiDungRepo.existsById(diaChiRequest.getNguoiDungId())) {
+                return new ResponObject<String, APIStatus>("Thất bại", APIStatus.THATBAI, "Người dùng không tồn tại");
+            }
+            DiaChi diaChi = new DiaChi();
+            diaChi.setNgayTao(LocalDateTime.now());
+            diaChi.setNguoiDung(_nguoiDungRepo.findById(diaChiRequest.getNguoiDungId()).orElse(null));
+            diaChi.setNguoiNhan(diaChiRequest.getNguoiNhan());
+            diaChi.setHoNguoiNhan(diaChiRequest.getHoNguoiNhan());
+            diaChi.setXaId(diaChiRequest.getXaId());
+            diaChi.setHuyenId(diaChiRequest.getHuyenId());
+            diaChi.setTinhId(diaChiRequest.getTinhId());
+            diaChi.setXa(diaChiRequest.getXa());
+            diaChi.setHuyen(diaChiRequest.getHuyen());
+            diaChi.setTinh(diaChiRequest.getTinh());
+            diaChi.setSoDienThoai(diaChiRequest.getSoDienThoai());
+            diaChi.setChiTietDiaChi(diaChiRequest.getChiTietDiaChi());
+            diaChi.setLaDiaChiChinh(diaChiRequest.getLaDiaChiChinh());
+            _diaChiRepo.save(diaChi);
+
+            return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thêm địa chỉ thành công");
+        } catch (Exception e) {
+            return new ResponObject<String, APIStatus>("Lỗi server", APIStatus.THATBAI, "Có lỗi xảy ra khi thêm địa chỉ");
+        }
+    }
+
+    @Override
+    public ResponObject<String, APIStatus> capNhatDiaChi(DiaChiRequest diaChiRequest) {
+        try {
+            DiaChi diaChi = _diaChiRepo.findById(diaChiRequest.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy địa chỉ với ID: " + diaChiRequest.getId()));
+
+            diaChi.setNguoiNhan(diaChiRequest.getNguoiNhan());
+            diaChi.setHoNguoiNhan(diaChiRequest.getHoNguoiNhan());
+            diaChi.setXaId(diaChiRequest.getXaId());
+            diaChi.setHuyenId(diaChiRequest.getHuyenId());
+            diaChi.setTinhId(diaChiRequest.getTinhId());
+            diaChi.setXa(diaChiRequest.getXa());
+            diaChi.setHuyen(diaChiRequest.getHuyen());
+            diaChi.setTinh(diaChiRequest.getTinh());
+            diaChi.setSoDienThoai(diaChiRequest.getSoDienThoai());
+            diaChi.setChiTietDiaChi(diaChiRequest.getChiTietDiaChi());
+            _diaChiRepo.save(diaChi);
+
+            return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Cập nhật địa chỉ thành công");
+        } catch (EntityNotFoundException e) {
+            return new ResponObject<String, APIStatus>("Thất bại", APIStatus.THATBAI, e.getMessage());
+        } catch (Exception e) {
+            return new ResponObject<String, APIStatus>("Lỗi", APIStatus.THATBAI, "Có lỗi xảy ra khi cập nhật địa chỉ: " + e.getMessage());
+        }
     }
 
 
