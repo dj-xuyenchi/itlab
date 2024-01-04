@@ -16,6 +16,9 @@ export default function Voucher() {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [resetTable, setResetTableGift] = useState(false);
 
+    const [tableKey, setTableKey] = useState(Date.now()); // Add a key for table re-render
+
+
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchTextGift(selectedKeys[0]);
@@ -134,7 +137,7 @@ export default function Voucher() {
 
     useEffect(() => {
         loadGiftVouchers();
-    }, [resetTable]);
+      }, [resetTable, tableKey]);
 
     const loadGiftVouchers = async () => {
         try {
@@ -162,6 +165,11 @@ export default function Voucher() {
         voucherList: voucher[5],
     }));
 
+
+    const handleTableReload = () => {
+        setTableKey(Date.now()); // Update the tableKey to trigger a re-render
+      };
+
     return (
         <div>
             <Header />
@@ -177,9 +185,9 @@ export default function Voucher() {
                     }}
                 >
                     <Space>
-                    <ModalU />
+                    <ModalU onActionSuccess={handleTableReload}/>
                     
-                    <AddGift />
+                    <AddGift onActionSuccess={handleTableReload}/>
                     </Space>
                    
                 </div>

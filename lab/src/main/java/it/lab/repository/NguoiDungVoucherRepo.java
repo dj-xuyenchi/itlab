@@ -11,16 +11,25 @@ import java.util.List;
 @Repository
 public interface NguoiDungVoucherRepo extends JpaRepository<NguoiDungVoucher, Long> {
 
-
-    @Query("SELECT b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email, " +
-            "STRING_AGG(CONCAT(c.tenVoucher, ' (KT: ',c.ngayKetThuc, ')'), ', ') " +
-            "FROM NguoiDungVoucher a " +
-            "JOIN a.nguoiDung b " +
-            "JOIN a.voucher c " +
-            "GROUP BY b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email")
-    List<Object[]> getAllTang();
-
-
-
+//    @Query("SELECT b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email, " +
+//            "STRING_AGG(CONCAT(c.tenVoucher, ' (KT: ',c.ngayKetThuc, ')',a.trangThai), ', ') " +
+//            "FROM NguoiDungVoucher a " +
+//            "JOIN a.nguoiDung b " +
+//            "JOIN a.voucher c " +
+//            "GROUP BY b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email")
+//    List<Object[]> getAllTang();
+@Query("SELECT b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email, " +
+        "STRING_AGG(CONCAT(c.tenVoucher, ' (KT: ', c.ngayKetThuc, ')', " +
+        "CASE " +
+        "  WHEN a.trangThai = 0 THEN ' (Status: Run)' " +
+        "  WHEN a.trangThai = 2 THEN ' (Status: DaSuDung)' " +
+        "  WHEN a.trangThai = 1 THEN ' (Status: Stop)' " +
+        "  ELSE '' " +
+        "END), ', ') " +
+        "FROM NguoiDungVoucher a " +
+        "JOIN a.nguoiDung b " +
+        "JOIN a.voucher c " +
+        "GROUP BY b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email")
+List<Object[]> getAllTang();
 
 }
