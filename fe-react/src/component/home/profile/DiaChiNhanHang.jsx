@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Radio, Row, Tag, notification } from "antd";
+import { Button, Col, Divider, Radio, Row, Tag, notification,Modal } from "antd";
 import "./style.css";
 import { useEffect, useState } from "react";
 import { useNguoiDungStore } from "./useNguoiDungStore";
@@ -6,8 +6,15 @@ import { useParams } from "react-router-dom";
 import { selectLanguage } from "../../../language/selectLanguage";
 import { useSelector } from "react-redux";
 import { fixNgayThang } from "../../../extensions/fixNgayThang";
+import ModalThemDiaChi from "./ModalThemDiaChi";
 
 function DiaChiNhanHang() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleOpenModal = () => {
+        console.log('Opening modal');
+        setIsModalOpen(true);
+    };
+    
     const param = useParams();
     const [api, contextHolder] = notification.useNotification();
     const [diaChi, setDiaChi] = useState(undefined)
@@ -51,22 +58,22 @@ function DiaChiNhanHang() {
         <>
             {contextHolder}
             <Row justify="space-between" align="middle">
-            <Col>
-            <h4
-                style={{
-                    fontStyle: "normal",
-                    fontWeight: 700,
-                    fontSize: "20px",
-                    marginBottom: "4px",
-                }}
-            >
-                Địa chỉ nhận hàng
-            </h4>
-            </Col>
-            <Col>
-                    <Button type="primary">Thêm địa chỉ</Button>
+                <Col>
+                    <h4
+                        style={{
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            fontSize: "20px",
+                            marginBottom: "4px",
+                        }}
+                    >
+                        Địa chỉ nhận hàng
+                    </h4>
                 </Col>
-                </Row>
+                <Col>
+                    <Button type="primary" onClick={handleOpenModal}>Thêm địa chỉ</Button>
+                </Col>
+            </Row>
             <Divider />
             {diaChi && diaChi.map((item) => {
                 return <>
@@ -92,22 +99,27 @@ function DiaChiNhanHang() {
                                 {fixNgayThang(item.ngayTao)}
                             </Tag>
                             {item.laDiaChiChinh ? (
-                            <Tag color="#f50">Là địa chỉ chính</Tag>
-                        ) : (
-                            <Button size="small" onClick={() => handleCapNhatDiaChiMacDinh(item.id)}>
-                                Set mặc định
+                                <Tag color="#f50">Là địa chỉ chính</Tag>
+                            ) : (
+                                <Button size="small" onClick={() => handleCapNhatDiaChiMacDinh(item.id)}>
+                                    Set mặc định
+                                </Button>
+                            )}
+                            <Button style={{ color: "blue" }} type="text" size="small">
+                                Chỉnh sửa
                             </Button>
-                        )}
-                        <Button style={{ color: "blue" }} type="text" size="small">
-                            Chỉnh sửa
-                        </Button>
                         </Col>
                     </Row>
                     <Divider />
                 </>
-
+                
             })}
-
+           <ModalThemDiaChi
+                id={param.id} // Giả sử rằng bạn muốn truyền id người dùng
+                setData={handleLayDiaChi} // Hàm để cập nhật danh sách địa chỉ
+                handle={() => setIsModalOpen(false)} // Hàm để đóng modal
+                isModalOpen={isModalOpen} // Trạng thái hiển thị của modal
+            />
         </>
     );
 }

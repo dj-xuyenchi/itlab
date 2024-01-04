@@ -27,12 +27,12 @@ export const useNguoiDungStore = {
             });
             return response;
         },
-        // async themDiaChiNguoiDung(diaChi, nguoiDungId) {
-        //     const response = await axiosIns.post(`/api/nguoi-dung/themdiachinguoidung`, {
-        //         ...diaChi,
-        //         nguoiDung: { id: nguoiDungId }
-        //     });
-        //     return response;
-        // },
+        async themDiaChiNguoiDung(diaChi, nguoiDungId) {
+            const response = await axiosIns.post(`/api/nguoi-dung/themdiachinguoidung`, {
+                ...diaChi,
+                nguoiDung: { id: nguoiDungId }
+            });
+            return response;
+        },
     },
 }
