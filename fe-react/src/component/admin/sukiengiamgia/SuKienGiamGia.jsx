@@ -188,11 +188,11 @@ function SuKienGiamGia() {
       ),
     },
     {
-      title: "Giá trị giảm(%)",
+      title: "Giảm(%)",
       dataIndex: "giaTriGiam",
       key: "giaTriGiam",
       width: "10%",
-      // ...getColumnSearchProps("giaTriGiam"),
+       ...getColumnSearchProps("giaTriGiam"),
     },
     {
       title: "Mô tả",
@@ -338,7 +338,7 @@ function SuKienGiamGia() {
       return; // Không gửi yêu cầu nếu dữ liệu không hợp lệ
     }
     if (
-      suKienGiamGia.ngayKetThuc <= suKienGiamGia.ngayBatDau
+      suKienGiamGia.ngayKetThuc < suKienGiamGia.ngayBatDau
     ) {
       openNotification(
         "error",
@@ -369,7 +369,7 @@ function SuKienGiamGia() {
     };
 
     formData.append("data", JSON.stringify(suKienData));
-
+    setIsModalOpen(false);
     try {
       const response = await fetch(
         "http://localhost:8089/api/sukiengiamgia/themsukiengg",
@@ -378,9 +378,9 @@ function SuKienGiamGia() {
           body: formData,
         }
       );
-
+      
       const responseData = await response.json();
-      setIsModalOpen(false);
+     
       layDuLieu();
       if (response.ok) {
         form.resetFields();
@@ -453,6 +453,12 @@ function SuKienGiamGia() {
                 open={isModalOpen}
                 onCancel={handleCancel}
                 centered
+                footer={[
+                  <Button type="primary" htmlType="submit" onClick={handleThemSuKienGiamGia}>
+                    Thêm
+                  </Button>,
+                ]}
+                onClose={() => setIsModalOpen(false)}
               >
                 <Form
                   form={form}
@@ -572,15 +578,6 @@ function SuKienGiamGia() {
                         });
                       }}
                     />
-                  </Form.Item>
-                  <Form.Item label=" ">
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      onClick={handleThemSuKienGiamGia}
-                    >
-                      Thêm mới
-                    </Button>
                   </Form.Item>
                 </Form>
               </Modal>

@@ -454,6 +454,11 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
+    public List<SanPham> getAllSanPham() {
+        return _sanPhamRepository.findAll();
+    }
+
+    @Override
     public Object capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile multipartFile, MultipartFile multipartFile1) {
         return null;
     }

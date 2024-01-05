@@ -132,7 +132,6 @@ function ModalView({ id }) {
             Thêm
           </Button>,
         ]}
-       
       >
         <Form
           name="wrap"
@@ -193,7 +192,6 @@ function ModalView({ id }) {
               ))}
             </Select>
           </Form.Item>
-          
         </Form>
       </Modal>
     </>

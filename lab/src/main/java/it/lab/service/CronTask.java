@@ -54,7 +54,7 @@ public class CronTask implements Cron {
         }
     }
 
-    @Scheduled(cron = "0 0 24 ***")
+    @Scheduled(cron = "0 0 0 * * *")
     private void updateTrangThaiSuKienAuTo() {
         List<SuKienGiamGia> suKienGiamGiaList = _suKienGiamGiaRepo.findAll();
         for (SuKienGiamGia suKienGiamGia : suKienGiamGiaList) {
@@ -70,7 +70,7 @@ public class CronTask implements Cron {
             }
         }
     }
-    @Scheduled(cron = "00 03 24 ***")
+    @Scheduled(cron = "0 0 1 * * *")
     public void updateTrangThaiSPSuKienAuTo(){
         List<SanPhamSuKien> sanPhamSuKienList=sanPhamSuKienRepo.findAll();
         for(SanPhamSuKien sanPhamSuKien:sanPhamSuKienList){

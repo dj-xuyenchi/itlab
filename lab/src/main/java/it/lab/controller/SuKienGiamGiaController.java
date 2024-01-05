@@ -43,7 +43,7 @@ public class SuKienGiamGiaController {
         return ResponseEntity.ok(suKienGiamGiaService.themSuKienGiamGia(suKienGiamGia));
     }
 
-    @RequestMapping(value = "/xoasukiengiamgia", method = RequestMethod.GET)
+    @PutMapping(value = "/xoasukiengiamgia")
     public ResponseEntity<?> xoaSuKienGiamGia(@RequestParam Long suKienGiamGiaId) {
         return ResponseEntity.ok(suKienGiamGiaService.xoaSuKienGiamGia(suKienGiamGiaId));
     }

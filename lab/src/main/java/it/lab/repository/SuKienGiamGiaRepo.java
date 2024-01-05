@@ -11,4 +11,6 @@ import java.util.List;
 public interface SuKienGiamGiaRepo extends JpaRepository<SuKienGiamGia, Long> {
     @Query("SELECT s FROM SuKienGiamGia s WHERE s.trangThai =0 or s.trangThai =2 ORDER BY s.ngayCapNhat DESC")
     List<SuKienGiamGia> getAll();
+    @Query("SELECT s FROM SuKienGiamGia s WHERE s.trangThai =0  ORDER BY s.ngayCapNhat DESC")
+    List<SuKienGiamGia> getAllSuKienHoatDong();
 }

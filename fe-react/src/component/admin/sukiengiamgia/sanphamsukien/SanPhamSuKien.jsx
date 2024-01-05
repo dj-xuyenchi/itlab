@@ -17,6 +17,7 @@ import ModalView from "./ModalThemNhom";
 import DungNhomSanPham from "./DungNhomSanPham";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 import Modalxoa from "./Modalxoa";
+import ModalNgungAll from "./ModalNgungAll";
 function Product() {
   const [sanPham, setSanPhamSuKien] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -153,7 +154,13 @@ function Product() {
       key: "ngayCapNhat",
       width: "20%",
       render: (ngayCapNhat) => (
-        <>{ngayCapNhat ? fixNgayThang(ngayCapNhat) : <Tag color="processing">Mới</Tag>}</>
+        <>
+          {ngayCapNhat ? (
+            fixNgayThang(ngayCapNhat)
+          ) : (
+            <Tag color="processing">Mới</Tag>
+          )}
+        </>
       ),
     },
     {
@@ -168,16 +175,13 @@ function Product() {
           return <span style={{ color: "red" }}>Ngừng sự kiện</span>;
         }
       },
-  
     },
     {
       title: "Thao tác",
       dataIndex: "id", // Sử dụng dataIndex là 'id' vì chúng ta muốn truy cập 'id' của mỗi hàng
       key: "action",
       width: "10%",
-      render: (id) => (
-        <Modalxoa id={id}/>
-      ),
+      render: (id) => <Modalxoa id={id} />,
     },
   ];
   // thông báo
@@ -268,13 +272,13 @@ function Product() {
               <Col span={12}>
                 {<ModalThemNhom />}
                 {isModalVisible && (
-                  <ModalView setIsModalVisible={setIsModalVisible} />
+                  <ModalThemNhom setIsModalVisible={setIsModalVisible} />
                 )}
               </Col>
             </Row>
             <Row gutter={[16, 16]}>
               <Col
-                span={24}
+                span={12}
                 style={{ marginTop: "16px" }}
                 className="red-button"
               >
@@ -283,6 +287,16 @@ function Product() {
                 {<DungNhomSanPham />}
                 {isModalVisible && (
                   <ModalView setIsModalVisible={setIsModalVisible} />
+                )}
+              </Col>
+              <Col
+                span={12}
+                style={{ marginTop: "16px" }}
+                className="red-button"
+              >
+                {<ModalNgungAll />}
+                {isModalVisible && (
+                  <ModalNgungAll setIsModalVisible={setIsModalVisible} />
                 )}
               </Col>
             </Row>

@@ -48,7 +48,7 @@ public class SanPhamSuKienController {
     }
     @GetMapping("/get-all-sukiengiamgia")
     public ResponseEntity<?> getAllSuKienGiamGia() {
-        return ResponseEntity.ok(suKienGiamGiaService.getAll());
+        return ResponseEntity.ok(suKienGiamGiaService.getAllSuKienHoatDong());
     }
 
     @GetMapping("/getnhomsanpham")
@@ -82,6 +82,45 @@ public class SanPhamSuKienController {
         service.save(sanPhamSuKien);
         return ResponseEntity.ok(service.save(sanPhamSuKien));
     }
+    @PostMapping("/add-all")
+    public ResponseEntity<?> addTatCaSanPham(@RequestParam(name = "idSuKien") long idSK) {
+        try {
+            LocalDateTime currentDate = LocalDateTime.now();
+            SuKienGiamGia suKienGiamGia = suKienGiamGiaService.findById(idSK);
+            if (suKienGiamGia == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy sự kiện giảm giá");
+            }
+            List<SanPham> sanPhamList = iSanPhamService.getAllSanPham();
+            if (sanPhamList.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không có sản phẩm nào để thêm vào sự kiện");
+            }
+
+            List<SanPhamSuKien> sanPhamSuKienList = service.getAll();
+
+            for (SanPhamSuKien sanPhamSuKien : sanPhamSuKienList) {
+                if (sanPhamSuKien.getTrangThai() == TrangThaiSanPhamSuKien.CHAY_SU_KIEN) {
+                    sanPhamSuKien.setNgayCapNhat(currentDate);
+                    sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+                    service.save(sanPhamSuKien);
+                }
+            }
+            for (SanPham sanPham : sanPhamList) {
+                SanPhamSuKien sanPhamSuKien = new SanPhamSuKien();
+                sanPhamSuKien.setSanPham(sanPham);
+                sanPhamSuKien.setSuKienGiamGia(suKienGiamGia);
+                sanPhamSuKien.setNgayTao(currentDate);
+                sanPhamSuKien.setNgayCapNhat(currentDate);
+                sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.CHAY_SU_KIEN);
+                service.save(sanPhamSuKien);
+            }
+
+            return ResponseEntity.ok("Yêu cầu đã được xử lý thành công");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi trong quá trình xử lý yêu cầu");
+        }
+    }
+
 
     @PostMapping("/add-nhom-san-pham")
     public ResponseEntity<?> saveTheoSanPhamNhom(
@@ -125,6 +164,19 @@ public class SanPhamSuKienController {
        }
         service.save(phamSuKien);
         return ResponseEntity.ok(phamSuKien);
+    }
+    @PutMapping("/update-ngung-all")
+    public ResponseEntity<?> updateAll() {
+        LocalDateTime time=LocalDateTime.now();
+        List<SanPhamSuKien> sanPhamSuKienList=service.getAll();
+        for(SanPhamSuKien sanPhamSuKien:sanPhamSuKienList){
+            if(sanPhamSuKien.getTrangThai()==TrangThaiSanPhamSuKien.CHAY_SU_KIEN){
+                sanPhamSuKien.setNgayCapNhat(time);
+                sanPhamSuKien.setTrangThai(TrangThaiSanPhamSuKien.NGUNG_SU_KIEN);
+                service.save(sanPhamSuKien);
+            }
+        }
+        return ResponseEntity.ok("Yêu cầu đã được xử lý thành công");
     }
     @PutMapping("/update-ngung-su-kien-nhom")
     public ResponseEntity<?> ngungNhomSanPham(@RequestParam(name = "id") long idNhom

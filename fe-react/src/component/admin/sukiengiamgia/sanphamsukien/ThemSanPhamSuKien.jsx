@@ -6,17 +6,20 @@ import { selectLanguage } from "../../../../language/selectLanguage";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Button, Image, Input, Space, Table, Tag } from "antd";
+import { Button, Image, Input, Space, Table, Tag, Row, Col } from "antd";
 import { useSanPhamStore } from "../../product/useSanPhamStore";
 import { BsFillPencilFill } from "react-icons/bs";
-import ModalThem from "./ModalThem"
-import ModalThemNhom from "./ModalThemNhom"
+import ModalThem from "./ModalThem";
+import ModalThemNhom from "./ModalThemNhom";
+import ModalAddAll from "./ModalAddAll";
+import ModalView from "./ModalAddAll";
 function ThemSanPhamSuKien() {
   const language = useSelector(selectLanguage);
   const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -287,7 +290,6 @@ function ThemSanPhamSuKien() {
     const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
     setSanPham(data.data.data);
     // handleSetFilter(data.data.data);
-  
   };
   useEffect(() => {
     const fetchThuocTinh = async () => {
@@ -301,6 +303,15 @@ function ThemSanPhamSuKien() {
     setFilteredInfo(filters);
     console.log(filters);
   };
+  const [isModalAddAllVisible, setIsModalAddAllVisible] = useState(false);
+
+  const handleOpenModalAddAll = () => {
+    setIsModalAddAllVisible(true);
+  };
+
+  const handleCloseModalAddAll = () => {
+    setIsModalAddAllVisible(false);
+  };
   return (
     <>
       <div>
@@ -308,11 +319,19 @@ function ThemSanPhamSuKien() {
         <MenuAdmin />
         <div className="body-container">
           <div className="content">
+            <Row gutter={[16, 16]}>
+              <Col span={12}></Col>
+              <Col span={12}>
+                {<ModalAddAll />}
+                {isModalVisible && (
+                  <ModalView setIsModalVisible={setIsModalVisible} />
+                )}
+              </Col>
+            </Row>
             <div className="table-sanpham background-color">
               <Table
                 columns={columns}
                 dataSource={sanPham}
-                // onChange={onChange}
                 pagination={{
                   position: ["bottomRight"],
                 }}
@@ -324,4 +343,5 @@ function ThemSanPhamSuKien() {
     </>
   );
 }
+
 export default ThemSanPhamSuKien;

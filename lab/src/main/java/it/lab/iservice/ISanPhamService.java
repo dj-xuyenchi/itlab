@@ -96,6 +96,7 @@ public interface ISanPhamService {
 
     public SanPhamDTO laySanPhamById(Long sanPhamId);
     public List<NhomSanPham> getAll();
+    public List<SanPham> getAllSanPham();
 
     Object capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile multipartFile, MultipartFile multipartFile1);
 }

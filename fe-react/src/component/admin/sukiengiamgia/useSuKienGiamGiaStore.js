@@ -26,7 +26,7 @@ export const useSuKienGiamGiaStore = {
             )
         },
         async xoaSuKienGiamGiaId(payload) {
-            return axiosIns.get('/api/sukiengiamgia/xoasukiengiamgia?suKienGiamGiaId=' + payload
+            return axiosIns.put('/api/sukiengiamgia/xoasukiengiamgia?suKienGiamGiaId=' + payload
             )
         },
     },

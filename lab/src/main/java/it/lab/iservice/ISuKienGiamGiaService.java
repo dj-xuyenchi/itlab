@@ -26,5 +26,6 @@ public interface ISuKienGiamGiaService {
     public SuKienGiamGiaDTO laySuKienGiamGiaById(Long suKienGiamGiaId);
     public SuKienGiamGia findById(Long suKienGiamGiaId);
     public List<SuKienGiamGia> getAll();
+    public List<SuKienGiamGia> getAllSuKienHoatDong();
     public ResponObject<String, APIStatus> suaSuKien(Long id,SuKienGiamGiaReque suKienGiamGia, MultipartFile hinh) throws IOException;
 }

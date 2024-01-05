@@ -126,4 +126,8 @@ public class SuKienGiamGiaService implements ISuKienGiamGiaService {
     public List<SuKienGiamGia> getAll() {
         return suKienGiamGiaRepo.getAll();
     }
+    @Override
+    public List<SuKienGiamGia> getAllSuKienHoatDong() {
+        return suKienGiamGiaRepo.getAllSuKienHoatDong();
+    }
 }
