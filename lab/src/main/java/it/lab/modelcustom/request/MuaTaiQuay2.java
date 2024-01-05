@@ -19,7 +19,9 @@ public class MuaTaiQuay2 {
     /// 2 là sử dụng địa chỉ có sẵn
     private Integer taoDiaChi;
     private Long hoaDonId;
+    private Long khachHangId;
     private Long diaChiId;
     private DiaChiMoi diaChiMoi;
     private String ghiChu;
+    private Double phiGiaoHang;
 }

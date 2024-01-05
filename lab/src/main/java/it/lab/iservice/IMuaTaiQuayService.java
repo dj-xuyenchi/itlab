@@ -6,8 +6,8 @@ import it.lab.modelcustom.request.MuaTaiQuay2;
 import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
 
 public interface IMuaTaiQuayService {
     public List<HoaDonChoTaiCuaHang> layDanhSachTaiCuaHang();
@@ -31,5 +31,8 @@ public interface IMuaTaiQuayService {
     public String[] taoHoaDonTaiQuayThanhToanVNPAY(MuaTaiQuayRequest muaTaiQuayRequest);
 
     public TrangThaiQuetMa quetMa(String maSp, Long hoaDonId);
-    public String muaTaiQuay2(MuaTaiQuay2 muaTaiQuay2);
+
+    public String muaTaiQuay2(MuaTaiQuay2 muaTaiQuay2) throws UnsupportedEncodingException;
+
+    public int doiTrangThaiHoaDonTaiQuay(String maHd, String status);
 }

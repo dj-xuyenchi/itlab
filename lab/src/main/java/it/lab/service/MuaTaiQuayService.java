@@ -1,7 +1,7 @@
 package it.lab.service;
 
-import it.lab.common.Email;
 import it.lab.common.Template;
+import it.lab.config.Config;
 import it.lab.dto.*;
 import it.lab.entity.*;
 import it.lab.enums.TrangThaiDiaChi;
@@ -9,6 +9,7 @@ import it.lab.enums.TrangThaiHoaDon;
 import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.enums.TrangThaiQuetMa;
 import it.lab.iservice.IMuaTaiQuayService;
+import it.lab.modelcustom.request.DiaChiMoi;
 import it.lab.modelcustom.request.MuaTaiQuay2;
 import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.respon.HoaDonChoTaiCuaHang;
@@ -16,11 +17,12 @@ import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class MuaTaiQuayService implements IMuaTaiQuayService {
@@ -41,7 +43,8 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     @Autowired
     private RankKhachHangRepo _rankKhachRepo;
     @Autowired
-private SanPhamRepo _sanPhamRepo;
+    private SanPhamRepo _sanPhamRepo;
+
     @Override
     public List<HoaDonChoTaiCuaHang> layDanhSachTaiCuaHang() {
         return HoaDonChoTaiCuaHang.fromCollection(_hoaDonRepo.findAll());
@@ -270,7 +273,190 @@ private SanPhamRepo _sanPhamRepo;
     }
 
     @Override
-    public String muaTaiQuay2(MuaTaiQuay2 muaTaiQuay2) {
-        return null;
+    public String muaTaiQuay2(MuaTaiQuay2 muaTaiQuay2) throws UnsupportedEncodingException {
+        HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuay2.getHoaDonId()).get();// nếu ko chọn địa chỉ thì cột địa chỉ trên HD là null
+        hoaDon = setDiaChiChoHoaDon(hoaDon, muaTaiQuay2);
+        hoaDon = setKhachHang(hoaDon, muaTaiQuay2.getKhachHangId());
+        _hoaDonRepo.save(hoaDon);
+        //Lấy tại cửa hàng
+        if (muaTaiQuay2.getThanhToanBang() == 1) {
+            return vnpay(hoaDon, muaTaiQuay2);
+        } else {
+            return tienMat(hoaDon, muaTaiQuay2);
+        }
+    }
+
+    @Override
+    public int doiTrangThaiHoaDonTaiQuay(String maHd, String trangThai) {
+        var hoaDon = _hoaDonRepo.findHoaDonByMaHoaDon(maHd);
+        if (!hoaDon.isPresent()) {
+            return 0;
+        }
+        if (trangThai.equals("00")) {
+            thayDoiSoLuongKhiConfirmHoaDon(hoaDon.get().getId());
+            if (hoaDon.get().getPhuongThucVanChuyen().getId() == 1) {
+                hoaDon.get().setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+            } else {
+                hoaDon.get().setTrangThai(TrangThaiHoaDon.DAGIAO);
+            }
+            _hoaDonRepo.save(hoaDon.get());
+            return 1;
+        } else {
+            hoaDon.get().setGhiChu("");
+            _hoaDonRepo.save(hoaDon.get());
+            return 0;
+        }
+
+    }
+
+
+    private String tienMat(HoaDon hoaDon, MuaTaiQuay2 muaTaiQuay2) {
+        hoaDon.setGhiChu(muaTaiQuay2.getGhiChu());
+        hoaDon.setNgayCapNhat(LocalDateTime.now());
+        PhuongThucThanhToan pttt = _phuongThucThanhToanRepo.findById(2l).get();
+        hoaDon.setPhuongThucThanhToan(pttt);
+        thayDoiSoLuongKhiConfirmHoaDon(hoaDon.getId());
+        if (muaTaiQuay2.getTaoDiaChi() == 0) {
+            hoaDon.setTrangThai(TrangThaiHoaDon.DAGIAO);
+            hoaDon.setNgayGiao(LocalDateTime.now());
+            _hoaDonRepo.save(hoaDon);
+        } else {
+            hoaDon.setPhiGiaoHang(muaTaiQuay2.getPhiGiaoHang());
+            hoaDon.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+            _hoaDonRepo.save(hoaDon);
+        }
+        return "OK";
+    }
+
+    private String vnpay(HoaDon hoaDon, MuaTaiQuay2 muaTaiQuay2) throws UnsupportedEncodingException {
+        hoaDon.setPhuongThucThanhToan(_phuongThucThanhToanRepo.findById(1l).get());
+        hoaDon.setGhiChu(muaTaiQuay2.getGhiChu());
+        hoaDon.setNgayCapNhat(LocalDateTime.now());
+        _hoaDonRepo.save(hoaDon);
+        return taoLinkVnPay(hoaDon.getMaHoaDon(), (long) (hoaDon.getGiaTriHd() + (hoaDon.getPhiGiaoHang() == null ? 0 : hoaDon.getPhiGiaoHang())));
+    }
+
+
+    //hàm này phụ trách set khách hàng
+    private HoaDon setKhachHang(HoaDon hoaDon, Long khachHangId) {
+        NguoiDung ng = _nguoiDungRepo.findById(khachHangId).get();
+        hoaDon.setNguoiMua(ng);
+        return hoaDon;
+    }
+
+    // hàm này phụ trách set địa chỉ cho hóa đơn
+    private HoaDon setDiaChiChoHoaDon(HoaDon hoaDon, MuaTaiQuay2 muaTaiQuay2) {
+        // nếu ko chọn địa chỉ thì cột địa chỉ trên HD là null
+        Long diaChiId = null;
+        if (muaTaiQuay2.getTaoDiaChi() == 1) {
+            hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(1l).get());
+            hoaDon.setDiaChiGiao(taoDiaChi(muaTaiQuay2));
+            diaChiId=0l;
+        }
+        if (muaTaiQuay2.getTaoDiaChi() == 2) {
+            DiaChi diaChi = _diaChiRepo.findById(muaTaiQuay2.getDiaChiId()).get();
+            hoaDon.setDiaChiGiao(diaChi);
+            hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(1l).get());
+            diaChiId = muaTaiQuay2.getDiaChiId();
+        }
+        if (diaChiId == null) {
+            hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(3l).get());
+        }
+        return hoaDon;
+    }
+
+    private DiaChi taoDiaChi(MuaTaiQuay2 muaTaiQuay2) {
+        NguoiDung ng = _nguoiDungRepo.findById(muaTaiQuay2.getKhachHangId()).get();
+        DiaChiMoi diaChiMoi = muaTaiQuay2.getDiaChiMoi();
+        DiaChi diaChi = new DiaChi(
+                null,
+                ng,
+                diaChiMoi.getTen(),
+                diaChiMoi.getHo(),
+                diaChiMoi.getXaId(),
+                diaChiMoi.getHuyenId(),
+                diaChiMoi.getTinhId(),
+                diaChiMoi.getXa(),
+                diaChiMoi.getHuyen(),
+                diaChiMoi.getTinh(),
+                diaChiMoi.getChiTietDiaChi(),
+                LocalDateTime.now(),
+                null,
+                diaChiMoi.getSoDienThoai(),
+                false,
+                TrangThaiDiaChi.HOATDONG,
+                null
+        );
+        _diaChiRepo.save(diaChi);
+        return diaChi;
+    }
+
+    private String taoLinkVnPay(String maHd, Long soTien) throws UnsupportedEncodingException {
+        String vnp_Version = "2.1.0";
+        String vnp_Command = "pay";
+        String vnp_OrderInfo = "Mua " + LocalDateTime.now().getSecond();
+        String orderType = "2000";
+        String vnp_TxnRef = maHd;
+        String vnp_IpAddr = "42.114.34.177";
+        String vnp_TmnCode = "MXWCJ2KO";
+        Long amount = soTien * 100;
+        Map vnp_Params = new HashMap();
+        vnp_Params.put("vnp_Version", vnp_Version);
+        vnp_Params.put("vnp_Command", vnp_Command);
+        vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
+        vnp_Params.put("vnp_Amount", String.valueOf(amount));
+        vnp_Params.put("vnp_CurrCode", "VND");
+        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", vnp_OrderInfo);
+        vnp_Params.put("vnp_OrderType", orderType);
+        vnp_Params.put("vnp_Locale", "vn");
+        vnp_Params.put("vnp_ReturnUrl", "http://localhost:3000/admin/vnpaytrangthai");
+        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        String vnp_CreateDate = formatter.format(cld.getTime());
+        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
+        cld.add(Calendar.MINUTE, 15);
+        String vnp_ExpireDate = formatter.format(cld.getTime());
+        vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
+        vnp_Params.put("vnp_Bill_Mobile", "0968491797");
+        vnp_Params.put("vnp_Bill_Email", "do.quanganh99zz@gmail.com");
+        String fullName = "Đỗ Quang Anh";
+        if (fullName != null && !fullName.isEmpty()) {
+            int idx = fullName.indexOf(' ');
+            String firstName = fullName.substring(0, idx);
+            String lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
+            vnp_Params.put("vnp_Bill_FirstName", firstName);
+            vnp_Params.put("vnp_Bill_LastName", lastName);
+        }
+        vnp_Params.put("vnp_Bill_Address", "Thái bình");
+        vnp_Params.put("vnp_Bill_City", "Thái bình");
+        vnp_Params.put("vnp_Bill_Country", "Thái bình");
+        List fieldNames = new ArrayList(vnp_Params.keySet());
+        Collections.sort(fieldNames);
+        StringBuilder hashData = new StringBuilder();
+        StringBuilder query = new StringBuilder();
+        Iterator itr = fieldNames.iterator();
+        while (itr.hasNext()) {
+            String fieldName = (String) itr.next();
+            String fieldValue = (String) vnp_Params.get(fieldName);
+            if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                hashData.append(fieldName);
+                hashData.append('=');
+                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
+                query.append('=');
+                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                if (itr.hasNext()) {
+                    query.append('&');
+                    hashData.append('&');
+                }
+            }
+        }
+        String queryUrl = query.toString();
+        String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
+        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
+        return paymentUrl;
     }
 }

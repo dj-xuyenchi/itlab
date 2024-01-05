@@ -73,11 +73,17 @@ public class BanTaiQuayController {
     public ResponseEntity<?> quetMaSanPham(@RequestParam String maSp, @RequestParam Long hoaDonId) {
         return ResponseEntity.ok(_muaTaiQuay.quetMa(maSp, hoaDonId));
     }
-    @RequestMapping(value = "/muataiquay2", method = RequestMethod.POST)
-    public ResponseEntity<?> thanhToanTaiQuay2(@RequestBody MuaTaiQuay2 muaTaiQuay2) {
 
+    @RequestMapping(value = "/muataiquay2", method = RequestMethod.POST)
+    public ResponseEntity<?> thanhToanTaiQuay2(@RequestBody MuaTaiQuay2 muaTaiQuay2) throws UnsupportedEncodingException {
         return ResponseEntity.ok(_muaTaiQuay.muaTaiQuay2(muaTaiQuay2));
     }
+
+    @RequestMapping(value = "/muataiquayvnpaycheck", method = RequestMethod.POST)
+    public ResponseEntity<?> muaTaiQuayVnPayCheck(@RequestParam String maHd, @RequestParam String status) {
+        return ResponseEntity.ok(_muaTaiQuay.doiTrangThaiHoaDonTaiQuay(maHd, status));
+    }
+
     @RequestMapping(value = "/thanhtoanvnpaytaiquay", method = RequestMethod.POST)
     public ResponseEntity<?> thanhToan(@RequestBody MuaTaiQuayRequest muaTaiQuayRequest) throws UnsupportedEncodingException {
         String[] res = _muaTaiQuay.taoHoaDonTaiQuayThanhToanVNPAY(muaTaiQuayRequest);
