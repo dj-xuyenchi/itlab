@@ -321,7 +321,6 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             hoaDon.setNgayGiao(LocalDateTime.now());
             _hoaDonRepo.save(hoaDon);
         } else {
-            hoaDon.setPhiGiaoHang(muaTaiQuay2.getPhiGiaoHang());
             hoaDon.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
             _hoaDonRepo.save(hoaDon);
         }
@@ -351,16 +350,19 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         if (muaTaiQuay2.getTaoDiaChi() == 1) {
             hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(1l).get());
             hoaDon.setDiaChiGiao(taoDiaChi(muaTaiQuay2));
+            hoaDon.setPhiGiaoHang(muaTaiQuay2.getPhiGiaoHang());
             diaChiId=0l;
         }
         if (muaTaiQuay2.getTaoDiaChi() == 2) {
             DiaChi diaChi = _diaChiRepo.findById(muaTaiQuay2.getDiaChiId()).get();
             hoaDon.setDiaChiGiao(diaChi);
+            hoaDon.setPhiGiaoHang(muaTaiQuay2.getPhiGiaoHang());
             hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(1l).get());
             diaChiId = muaTaiQuay2.getDiaChiId();
         }
         if (diaChiId == null) {
             hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(3l).get());
+            hoaDon.setPhiGiaoHang(0d);
         }
         return hoaDon;
     }

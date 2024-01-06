@@ -32,8 +32,14 @@ import { useGHN } from "../../../../plugins/ghnapi";
 import { IoMdPrint } from "react-icons/io";
 import InHoaDon from "../InHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
-function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false, tuChoi = false }) {
-
+function ChiTietHoaDon({
+  hoaDonId,
+  type2 = false,
+  type = false,
+  showDoi = false,
+  tuChoi = false,
+  isChoXacNhan = true,
+}) {
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -51,8 +57,6 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
     }
   };
 
-  const language = useSelector(selectLanguage);
-  const dispath = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState({});
   function setModalSanPhamHienThi(id, value) {
@@ -472,8 +476,6 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
     },
   ];
 
-
-
   //
   const columnsDoi = [
     {
@@ -509,9 +511,16 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
       render: (soLuong, record) => (
         <InputNumber
           min={1}
+          max={record.sanPhamChiTiet.soLuongTon}
           value={soLuong}
-          disabled={!type}
+          disabled={isChoXacNhan}
           onChange={(e) => {
+            if (!e) {
+              return;
+            }
+            if (isNaN(e)) {
+              return;
+            }
             handleThayDoiSoLuong(e, record);
           }}
         />
@@ -545,18 +554,12 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
       dataIndex: "id",
       key: "id",
       width: "10%",
-      render: (id, record) => (
-        <>
-          {record.ghiChu}
-        </>
-      ),
+      render: (id, record) => <>{record.ghiChu}</>,
     },
   ];
   //
 
-
   const [dataChiTiet, setDataChiTiet] = useState(undefined);
-  const [isSelect, setIsSelect] = useState(false);
   async function handleSearchSelect(e) {
     const data =
       await useChiTietHoaDonStore.actions.fetchSanPhamChiTietCuaSanPham(
@@ -568,8 +571,8 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
     if (hoaDonChiTiet.phuongThucVanChuyen.maPhuongThuc == "GHN") {
       const giaShip = await useGHN.actions.layGia({
         gia: hoaDonChiTiet.giaTriHd - hoaDonChiTiet.phiVanChuyen,
-        denHuyen: hoaDonChiTiet.diaChiGiao.huyenId,
-        denXa: hoaDonChiTiet.diaChiGiao.xaId,
+        denHuyen: "1204",
+        denXa: "120416",
       });
       await useChiTietHoaDonStore.actions.thayDoiPhiVanChuyen({
         phiVanChuyenMoi: giaShip.data.data.total,
@@ -600,12 +603,14 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
         >
           <Row>
             <h6>Thông tin hóa đơn</h6>
-            <Col style={{
-              marginTop: "4px"
-            }} span={24}>
+            <Col
+              style={{
+                marginTop: "4px",
+              }}
+              span={24}
+            >
               {!type && <InHoaDon data={hoaDonChiTiet} />}
             </Col>
-
           </Row>
           <Row
             style={{
@@ -647,7 +652,9 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
               <Input
                 disabled
                 value={
-                  hoaDonChiTiet.ngayGiao ? fixNgayThang(hoaDonChiTiet.ngayGiao) : "Chưa giao"
+                  hoaDonChiTiet.ngayGiao
+                    ? fixNgayThang(hoaDonChiTiet.ngayGiao)
+                    : "Chưa giao"
                 }
               />
             </Col>
@@ -663,13 +670,25 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
               Ngày tạo:
             </Col>
             <Col span={8}>
-              <Input placeholder="" disabled value={hoaDonChiTiet.ngayTao && fixNgayThang(hoaDonChiTiet.ngayTao)} />
+              <Input
+                placeholder=""
+                disabled
+                value={
+                  hoaDonChiTiet.ngayTao && fixNgayThang(hoaDonChiTiet.ngayTao)
+                }
+              />
             </Col>
             <Col span={3} offset={1}>
               Ngày cập nhật:
             </Col>
             <Col span={8}>
-              <Input disabled value={hoaDonChiTiet.ngayCapNhat && fixNgayThang(hoaDonChiTiet.ngayCapNhat)} />
+              <Input
+                disabled
+                value={
+                  hoaDonChiTiet.ngayCapNhat &&
+                  fixNgayThang(hoaDonChiTiet.ngayCapNhat)
+                }
+              />
             </Col>
           </Row>
           <Row
@@ -881,125 +900,133 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
                 disabled
                 value={fixMoney(
                   hoaDonChiTiet.giaTriHd -
-                  (hoaDonChiTiet.phiVanChuyen
-                    ? hoaDonChiTiet.phiVanChuyen
-                    : 0)
+                    (hoaDonChiTiet.phiVanChuyen
+                      ? hoaDonChiTiet.phiVanChuyen
+                      : 0)
                 )}
               />
             </Col>
           </Row>
-          {tuChoi && <Row>
-            <Col span={24}>
-              <h6>Lý do từ chối</h6>
-            </Col>
-            <Col span={23} style={{
-              marginTop: "12px",
-              marginBottom: "12px"
-            }}>
-              <TextArea
-                rows={4}
-                disabled
-                value={
-                  hoaDonChiTiet.lyDoTuChoiDoi
-                }
-                maxLength={6}
-              />
-            </Col>
-          </Row>}
-          {!showDoi ? <>
+          {tuChoi && (
             <Row>
-              <Col span={11}>
-                <h6>Thông tin sản phẩm </h6>
+              <Col span={24}>
+                <h6>Lý do từ chối</h6>
               </Col>
-              {type2 ? (
-                <Col
-                  span={12}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Button
-                    icon={<MdOutlinePostAdd />}
-                    onClick={setIsModalOpen3}
-                    title="Thêm sản phẩm"
-                    type="primary"
-                  >
-                    Thêm sản phẩm
-                  </Button>
-                  <Modal
-                    width={1268}
-                    title="Thêm sản phẩm"
-                    open={isModalOpen3}
-                    onOk={() => {
-                      setIsModalOpen3(false);
-                    }}
-                    onCancel={() => {
-                      setIsModalOpen3(false);
-                    }}
-                    centered
-                  >
-                    <Row>
-                      <Col span={12}>
-                        <Select
-                          style={{
-                            width: "100%",
-                          }}
-                          showSearch
-                          labelInValue
-                          defaultValue={"Chọn sản phẩm"}
-                          onChange={handleSearchSelect}
-                          filterOption={(input, option) =>
-                            option.children
-                              .toLowerCase()
-                              .indexOf(input.toLowerCase()) >= 0
-                          }
-                        >
-                          {data
-                            ? data.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.tenSanPham}
-                              </Select.Option>
-                            ))
-                            : ""}
-                        </Select>
-                      </Col>
-                    </Row>
-                    <Row
-                      style={{
-                        marginTop: "14px",
-                      }}
-                    >
-                      <Col span={24}>
-                        <Table
-                          columns={columns2}
-                          dataSource={dataChiTiet}
-                          pagination={{ pageSize: 10 }}
-                        />
-                      </Col>
-                    </Row>
-                  </Modal>
-                </Col>
-              ) : (
-                ""
-              )}
-            </Row>
-            <Row
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: "14px",
-                marginBottom: "14px",
-              }}
-            >
-              <Col span={23}>
-                <Table
-                  columns={columnsDoi}
-                  dataSource={hoaDonChiTiet.hoaDonChiTietList}
+              <Col
+                span={23}
+                style={{
+                  marginTop: "12px",
+                  marginBottom: "12px",
+                }}
+              >
+                <TextArea
+                  rows={4}
+                  disabled
+                  value={hoaDonChiTiet.lyDoTuChoiDoi}
+                  maxLength={6}
                 />
               </Col>
             </Row>
-          </> :
+          )}
+          {!showDoi ? (
+            <>
+              <Row>
+                <Col span={11}>
+                  <h6>Thông tin sản phẩm </h6>
+                </Col>
+                {type2 ? (
+                  <Col
+                    span={12}
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Button
+                      icon={<MdOutlinePostAdd />}
+                      onClick={setIsModalOpen3}
+                      title="Thêm sản phẩm"
+                      type="primary"
+                    >
+                      Thêm sản phẩm
+                    </Button>
+                    <Modal
+                      width={1268}
+                      title="Thêm sản phẩm"
+                      open={isModalOpen3}
+                      onOk={() => {
+                        setIsModalOpen3(false);
+                      }}
+                      onCancel={() => {
+                        setIsModalOpen3(false);
+                      }}
+                      centered
+                    >
+                      <Row>
+                        <Col span={12}>
+                          <Select
+                            style={{
+                              width: "100%",
+                            }}
+                            showSearch
+                            labelInValue
+                            defaultValue={"Chọn sản phẩm"}
+                            onChange={handleSearchSelect}
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                          >
+                            {data
+                              ? data.map((option) => (
+                                  <Select.Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.tenSanPham}
+                                  </Select.Option>
+                                ))
+                              : ""}
+                          </Select>
+                        </Col>
+                      </Row>
+                      <Row
+                        style={{
+                          marginTop: "14px",
+                        }}
+                      >
+                        <Col span={24}>
+                          <Table
+                            columns={columns2}
+                            dataSource={dataChiTiet}
+                            pagination={{ pageSize: 10 }}
+                          />
+                        </Col>
+                      </Row>
+                    </Modal>
+                  </Col>
+                ) : (
+                  ""
+                )}
+              </Row>
+              <Row
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "14px",
+                  marginBottom: "14px",
+                }}
+              >
+                <Col span={23}>
+                  <Table
+                    columns={columnsDoi}
+                    dataSource={hoaDonChiTiet.hoaDonChiTietList}
+                  />
+                </Col>
+              </Row>
+            </>
+          ) : (
             <>
               <Row>
                 <Col span={11}>
@@ -1043,14 +1070,16 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
                 </Col>
               </Row>
             </>
-          }
+          )}
         </Modal>
       ) : (
         ""
       )}
-      <div style={{
-        display: 'none'
-      }}>
+      <div
+        style={{
+          display: "none",
+        }}
+      >
         <div>
           <Table
             columns={columnsDoiTra2}
@@ -1058,7 +1087,6 @@ function ChiTietHoaDon({ hoaDonId, type2 = false, type = false, showDoi = false,
           />
         </div>
       </div>
-
     </>
   );
 }

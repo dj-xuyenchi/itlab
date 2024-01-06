@@ -229,7 +229,14 @@ function ChoGiaoHang() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon type2={true} hoaDonId={id} type={true} />,
+      render: (id) => (
+        <ChiTietHoaDon
+          type2={true}
+          hoaDonId={id}
+          type={true}
+          isChoXacNhan={false}
+        />
+      ),
     },
   ];
   const [data, setData] = useState([]);
