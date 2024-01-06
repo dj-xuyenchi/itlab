@@ -1,6 +1,7 @@
 package it.lab.enums;
 
 public enum TrangThaiSuKienGiamGia {
-    HOATDONG,
-    DANGUNG
+    HOATDONG,//0
+    DANGUNG,//1
+    CHUADIENRA,//2
 }

@@ -1,5 +1,6 @@
 package it.lab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiSanPham;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -20,46 +22,54 @@ public class SanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "masanpham",unique = true)
+    @Column(name = "masanpham", unique = true)
     private String maSanPham;
-    @Column(name = "tensanpham")
+    @Column(name = "tensanpham", columnDefinition = "nvarchar(max)")
     private String tenSanPham;
-    @Column(name = "hinhanh")
-    private String hinhAnh;
+    @Column(name = "hinhanh1")
+    private String hinhAnh1;
+    @Column(name = "hinhanh2")
+    private String hinhAnh2;
     @Column(name = "gianhap")
     private Double giaNhap;
     @Column(name = "giaban")
     private Double giaBan;
     @Column(name = "ngaytao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
+    @Column(name = "ngaycapnhat")
+    private LocalDateTime ngayCapNhat;
     @Column(name = "mota")
     private String moTa;
     @Column(name = "trangthai")
     private TrangThaiSanPham trangThai;
     @Column(name = "soluongton")
     private Integer soLuongTon;
-    @JoinColumn(name = "loaisanphamid")
+    @Column(name = "soluongdaban")
+    private Integer soLuongDaBan;
+    @Column(name = "soluongtrahang")
+    private Integer soLuongTraHang;
+    @Column(name = "soluongloi")
+    private Integer soLuongLoi;
+
+    @JoinColumn(name = "thietkeid")
     @ManyToOne
-    private LoaiSanPham loaiSanPham;
-    @JoinColumn(name = "mausacid")
+    @JsonIgnore
+    private ThietKe thietKe;
+    @JoinColumn(name = "nhomsanphamid")
     @ManyToOne
-    private MauSac mauSac;
-    @JoinColumn(name = "kichthuocid")
+//    @JsonIgnore
+    private NhomSanPham nhomSanPham;
+    @JoinColumn(name = "chatlieuid")
     @ManyToOne
-    private KichThuoc kichThuoc;
-    @JoinColumn(name = "brandid")
-    @ManyToOne
-    private Brand brand;
+    @JsonIgnore
+    private ChatLieu chatLieu;
     @OneToMany(mappedBy = "sanPham")
-    private List<DanhGiaSao> danhGiaSaoList;
-    @OneToMany(mappedBy = "sanPham")
-    private List<BinhLuanDanhGia> binhLuanDanhGiaList;
-    @OneToMany(mappedBy = "sanPham")
-    private List<GioHang> gioHangList;
-    @OneToMany(mappedBy = "sanPham")
-    private List<HoaDonChiTiet> hoaDonChiTietList;
-    @OneToMany(mappedBy = "sanPham")
+    @JsonIgnore
     private List<SanPhamSuKien> sanPhamSuKienList;
     @OneToMany(mappedBy = "sanPham")
-    private List<SanPhamYeuThich> sanPhamYeuThichList;
+    @JsonIgnore
+    private List<HinhAnhSanPham> hinhAnhSanPhamList;
+    @OneToMany(mappedBy = "sanPham")
+    @JsonIgnore
+    private List<SanPhamChiTiet> sanPhamChiTietList;
 }

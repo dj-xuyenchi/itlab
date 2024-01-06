@@ -20,8 +20,7 @@ public class NguoiDungUserDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
-
-    public NguoiDungUserDetails(NguoiDungData nguoiDung) {
+    public NguoiDungUserDetails(NguoiDungData2 nguoiDung) {
         email = nguoiDung.getNguoiDung().getEmail();
         password = nguoiDung.getNguoiDung().getMatKhau();
         String[] roleList = new String[nguoiDung.getQuyenList().size()];
