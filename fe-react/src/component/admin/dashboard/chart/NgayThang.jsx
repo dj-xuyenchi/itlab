@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
-import { Col, Row, Statistic } from 'antd';
+import { Col, Row, Statistic ,Space} from 'antd';
 import axios from 'axios';
 import { DollarOutlined } from '@ant-design/icons';
 
-import { DatePicker, Button,message } from 'antd';
+import { DatePicker, Button, message } from 'antd';
 
 
 const formatter = (value) => <CountUp end={value} separator="," />;
@@ -88,29 +88,31 @@ function NgayThang() {
       <Col span={8}>
         <h3 style={{ display: 'flex', alignItems: 'center' }}>
           <Statistic title="Doanh số trong ngày" value={totalRevenue} formatter={formatter} />
-          <DollarOutlined style={{ marginTop: '25px' ,color:'gold'}} />
+          <DollarOutlined style={{ marginTop: '25px', color: 'gold' }} />
         </h3>
       </Col>
       <Col span={8}>
         <h3 style={{ display: 'flex', alignItems: 'center' }}>
           <Statistic title="Doanh số trong tháng(hiện tại)" value={totalThang} formatter={formatter} />
-          <DollarOutlined style={{ marginTop: '25px' ,color:'gold' }} />
+          <DollarOutlined style={{ marginTop: '25px', color: 'gold' }} />
         </h3>
       </Col>
       <Col span={8}>
         <div>
           <h3 style={{ display: 'flex', alignItems: 'center' }}>
-            <RangePicker value={dateRange} onChange={handleDateChange} />
-            <Button type="primary" onClick={handleCalculateTotalRevenue}>
-              Chọn
-            </Button>
+              <Space>
+                <RangePicker value={dateRange} onChange={handleDateChange} />
+                <Button type="primary" onClick={handleCalculateTotalRevenue}>
+                  Chọn
+                </Button>
+              </Space>
           </h3>
 
           {totalKhoang !== null && (
             <div>
               <h5 style={{ display: 'flex', alignItems: 'center' }}>
                 <Statistic title="Doanh số trong khoảng" value={totalKhoang} formatter={formatter} />
-                <DollarOutlined style={{ marginTop: '25px',color:'gold' }} />
+                <DollarOutlined style={{ marginTop: '25px', color: 'gold' }} />
               </h5>
             </div>
           )}

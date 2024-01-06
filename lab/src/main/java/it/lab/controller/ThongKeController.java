@@ -42,6 +42,9 @@ public class ThongKeController {
     @Autowired
     private SanPhamRepo sanPhamRepo;
 
+    @Autowired
+    private NhomSanPhamRepository nhomSanPhamRepository;
+
     //thong ke tai khoan c rank
     @GetMapping("/rank")
     public List<Object[]> getTotalRevenueByUser() {
@@ -325,5 +328,30 @@ public class ThongKeController {
         // Gọi phương thức xử lý doanh thu với tháng đã chọn hoặc tháng hiện tại
         return repositoryThongKe.tinhTongDoanhThuTrongThang(selectedDate);
     }
+
+    @GetMapping("/soluongao")
+    public List<Object[]> getThongKeAo() {
+        return nhomSanPhamRepository.thongKeSoLuongAo();
+    }
+
+
+    @GetMapping("/khoang-ban-chay-nhat")
+    public List<Object[]> TrongKhoangBanChay(
+            @RequestParam(value = "selectedDateStart", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String selectedDateStart,
+            @RequestParam(value = "selectedDateEnd", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String selectedDateEnd) {
+
+        // Trim whitespace from date strings
+        selectedDateStart = selectedDateStart.trim();
+        selectedDateEnd = selectedDateEnd.trim();
+
+        LocalDate startDate = LocalDate.parse(selectedDateStart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate endDate = LocalDate.parse(selectedDateEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        return repositoryHDCT.SanPhamBanChayTrongThangTrongKhoang(startDateTime, endDateTime);
+    }
+
 
 }

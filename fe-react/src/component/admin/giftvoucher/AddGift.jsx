@@ -12,7 +12,7 @@ const openNotification = (type, message, description, placement) => {
   });
 };
 
-const YourModalComponent = () => {
+const YourModalComponent = ({ onActionSuccess }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleOpenModal = () => {
