@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Radio, Row, Tag, notification } from "antd";
+import { Button, Col, Divider, Radio, Row, Tag, notification,Modal } from "antd";
 import "./style.css";
 import { useEffect, useState } from "react";
 import { useNguoiDungStore } from "./useNguoiDungStore";
@@ -6,8 +6,20 @@ import { useParams } from "react-router-dom";
 import { selectLanguage } from "../../../language/selectLanguage";
 import { useSelector } from "react-redux";
 import { fixNgayThang } from "../../../extensions/fixNgayThang";
+import ModalThemDiaChi from "./ModalThemDiaChi";
 
 function DiaChiNhanHang() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+      setIsModalOpen(true);
+    };
+    const handleOk = () => {
+      setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
+    
     const param = useParams();
     const [api, contextHolder] = notification.useNotification();
     const [diaChi, setDiaChi] = useState(undefined)
@@ -26,9 +38,25 @@ function DiaChiNhanHang() {
             });
         }
     };
+
+    const handleCapNhatDiaChiMacDinh = async (diaChiId) => {
+        try {
+            const response = await useNguoiDungStore.actions.capNhatDiaChiMacDinh(param.id, diaChiId);
+            if (response.status === 200) {
+                openNotification('success', 'Thành công', 'Địa chỉ mặc định đã được cập nhật.', 'topRight');
+                handleLayDiaChi();
+            } else {
+                openNotification('error', 'Lỗi', 'Không thể cập nhật địa chỉ mặc định.', 'topRight');
+            }
+        } catch (error) {
+            openNotification('error', 'Lỗi kỹ thuật', error.message, 'topRight');
+        }
+    };
+    const [data, setData] = useState([]);
     async function handleLayDiaChi() {
         const data = await useNguoiDungStore.actions.layDiaChiNguoiDung(param.id)
         setDiaChi(data.data)
+        setData(data.data.data);
         console.log(data.data);
     }
     useEffect(() => {
@@ -37,16 +65,29 @@ function DiaChiNhanHang() {
     return (
         <>
             {contextHolder}
-            <h4
-                style={{
-                    fontStyle: "normal",
-                    fontWeight: 700,
-                    fontSize: "20px",
-                    marginBottom: "4px",
-                }}
-            >
-                Địa chỉ nhận hàng
-            </h4>
+            <Row justify="space-between" align="middle">
+                <Col>
+                    <h4
+                        style={{
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            fontSize: "20px",
+                            marginBottom: "4px",
+                        }}
+                    >
+                        Địa chỉ nhận hàng
+                    </h4>
+                </Col>
+                <Col>
+                <ModalThemDiaChi
+                id={param.id}
+                setData={handleLayDiaChi} 
+                handleCancel={handleCancel} 
+                isModalOpen={isModalOpen} 
+            />
+                </Col>
+            </Row>
+
             <Divider />
             {diaChi && diaChi.map((item) => {
                 return <>
@@ -71,19 +112,32 @@ function DiaChiNhanHang() {
                             <Tag color="#2db7f5">
                                 {fixNgayThang(item.ngayTao)}
                             </Tag>
-                            {item.laDiaChiChinh ? <Tag color="#f50">Là địa chỉ chính</Tag> : <Button size="small">Set mặc định</Button>}
-                            <Button style={{
-                                color: "blue"
-                            }} type="text" size="small">Chỉnh sửa</Button>
+                            {item.laDiaChiChinh ? (
+                                <Tag color="#f50">Là địa chỉ chính</Tag>
+                            ) : (
+                                <Button size="small" onClick={() => handleCapNhatDiaChiMacDinh(item.id)}>
+                                    Set mặc định
+                                </Button>
+                            )}
+                            <Button style={{ color: "blue" }} type="text" size="small">
+                                Chỉnh sửa
+                            </Button>
                         </Col>
                     </Row>
                     <Divider />
                 </>
-
+                
             })}
-
+           <ModalThemDiaChi
+                id={param.id}
+                setData={handleLayDiaChi}
+                handle={() => setIsModalOpen(false)}
+                isModalOpen={isModalOpen}
+            />
         </>
     );
 }
 
 export default DiaChiNhanHang;
+
+
