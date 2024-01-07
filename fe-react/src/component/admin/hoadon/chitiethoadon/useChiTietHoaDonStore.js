@@ -29,6 +29,13 @@ export const useChiTietHoaDonStore = {
                 + 'hoaDonId=' + payload.hoaDonId + "&phiVanChuyenMoi=" + payload.phiVanChuyenMoi
             )
         },
-       
+        async doiDiaChi(payload) {
+            return axiosIns.get('/api/admin/doidiachihoadon?'
+                + 'hoaDonId=' + payload.hoaDonId + "&diaChiId=" + payload.diaChiId
+            )
+        },
+        async taoDiaChi(payload) {
+            return axiosIns.post('/api/admin/taodiachi', payload)
+        },
     },
 }

@@ -6,6 +6,7 @@ import { fixMoney } from "../../../../extensions/fixMoney";
 import {
   Button,
   Col,
+  Divider,
   Image,
   Input,
   InputNumber,
@@ -29,10 +30,12 @@ import { MdOutlinePostAdd } from "react-icons/md";
 import ModalView from "../../product/sanphamchitiet/ModalView";
 import AddSanPham from "./AddSanPham";
 import { useGHN } from "../../../../plugins/ghnapi";
-import { IoMdPrint } from "react-icons/io";
 import InHoaDon from "../InHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
-function ChiTietHoaDon({
+import { useNguoiDungStore } from "../../../home/profile/useNguoiDungStore";
+import ModalThemDiaChi from "./ModalThemDiaChi";
+import ModalXoaChiTiet from "./ModalXoaChiTiet";
+function ChiTietHoaDonChoXacNhan({
   hoaDonId,
   type2 = false,
   type = false,
@@ -59,6 +62,7 @@ function ChiTietHoaDon({
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState({});
+  const [isModalDiaChi, setModalDiaChi] = useState(false);
   function setModalSanPhamHienThi(id, value) {
     setIsModalOpen2({
       ...isModalOpen2,
@@ -93,7 +97,10 @@ function ChiTietHoaDon({
     if (isModalOpen3) {
       layDuLieu2();
     }
-  }, [isModalOpen, isModalOpen3]);
+    if (isModalDiaChi) {
+      handleLayDiaChi();
+    }
+  }, [isModalOpen, isModalOpen3, isModalDiaChi]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -219,10 +226,7 @@ function ChiTietHoaDon({
     });
     handleLayPhiVanChuyenGHN();
   }
-  async function handleXoaSpHoaDon(e) {
-    await useChiTietHoaDonStore.actions.xoaHoaDonChiTiet(e);
-    handleLayPhiVanChuyenGHN();
-  }
+
   const columns2 = [
     {
       title: "Màu sắc",
@@ -304,177 +308,6 @@ function ChiTietHoaDon({
       ),
     },
   ];
-  const columns = [
-    {
-      title: "Ảnh sản phẩm",
-      dataIndex: "sanPhamChiTiet",
-      key: "name",
-      width: "15%",
-      render: (sanPhamChiTiet) => (
-        <Image
-          src={sanPhamChiTiet.hinhAnh}
-          style={{ width: "120px", height: "180px" }}
-        />
-      ),
-    },
-    {
-      title: "Tên sản phẩm",
-      dataIndex: "sanPhamChiTiet",
-      key: "sanPhamChiTiet",
-      width: "35%",
-      render: (sanPhamChiTiet) => (
-        <span>
-          {sanPhamChiTiet.sanPham.tenSanPham}
-          <Tag color="success">{sanPhamChiTiet.mauSac.tenMau}</Tag>
-          <Tag color="processing">{sanPhamChiTiet.kichThuoc.tenKichThuoc}</Tag>
-        </span>
-      ),
-    },
-    {
-      title: "Số lượng",
-      dataIndex: "soLuong",
-      key: "soLuong",
-      width: "10%",
-      render: (soLuong, record) => (
-        <InputNumber
-          min={1}
-          value={soLuong}
-          disabled={!type}
-          onChange={(e) => {
-            handleThayDoiSoLuong(e, record);
-          }}
-        />
-      ),
-    },
-    {
-      title: "Số lượng tồn",
-      dataIndex: "sanPhamChiTiet",
-      key: "sanPhamChiTiet",
-      width: "10%",
-      render: (sanPhamChiTiet) => <span>{sanPhamChiTiet.soLuongTon}</span>,
-    },
-    {
-      title: "Giá nhập",
-      dataIndex: "sanPhamChiTiet",
-      key: "sanPhamChiTiet",
-      width: "10%",
-      render: (sanPhamChiTiet) => (
-        <span>{fixMoney(sanPhamChiTiet.sanPham.giaNhap)}</span>
-      ),
-    },
-    {
-      title: "Đơn giá",
-      dataIndex: "donGia",
-      key: "donGia",
-      width: "10%",
-      render: (donGia) => <span>{fixMoney(donGia)}</span>,
-    },
-    {
-      title: "Thao tác",
-      dataIndex: "id",
-      key: "id",
-      width: "10%",
-      render: (id, record) => (
-        <>
-          {type ? (
-            <>
-              <Button
-                danger
-                shape="circle"
-                icon={<AiOutlineDelete />}
-                onClick={() => {
-                  setModalSanPhamHienThi(id, true);
-                }}
-              ></Button>
-              <Modal
-                key={id}
-                title="Xóa sản phẩm khỏi hóa đơn"
-                open={isModalOpen2[id]}
-                onOk={() => {
-                  handleXoaSpHoaDon(id);
-                  setModalSanPhamHienThi(id, false);
-                }}
-                onCancel={() => {
-                  setModalSanPhamHienThi(id, false);
-                }}
-                centered
-              >
-                <p>Bạn có chắc muốn xóa sản phẩm này {id}</p>
-              </Modal>
-            </>
-          ) : (
-            ""
-          )}
-        </>
-      ),
-    },
-  ];
-  const columnsDoiTra2 = [
-    {
-      title: "Ảnh sản phẩm",
-      dataIndex: "sanPhamChiTiet",
-      key: "name",
-      width: "15%",
-      render: (sanPhamChiTiet) => (
-        <Image
-          src={sanPhamChiTiet.hinhAnh}
-          style={{ width: "120px", height: "180px" }}
-        />
-      ),
-    },
-    {
-      title: "Tên sản phẩm",
-      dataIndex: "sanPhamChiTiet",
-      key: "sanPhamChiTiet",
-      width: "35%",
-      render: (sanPhamChiTiet) => (
-        <span>
-          {sanPhamChiTiet.sanPham.tenSanPham}
-          <Tag color="success">{sanPhamChiTiet.mauSac.tenMau}</Tag>
-          <Tag color="processing">{sanPhamChiTiet.kichThuoc.tenKichThuoc}</Tag>
-        </span>
-      ),
-    },
-    {
-      title: "Số lượng",
-      dataIndex: "soLuong",
-      key: "soLuong",
-      width: "10%",
-      render: (soLuong, record) => (
-        <InputNumber
-          min={1}
-          value={soLuong}
-          disabled={!type}
-          onChange={(e) => {
-            handleThayDoiSoLuong(e, record);
-          }}
-        />
-      ),
-    },
-    {
-      title: "Số lượng tồn",
-      dataIndex: "sanPhamChiTiet",
-      key: "sanPhamChiTiet",
-      width: "10%",
-      render: (sanPhamChiTiet) => <span>{sanPhamChiTiet.soLuongTon}</span>,
-    },
-    {
-      title: "Giá nhập",
-      dataIndex: "sanPhamChiTiet",
-      key: "sanPhamChiTiet",
-      width: "10%",
-      render: (sanPhamChiTiet) => (
-        <span>{fixMoney(sanPhamChiTiet.sanPham.giaNhap)}</span>
-      ),
-    },
-    {
-      title: "Đơn giá",
-      dataIndex: "donGia",
-      key: "donGia",
-      width: "10%",
-      render: (donGia) => <span>{fixMoney(donGia)}</span>,
-    },
-  ];
 
   //
   const columnsDoi = [
@@ -510,7 +343,7 @@ function ChiTietHoaDon({
       width: "10%",
       render: (soLuong, record) => (
         <InputNumber
-          min={1}
+          min={0}
           max={record.sanPhamChiTiet.soLuongTon}
           value={soLuong}
           disabled={isChoXacNhan}
@@ -518,10 +351,11 @@ function ChiTietHoaDon({
             if (!e) {
               return;
             }
-            if (isNaN(e)) {
+            if (!isNaN(e)) {
+              handleThayDoiSoLuong(e, record);
+            } else {
               return;
             }
-            handleThayDoiSoLuong(e, record);
           }}
         />
       ),
@@ -550,11 +384,15 @@ function ChiTietHoaDon({
       render: (donGia) => <span>{fixMoney(donGia)}</span>,
     },
     {
-      title: "Ghi chú",
+      title: "Thao tác",
       dataIndex: "id",
       key: "id",
       width: "10%",
-      render: (id, record) => <>{record.ghiChu}</>,
+      render: (id) => (
+        <>
+          <ModalXoaChiTiet id={id} fetData={layDuLieu} />
+        </>
+      ),
     },
   ];
   //
@@ -571,8 +409,8 @@ function ChiTietHoaDon({
     if (hoaDonChiTiet.phuongThucVanChuyen.maPhuongThuc == "GHN") {
       const giaShip = await useGHN.actions.layGia({
         gia: hoaDonChiTiet.giaTriHd - hoaDonChiTiet.phiVanChuyen,
-        denHuyen: "1204",
-        denXa: "120416",
+        denHuyen: hoaDonChiTiet.diaChiGiao.id % 2 === 0 ? "1444" : "1204",
+        denXa: hoaDonChiTiet.diaChiGiao.id % 2 === 0 ? "20314" : "120416",
       });
       await useChiTietHoaDonStore.actions.thayDoiPhiVanChuyen({
         phiVanChuyenMoi: giaShip.data.data.total,
@@ -580,6 +418,28 @@ function ChiTietHoaDon({
       });
     }
     layDuLieu();
+  }
+  const [diaChi, setDiaChi] = useState(undefined);
+  async function handleLayDiaChi() {
+    const data = await useNguoiDungStore.actions.layDiaChiNguoiDung(
+      hoaDonChiTiet.nguoiMua.id
+    );
+    setDiaChi(data.data);
+  }
+  async function handleDoiDiaChi(diaChiId) {
+    const data = await useChiTietHoaDonStore.actions.doiDiaChi({
+      diaChiId: diaChiId,
+      hoaDonId: hoaDonId,
+    });
+    layDuLieu();
+    setModalDiaChi(false);
+    openNotification(
+      "success",
+      "Hệ thống",
+      "Đổi địa chỉ thành công!",
+      "bottomRight"
+    );
+    handleLayPhiVanChuyenGHN();
   }
   return (
     <>
@@ -593,6 +453,60 @@ function ChiTietHoaDon({
           icon={<IoEyeSharp />}
         />
       </Tooltip>
+      <Modal
+        title="Chọn địa chỉ"
+        width={768}
+        open={isModalDiaChi}
+        onOk={() => {
+          setModalDiaChi(false);
+        }}
+        onCancel={() => {
+          setModalDiaChi(false);
+        }}
+        centered
+      >
+        <ModalThemDiaChi
+          fetData={handleLayDiaChi}
+          idNguoiDung={hoaDonChiTiet && hoaDonChiTiet.nguoiMua.id}
+        />
+        {diaChi &&
+          diaChi.map((item) => {
+            return (
+              <>
+                <Row>
+                  <Col span={24}>
+                    <p>
+                      {item.hoNguoiNhan + " " + item.nguoiNhan + " "}|{" "}
+                      {item.soDienThoai}
+                      <Tag
+                        color="blue"
+                        style={{
+                          marginLeft: "8px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          handleDoiDiaChi(item.id);
+                        }}
+                      >
+                        Chọn
+                      </Tag>
+                    </p>
+                  </Col>
+                  <Col span={24}>
+                    <p>{item.chiTietDiaChi}</p>
+                  </Col>
+                  <Col span={24}>
+                    <p>{item.xa + ", " + item.huyen + ", " + item.tinh}</p>
+                  </Col>
+                  <Col span={24}>
+                    <Tag color="#2db7f5">{fixNgayThang(item.ngayTao)}</Tag>
+                  </Col>
+                </Row>
+                <Divider />
+              </>
+            );
+          })}
+      </Modal>
       {hoaDonChiTiet ? (
         <Modal
           cancelButtonProps={{ style: { display: "none" } }}
@@ -770,7 +684,21 @@ function ChiTietHoaDon({
               marginTop: "8px",
             }}
           >
-            <h6>Thông tin giao hàng</h6>
+            <h6>
+              Thông tin giao hàng{" "}
+              <span
+                style={{
+                  cursor: "pointer",
+                  color: "blue",
+                  fontSize: "14px",
+                }}
+                onClick={() => {
+                  setModalDiaChi(true);
+                }}
+              >
+                đổi địa chỉ
+              </span>
+            </h6>
           </Row>
           <Row
             style={{
@@ -835,6 +763,7 @@ function ChiTietHoaDon({
               />
             </Col>
           </Row>
+
           <Row
             style={{
               display: "flex",
@@ -955,167 +884,105 @@ function ChiTietHoaDon({
               </Col>
             </Row>
           )}
-          {!showDoi ? (
-            <>
-              <Row>
-                <Col span={11}>
-                  <h6>Thông tin sản phẩm </h6>
-                </Col>
-                {type2 ? (
-                  <Col
-                    span={12}
+
+          <Row>
+            <Col span={11}>
+              <h6>Thông tin sản phẩm </h6>
+            </Col>
+            {type2 ? (
+              <Col
+                span={12}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Button
+                  icon={<MdOutlinePostAdd />}
+                  onClick={setIsModalOpen3}
+                  title="Thêm sản phẩm"
+                  type="primary"
+                >
+                  Thêm sản phẩm
+                </Button>
+                <Modal
+                  width={1268}
+                  title="Thêm sản phẩm"
+                  open={isModalOpen3}
+                  onOk={() => {
+                    setIsModalOpen3(false);
+                  }}
+                  onCancel={() => {
+                    setIsModalOpen3(false);
+                  }}
+                  centered
+                >
+                  <Row>
+                    <Col span={12}>
+                      <Select
+                        style={{
+                          width: "100%",
+                        }}
+                        showSearch
+                        labelInValue
+                        defaultValue={"Chọn sản phẩm"}
+                        onChange={handleSearchSelect}
+                        filterOption={(input, option) =>
+                          option.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                        }
+                      >
+                        {data
+                          ? data.map((option) => (
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.tenSanPham}
+                              </Select.Option>
+                            ))
+                          : ""}
+                      </Select>
+                    </Col>
+                  </Row>
+                  <Row
                     style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
+                      marginTop: "14px",
                     }}
                   >
-                    <Button
-                      icon={<MdOutlinePostAdd />}
-                      onClick={setIsModalOpen3}
-                      title="Thêm sản phẩm"
-                      type="primary"
-                    >
-                      Thêm sản phẩm
-                    </Button>
-                    <Modal
-                      width={1268}
-                      title="Thêm sản phẩm"
-                      open={isModalOpen3}
-                      onOk={() => {
-                        setIsModalOpen3(false);
-                      }}
-                      onCancel={() => {
-                        setIsModalOpen3(false);
-                      }}
-                      centered
-                    >
-                      <Row>
-                        <Col span={12}>
-                          <Select
-                            style={{
-                              width: "100%",
-                            }}
-                            showSearch
-                            labelInValue
-                            defaultValue={"Chọn sản phẩm"}
-                            onChange={handleSearchSelect}
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                          >
-                            {data
-                              ? data.map((option) => (
-                                  <Select.Option
-                                    key={option.id}
-                                    value={option.id}
-                                  >
-                                    {option.tenSanPham}
-                                  </Select.Option>
-                                ))
-                              : ""}
-                          </Select>
-                        </Col>
-                      </Row>
-                      <Row
-                        style={{
-                          marginTop: "14px",
-                        }}
-                      >
-                        <Col span={24}>
-                          <Table
-                            columns={columns2}
-                            dataSource={dataChiTiet}
-                            pagination={{ pageSize: 10 }}
-                          />
-                        </Col>
-                      </Row>
-                    </Modal>
-                  </Col>
-                ) : (
-                  ""
-                )}
-              </Row>
-              <Row
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "14px",
-                  marginBottom: "14px",
-                }}
-              >
-                <Col span={23}>
-                  <Table
-                    columns={columnsDoi}
-                    dataSource={hoaDonChiTiet.hoaDonChiTietList}
-                  />
-                </Col>
-              </Row>
-            </>
-          ) : (
-            <>
-              <Row>
-                <Col span={11}>
-                  <h6>Thông tin sản phẩm ban đầu</h6>
-                </Col>
-              </Row>
-              <Row
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "14px",
-                  marginBottom: "14px",
-                }}
-              >
-                <Col span={23}>
-                  <Table
-                    columns={columnsDoi}
-                    dataSource={hoaDonChiTiet.truocDo}
-                  />
-                </Col>
-              </Row>
-
-              <Row>
-                <Col span={11}>
-                  <h6>Thông tin sản phẩm sau khi đổi trả</h6>
-                </Col>
-              </Row>
-              <Row
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "14px",
-                  marginBottom: "14px",
-                }}
-              >
-                <Col span={23}>
-                  <Table
-                    columns={columnsDoiTra2}
-                    dataSource={hoaDonChiTiet.sauKhiDoi}
-                  />
-                </Col>
-              </Row>
-            </>
-          )}
+                    <Col span={24}>
+                      <Table
+                        columns={columns2}
+                        dataSource={dataChiTiet}
+                        pagination={{ pageSize: 10 }}
+                      />
+                    </Col>
+                  </Row>
+                </Modal>
+              </Col>
+            ) : (
+              ""
+            )}
+          </Row>
+          <Row
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginTop: "14px",
+              marginBottom: "14px",
+            }}
+          >
+            <Col span={23}>
+              <Table
+                columns={columnsDoi}
+                dataSource={hoaDonChiTiet.hoaDonChiTietList}
+              />
+            </Col>
+          </Row>
         </Modal>
       ) : (
         ""
       )}
-      <div
-        style={{
-          display: "none",
-        }}
-      >
-        <div>
-          <Table
-            columns={columnsDoiTra2}
-            dataSource={hoaDonChiTiet && hoaDonChiTiet.sauKhiDoi}
-          />
-        </div>
-      </div>
     </>
   );
 }
 
-export default ChiTietHoaDon;
+export default ChiTietHoaDonChoXacNhan;

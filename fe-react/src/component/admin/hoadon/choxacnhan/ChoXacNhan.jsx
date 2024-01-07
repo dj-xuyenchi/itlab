@@ -19,6 +19,7 @@ import Highlighter from "react-highlight-words";
 import { useHoaDonChoStore } from "./useHoaDonChoStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+import ChiTietHoaDonChoXacNhan from "../chitiethoadon/ChiTietHoaDonChoXacNhan";
 
 function ChoGiaoHang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -230,7 +231,7 @@ function ChoGiaoHang() {
       width: "10%",
       align: "center",
       render: (id) => (
-        <ChiTietHoaDon
+        <ChiTietHoaDonChoXacNhan
           type2={true}
           hoaDonId={id}
           type={true}
