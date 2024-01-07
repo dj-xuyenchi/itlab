@@ -23,6 +23,7 @@ public interface ThongKeHDCTRepository extends JpaRepository<HoaDonChiTiet,Integ
 //            "WHERE FUNCTION('YEAR', hdt.ngayTao) = :yearParam " +
 //            "AND FUNCTION('MONTH', hdt.ngayTao) = :monthParam")
 //    BigDecimal tinhTongDoanhThuNamSauKhiTruChiPhi(@Param("yearParam") int year, @Param("monthParam") int month);
+//    thanhbar
 @Query("SELECT SUM((sp.giaBan - sp.giaNhap) * hdct.soLuong) AS tongLoiNhuan " +
         "FROM HoaDonChiTiet hdct " +
         "JOIN hdct.hoaDon hdt " +

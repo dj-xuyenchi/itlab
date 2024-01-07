@@ -6,19 +6,19 @@ import moment from 'moment';
 const { RangePicker } = DatePicker;
 
 const YourComponent = () => {
-  const [yearRange, setYearRange] = useState([moment().year() - 1, moment().year()]); // Default to the last two years
+  const [yearRange, setYearRange] = useState([moment().year() - 1, moment().year()]); 
   const [yearlyProfits, setYearlyProfits] = useState({});
   const [chart, setChart] = useState(null);
 
   const createChartOption = useCallback(() => {
     if (!yearlyProfits || Object.keys(yearlyProfits).length === 0) {
-      return {}; // Return an empty object or handle the case when yearlyProfits is not yet available
+      return {}; // thanh-bar
     }
 
     const months = Object.keys(yearlyProfits[Object.keys(yearlyProfits)[0]]);
     const sortedMonths = months.sort((a, b) => moment().month(a).valueOf() - moment().month(b).valueOf());
 
-    const xAxisData = sortedMonths.slice(0, 12); // Display data for the first 12 months
+    const xAxisData = sortedMonths.slice(0, 12); 
     const seriesData = Object.keys(yearlyProfits).flatMap((year) => [
       {
         name: year + ' - Tổng Doanh Thu',
@@ -78,7 +78,7 @@ const YourComponent = () => {
     const newChart = echarts.init(chartDom);
     setChart(newChart);
 
-    // Set the canvas size
+    // thanh bar
     newChart.resize({
       width: 1100,
       height: 400,

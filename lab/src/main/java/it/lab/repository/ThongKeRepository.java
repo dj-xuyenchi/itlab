@@ -55,6 +55,8 @@ public interface ThongKeRepository extends JpaRepository<HoaDon,Integer> {
             "WHERE FUNCTION('YEAR', h.ngayTao) = FUNCTION('YEAR', :selectedDate) " +
             "AND FUNCTION('MONTH', h.ngayTao) = FUNCTION('MONTH', :selectedDate) ")
     BigDecimal tinhTongDoanhThuTrongThang(@Param("selectedDate") Date selectedDate);
+
+//    thanhbarr
     @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
             "WHERE FUNCTION('YEAR', h.ngayTao) BETWEEN :startYear AND :endYear " +
             "AND FUNCTION('MONTH', h.ngayTao) = :monthParam")
