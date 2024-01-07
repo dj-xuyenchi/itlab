@@ -10,6 +10,7 @@ import { fixNgayThang } from "../../../extensions/fixNgayThang";
 function DiaChiNhanHang() {
     const param = useParams();
     const [api, contextHolder] = notification.useNotification();
+    const [diaChi, setDiaChi] = useState(undefined)
     const openNotification = (type, title, des, placement) => {
         if (type === "error") {
             api.error({
@@ -25,10 +26,10 @@ function DiaChiNhanHang() {
             });
         }
     };
-    const [diaChi, setDiaChi] = useState(undefined);
     async function handleLayDiaChi() {
         const data = await useNguoiDungStore.actions.layDiaChiNguoiDung(param.id)
         setDiaChi(data.data)
+        console.log(data.data);
     }
     useEffect(() => {
         handleLayDiaChi()
@@ -78,7 +79,9 @@ function DiaChiNhanHang() {
                     </Row>
                     <Divider />
                 </>
+
             })}
+
         </>
     );
 }

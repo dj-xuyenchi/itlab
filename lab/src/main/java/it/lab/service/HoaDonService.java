@@ -2,19 +2,22 @@ package it.lab.service;
 
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
-import it.lab.dto.DiaChiDTO;
 import it.lab.dto.HoaDonDTO;
 import it.lab.dto.SanPhamChiTietDTO;
 import it.lab.dto.SanPhamDTO;
-import it.lab.entity.*;
+import it.lab.entity.HoaDon;
+import it.lab.entity.HoaDonChiTiet;
+import it.lab.entity.SanPham;
 import it.lab.entity.SanPhamChiTiet;
 import it.lab.enums.APIStatus;
-import it.lab.enums.TrangThaiDiaChi;
 import it.lab.enums.TrangThaiHoaDon;
 import it.lab.enums.XacNhanHoaDonEnum;
 import it.lab.iservice.IHoaDonService;
 import it.lab.modelcustom.respon.*;
-import it.lab.repository.*;
+import it.lab.repository.HoaDonChiTietRepo;
+import it.lab.repository.HoaDonRepo;
+import it.lab.repository.SanPhamChiTietRepo;
+import it.lab.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +35,7 @@ public class HoaDonService implements IHoaDonService {
     private HoaDonChiTietRepo _hoaDonChiTietRepo;
     @Autowired
     private SanPhamChiTietRepo _sanPhamChiTietRepo;
-    @Autowired
-    private DiaChiRepo _diaChiRepo;
-    @Autowired
-    private NguoiDungRepo _nguoiDungRepo;
+
     @Override
     public Page<HoaDonCho> layHetHoaDonCho() {
         return new Page<HoaDonCho>(HoaDonCho.fromCollection(_hoaDonRepo.findAll()), 0, 100000);
@@ -251,23 +251,6 @@ public class HoaDonService implements IHoaDonService {
         hoaDon.setPhiGiaoHang(phiVanChuyenMoi);
         _hoaDonRepo.save(hoaDon);
         return true;
-    }
-
-    @Override
-    public void doiDiaChiHoaDon(Long hoaDonId, Long diaChiId) {
-        HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
-        DiaChi diaChi = _diaChiRepo.findById(diaChiId).get();
-        hoaDon.setDiaChiGiao(diaChi);
-        _hoaDonRepo.save(hoaDon);
-    }
-
-    @Override
-    public void taoDiaChi(DiaChiDTO diaChi) {
-        NguoiDung ng = _nguoiDungRepo.findById(diaChi.getNguoiDung().getId()).get();
-        diaChi.setTrangThai(TrangThaiDiaChi.HOATDONG);
-        diaChi.setNgayTao(LocalDateTime.now());
-        diaChi.setNguoiDung(ng);
-        _diaChiRepo.save(diaChi.toEntity());
     }
 
 }

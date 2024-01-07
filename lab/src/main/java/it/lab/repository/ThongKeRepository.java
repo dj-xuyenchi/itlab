@@ -56,6 +56,21 @@ public interface ThongKeRepository extends JpaRepository<HoaDon,Integer> {
             "AND FUNCTION('MONTH', h.ngayTao) = FUNCTION('MONTH', :selectedDate) ")
     BigDecimal tinhTongDoanhThuTrongThang(@Param("selectedDate") Date selectedDate);
 
+//    thanhbarr
+    @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
+            "WHERE FUNCTION('YEAR', h.ngayTao) BETWEEN :startYear AND :endYear " +
+            "AND FUNCTION('MONTH', h.ngayTao) = :monthParam")
+    BigDecimal tinhTongDoanhThuTrongThang1(
+            @Param("startYear") int startYear,
+            @Param("endYear") int endYear,
+            @Param("monthParam") int month);
+
+
+
+
+
+
+
 
     //thong ke 1 năm
 
@@ -72,10 +87,17 @@ public interface ThongKeRepository extends JpaRepository<HoaDon,Integer> {
                                                @Param("selectedDateEnd") LocalDateTime selectedDateEnd);
 
     //thong ke doanh thu cua 12 thang bang bieu do
-    @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
-            "WHERE FUNCTION('YEAR', h.ngayTao) = :year " +
-            "AND FUNCTION('MONTH', h.ngayTao) = :month")
-    BigDecimal tinhTongDoanhThuTrongThangChar(@Param("year") int year, @Param("month") int month);
+//    @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
+//            "WHERE FUNCTION('YEAR', h.ngayTao) = :year " +
+//            "AND FUNCTION('MONTH', h.ngayTao) = :month")
+//    BigDecimal tinhTongDoanhThuTrongThangChar(@Param("year") int year, @Param("month") int month);
+
+
+    @Query("SELECT YEAR(h.ngayTao) AS year, MONTH(h.ngayTao) AS month, SUM(h.giaTriHd) " +
+            "FROM HoaDon h " +
+            "WHERE YEAR(h.ngayTao) BETWEEN :startYear AND :endYear " +
+            "GROUP BY YEAR(h.ngayTao), MONTH(h.ngayTao)")
+    BigDecimal tinhTongDoanhThuTrongThangChar(@Param("startYear") int startYear, @Param("endYear") int endYear);
 
 //thong ke doanh thu của 12 tháng sau khi trừ hết chi phí
 

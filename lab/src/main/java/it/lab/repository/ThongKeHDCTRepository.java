@@ -16,16 +16,32 @@ public interface ThongKeHDCTRepository extends JpaRepository<HoaDonChiTiet,Integ
     int getTongSoLuongBanDuoc();
 
 
-    @Query("SELECT SUM((sp.giaBan - sp.giaNhap) * hdct.soLuong) AS tongLoiNhuan " +
-            "FROM HoaDonChiTiet hdct " +
-            "JOIN hdct.hoaDon hdt " +
-            "JOIN hdct.sanPhamChiTiet sp " +
-            "WHERE FUNCTION('YEAR', hdt.ngayTao) = :yearParam " +
-            "AND FUNCTION('MONTH', hdt.ngayTao) = :monthParam")
-    BigDecimal tinhTongDoanhThuNamSauKhiTruChiPhi(@Param("yearParam") int year, @Param("monthParam") int month);
+//    @Query("SELECT SUM((sp.giaBan - sp.giaNhap) * hdct.soLuong) AS tongLoiNhuan " +
+//            "FROM HoaDonChiTiet hdct " +
+//            "JOIN hdct.hoaDon hdt " +
+//            "JOIN hdct.sanPhamChiTiet sp " +
+//            "WHERE FUNCTION('YEAR', hdt.ngayTao) = :yearParam " +
+//            "AND FUNCTION('MONTH', hdt.ngayTao) = :monthParam")
+//    BigDecimal tinhTongDoanhThuNamSauKhiTruChiPhi(@Param("yearParam") int year, @Param("monthParam") int month);
+//    thanhbar
+@Query("SELECT SUM((sp.giaBan - sp.giaNhap) * hdct.soLuong) AS tongLoiNhuan " +
+        "FROM HoaDonChiTiet hdct " +
+        "JOIN hdct.hoaDon hdt " +
+        "JOIN hdct.sanPhamChiTiet sp " +
+        "WHERE FUNCTION('YEAR', hdt.ngayTao) BETWEEN :startYear AND :endYear " +
+        "AND FUNCTION('MONTH', hdt.ngayTao) = :monthParam")
+BigDecimal tinhTongDoanhThuNamSauKhiTruChiPhi(@Param("startYear") int startYear,
+                                              @Param("endYear") int endYear,
+                                              @Param("monthParam") int month);
 
 
-//    thông kê sản phẩm bán chạy nhất tháng
+
+
+
+
+
+
+    //    thông kê sản phẩm bán chạy nhất tháng
     @Query("SELECT c.id AS idCTSP, c.sanPham.tenSanPham, CONVERT(VARCHAR(100), c.hinhAnh) AS image, SUM(a.soLuong) AS tongSoLuong,c.sanPham.giaNhap,c.sanPham.giaBan " +
             "FROM HoaDonChiTiet a " +
             "JOIN  a.hoaDon  b " +

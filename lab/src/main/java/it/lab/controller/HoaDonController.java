@@ -1,6 +1,5 @@
 package it.lab.controller;
 
-import it.lab.dto.DiaChiDTO;
 import it.lab.iservice.IHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -91,17 +90,5 @@ public class HoaDonController {
     @RequestMapping(value = "/thaydoiphivanchuyen", method = RequestMethod.GET)
     public ResponseEntity<?> thayDoiPhiVanChuyen(@RequestParam Long hoaDonId, @RequestParam Double phiVanChuyenMoi) {
         return ResponseEntity.ok(_hoaDonService.thayDoiPhiVanChuyen(hoaDonId, phiVanChuyenMoi));
-    }
-
-    @RequestMapping(value = "/doidiachihoadon", method = RequestMethod.GET)
-    public ResponseEntity<?> thayDoiPhiVanChuyen(@RequestParam Long hoaDonId, @RequestParam Long diaChiId) {
-        _hoaDonService.doiDiaChiHoaDon(hoaDonId, diaChiId);
-        return ResponseEntity.ok("");
-    }
-
-    @RequestMapping(value = "/taodiachi", method = RequestMethod.POST)
-    public ResponseEntity<?> thayDoiPhiVanChuyen(@RequestBody DiaChiDTO diaChi) {
-        _hoaDonService.taoDiaChi(diaChi);
-        return ResponseEntity.ok("");
     }
 }

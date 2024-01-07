@@ -765,11 +765,7 @@ function ChiTietHoaDon({
             </Col>
           </Row>
 
-          <Row
-            style={{
-              marginTop: "8px",
-            }}
-          >
+          <Row>
             <h6>Thông tin giao hàng</h6>
           </Row>
           <Row
@@ -780,30 +776,7 @@ function ChiTietHoaDon({
               marginBottom: "14px",
             }}
           >
-            <Col span={3} style={{}}>
-              Họ tên người nhận:
-            </Col>
-            <Col span={6}>
-              <Input
-                disabled
-                value={
-                  hoaDonChiTiet.diaChiGiao &&
-                  hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                    " " +
-                    hoaDonChiTiet.diaChiGiao.nguoiNhan
-                }
-              />
-            </Col>
-          </Row>
-          <Row
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginTop: "14px",
-              marginBottom: "14px",
-            }}
-          >
-            <Col span={3} style={{}}>
+            <Col span={2} style={{}}>
               Xã:
             </Col>
             <Col span={4}>

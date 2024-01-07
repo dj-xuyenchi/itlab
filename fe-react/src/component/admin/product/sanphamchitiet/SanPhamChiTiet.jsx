@@ -403,7 +403,6 @@ function SanPhamChiTiet() {
                   labelCol={{
                     flex: "110px",
                   }}
-                  onFinish={handleThemChatLieu}
                   labelAlign="left"
                   labelWrap
                   wrapperCol={{
@@ -513,6 +512,7 @@ function SanPhamChiTiet() {
                     <Button
                       type="primary"
                       htmlType="submit"
+                      onClick={handleThemChatLieu}
                     >
                       Thêm mới
                     </Button>

@@ -1,145 +1,105 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
+import { DatePicker } from 'antd';
 import * as echarts from 'echarts';
-import { DatePicker,message } from 'antd';
 import moment from 'moment';
-import 'moment/locale/vi';
 
+const { RangePicker } = DatePicker;
 
+const YourComponent = () => {
+  const [yearRange, setYearRange] = useState([moment().year() - 1, moment().year()]); 
+  const [yearlyProfits, setYearlyProfits] = useState({});
+  const [chart, setChart] = useState(null);
 
+  const createChartOption = useCallback(() => {
+    if (!yearlyProfits || Object.keys(yearlyProfits).length === 0) {
+      return {}; // thanh-bar
+    }
 
-function ThongKeBar({ title = "Tên biểu đồ", subTitle = "doanh-thu-năm" }) {
-    const chartRef = useRef(null);
-    const [data, setData] = useState({
-        doanhThuTheoThang: [],
-        doanhThuTheoThangTruChiPhi: []
+    const months = Object.keys(yearlyProfits[Object.keys(yearlyProfits)[0]]);
+    const sortedMonths = months.sort((a, b) => moment().month(a).valueOf() - moment().month(b).valueOf());
+
+    const xAxisData = sortedMonths.slice(0, 12); 
+    const seriesData = Object.keys(yearlyProfits).flatMap((year) => [
+      {
+        name: year + ' - Tổng Doanh Thu',
+        type: 'line',
+        data: xAxisData.map((month) => yearlyProfits[year][month].tongDoanhThu),
+      },
+      {
+        name: year + ' - Chi Phí',
+        type: 'line',
+        data: xAxisData.map((month) => yearlyProfits[year][month].loiNhuanSauKhiTruChiPhi),
+      }
+    ]);
+
+    return {
+      title: {
+      },
+      tooltip: {
+        trigger: 'axis',
+      },
+      legend: {
+        data: Object.keys(yearlyProfits).flatMap((year) => [year + ' - Tổng Doanh Thu', year + ' - Chi Phí']),
+      },
+      xAxis: {
+        type: 'category',
+        nameLocation: 'middle',
+        data: xAxisData,
+      },
+      yAxis: {
+        name: 'Values',
+      },
+      series: seriesData,
+    };
+  }, [yearlyProfits]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8089/api/thong-ke/bieu-do-tong-hop?startYear=${yearRange[0]}&endYear=${yearRange[1]}`);
+        const data = await response.json();
+        setYearlyProfits(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [yearRange]);
+
+  useEffect(() => {
+    if (chart) {
+      chart.setOption(createChartOption());
+    }
+  }, [yearlyProfits, chart, createChartOption]);
+
+  useEffect(() => {
+    const chartDom = document.getElementById('chart');
+    const newChart = echarts.init(chartDom);
+    setChart(newChart);
+
+    // thanh bar
+    newChart.resize({
+      width: 1100,
+      height: 400,
     });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [selectedYear, setSelectedYear] = useState(moment());
 
-    const fetchData = useCallback(async () => {
-        const year = selectedYear.year();
+    return () => {
+      newChart.dispose();
+    };
+  }, []);
 
-        try {
-            const response = await axios.get(`http://localhost:8089/api/thong-ke/bieu-do-tong-hop?year=${year}`);
-            const result = response.data;
+  return (
+    <div>
+      <RangePicker
+        picker="year"
+        onChange={(dates, dateStrings) => setYearRange([parseInt(dateStrings[0], 10), parseInt(dateStrings[1], 10)])}
+      />
+      {/* <h5>Thống kê theo năm</h5> */}
 
-            setData(result);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setError(error.message || 'An error occurred while fetching data.');
-        } finally {
-            setLoading(false);
-        }
-    }, [selectedYear]);
+      <div id="chart" style={{ width: '90%', height: '400px'}} />
+    </div>
+  );
+};
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData, selectedYear]);
-
-
-
- 
-
-
-    useEffect(() => {
-        if (!chartRef.current || loading || error) {
-            return;
-        }
-
-        const chart = echarts.init(chartRef.current);
-
-        const option = {
-            title: {
-                text: title,
-                subtext: subTitle
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data: ['Doanh thu', 'Doanh thu trừ chi phí']
-            },
-            xAxis: {
-                type: 'category',
-                data: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    name: 'Doanh thu',
-                    type: 'bar',
-                    data: data.doanhThuTheoThang.map(value => value || 0),
-                },
-                {
-                    name: 'Doanh thu trừ chi phí',
-                    type: 'bar',
-                    data: data.doanhThuTheoThangTruChiPhi.map(value => value || 0),
-                }
-            ]
-        };
-
-        chart.setOption(option);
-
-        window.addEventListener('resize', () => {
-            chart.resize();
-        });
-
-        return () => {
-            chart.dispose();
-            window.removeEventListener('resize', () => {
-                chart.resize();
-            });
-        };
-    }, [data, loading, error, subTitle, title]);
-
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
-
-
-
-    const handleDatePickerChange = (date) => {
-        // Kiểm tra xem DatePicker có được chọn hay không
-        if (date == null) {
-            // Thông báo khi DatePicker chưa được chọn
-            message.error('Vui lòng chọn một năm.');
-            return;
-        }
-
-        // Nếu không có lỗi, cập nhật selectedYear
-        setSelectedYear(date);
-
-    }
-    return (
-        <div>
-        
-
-        <DatePicker
-            onChange={handleDatePickerChange}
-            picker="year"
-            value={selectedYear}
-            locale={{
-                lang: {
-                    locale: 'vi',
-                },
-            }}
-        />
-            {/* <button onClick={fetchData}>Fetch Data</button> */}
-            
-            <div ref={chartRef} style={{ width: '1100px', height: '400px' }} />
-
-           
-
-        </div>
-    );
-}
-
-export default ThongKeBar;
+export default YourComponent;

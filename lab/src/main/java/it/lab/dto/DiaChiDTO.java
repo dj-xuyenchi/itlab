@@ -64,27 +64,6 @@ public class DiaChiDTO {
                 null
         );
     }
-    public  DiaChi toEntity() {
-        return new DiaChi(
-                this.getId(),
-                this.getNguoiDung(),
-                this.getNguoiNhan(),
-                this.getHoNguoiNhan(),
-                this.getXaId(),
-                this.getHuyenId(),
-                this.getTinhId(),
-                this.getXa(),
-                this.getHuyen(),
-                this.getTinh(),
-                this.getChiTietDiaChi(),
-                this.getNgayTao(),
-                this.getNgayCapNhat(),
-                this.getSoDienThoai(),
-                this.getLaDiaChiChinh(),
-                this.getTrangThai(),
-                null
-        );
-    }
 
     public static List<DiaChiDTO> fromCollection(List<DiaChi> collection) {
         List<DiaChiDTO> to = new ArrayList<>();
