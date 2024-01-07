@@ -62,4 +62,13 @@ public interface ThongKeHDCTRepository extends JpaRepository<HoaDonChiTiet,Integ
                                                        @Param("selectedDateStart") LocalDateTime selectedDateStart, // Add this parameter for start date
                                                        @Param("selectedDateEnd") LocalDateTime selectedDateEnd); // Add this parameter for end date
 
+    @Query("SELECT SUM((sp.giaBan - sp.giaNhap) * hdct.soLuong) AS tongLoiNhuan " +
+            "FROM HoaDonChiTiet hdct " +
+            "JOIN hdct.hoaDon hdt " +
+            "JOIN hdct.sanPhamChiTiet sp " +
+            "WHERE FUNCTION('YEAR', hdt.ngayTao) BETWEEN :startYear AND :endYear " +
+            "AND FUNCTION('MONTH', hdt.ngayTao) = :monthParam")
+    BigDecimal tinhTongDoanhThuNamSauKhiTruChiPhi(@Param("startYear") int startYear,
+                                                  @Param("endYear") int endYear,
+                                                  @Param("monthParam") int month);
 }
