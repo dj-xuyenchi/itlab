@@ -6,12 +6,12 @@ import html2pdf from "html2pdf.js";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { fixTrangThai } from "../../../extensions/fixTrangThai";
 function InHoaDon({ data }) {
-    const [isShow, setIsShow] = useState(false)
     const generatePdf = () => {
+        console.log(data);
+
         const content = document.getElementById('content-to-export');
         html2pdf(content);
     };
-    console.log(data);
     const date = new Date()
     return (
 
@@ -73,8 +73,8 @@ function InHoaDon({ data }) {
                     <div>
                         <div>
                             <p>Họ tên khách hàng: {data.nguoiMua.ho + " " + data.nguoiMua.ten}</p>
-                            <p>Địa chỉ: {data.diaChiGiao && data.diaChiGiao.huyen + data.diaChiGiao.tinh}</p>
-                            <p>Điện thoại: {data.diaChiGiao && data.diaChiGiao.soDienThoai}</p>
+                            <p>Địa chỉ: {data.diaChiGiao ? data.diaChiGiao.huyen + ", " + data.diaChiGiao.tinh : ""}</p>
+                            <p>Điện thoại: {data.diaChiGiao ? data.diaChiGiao.soDienThoai : ""}</p>
                             <p>Hình thức thanh toán: {data.phuongThucThanhToan.tenPhuongThuc}</p>
                             <p>Hình thức nhận hàng: {data.phuongThucVanChuyen.tenPhuongThuc}</p>
                         </div>

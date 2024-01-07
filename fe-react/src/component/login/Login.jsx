@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { selectLanguage } from "../../language/selectLanguage";
 import { useLoginStore } from "./useLoginStore";
-import userSlice from "./userSlice";
 function Login() {
   const [api, contextHolder] = notification.useNotification();
   const language = useSelector(selectLanguage);

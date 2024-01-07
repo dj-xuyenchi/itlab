@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { GrChapterAdd } from "react-icons/gr";
 import { useChiTietHoaDonStore } from "./useChiTietHoaDonStore";
-function AddSanPham({ id, hoaDonId, setData, record }) {
+function AddSanPham({ id, hoaDonId, setData, record, fetData }) {
   const language = useSelector(selectLanguage);
   const [soLuong, setSoLuong] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,6 +46,12 @@ function AddSanPham({ id, hoaDonId, setData, record }) {
     }
   };
   const onChange = (value) => {
+    if (!value) {
+      return;
+    }
+    if (isNaN(value)) {
+      return;
+    }
     setSoLuong(value);
   };
   async function handleThem() {
@@ -74,6 +80,7 @@ function AddSanPham({ id, hoaDonId, setData, record }) {
     });
     openNotification("success", "Hệ thống", "Thêm thành công", "bottomRight");
     setData();
+    //  fetData()
     setIsModalOpen(false);
   }
   return (
@@ -106,6 +113,7 @@ function AddSanPham({ id, hoaDonId, setData, record }) {
               width: "100%",
             }}
             min={1}
+            max={record.soLuongTon}
             value={soLuong}
             onChange={onChange}
           />

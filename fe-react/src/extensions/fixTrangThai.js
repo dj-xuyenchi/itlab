@@ -1,8 +1,12 @@
 export const fixTrangThai = (input) => {
     switch (input) {
-        case 'HOANTHANH':
-            return "Hoàn Thành"
-        case "DANGGIAO":
-            return "Đang Giao"
+        case "DAGIAO":
+            return "Đã giao"
+        case "DADOITRA":
+            return "Đã đổi trả"
+        case "TUCHOIDOI":
+            return "Từ chối đổi trả"
+        default:
+            return "Liên hệ"
     }
 }

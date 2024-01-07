@@ -25,12 +25,12 @@ function ProductItem({ item }) {
           <Link to={"/sanpham/" + item.id} >
             <div className="product-imgs">
               <img ref={imgRef} src={item.hinhAnh1} alt="san pham" />
-              <div className="sales">
+              {/* <div className="sales">
                 <img
                   src={require("../../../../../assets/fakedata/sales.webp")}
                   alt=""
                 />
-              </div>
+              </div> */}
             </div>
           </Link>
           <div className="product-detail">
@@ -40,7 +40,6 @@ function ProductItem({ item }) {
             </div>
             <div className="product-cost">{fixMoney(item.giaBan)}</div>
             <div className="product-color">
-              <div></div>
             </div>
           </div>
         </div>

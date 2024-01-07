@@ -41,5 +41,14 @@ export const useBanTaiQuayStore = {
             return axiosIns.post('/api/admin/thanhtoanvnpaytaiquay', payload
             )
         },
+        async thanhToanTaiQuay(payload) {
+            return axiosIns.post('/api/admin/muataiquay2', payload
+            )
+        },
+        async checkThanhToan(payload) {
+            return axiosIns.post('/api/admin/muataiquayvnpaycheck?maHd=' + payload.maHd + "&status=" + payload.status
+            )
+        },
+
     },
 }

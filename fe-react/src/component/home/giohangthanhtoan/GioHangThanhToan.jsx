@@ -24,7 +24,6 @@ import { selectThanhToan } from "./selectThanhToan";
 import SanPhamItem from "./SanPhamItem";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { useGHN } from "../../../plugins/ghnapi";
-import { Option } from "antd/es/mentions";
 function GioHangThanhToan() {
   const thanhToan = useSelector(selectThanhToan);
   const [duLieuThanhToan, setDuLieuThanhToan] = useState(undefined);
@@ -33,9 +32,7 @@ function GioHangThanhToan() {
   const [phiVanChuyen, setPhiVanChuyen] = useState(0);
   const [ghiChu, setGhiChu] = useState("");
   const [diaChiChon, setDiaChiChon] = useState(undefined);
-  const [tinh, setTinh] = useState(undefined);
-  const [phuongThucThanhToan, setPhuongThucThanhToan] =
-    useState(0);
+  const [phuongThucThanhToan, setPhuongThucThanhToan] = useState(0);
   const options = [];
   const size = "large";
   const [api, contextHolder] = notification.useNotification();
@@ -55,7 +52,17 @@ function GioHangThanhToan() {
     }
   };
   async function handleTaoRequest() {
-    if (duLieuThanhToan.data.sanPhamList.length == 0) {
+    console.log(phuongThucThanhToan);
+    if (phuongThucThanhToan === 0) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Vui lòng chọn phương thức thanh toán",
+        "bottomRight"
+      );
+      return
+    }
+    if (duLieuThanhToan.data.sanPhamList.length === 0) {
       openNotification("error", "Hệ thống", "Giỏ hàng trống", "bottomRight");
       return;
     }
@@ -79,12 +86,22 @@ function GioHangThanhToan() {
       const request = await useGioHangStore.actions.vnPay({
         ghiChu: ghiChu,
         diaChiId: diaChiChon.id,
-        phuongThucThanhToanId: phuongThucThanhToan.id,
+        phuongThucThanhToanId: phuongThucThanhToan,
         phuongThucVanChuyenId: 1,
         gia: soTienPhaiTra,
         phiVanChuyen: phiVanChuyen,
       });
       window.location.href = request.data;
+    } else {
+      const request = await useGioHangStore.actions.taoHoaDonOnline({
+        ghiChu: ghiChu,
+        diaChiId: diaChiChon.id,
+        phuongThucThanhToanId: phuongThucThanhToan,
+        phuongThucVanChuyenId: 1,
+        gia: soTienPhaiTra,
+        phiVanChuyen: phiVanChuyen,
+      });
+      window.location.href = 'http://localhost:3000/checkout';
     }
   }
   function handleChonDiaChi(e) {
@@ -96,6 +113,7 @@ function GioHangThanhToan() {
         return item.id === e.target.value;
       })
     );
+    handleTestGia()
   }
   //giao hàng
   async function handleTinhGiaVanChuyen() {
@@ -104,8 +122,8 @@ function GioHangThanhToan() {
     }
     const giaShip = await useGHN.actions.layGia({
       gia: soTienPhaiTra,
-      denXa: diaChiChon.xaId,
       denHuyen: diaChiChon.huyenId,
+      denXa: diaChiChon.xaId,
     });
     setPhiVanChuyen(giaShip.data.data.total);
   }
@@ -119,20 +137,26 @@ function GioHangThanhToan() {
     setSoTienPhaiTra(chuaTinhChiPhi);
     setSoLong(soLuongSanPham);
   }
+
+  async function handleTestGia() {
+    if (!diaChiChon || soTienPhaiTra === 0) {
+      return
+    }
+    const giaShip = await useGHN.actions.layGia({
+      gia: soTienPhaiTra,
+      denHuyen: diaChiChon.id % 2 === 0 ? "1444" : "1204",
+      denXa: diaChiChon.id % 2 === 0 ? "20314" : "120416",
+    });
+    setPhiVanChuyen(giaShip.data.data.total);
+  }
   useEffect(() => {
     async function handleLayGioHang() {
       const data = await useGioHangStore.actions.layDuLieuThanhToan(
         JSON.parse(localStorage.getItem("user")).data.nguoiDung.id
       );
       setDuLieuThanhToan(data.data);
-      setPhuongThucThanhToan(data.data.data.phuongThucThanhToanDTOList[0]);
-    }
-    async function handleLayTinh() {
-      const data = await useGHN.actions.layTinh();
-      setTinh(data.data.data);
     }
     handleLayGioHang();
-    handleLayTinh();
   }, []);
   async function handleCapNhatSoLuongSanPhamGioHang(gioHangId, soLuongMoi) {
     const data = await useGioHangStore.actions.capNhatSoLuongSanPhamGioHang({
@@ -140,7 +164,7 @@ function GioHangThanhToan() {
       gioHangId: gioHangId,
       soLuongMoi: soLuongMoi,
     });
-    handleTinhGiaVanChuyen();
+    handleTestGia();
     setDuLieuThanhToan(data.data);
   }
   useEffect(() => {
@@ -152,6 +176,9 @@ function GioHangThanhToan() {
       setDiaChiChon(diaChiMacDinh);
     }
   }, [duLieuThanhToan]);
+  useEffect(() => {
+    handleTestGia()
+  }, [diaChiChon]);
   return (
     <>
       {contextHolder}
@@ -293,16 +320,6 @@ function GioHangThanhToan() {
                           disabled
                           value={diaChiChon ? diaChiChon.tinh : "Chưa chọn"}
                         >
-                          {tinh
-                            ? tinh.map((option) => (
-                              <Option
-                                key={option.code}
-                                value={option.ProvinceName}
-                              >
-                                {option.name}
-                              </Option>
-                            ))
-                            : ""}
                         </Select>
                       </Col>
                       <Col

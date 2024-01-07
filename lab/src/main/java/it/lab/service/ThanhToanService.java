@@ -90,7 +90,7 @@ public class ThanhToanService implements IThanhToan {
         hd.setPhuongThucThanhToan(pttt.get());
         hd.setPhuongThucVanChuyen(ptvc.get());
         hd.setPhiGiaoHang(yeuCau.getPhiVanChuyen());
-        hd.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+        hd.setTrangThai(TrangThaiHoaDon.CHOXACNHAN);
         List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(nguoiMua);
         Double giaTri = 0d;
         for (GioHang gh : ghList) {
@@ -98,8 +98,11 @@ public class ThanhToanService implements IThanhToan {
             giaTri += sp.getGiaBan() * gh.getSoLuong();
         }
         hd.setGiaTriHd(giaTri + yeuCau.getPhiVanChuyen());
-        String thongBao = Template.hoaDonMoi(hd);
-        guiThongBaoChoNhanVien(thongBao);
+        //  String thongBao = Template.hoaDonMoi(hd);
+        //    guiThongBaoChoNhanVien(thongBao);
+        _hoaDonRepo.save(hd);
+        hd.setMaHoaDon("HD" + hd.getId());
+        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _hoaDonRepo.save(hd);
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
@@ -141,7 +144,7 @@ public class ThanhToanService implements IThanhToan {
         hd.setPhuongThucThanhToan(pttt.get());
         hd.setPhuongThucVanChuyen(ptvc.get());
         hd.setPhiGiaoHang(yeuCau.getPhiVanChuyen());
-        hd.setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+        hd.setTrangThai(TrangThaiHoaDon.CHOTHANHTOANBANKING);
         List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(nguoiMua);
         Double giaTri = 0d;
         for (GioHang gh : ghList) {
@@ -149,14 +152,31 @@ public class ThanhToanService implements IThanhToan {
             giaTri += sp.getGiaBan() * gh.getSoLuong();
         }
         hd.setGiaTriHd(giaTri + yeuCau.getPhiVanChuyen());
-
         _hoaDonRepo.save(hd);
         hd.setMaHoaDon("HD" + hd.getId());
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _hoaDonRepo.save(hd);
-        _gioHangRepo.deleteAll(ghList);
-        thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
+      //  _gioHangRepo.deleteAll(ghList);
+      //  thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
         return hd.getMaHoaDon();
+    }
+
+    @Override
+    public void checkThanhToanVNPay(String maHD, Long trangThai) {
+        var hoaDon = _hoaDonRepo.findHoaDonByMaHoaDon(maHD);
+        if (!hoaDon.isPresent()) {
+            return;
+        }
+        if (trangThai == 0) {
+            List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(hoaDon.get().getNguoiMua());
+            _gioHangRepo.deleteAll(ghList);
+            thayDoiSoLuongKhiConfirmHoaDon(hoaDon.get().getId());
+            hoaDon.get().setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+            _hoaDonRepo.save(hoaDon.get());
+        } else {
+            hoaDon.get().setTrangThai(TrangThaiHoaDon.CUAHANGHUY);
+            _hoaDonRepo.save(hoaDon.get());
+        }
     }
 
     private List<HoaDonChiTiet> taoHoaDonChiTiet(List<GioHang> gioHangList, Long hoaDonId) {

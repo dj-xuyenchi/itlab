@@ -39,8 +39,9 @@ public class NguoiDungController {
     @RequestMapping(value = "/capnhatnguoidung", method = RequestMethod.POST)
     public ResponseEntity<?> suaNguoiDung(@RequestPart("anhDaiDien") Optional<MultipartFile> data, @RequestPart("data") String nguoiDung) throws IOException {
         Gson gson = new Gson();
-        return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(gson.fromJson(nguoiDung, NguoiDungRequest.class),data.isPresent()? data.get():null));
+        return ResponseEntity.ok(_nguoiDungService.capNhatNguoiDung(gson.fromJson(nguoiDung, NguoiDungRequest.class), data.isPresent() ? data.get() : null));
     }
+
     @RequestMapping(value = "/doimatkhau", method = RequestMethod.POST)
     public ResponseEntity<?> doiMatKhau(
             @RequestBody DoiMatKhau matKhau
@@ -64,4 +65,8 @@ public class NguoiDungController {
         return ResponseEntity.ok(_rankKhachHangService.layHetRankKhachHang());
     }
 
+    @RequestMapping(value = "/laydiachinguoidung", method = RequestMethod.GET)
+    public ResponseEntity<?> layDiaChi(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_nguoiDungService.layDiaChiNguoiDung(nguoiDungId));
+    }
 }

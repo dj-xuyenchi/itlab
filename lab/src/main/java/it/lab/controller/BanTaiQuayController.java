@@ -3,6 +3,7 @@ package it.lab.controller;
 import it.lab.config.Config;
 import it.lab.iservice.IHoaDonService;
 import it.lab.iservice.IMuaTaiQuayService;
+import it.lab.modelcustom.request.MuaTaiQuay2;
 import it.lab.modelcustom.request.MuaTaiQuayRequest;
 import it.lab.modelcustom.request.TaoHoaDonOnline;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,6 @@ import java.util.*;
 public class BanTaiQuayController {
     @Autowired
     private IMuaTaiQuayService _muaTaiQuay;
-
-
-
 
     @RequestMapping(value = "/layhoadontaiquay", method = RequestMethod.GET)
     public ResponseEntity<?> layHetHoaDonCho() {
@@ -74,6 +72,16 @@ public class BanTaiQuayController {
     @RequestMapping(value = "/quetmasanpham", method = RequestMethod.GET)
     public ResponseEntity<?> quetMaSanPham(@RequestParam String maSp, @RequestParam Long hoaDonId) {
         return ResponseEntity.ok(_muaTaiQuay.quetMa(maSp, hoaDonId));
+    }
+
+    @RequestMapping(value = "/muataiquay2", method = RequestMethod.POST)
+    public ResponseEntity<?> thanhToanTaiQuay2(@RequestBody MuaTaiQuay2 muaTaiQuay2) throws UnsupportedEncodingException {
+        return ResponseEntity.ok(_muaTaiQuay.muaTaiQuay2(muaTaiQuay2));
+    }
+
+    @RequestMapping(value = "/muataiquayvnpaycheck", method = RequestMethod.POST)
+    public ResponseEntity<?> muaTaiQuayVnPayCheck(@RequestParam String maHd, @RequestParam String status) {
+        return ResponseEntity.ok(_muaTaiQuay.doiTrangThaiHoaDonTaiQuay(maHd, status));
     }
 
     @RequestMapping(value = "/thanhtoanvnpaytaiquay", method = RequestMethod.POST)

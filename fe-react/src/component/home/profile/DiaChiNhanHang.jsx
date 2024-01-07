@@ -1,14 +1,16 @@
-import { Button, Col, Divider, Radio, Row, notification } from "antd";
+import { Button, Col, Divider, Radio, Row, Tag, notification } from "antd";
 import "./style.css";
 import { useEffect, useState } from "react";
 import { useNguoiDungStore } from "./useNguoiDungStore";
 import { useParams } from "react-router-dom";
 import { selectLanguage } from "../../../language/selectLanguage";
 import { useSelector } from "react-redux";
+import { fixNgayThang } from "../../../extensions/fixNgayThang";
 
 function DiaChiNhanHang() {
     const param = useParams();
     const [api, contextHolder] = notification.useNotification();
+    const [diaChi, setDiaChi] = useState(undefined)
     const openNotification = (type, title, des, placement) => {
         if (type === "error") {
             api.error({
@@ -24,7 +26,14 @@ function DiaChiNhanHang() {
             });
         }
     };
-
+    async function handleLayDiaChi() {
+        const data = await useNguoiDungStore.actions.layDiaChiNguoiDung(param.id)
+        setDiaChi(data.data)
+        console.log(data.data);
+    }
+    useEffect(() => {
+        handleLayDiaChi()
+    }, [])
     return (
         <>
             {contextHolder}
@@ -39,20 +48,39 @@ function DiaChiNhanHang() {
                 Địa chỉ nhận hàng
             </h4>
             <Divider />
-            <Row>
-                <Col span={13}>
-                    <p>
-                        Mật khẩu cũ
-                        <span
-                            style={{
-                                color: "red",
-                            }}
-                        >
-                            *
-                        </span>
-                    </p>
-                </Col>
-            </Row>
+            {diaChi && diaChi.map((item) => {
+                return <>
+                    <Row>
+                        <Col span={24}>
+                            <p>
+                                {item.hoNguoiNhan + " " + item.nguoiNhan + " "}
+                                | {item.soDienThoai}
+                            </p>
+                        </Col>
+                        <Col span={24}>
+                            <p>
+                                {item.chiTietDiaChi}
+                            </p>
+                        </Col>
+                        <Col span={24}>
+                            <p>
+                                {item.xa + ", " + item.huyen + ", " + item.tinh}
+                            </p>
+                        </Col>
+                        <Col span={24}>
+                            <Tag color="#2db7f5">
+                                {fixNgayThang(item.ngayTao)}
+                            </Tag>
+                            {item.laDiaChiChinh ? <Tag color="#f50">Là địa chỉ chính</Tag> : <Button size="small">Set mặc định</Button>}
+                            <Button style={{
+                                color: "blue"
+                            }} type="text" size="small">Chỉnh sửa</Button>
+                        </Col>
+                    </Row>
+                    <Divider />
+                </>
+
+            })}
 
         </>
     );
