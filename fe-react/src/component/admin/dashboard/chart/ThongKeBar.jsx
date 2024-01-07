@@ -95,7 +95,7 @@ const YourComponent = () => {
         picker="year"
         onChange={(dates, dateStrings) => setYearRange([parseInt(dateStrings[0], 10), parseInt(dateStrings[1], 10)])}
       />
-      {/* <h5>Thống kê theo năm</h5> */}
+      {/* <h5>Thống kê theo năm thanh-bar</h5> */}
 
       <div id="chart" style={{ width: '90%', height: '400px'}} />
     </div>

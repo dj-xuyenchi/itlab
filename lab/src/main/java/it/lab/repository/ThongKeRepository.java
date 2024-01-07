@@ -93,7 +93,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon,Integer> {
             "WHERE FUNCTION('YEAR', h.ngayTao) = FUNCTION('YEAR', CURRENT_DATE) ")
     BigDecimal tinhTongDoanhThuTrongNamHienTai();
 
-
+//thanh-bar
     @Query("SELECT SUM(h.giaTriHd) FROM HoaDon h " +
             "WHERE FUNCTION('YEAR', h.ngayTao) BETWEEN :startYear AND :endYear " +
             "AND FUNCTION('MONTH', h.ngayTao) = :monthParam")
