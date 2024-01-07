@@ -7,6 +7,7 @@ import { selectLanguage } from "../../../language/selectLanguage";
 import { useSelector } from "react-redux";
 import { fixNgayThang } from "../../../extensions/fixNgayThang";
 import ModalThemDiaChi from "./ModalThemDiaChi";
+import ModalCapNhatDiaChi from "./ModalCapNhatDiaChi"
 
 function DiaChiNhanHang() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +39,18 @@ function DiaChiNhanHang() {
             });
         }
     };
-
+    const xacNhanXoaDiaChi = (diaChiId) => {
+        Modal.confirm({
+            title: 'Xác nhận',
+            content: 'Bạn có chắc chắn muốn xóa địa chỉ này không?',
+            okText: 'Xóa',
+            okType: 'danger',
+            cancelText: 'Hủy bỏ',
+            onOk() {
+                xoaDiaChi(diaChiId);
+            },
+        });
+    };
     const handleCapNhatDiaChiMacDinh = async (diaChiId) => {
         try {
             const response = await useNguoiDungStore.actions.capNhatDiaChiMacDinh(param.id, diaChiId);
@@ -52,6 +64,20 @@ function DiaChiNhanHang() {
             openNotification('error', 'Lỗi kỹ thuật', error.message, 'topRight');
         }
     };
+    async function xoaDiaChi(diaChiId) {
+        try {
+            const response = await useNguoiDungStore.actions.xoaDiaChiById(diaChiId);
+            if (response.status === 200) {
+                openNotification('success', 'Thành công', 'Địa chỉ đã được xóa.', 'topRight');
+                handleLayDiaChi(); 
+            } else {
+                openNotification('error', 'Lỗi', 'Địa chỉ đang được sử dụng.', 'topRight');
+            }
+        } catch (error) {
+            openNotification('error', 'Lỗi kỹ thuật', error.message, 'topRight');
+        }
+    }
+    
     const [data, setData] = useState([]);
     async function handleLayDiaChi() {
         const data = await useNguoiDungStore.actions.layDiaChiNguoiDung(param.id)
@@ -81,9 +107,9 @@ function DiaChiNhanHang() {
                 <Col>
                 <ModalThemDiaChi
                 id={param.id}
-                setData={handleLayDiaChi} 
-                handleCancel={handleCancel} 
-                isModalOpen={isModalOpen} 
+                setData={handleLayDiaChi}
+                handle={() => setIsModalOpen(false)}
+                isModalOpen={isModalOpen}
             />
                 </Col>
             </Row>
@@ -119,8 +145,8 @@ function DiaChiNhanHang() {
                                     Set mặc định
                                 </Button>
                             )}
-                            <Button style={{ color: "blue" }} type="text" size="small">
-                                Chỉnh sửa
+                            <Button size="small" danger onClick={() => xacNhanXoaDiaChi(item.id)}>
+                                Xóa
                             </Button>
                         </Col>
                     </Row>
@@ -128,12 +154,6 @@ function DiaChiNhanHang() {
                 </>
                 
             })}
-           <ModalThemDiaChi
-                id={param.id}
-                setData={handleLayDiaChi}
-                handle={() => setIsModalOpen(false)}
-                isModalOpen={isModalOpen}
-            />
         </>
     );
 }

@@ -28,8 +28,16 @@ export const useNguoiDungStore = {
             return response;
         },
         async themDiaChiNguoiDung(payload ) {
-            const response = await axiosIns.post(`/api/nguoi-dung/themdiachinguoidung`,payload);
+            const response = await axiosIns.post(`/api/nguoi-dung/themdiachi`,payload);
             return response;
+        },
+        async capNhatDiaChi(payload) {
+                const response = await axiosIns.post(`/api/nguoi-dung/capnhatdiachi`, payload);
+                return response;
+        },
+        async xoaDiaChiById(payload) {
+            return axiosIns.get('/api/nguoi-dung/xoadiachi?diaChiId=' + payload
+            )
         },
     },
 }

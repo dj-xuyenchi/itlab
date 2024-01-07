@@ -29,13 +29,15 @@ public interface INguoiDungService {
 
     public Page<NguoiDungDTO> xoaNguoiDung(Long nguoiDungId);
 
+    ResponObject<String, APIStatus> xoaDiaChi( Long diaChiId);
+
     public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId);
 
     ResponObject<String, APIStatus> capNhatDiaChiMacDinh(Long nguoiDungId, Long diaChiId);
 
     ResponObject<String, APIStatus> themDiaChi(DiaChiRequest diaChiRequest);
 
-    ResponObject<String, APIStatus> capNhatDiaChi(DiaChiRequest diaChiRequest);
+    ResponObject<String, APIStatus> capNhatDiaChi(Long diaChiId, Long nguoiDungId, DiaChiRequest diaChiRequest);
 
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDung, MultipartFile anhdaidien) throws IOException;
 }

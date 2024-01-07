@@ -96,13 +96,23 @@ public class NguoiDungController {
         }
     }
 
-    @RequestMapping(value = "/capnhatdiachi", method = RequestMethod.POST)
+    @PostMapping(value = "/capnhatdiachi")
     public ResponseEntity<?> capNhatDiaChi(@RequestBody DiaChiRequest diaChiRequest) {
         try {
-            ResponObject<String, APIStatus> response = _nguoiDungService.capNhatDiaChi(diaChiRequest);
+            ResponObject<String, APIStatus> response = _nguoiDungService.capNhatDiaChi(
+                    diaChiRequest.getNguoiDungId(),
+                    diaChiRequest.getId(),
+                    diaChiRequest);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new ResponObject<String, APIStatus>(null, APIStatus.THATBAI, "Có lỗi xảy ra: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(new ResponObject<String, APIStatus>(
+                    null, APIStatus.THATBAI, "Có lỗi xảy ra: " + e.getMessage()));
         }
     }
+
+    @RequestMapping(value = "/xoadiachi", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaDiaChi(@RequestParam Long diaChiId) {
+        return ResponseEntity.ok(_nguoiDungService.xoaDiaChi(diaChiId));
+    }
+
 }

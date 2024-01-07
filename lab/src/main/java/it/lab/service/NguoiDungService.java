@@ -101,10 +101,22 @@ public class NguoiDungService implements INguoiDungService {
     }
 
     @Override
+    public ResponObject<String, APIStatus> xoaDiaChi(Long diaChiId) {
+        try {
+            _diaChiRepo.deleteById(diaChiId);
+            return new ResponObject<String, APIStatus>("Xóa thành công", APIStatus.THANHCONG, "Thành công");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    @Override
     public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId) {
         NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
         return DiaChiDTO.fromCollection(_diaChiRepo.findDiaChisByNguoiDung(ng));
     }
+
 
 
     @Transactional
@@ -161,11 +173,15 @@ public class NguoiDungService implements INguoiDungService {
     }
 
     @Override
-    public ResponObject<String, APIStatus> capNhatDiaChi(DiaChiRequest diaChiRequest) {
+    @Transactional
+    public ResponObject<String, APIStatus> capNhatDiaChi(Long nguoiDungId, Long diaChiId, DiaChiRequest diaChiRequest) {
         try {
-            DiaChi diaChi = _diaChiRepo.findById(diaChiRequest.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy địa chỉ với ID: " + diaChiRequest.getId()));
+            DiaChi diaChi = _diaChiRepo.findById(diaChiId)
+                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy địa chỉ với ID: " + diaChiId));
+            NguoiDung nguoiDung = _nguoiDungRepo.findById(nguoiDungId)
+                    .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với ID: " + nguoiDungId));
 
+            // Assuming DiaChiRequest contains all the necessary fields to update an address.
             diaChi.setNguoiNhan(diaChiRequest.getNguoiNhan());
             diaChi.setHoNguoiNhan(diaChiRequest.getHoNguoiNhan());
             diaChi.setXaId(diaChiRequest.getXaId());
@@ -176,15 +192,19 @@ public class NguoiDungService implements INguoiDungService {
             diaChi.setTinh(diaChiRequest.getTinh());
             diaChi.setSoDienThoai(diaChiRequest.getSoDienThoai());
             diaChi.setChiTietDiaChi(diaChiRequest.getChiTietDiaChi());
-            _diaChiRepo.save(diaChi);
+            diaChi.setLaDiaChiChinh(diaChiRequest.getLaDiaChiChinh());
+            diaChi.setTrangThai(diaChiRequest.getTrangThai()); // Assuming that DiaChiRequest has a field for TrangThai
+            diaChi.setNgayCapNhat(LocalDateTime.now());
 
-            return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Cập nhật địa chỉ thành công");
+            _diaChiRepo.save(diaChi);
+            return new ResponObject<String, APIStatus>("Cập nhật thành công", APIStatus.THANHCONG, "Cập nhật địa chỉ thành công");
         } catch (EntityNotFoundException e) {
             return new ResponObject<String, APIStatus>("Thất bại", APIStatus.THATBAI, e.getMessage());
         } catch (Exception e) {
-            return new ResponObject<String, APIStatus>("Lỗi", APIStatus.THATBAI, "Có lỗi xảy ra khi cập nhật địa chỉ: " + e.getMessage());
+            return new ResponObject<String, APIStatus>("Lỗi server", APIStatus.THATBAI, "Có lỗi xảy ra khi cập nhật địa chỉ");
         }
     }
+
 
 
     @Override
