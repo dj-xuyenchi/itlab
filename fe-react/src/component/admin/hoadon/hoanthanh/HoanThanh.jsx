@@ -208,13 +208,17 @@ function HoanThanh({ type = 2 }) {
       title: "Giá trị HĐ",
       dataIndex: "hoaDonChiTietList",
       width: "15%",
-      render: (hoaDonChiTietList) => <span>
-        {fixMoney(hoaDonChiTietList ?
-          hoaDonChiTietList.reduce((pre, cur) => {
-            return pre + (cur.soLuong * cur.donGia)
-          }, 0) : 0)
-        }
-      </span>,
+      render: (hoaDonChiTietList) => (
+        <span>
+          {fixMoney(
+            hoaDonChiTietList
+              ? hoaDonChiTietList.reduce((pre, cur) => {
+                  return pre + cur.soLuong * cur.donGia;
+                }, 0)
+              : 0
+          )}
+        </span>
+      ),
     },
     {
       title: "Ngày thanh toán",
@@ -235,12 +239,80 @@ function HoanThanh({ type = 2 }) {
       render: (id) => (
         <>
           <ChiTietHoaDon hoaDonId={id} />
-          {type == 1 &&
+          {type == 1 && (
             <>
               <YeuCauDoiTra hoaDonId={id} setData2={layDuLieu} />
               <HuyDoiTra id={id} setData={layDuLieu} />
             </>
-          }
+          )}
+        </>
+      ),
+    },
+  ];
+  const columnsDoiTra = [
+    {
+      title: "Mã HĐ",
+      dataIndex: "maHoaDon",
+      width: "10%",
+      ...getColumnSearchProps("maHoaDon"),
+    },
+    {
+      title: "Tên khách hàng",
+      dataIndex: "tenKhachHang",
+      width: "15%",
+      ...getColumnSearchProps("tenKhachHang"),
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "soDienThoai",
+      width: "15%",
+      ...getColumnSearchProps("soDienThoai"),
+    },
+    {
+      title: "Giá trị HĐ",
+      dataIndex: "hoaDonChiTietList",
+      width: "15%",
+      render: (hoaDonChiTietList) => (
+        <span>
+          {fixMoney(
+            hoaDonChiTietList
+              ? hoaDonChiTietList.reduce((pre, cur) => {
+                  if (cur.trangThai === 2) {
+                    return pre + cur.soLuong * cur.donGia;
+                  } else {
+                    return pre;
+                  }
+                }, 0)
+              : 0
+          )}
+        </span>
+      ),
+    },
+    {
+      title: "Ngày thanh toán",
+      dataIndex: "ngayThanhToan",
+      width: "20%",
+      render: (item) => <span>{fixNgayThang(item)}</span>,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "trangThai",
+      width: "10%",
+    },
+    {
+      title: "Thao tác",
+      dataIndex: "key",
+      width: "15%",
+      align: "center",
+      render: (id) => (
+        <>
+          <ChiTietHoaDon hoaDonId={id} />
+          {type == 1 && (
+            <>
+              <YeuCauDoiTra hoaDonId={id} setData2={layDuLieu} />
+              <HuyDoiTra id={id} setData={layDuLieu} />
+            </>
+          )}
         </>
       ),
     },
@@ -289,22 +361,24 @@ function HoanThanh({ type = 2 }) {
     <>
       {contextHolder}
       <div className="choxacnhan">
-        {type != 1 ? <Table
-          columns={columns}
-          dataSource={sapXepTheoNgayTao(data)}
-        /> : <Table
-          columns={columns}
-          dataSource={sapXepTheoNgayTao(data.filter((item) => {
-            return kiemTraNgayTrong30Ngay(item.ngayThanhToan)
-          }))}
-        />}
+        {type != 1 ? (
+          <Table columns={columns} dataSource={sapXepTheoNgayTao(data)} />
+        ) : (
+          <Table
+            columns={columnsDoiTra}
+            dataSource={sapXepTheoNgayTao(
+              data.filter((item) => {
+                return kiemTraNgayTrong30Ngay(item.ngayThanhToan);
+              })
+            )}
+          />
+        )}
         <Row
           style={{
             display: "flex",
             justifyContent: "flex-end",
           }}
         >
-
           <Modal
             title="Xác nhận hóa đơn"
             open={isModalOpen}

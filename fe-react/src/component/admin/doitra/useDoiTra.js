@@ -14,6 +14,9 @@ export const useDoiTra = {
         async taoYeuCau(payload) {
             return axiosIns.post('/api/admin/taoyeucau', payload)
         },
+        async taoYeuCau2(payload) {
+            return axiosIns.post('/api/admin/taoyeucau2', payload)
+        },
         async huyYeuCau(payload) {
             return axiosIns.get('/api/admin/huydoitra?hoaDonId=' + payload)
         },

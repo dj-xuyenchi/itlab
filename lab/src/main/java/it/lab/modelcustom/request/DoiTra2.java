@@ -14,4 +14,5 @@ import java.util.List;
 public class DoiTra2 {
     private List<SanPhamDoi2> sanPhamDoi;
     private List<SanPhamTra> sanPhamTra;
+    private Long hoaDonId;
 }

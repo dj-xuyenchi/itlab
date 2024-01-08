@@ -23,16 +23,16 @@ import { fixMoney } from "../../../extensions/fixMoney";
 import DoiSanPham from "./DoiSanPham";
 
 function YeuCauDoiTra({ hoaDonId, setData2 }) {
-  const formatter = value => {
-    if (value === '' || value === undefined) {
+  const formatter = (value) => {
+    if (value === "" || value === undefined) {
       return value;
     }
     return String(parseInt(value, 10));
   };
 
   // Hàm parser để trả về giá trị số nguyên
-  const parser = value => {
-    if (value === '' || value === undefined) {
+  const parser = (value) => {
+    if (value === "" || value === undefined) {
       return value;
     }
     return parseInt(value, 10);
@@ -141,50 +141,54 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
     {
       title: "Hiện trạng sản phẩm",
       dataIndex: "hienTrangSanPham",
-      render: (ghiChu, record, number) =>
-
+      render: (ghiChu, record, number) => (
         <>
-          <p style={{
-            marginBottom: "2px"
-          }}>Đổi</p>
+          <p
+            style={{
+              marginBottom: "2px",
+            }}
+          >
+            Đổi
+          </p>
           <InputNumber
             min={0}
             formatter={formatter}
             parser={parser}
             onChange={(e) => {
-              if (!e) {
-                return
-              }
               if (isNaN(e)) {
-                return
+                soDoi[number] = 0;
+                setSoDoi([...soDoi]);
+                return;
               }
               soDoi[number] = e;
-              setSoDoi([...soDoi])
+              setSoDoi([...soDoi]);
             }}
           />
-          <p style={{
-            marginBottom: "2px"
-          }}>Lỗi</p>
+          <p
+            style={{
+              marginBottom: "2px",
+            }}
+          >
+            Lỗi
+          </p>
           <InputNumber
             min={0}
             formatter={formatter}
             parser={parser}
             onChange={(e) => {
-              if (!e) {
-                return
-              }
               if (isNaN(e)) {
-                return
+                soLoi[number] = 0;
+                setSoLoi([...soLoi]);
+                return;
               }
               soLoi[number] = e;
-              setSoLoi([...soLoi])
+              setSoLoi([...soLoi]);
             }}
           />
-
         </>
-      ,
+      ),
       width: "10%",
-    }
+    },
   ];
   const [data, setData] = useState(undefined);
   async function handleLayChiTiet() {
@@ -222,7 +226,6 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
 
     var duLieuDoiTra = [];
     for (var item of selectedChiTietHoaDon) {
-
       if (!soLuong[item]) {
         openNotification(
           "error",
@@ -250,7 +253,7 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
         );
         return;
       }
-      if (((soLoi[item] ? soLoi[item] : 0) + (soDoi[item] ? soDoi[item] : 0)) !== soLuong[item]) {
+      if (soLoi[item] + soDoi[item] !== soLuong[item]) {
         openNotification(
           "error",
           "Hệ thống",
@@ -264,10 +267,12 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
         chiTietId: data[item].id,
         ghiChu: ghiChu[item],
         soLuong: soLuong[item],
-        soLuongLoi: soLoi[item],
-        soLuongDoiTra: soDoi[item],
+        soLuongLoi: soLoi[item] ? soLoi[item] : 0,
+        soLuongDoiTra: soDoi[item] ? soDoi[item] : 0,
       };
     }
+    console.log(duLieuDoiTra);
+
     if (sanPhamDoi.length === 0) {
       openNotification(
         "error",
@@ -277,33 +282,34 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
       );
       return;
     }
-    console.log(duLieuDoiTra);
-    console.log(sanPhamDoi);
-
     setDataDoiTra(duLieuDoiTra);
-    // setConfirmModal(true);
+    setConfirmModal(true);
   }
-  const [dataDoiTra, setDataDoiTra] = useState(undefined)
+  const [dataDoiTra, setDataDoiTra] = useState(undefined);
   const [confirmModal, setConfirmModal] = useState(false);
   async function handleTaoYeuCau() {
-    const data = await useDoiTra.actions.taoYeuCau(dataDoiTra)
-    if (data.data) {
+    const data = await useDoiTra.actions.taoYeuCau2({
+      sanPhamDoi: sanPhamDoi,
+      sanPhamTra: dataDoiTra,
+      hoaDonId: hoaDonId,
+    });
+    if (data.data === 1) {
       openNotification(
         "success",
         "Hệ thống",
         "Đổi trả thành công",
         "bottomRight"
       );
-      setData2()
+      setData2();
     } else {
       openNotification(
         "error",
         "Hệ thống",
-        "Đổi trả thất bại",
+        "Tổng giá trị hóa đơn sau khi đổi phải lớn hơn hoặc bằng giá trị cũ",
         "bottomRight"
       );
     }
-    setIsModalOpen(false)
+    setIsModalOpen(false);
   }
 
   return (
@@ -357,21 +363,19 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
             />
           </Col>
         </Row>
-        <Row style={{
-          width: "400px"
-        }}>
-          <DoiSanPham
-            dataDoi={sanPhamDoi}
-            setSanPhamDoi={setSanPhamDoi}
-          />
+        <Row
+          style={{
+            width: "400px",
+          }}
+        >
+          <DoiSanPham dataDoi={sanPhamDoi} setSanPhamDoi={setSanPhamDoi} />
         </Row>
       </Modal>
       <Modal
-        title="Đổi trả sản phẩm?"
+        title="Đổi trả sản phẩm"
         open={confirmModal}
         onOk={() => {
-          console.log(dataDoiTra);
-          //    handleTaoYeuCau();
+          handleTaoYeuCau();
           //    setConfirmModal(false);
         }}
         onCancel={() => {

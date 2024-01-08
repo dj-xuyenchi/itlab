@@ -22,7 +22,7 @@ public class HoaDonDoiTra {
     private String tenKhachHang;
     private String soDienThoai;
     private List<HoaDonChiTiet> hoaDonChiTietList;
-    private LocalDateTime ngayTao;
+    private LocalDateTime ngayCapNhat;
     private String trangThai;
 
     public static HoaDonDoiTra fromEntity(HoaDon entity) {
@@ -32,7 +32,7 @@ public class HoaDonDoiTra {
                 entity.getNguoiMua().getHo() + entity.getNguoiMua().getTen(),
                 entity.getNguoiMua().getSoDienThoai(),
                 entity.getHoaDonChiTietList(),
-                entity.getNgayTao(),
+                entity.getNgayCapNhat(),
                 "Đã đổi trả"
         );
     }

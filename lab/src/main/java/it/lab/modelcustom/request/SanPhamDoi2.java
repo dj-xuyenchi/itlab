@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SanPhamDoi2 {
-    private Integer soLuong;
-    private Long sanPhamChiTietId;
+    private Integer soLuongDoi;
+    private Long id;
 
 }

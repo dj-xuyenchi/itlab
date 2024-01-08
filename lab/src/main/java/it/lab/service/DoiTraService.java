@@ -11,6 +11,7 @@ import it.lab.modelcustom.request.DoiTra2;
 import it.lab.repository.HoaDonChiTietRepo;
 import it.lab.repository.HoaDonRepo;
 import it.lab.repository.SanPhamChiTietRepo;
+import it.lab.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,8 @@ public class DoiTraService implements IDoiTraService {
     private HoaDonRepo _hoaDonRepo;
     @Autowired
     private SanPhamChiTietRepo _sanPhamChiTietRepo;
-
+    @Autowired
+    private SanPhamRepo _sanPhamRepo;
     @Override
     public List<HoaDonChiTiet> layHoaDonChiTietCuaHoaDon(Long hoaDonId) {
         HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
@@ -98,9 +100,84 @@ public class DoiTraService implements IDoiTraService {
         }
     }
 
+    /// 1 là thành công, 2 là ko đồng ý do giá trị hóa đơn nhỏ hơn trước
     @Override
     public Integer doiTra2(DoiTra2 doiTra) {
+        Double giaTriHdHienTai = _hoaDonRepo.tinhGiaTriHd(doiTra.getHoaDonId());
+        Double giaTriHdMoi = tinhGiaTriHdSauDoiTra(doiTra);
+        if (giaTriHdMoi < giaTriHdHienTai) {
+            return 2;
+        }
+        doiTraSanPham(doiTra);
         return 1;
+    }
+
+    private void doiTraSanPham(DoiTra2 doiTra) {
+        HoaDon hd = _hoaDonRepo.findById(doiTra.getHoaDonId()).get();
+        hd.setTrangThai(TrangThaiHoaDon.DADOITRA);
+        for (var item : doiTra.getSanPhamTra()) {
+            HoaDonChiTiet hdct = _hoaDonChiTietRepo.findById(item.getChiTietId()).get();
+            hdct.setTrangThai(1);
+            hdct.setSoLuongDoiTra(item.getSoLuong());
+            hdct.setSoLuongLoi(item.getSoLuongLoi());
+            hdct.setSoLuongDoi(item.getSoLuongDoiTra());
+            hdct.setGhiChu(item.getGhiChu());
+            SanPhamChiTiet sp = hdct.getSanPhamChiTiet();
+            sp.setSoLuongTon(sp.getSoLuongTon()+hdct.getSoLuong());
+            sp.setSoLuongLoi(sp.getSoLuongLoi()+item.getSoLuongLoi());
+            sp.setSoLuongTraHang(sp.getSoLuongTraHang()+item.getSoLuongDoiTra());
+            SanPham sanPham = sp.getSanPham();
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon()+hdct.getSoLuong());
+            sanPham.setSoLuongLoi(sanPham.getSoLuongLoi()+item.getSoLuongLoi());
+            sanPham.setSoLuongTraHang(sanPham.getSoLuongTraHang()+item.getSoLuongDoiTra());
+            if(hdct.getSoLuong()>item.getSoLuong()){
+                HoaDonChiTiet hdctMoi = new HoaDonChiTiet();
+                hdctMoi.setNgayTao(LocalDateTime.now());
+                hdctMoi.setHoaDon(hd);
+                hdctMoi.setSoLuong(hdct.getSoLuong()-item.getSoLuong());
+                hdctMoi.setSanPhamChiTiet(sp);
+                hdctMoi.setDonGia(sp.getGiaBan());
+                hdctMoi.setTrangThai(2);
+                sp.setSoLuongTon(sp.getSoLuongTon()-(hdct.getSoLuong()-item.getSoLuong()));
+                sanPham.setSoLuongTon(sanPham.getSoLuongTon()-(hdct.getSoLuong()-item.getSoLuong()));
+                _hoaDonChiTietRepo.save(hdctMoi);
+            }
+            _sanPhamRepo.save(sanPham);
+            _sanPhamChiTietRepo.save(sp);
+            _hoaDonChiTietRepo.save(hdct);
+        }
+        for (var item : doiTra.getSanPhamDoi()) {
+            SanPhamChiTiet spct = _sanPhamChiTietRepo.findById(item.getId()).get();
+            SanPham sp = spct.getSanPham();
+            sp.setSoLuongTon(sp.getSoLuongTon()-item.getSoLuongDoi());
+            spct.setSoLuongTon(spct.getSoLuongTon()-item.getSoLuongDoi());
+            HoaDonChiTiet hdct = new HoaDonChiTiet();
+            hdct.setNgayTao(LocalDateTime.now());
+            hdct.setHoaDon(hd);
+            hdct.setSoLuong(item.getSoLuongDoi());
+            hdct.setSanPhamChiTiet(spct);
+            hdct.setDonGia(spct.getGiaBan());
+            hdct.setTrangThai(2);
+            _sanPhamChiTietRepo.save(spct);
+            _sanPhamRepo.save(sp);
+            _hoaDonChiTietRepo.save(hdct);
+        }
+        hd.setGiaTriHd(tinhGiaTriHdSauDoiTra(doiTra));
+        hd.setNgayCapNhat(LocalDateTime.now());
+        _hoaDonRepo.save(hd);
+    }
+
+    private Double tinhGiaTriHdSauDoiTra(DoiTra2 doiTra) {
+        Double total = 0d;
+        for (var item : doiTra.getSanPhamTra()) {
+            HoaDonChiTiet hdct = _hoaDonChiTietRepo.findById(item.getChiTietId()).get();
+            total += (hdct.getSoLuong() - item.getSoLuong()) * hdct.getDonGia();
+        }
+        for (var item : doiTra.getSanPhamDoi()) {
+            SanPhamChiTiet spct = _sanPhamChiTietRepo.findById(item.getId()).get();
+            total += spct.getGiaBan() * item.getSoLuongDoi();
+        }
+        return total;
     }
 
     @Override

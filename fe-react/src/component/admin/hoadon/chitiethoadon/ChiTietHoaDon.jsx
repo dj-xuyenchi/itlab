@@ -629,12 +629,13 @@ function ChiTietHoaDon({
               Giá trị:
             </Col>
             <Col span={8}>
-              <Input disabled
+              <Input
+                disabled
                 value={fixMoney(
                   hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
-                    return pre + (cur.soLuong * cur.donGia)
-                  }, 0))
-                }
+                    return pre + cur.soLuong * cur.donGia;
+                  }, 0)
+                )}
               />
             </Col>
           </Row>
@@ -795,8 +796,8 @@ function ChiTietHoaDon({
                 value={
                   hoaDonChiTiet.diaChiGiao &&
                   hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                  " " +
-                  hoaDonChiTiet.diaChiGiao.nguoiNhan
+                    " " +
+                    hoaDonChiTiet.diaChiGiao.nguoiNhan
                 }
               />
             </Col>
@@ -908,37 +909,74 @@ function ChiTietHoaDon({
           <Row>
             <h6>Phương thức thanh toán</h6>
           </Row>
-          <Row
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginTop: "14px",
-              marginBottom: "14px",
-            }}
-          >
-            <Col span={3} style={{}}>
-              Phương thức:
-            </Col>
-            <Col span={8}>
-              <Input
-                disabled
-                value={hoaDonChiTiet.phuongThucThanhToan.tenPhuongThuc}
-              />
-            </Col>
-            <Col span={3} style={{}} offset={1}>
-              Số tiền:
-            </Col>
-            <Col span={8}>
-              <Input
-                disabled
-                value={fixMoney(
-                  hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
-                    return pre + (cur.soLuong * cur.donGia)
-                  }, 0) + hoaDonChiTiet.phiVanChuyen)
-                }
-              />
-            </Col>
-          </Row>
+          {hoaDonChiTiet.trangThai === "DADOITRA" ? (
+            <Row
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "14px",
+                marginBottom: "14px",
+              }}
+            >
+              <Col span={3} style={{}}>
+                Phương thức:
+              </Col>
+              <Col span={8}>
+                <Input
+                  disabled
+                  value={hoaDonChiTiet.phuongThucThanhToan.tenPhuongThuc}
+                />
+              </Col>
+              <Col span={3} style={{}} offset={1}>
+                Số tiền:
+              </Col>
+              <Col span={8}>
+                <Input
+                  disabled
+                  value={fixMoney(
+                    hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+                      if (cur.trangThai == 2) {
+                        return pre + cur.soLuong * cur.donGia;
+                      }
+                      return pre;
+                    }, 0) + hoaDonChiTiet.phiVanChuyen
+                  )}
+                />
+              </Col>
+            </Row>
+          ) : (
+            <Row
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "14px",
+                marginBottom: "14px",
+              }}
+            >
+              <Col span={3} style={{}}>
+                Phương thức:
+              </Col>
+              <Col span={8}>
+                <Input
+                  disabled
+                  value={hoaDonChiTiet.phuongThucThanhToan.tenPhuongThuc}
+                />
+              </Col>
+              <Col span={3} style={{}} offset={1}>
+                Số tiền:
+              </Col>
+              <Col span={8}>
+                <Input
+                  disabled
+                  value={fixMoney(
+                    hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+                      return pre + cur.soLuong * cur.donGia;
+                    }, 0) + hoaDonChiTiet.phiVanChuyen
+                  )}
+                />
+              </Col>
+            </Row>
+          )}
           {tuChoi && (
             <Row>
               <Col span={24}>
@@ -1012,13 +1050,13 @@ function ChiTietHoaDon({
                           >
                             {data
                               ? data.map((option) => (
-                                <Select.Option
-                                  key={option.id}
-                                  value={option.id}
-                                >
-                                  {option.tenSanPham}
-                                </Select.Option>
-                              ))
+                                  <Select.Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.tenSanPham}
+                                  </Select.Option>
+                                ))
                               : ""}
                           </Select>
                         </Col>

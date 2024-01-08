@@ -212,13 +212,17 @@ function DoiTra() {
       dataIndex: "hoaDonChiTietList",
       width: "15%",
       sorter: (a, b) => a.giaTriHd - b.giaTriHd,
-      render: (hoaDonChiTietList) => <span>
-        {fixMoney(hoaDonChiTietList ?
-          hoaDonChiTietList.reduce((pre, cur) => {
-            return pre + (cur.soLuong * cur.donGia)
-          }, 0) : 0)
-        }
-      </span>,
+      render: (hoaDonChiTietList) => (
+        <span>
+          {fixMoney(
+            hoaDonChiTietList
+              ? hoaDonChiTietList.reduce((pre, cur) => {
+                  return pre + cur.soLuong * cur.donGia;
+                }, 0)
+              : 0
+          )}
+        </span>
+      ),
     },
     {
       title: "Ngày tạo",
@@ -237,7 +241,69 @@ function DoiTra() {
       dataIndex: "key",
       width: "10%",
       align: "center",
-      render: (id) => <ChiTietHoaDon hoaDonId={id} showDoi={true} type={false} />,
+      render: (id) => (
+        <ChiTietHoaDon hoaDonId={id} showDoi={true} type={false} />
+      ),
+    },
+  ];
+  const columnsDoiTra = [
+    {
+      title: "Mã HĐ",
+      dataIndex: "maHoaDon",
+      width: "10%",
+      ...getColumnSearchProps("maHoaDon"),
+    },
+    {
+      title: "Tên khách hàng",
+      dataIndex: "tenKhachHang",
+      width: "20%",
+      ...getColumnSearchProps("tenKhachHang"),
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "soDienThoai",
+      width: "15%",
+      ...getColumnSearchProps("soDienThoai"),
+    },
+    {
+      title: "Giá trị HĐ",
+      dataIndex: "hoaDonChiTietList",
+      width: "15%",
+      render: (hoaDonChiTietList) => (
+        <span>
+          {fixMoney(
+            hoaDonChiTietList
+              ? hoaDonChiTietList.reduce((pre, cur) => {
+                  if (cur.trangThai === 2) {
+                    return pre + cur.soLuong * cur.donGia;
+                  } else {
+                    return pre;
+                  }
+                }, 0)
+              : 0
+          )}
+        </span>
+      ),
+    },
+    {
+      title: "Ngày đổi",
+      dataIndex: "ngayCapNhat",
+      width: "20%",
+      render: (item) => <span>{item ? fixNgayThang(item) : "Cập nhật"}</span>,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "trangThai",
+      width: "10%",
+    },
+    {
+      title: "Thao tác",
+      dataIndex: "key",
+      width: "10%",
+      align: "center",
+      render: (id) => (
+        <ChiTietHoaDon hoaDonId={id} showDoi={true} type={false} />
+      ),
     },
   ];
   const [data, setData] = useState([]);
@@ -298,8 +364,8 @@ function DoiTra() {
       <div className="choxacnhan">
         <Table
           rowSelection={rowSelection}
-          columns={columns}
-          dataSource={sapXepTheoNgayTao(data)}
+          columns={columnsDoiTra}
+          dataSource={data}
         />
       </div>
     </>
