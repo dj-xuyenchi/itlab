@@ -16,7 +16,7 @@ const YourComponent = () => {
     }
 
     const months = Object.keys(yearlyProfits[Object.keys(yearlyProfits)[0]]);
-    const sortedMonths = months.sort((a, b) => moment().month(a).valueOf() - moment().month(b).valueOf());
+    const sortedMonths = months.sort((a, b) => moment(a, 'MMMM').month() - moment(b, 'MMMM').month());
 
     const xAxisData = sortedMonths.slice(0, 12); // Display data for the first 12 months
     const seriesData = Object.keys(yearlyProfits).flatMap((year) => [

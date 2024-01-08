@@ -168,22 +168,24 @@ public class ThongKeController {
 
 
 
-    //thongkebar-1
+    private static final String[] MONTH_NAMES = {
+            "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+            "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+    };
+
     @GetMapping("/bieu-do-tong-hop")
     public ResponseEntity<Map<Integer, Map<String, Map<String, BigDecimal>>>> calculateTotalProfitByYearAndMonth(
             @RequestParam(name = "startYear", required = false, defaultValue = "0") int startYear,
             @RequestParam(name = "endYear", required = false, defaultValue = "0") int endYear) {
 
-
-
         Map<Integer, Map<String, Map<String, BigDecimal>>> yearlyProfits = new HashMap<>();
 
         for (int year = startYear; year <= endYear; year++) {
-            Map<String, Map<String, BigDecimal>> monthlyProfits = new HashMap<>();
+            Map<String, Map<String, BigDecimal>> monthlyProfits = new LinkedHashMap<>();
 
             for (int month = 1; month <= 12; month++) {
-                BigDecimal tongDoanhThu = repositoryThongKe.tinhTongDoanhThuTrongThang1(year,year, month);
-                BigDecimal loiNhuanSauKhiTruChiPhi = repositoryHDCT.tinhTongDoanhThuNamSauKhiTruChiPhi(year,year, month);
+                BigDecimal tongDoanhThu = repositoryThongKe.tinhTongDoanhThuTrongThang1(year, year, month);
+                BigDecimal loiNhuanSauKhiTruChiPhi = repositoryHDCT.tinhTongDoanhThuNamSauKhiTruChiPhi(year, year, month);
 
                 Map<String, BigDecimal> monthlyDetails = new HashMap<>();
                 monthlyDetails.put("tongDoanhThu", tongDoanhThu);
@@ -198,9 +200,11 @@ public class ThongKeController {
         return ResponseEntity.ok(yearlyProfits);
     }
 
+    // Sử dụng mảng trên trong phương thức getMonthName
     private String getMonthName(int month) {
-        return new DateFormatSymbols().getMonths()[month - 1];
+        return MONTH_NAMES[month - 1];
     }
+
 
 
 
