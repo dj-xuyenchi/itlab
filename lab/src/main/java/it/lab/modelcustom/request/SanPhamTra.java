@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoiTra2 {
-    private List<SanPhamDoi2> sanPhamDoi;
-    private List<SanPhamTra> sanPhamTra;
+public class SanPhamTra {
+    private Integer soLuong;
+    private Integer soLuongLoi;
+    private Integer soLuongDoiTra;
+    private Long chiTietId;
+    private String ghiChu;
 }

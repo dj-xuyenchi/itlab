@@ -7,6 +7,7 @@ import it.lab.entity.SanPhamChiTiet;
 import it.lab.enums.TrangThaiHoaDon;
 import it.lab.iservice.IDoiTraService;
 import it.lab.modelcustom.request.ChiTietDoiTra;
+import it.lab.modelcustom.request.DoiTra2;
 import it.lab.repository.HoaDonChiTietRepo;
 import it.lab.repository.HoaDonRepo;
 import it.lab.repository.SanPhamChiTietRepo;
@@ -95,6 +96,11 @@ public class DoiTraService implements IDoiTraService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public Integer doiTra2(DoiTra2 doiTra) {
+        return 1;
     }
 
     @Override
