@@ -294,6 +294,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         }
         if (trangThai.equals("00")) {
             thayDoiSoLuongKhiConfirmHoaDon(hoaDon.get().getId());
+            hoaDon.get().setNgayThanhToan(LocalDateTime.now());
             if (hoaDon.get().getPhuongThucVanChuyen().getId() == 1) {
                 hoaDon.get().setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
             } else {
@@ -316,6 +317,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         PhuongThucThanhToan pttt = _phuongThucThanhToanRepo.findById(2l).get();
         hoaDon.setPhuongThucThanhToan(pttt);
         thayDoiSoLuongKhiConfirmHoaDon(hoaDon.getId());
+        hoaDon.setNgayThanhToan(LocalDateTime.now());
         if (muaTaiQuay2.getTaoDiaChi() == 0) {
             hoaDon.setTrangThai(TrangThaiHoaDon.DAGIAO);
             hoaDon.setNgayGiao(LocalDateTime.now());

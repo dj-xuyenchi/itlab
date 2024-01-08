@@ -31,7 +31,6 @@ public class HoaDonChoTaiCuaHang {
     private LocalDateTime ngayGiao;
     private Double giaTriHd;
     private String trangThai;
-    private NguoiDungVoucher voucherGiaoHang;
     private NguoiDungVoucher voucherGiam;
     private NguoiDung nhanVien;
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
@@ -54,7 +53,6 @@ public class HoaDonChoTaiCuaHang {
                 entity.getNgayGiao(),
                 entity.getGiaTriHd(),
                 "Chờ",
-                entity.getVoucherGiaoHang(),
                 entity.getVoucherGiam(),
                 entity.getNhanVien(),
                 null,

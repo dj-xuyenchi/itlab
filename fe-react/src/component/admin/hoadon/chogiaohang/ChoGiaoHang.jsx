@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, Menu, Row, Space, Table, notification } from "antd";
+import { Button, Input, Menu, Modal, Row, Space, Table, notification } from "antd";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { fixMoney } from "../../../../extensions/fixMoney";
@@ -10,8 +10,20 @@ import Highlighter from "react-highlight-words";
 import { useHoaDonChoGiaoStore } from "./useHoaDonChoGiaoStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+import sapXepTheoNgayTao from "../../../../extensions/sapXepNgayTao";
 
 function ChoGiaoHang() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    handleXacNhanHoaDon();
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -176,10 +188,16 @@ function ChoGiaoHang() {
     },
     {
       title: "Giá trị HĐ",
-      dataIndex: "giaTriHd",
+      dataIndex: "hoaDonChiTietList",
       width: "15%",
       sorter: (a, b) => a.giaTriHd - b.giaTriHd,
-      render: (item) => <span>{fixMoney(item)}</span>,
+      render: (hoaDonChiTietList) => <span>
+        {fixMoney(hoaDonChiTietList ?
+          hoaDonChiTietList.reduce((pre, cur) => {
+            return pre + (cur.soLuong * cur.donGia)
+          }, 0) : 0)
+        }
+      </span>,
     },
     {
       title: "Ngày tạo",
@@ -248,7 +266,7 @@ function ChoGiaoHang() {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={data}
+          dataSource={sapXepTheoNgayTao(data)}
         />
         <Row
           style={{
@@ -256,18 +274,25 @@ function ChoGiaoHang() {
             justifyContent: "flex-end",
           }}
         >
-          {/* <Button type="primary" danger onClick={handleHuy}>
-            Hủy
-          </Button> */}
+        
           <Button
             style={{
               marginLeft: "12px",
             }}
             type="primary"
-            onClick={handleXacNhanHoaDon}
+            onClick={showModal}
           >
             Xác nhận
           </Button>
+          <Modal
+            title="Xác nhận hóa đơn"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            centered
+          >
+            <p>Bạn có chắc muốn xác nhận hóa đơn</p>
+          </Modal>
         </Row>
       </div>
     </>

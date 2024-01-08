@@ -37,7 +37,6 @@ public class SanPhamDTO {
     private ThietKe thietKe;
     private NhomSanPham nhomSanPham;
     private ChatLieu chatLieu;
-    private List<SanPhamSuKien> sanPhamSuKienList;
     private List<HinhAnhSanPham> hinhAnhSanPhamList;
     private List<SanPhamChiTiet> sanPhamChiTietList;
 
@@ -61,7 +60,6 @@ public class SanPhamDTO {
                 entity.getThietKe(),
                 entity.getNhomSanPham(),
                 entity.getChatLieu(),
-                entity.getSanPhamSuKienList(),
                 entity.getHinhAnhSanPhamList(),
                 entity.getSanPhamChiTietList()
         );

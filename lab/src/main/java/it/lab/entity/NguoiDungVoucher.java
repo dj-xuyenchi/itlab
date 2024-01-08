@@ -37,14 +37,8 @@ public class NguoiDungVoucher {
     private Double giaTriGiam;
     @Column(name = "loaigiam")
     private LoaiGiam loaiGiam;
-
     @Column(name = "trangthai")
     private TrangThaiNguoiDungVoucher trangThai;
-
-
-    @OneToMany(mappedBy = "voucherGiaoHang")
-    @JsonIgnore
-    private List<HoaDon> giaoHangList;
     @JsonIgnore
     @OneToMany(mappedBy = "voucherGiam")
     private List<HoaDon> giamList;

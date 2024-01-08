@@ -171,6 +171,7 @@ public class ThanhToanService implements IThanhToan {
             List<GioHang> ghList = _gioHangRepo.findGioHangsByNguoiMua(hoaDon.get().getNguoiMua());
             _gioHangRepo.deleteAll(ghList);
             thayDoiSoLuongKhiConfirmHoaDon(hoaDon.get().getId());
+            hoaDon.get().setNgayThanhToan(LocalDateTime.now());
             hoaDon.get().setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
             _hoaDonRepo.save(hoaDon.get());
         } else {

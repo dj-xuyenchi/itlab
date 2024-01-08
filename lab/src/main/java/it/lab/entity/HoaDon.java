@@ -48,16 +48,14 @@ public class HoaDon {
     private LocalDateTime ngayCapNhat;
     @Column(name = "ngaygiao")
     private LocalDateTime ngayGiao;
+    @Column(name = "ngaythanhtoan")
+    private LocalDateTime ngayThanhToan;
     @Column(name = "giatrihd")
     private Double giaTriHd;
     @Column(name = "trangthai")
     private TrangThaiHoaDon trangThai;
     @Column(name = "lydotuchoitra",columnDefinition = "nvarchar(max)")
     private String lyDoTuChoiTra;
-    @JoinColumn(name = "vouchergiaohangid")
-    @ManyToOne
-    @JsonIgnore
-    private NguoiDungVoucher voucherGiaoHang;
     @JoinColumn(name = "vouchergiamid")
     @ManyToOne
     @JsonIgnore

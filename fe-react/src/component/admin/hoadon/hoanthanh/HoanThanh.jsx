@@ -11,7 +11,6 @@ import {
   Table,
   notification,
 } from "antd";
-import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { fixMoney } from "../../../../extensions/fixMoney";
 import { SearchOutlined } from "@ant-design/icons";
@@ -20,8 +19,9 @@ import { useHoaDonHuyStore } from "./useHoaDonHuyStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 import YeuCauDoiTra from "../../doitra/YeuCauDoiTra";
-import { useDoiTra } from "../../doitra/useDoiTra";
 import HuyDoiTra from "../../doitra/HuyDoiTra";
+import sapXepTheoNgayTao from "../../../../extensions/sapXepNgayTao";
+import kiemTraNgayTrong30Ngay from "../../../../extensions/kiemTraNgayTao";
 
 function HoanThanh({ type = 2 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -206,16 +206,20 @@ function HoanThanh({ type = 2 }) {
     },
     {
       title: "Giá trị HĐ",
-      dataIndex: "giaTriHd",
+      dataIndex: "hoaDonChiTietList",
       width: "15%",
-      sorter: (a, b) => a.giaTriHd - b.giaTriHd,
-      render: (item) => <span>{fixMoney(item)}</span>,
+      render: (hoaDonChiTietList) => <span>
+        {fixMoney(hoaDonChiTietList ?
+          hoaDonChiTietList.reduce((pre, cur) => {
+            return pre + (cur.soLuong * cur.donGia)
+          }, 0) : 0)
+        }
+      </span>,
     },
     {
-      title: "Ngày tạo",
-      dataIndex: "ngayTao",
+      title: "Ngày thanh toán",
+      dataIndex: "ngayThanhToan",
       width: "20%",
-      sorter: (a, b) => a - b,
       render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
@@ -285,28 +289,22 @@ function HoanThanh({ type = 2 }) {
     <>
       {contextHolder}
       <div className="choxacnhan">
-        <Table
+        {type != 1 ? <Table
           columns={columns}
-          dataSource={data}
-        />
+          dataSource={sapXepTheoNgayTao(data)}
+        /> : <Table
+          columns={columns}
+          dataSource={sapXepTheoNgayTao(data.filter((item) => {
+            return kiemTraNgayTrong30Ngay(item.ngayThanhToan)
+          }))}
+        />}
         <Row
           style={{
             display: "flex",
             justifyContent: "flex-end",
           }}
         >
-          {/* <Button type="primary" danger onClick={showModal2}>
-            Hủy
-          </Button> */}
-          {/* <Button
-            style={{
-              marginLeft: "12px",
-            }}
-            type="primary"
-            onClick={showModal}
-          >
-            Xác nhận
-          </Button> */}
+
           <Modal
             title="Xác nhận hóa đơn"
             open={isModalOpen}

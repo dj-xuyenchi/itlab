@@ -19,6 +19,7 @@ import Highlighter from "react-highlight-words";
 import { useHoaDonChoStore } from "./useHoaDonChoStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+import sapXepTheoNgayTao from "../../../../extensions/sapXepNgayTao";
 
 function TuChoiDoi() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -207,10 +208,16 @@ function TuChoiDoi() {
     },
     {
       title: "Giá trị HĐ",
-      dataIndex: "giaTriHd",
+      dataIndex: "hoaDonChiTietList",
       width: "15%",
       sorter: (a, b) => a.giaTriHd - b.giaTriHd,
-      render: (item) => <span>{fixMoney(item)}</span>,
+      render: (hoaDonChiTietList) => <span>
+        {fixMoney(hoaDonChiTietList ?
+          hoaDonChiTietList.reduce((pre, cur) => {
+            return pre + (cur.soLuong * cur.donGia)
+          }, 0) : 0)
+        }
+      </span>,
     },
     {
       title: "Ngày tạo",
@@ -291,7 +298,7 @@ function TuChoiDoi() {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={data}
+          dataSource={sapXepTheoNgayTao(data)}
         />
       </div>
     </>

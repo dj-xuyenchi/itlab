@@ -511,7 +511,7 @@ function ChiTietHoaDon({
       render: (soLuong, record) => (
         <InputNumber
           min={1}
-          max={record.sanPhamChiTiet.soLuongTon}
+          // max={record.sanPhamChiTiet.soLuongTon}
           value={soLuong}
           disabled={isChoXacNhan}
           onChange={(e) => {
@@ -629,7 +629,13 @@ function ChiTietHoaDon({
               Giá trị:
             </Col>
             <Col span={8}>
-              <Input disabled value={fixMoney(hoaDonChiTiet.giaTriHd)} />
+              <Input disabled
+                value={fixMoney(
+                  hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+                    return pre + (cur.soLuong * cur.donGia)
+                  }, 0))
+                }
+              />
             </Col>
           </Row>
           <Row
@@ -789,8 +795,8 @@ function ChiTietHoaDon({
                 value={
                   hoaDonChiTiet.diaChiGiao &&
                   hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                    " " +
-                    hoaDonChiTiet.diaChiGiao.nguoiNhan
+                  " " +
+                  hoaDonChiTiet.diaChiGiao.nguoiNhan
                 }
               />
             </Col>
@@ -926,11 +932,10 @@ function ChiTietHoaDon({
               <Input
                 disabled
                 value={fixMoney(
-                  hoaDonChiTiet.giaTriHd -
-                    (hoaDonChiTiet.phiVanChuyen
-                      ? hoaDonChiTiet.phiVanChuyen
-                      : 0)
-                )}
+                  hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+                    return pre + (cur.soLuong * cur.donGia)
+                  }, 0) + hoaDonChiTiet.phiVanChuyen)
+                }
               />
             </Col>
           </Row>
@@ -1007,13 +1012,13 @@ function ChiTietHoaDon({
                           >
                             {data
                               ? data.map((option) => (
-                                  <Select.Option
-                                    key={option.id}
-                                    value={option.id}
-                                  >
-                                    {option.tenSanPham}
-                                  </Select.Option>
-                                ))
+                                <Select.Option
+                                  key={option.id}
+                                  value={option.id}
+                                >
+                                  {option.tenSanPham}
+                                </Select.Option>
+                              ))
                               : ""}
                           </Select>
                         </Col>

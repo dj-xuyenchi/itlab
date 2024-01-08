@@ -30,13 +30,13 @@ public class HoaDonDTO {
     private PhuongThucThanhToan phuongThucThanhToan;
     private PhuongThucVanChuyen phuongThucVanChuyen;
     private String ghiChu;
+    private LocalDateTime ngayThanhToan;
     private LocalDateTime ngayTao;
     private LocalDateTime ngayCapNhat;
     private LocalDateTime ngayGiao;
     private Double giaTriHd;
     private Double phiVanChuyen;
     private TrangThaiHoaDon trangThai;
-    private NguoiDungVoucher voucherGiaoHang;
     private NguoiDungVoucher voucherGiam;
     private NguoiDung nhanVien;
     private String lyDoTuChoiDoi;
@@ -60,13 +60,13 @@ public class HoaDonDTO {
                 entity.getPhuongThucThanhToan(),
                 entity.getPhuongThucVanChuyen(),
                 entity.getGhiChu(),
+                entity.getNgayThanhToan(),
                 entity.getNgayTao(),
                 entity.getNgayCapNhat(),
                 entity.getNgayGiao(),
                 entity.getGiaTriHd(),
                 entity.getPhiGiaoHang(),
                 entity.getTrangThai(),
-                entity.getVoucherGiaoHang(),
                 entity.getVoucherGiam(),
                 entity.getNhanVien(),
                 entity.getLyDoTuChoiTra(),

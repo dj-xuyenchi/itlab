@@ -543,7 +543,11 @@ function ChiTietHoaDonChoXacNhan({
               Giá trị:
             </Col>
             <Col span={8}>
-              <Input disabled value={fixMoney(hoaDonChiTiet.giaTriHd)} />
+              <Input disabled value={fixMoney(
+                hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+                  return pre + (cur.soLuong * cur.donGia)
+                }, 0))
+              } />
             </Col>
           </Row>
           <Row
@@ -717,8 +721,8 @@ function ChiTietHoaDonChoXacNhan({
                 value={
                   hoaDonChiTiet.diaChiGiao &&
                   hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                    " " +
-                    hoaDonChiTiet.diaChiGiao.nguoiNhan
+                  " " +
+                  hoaDonChiTiet.diaChiGiao.nguoiNhan
                 }
               />
             </Col>
@@ -855,11 +859,10 @@ function ChiTietHoaDonChoXacNhan({
               <Input
                 disabled
                 value={fixMoney(
-                  hoaDonChiTiet.giaTriHd -
-                    (hoaDonChiTiet.phiVanChuyen
-                      ? hoaDonChiTiet.phiVanChuyen
-                      : 0)
-                )}
+                  hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+                    return pre + (cur.soLuong * cur.donGia)
+                  }, 0) + hoaDonChiTiet.phiVanChuyen)
+                }
               />
             </Col>
           </Row>
@@ -935,10 +938,10 @@ function ChiTietHoaDonChoXacNhan({
                       >
                         {data
                           ? data.map((option) => (
-                              <Select.Option key={option.id} value={option.id}>
-                                {option.tenSanPham}
-                              </Select.Option>
-                            ))
+                            <Select.Option key={option.id} value={option.id}>
+                              {option.tenSanPham}
+                            </Select.Option>
+                          ))
                           : ""}
                       </Select>
                     </Col>

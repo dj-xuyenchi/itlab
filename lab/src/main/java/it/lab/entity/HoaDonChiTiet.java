@@ -39,6 +39,10 @@ public class HoaDonChiTiet {
     private String ghiChu;
     @Column(name = "soluongdoitra")
     private Integer soLuongDoiTra;
+    @Column(name = "soluongloi")
+    private Integer soLuongLoi;
+    @Column(name = "soluongdoi")
+    private Integer soLuongDoi;
     @Column(name = "trangthai")
     //1 là đã qua đổi tra 2 là chưa
     private Integer trangThai = 2;

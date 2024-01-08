@@ -23,9 +23,22 @@ import { fixMoney } from "../../../extensions/fixMoney";
 import DoiSanPham from "./DoiSanPham";
 
 function YeuCauDoiTra({ hoaDonId, setData2 }) {
+  const formatter = value => {
+    if (value === '' || value === undefined) {
+      return value;
+    }
+    return String(parseInt(value, 10));
+  };
+
+  // Hàm parser để trả về giá trị số nguyên
+  const parser = value => {
+    if (value === '' || value === undefined) {
+      return value;
+    }
+    return parseInt(value, 10);
+  };
   const [api, contextHolder] = notification.useNotification();
   const [selectedChiTietHoaDon, setSelectedChiTietHoaDon] = useState(undefined);
-  const [dataThayDoi, setDataThayDoi] = useState([]);
   const [sanPhamDoi, setSanPhamDoi] = useState([]);
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -45,8 +58,9 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ghiChu, setGhiChu] = useState([]);
   const [soLuong, setSoLuong] = useState([]);
+  const [soLoi, setSoLoi] = useState([]);
+  const [soDoi, setSoDoi] = useState([]);
   const [selectTrangThai, setSelectTrangThai] = useState([]);
-  const [selectHinhThuc, setSelectHinhThuc] = useState([]);
   const columns = [
     {
       title: "Sản phẩm",
@@ -86,6 +100,8 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
           <InputNumber
             min={1}
             max={soLuong2}
+            formatter={formatter}
+            parser={parser}
             onChange={(e) => {
               soLuong[number] = e;
               setSoLuong([...soLuong]);
@@ -126,69 +142,49 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
       title: "Hiện trạng sản phẩm",
       dataIndex: "hienTrangSanPham",
       render: (ghiChu, record, number) =>
-        Array(soLuong[number])
-          .fill()
-          .map((item, index) => {
-            return (
-              <>
-                <Select
-                  defaultValue="Hiện trạng sản phẩm"
-                  style={{
-                    width: "100%",
-                  }}
-                  onChange={(e) => {
-                    if (!selectTrangThai[number]) {
-                      selectTrangThai[number] = [];
-                    }
-                    if (e === 1) {
-                      selectTrangThai[number][index] = true;
-                      setSelectTrangThai([...selectTrangThai]);
-                    } else {
-                      selectTrangThai[number][index] = false;
-                      setSelectTrangThai([...selectTrangThai]);
-                    }
-                  }}
-                  options={[
-                    { value: 1, label: "Sản phẩm lỗi" },
-                    { value: 2, label: "Sản phẩm đổi trả" },
-                  ]}
-                />
-              </>
-            );
-          }),
-      width: "10%",
-    },
-    {
-      title: "Hình thức đổi trả",
-      dataIndex: "action",
-      render: (ghiChu, record, number) => (
+
         <>
-          <Select
-            defaultValue="Hình thức đổi trả"
-            style={{
-              width: "100%",
+          <p style={{
+            marginBottom: "2px"
+          }}>Đổi</p>
+          <InputNumber
+            min={0}
+            formatter={formatter}
+            parser={parser}
+            onChange={(e) => {
+              if (!e) {
+                return
+              }
+              if (isNaN(e)) {
+                return
+              }
+              soDoi[number] = e;
+              setSoDoi([...soDoi])
             }}
-            onChange={(e) => { }}
-            options={[
-              {
-                value: "1",
-                label: "Đổi sản phẩm",
-              },
-              {
-                value: "2",
-                label: "Hoàn tiền",
-              },
-            ]}
           />
-          <DoiSanPham
-            dataDoi={sanPhamDoi}
-            setSanPhamDoi={setSanPhamDoi}
-            number={number}
+          <p style={{
+            marginBottom: "2px"
+          }}>Lỗi</p>
+          <InputNumber
+            min={0}
+            formatter={formatter}
+            parser={parser}
+            onChange={(e) => {
+              if (!e) {
+                return
+              }
+              if (isNaN(e)) {
+                return
+              }
+              soLoi[number] = e;
+              setSoLoi([...soLoi])
+            }}
           />
+
         </>
-      ),
+      ,
       width: "10%",
-    },
+    }
   ];
   const [data, setData] = useState(undefined);
   async function handleLayChiTiet() {
@@ -226,15 +222,7 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
 
     var duLieuDoiTra = [];
     for (var item of selectedChiTietHoaDon) {
-      if (!ghiChu[item] || ghiChu[item] === "") {
-        openNotification(
-          "error",
-          "Hệ thống",
-          "Vui lòng nhập ghi chú cho lựa chọn thứ " + (Number(item) + 1),
-          "bottomRight"
-        );
-        return;
-      }
+
       if (!soLuong[item]) {
         openNotification(
           "error",
@@ -244,41 +232,56 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
         );
         return;
       }
-      if (!selectTrangThai[item]) {
+      if (!ghiChu[item] || ghiChu[item] === "") {
         openNotification(
           "error",
           "Hệ thống",
-          "Vui lòng chọn hiện trạng sản phẩm",
+          "Vui lòng nhập ghi chú cho lựa chọn thứ " + (Number(item) + 1),
+          "bottomRight"
+        );
+        return;
+      }
+      if (!soLoi[item] && !soDoi[item]) {
+        openNotification(
+          "error",
+          "Hệ thống",
+          "Vui lòng nhập số lượng lỗi và đổi sản phẩm",
+          "bottomRight"
+        );
+        return;
+      }
+      if (((soLoi[item] ? soLoi[item] : 0) + (soDoi[item] ? soDoi[item] : 0)) !== soLuong[item]) {
+        openNotification(
+          "error",
+          "Hệ thống",
+          "Số lượng lỗi và đổi không tương ứng với số lượng chọn",
           "bottomRight"
         );
         return;
       }
 
-      var loi = 0;
-      var tra = 0;
-
-      for (var item2 of selectTrangThai[item]) {
-        if (item2) {
-          loi++;
-        } else {
-          tra++;
-        }
-      }
       duLieuDoiTra[item] = {
         chiTietId: data[item].id,
-        duLieuMoi: sanPhamDoi[item],
         ghiChu: ghiChu[item],
         soLuong: soLuong[item],
-        soLuongLoi: loi,
-        soLuongDoiTra: tra,
+        soLuongLoi: soLoi[item],
+        soLuongDoiTra: soDoi[item],
       };
     }
-    var tienDoi = data.reduce((pre, next) => {
-      return pre + (next.soLuong + next.donGia);
-    }, 0);
+    if (sanPhamDoi.length === 0) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Vui lòng chọn sản phẩm muốn đổi!",
+        "bottomRight"
+      );
+      return;
+    }
+    console.log(duLieuDoiTra);
+    console.log(sanPhamDoi);
 
     setDataDoiTra(duLieuDoiTra);
-    setConfirmModal(true);
+    // setConfirmModal(true);
   }
   const [dataDoiTra, setDataDoiTra] = useState(undefined)
   const [confirmModal, setConfirmModal] = useState(false);
@@ -328,7 +331,7 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
         }}
       >
         <Row>
-          <h6>Thông tin sản phẩm</h6>
+          <h6>Thông tin sản phẩm HD{hoaDonId}</h6>
         </Row>
         <Row
           style={{
@@ -354,14 +357,22 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
             />
           </Col>
         </Row>
+        <Row style={{
+          width: "400px"
+        }}>
+          <DoiSanPham
+            dataDoi={sanPhamDoi}
+            setSanPhamDoi={setSanPhamDoi}
+          />
+        </Row>
       </Modal>
       <Modal
         title="Đổi trả sản phẩm?"
         open={confirmModal}
         onOk={() => {
           console.log(dataDoiTra);
-          handleTaoYeuCau();
-          setConfirmModal(false);
+          //    handleTaoYeuCau();
+          //    setConfirmModal(false);
         }}
         onCancel={() => {
           setConfirmModal(false);

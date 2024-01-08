@@ -21,7 +21,21 @@ import { useBanTaiQuayStore } from "../bantaiquay/useBanTaiQuayStore";
 import { useDoiTra } from "./useDoiTra";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { AiOutlineDelete } from "react-icons/ai";
-function DoiSanPham({ dataDoi, setSanPhamDoi, number }) {
+function DoiSanPham({ dataDoi, setSanPhamDoi }) {
+    const formatter = value => {
+        if (value === '' || value === undefined) {
+            return value;
+        }
+        return String(parseInt(value, 10));
+    };
+
+    // Hàm parser để trả về giá trị số nguyên
+    const parser = value => {
+        if (value === '' || value === undefined) {
+            return value;
+        }
+        return parseInt(value, 10);
+    };
     const [isShow, setIsShow] = useState(false);
     const [sanPhamChiTiet, setSanPhamChiTiet] = useState(undefined);
     const [isOpen, setIsOpen] = useState(false);
@@ -70,14 +84,20 @@ function DoiSanPham({ dataDoi, setSanPhamDoi, number }) {
             title: "Số lượng",
             render: (tenSanPham, record, number) => (
                 <InputNumber
+                    formatter={formatter}
+                    parser={parser}
                     onChange={(e) => {
-                        data[number] = {
-                            ...data[number],
-                            soLuongDoi: e,
-                        };
-                        setData([...data]);
+                        if (!e) {
+                            return
+                        }
+                        if (isNaN(e)) {
+                            return
+                        }
+                        data[number].soLuongDoi = e
+                        setData([...data])
                     }}
                     min={1}
+                    value={data[number].soLuongDoi}
                     max={record.soLuongTon}
                 />
             ),
@@ -86,7 +106,7 @@ function DoiSanPham({ dataDoi, setSanPhamDoi, number }) {
             title: "Đơn giá",
             dataIndex: "giaBan",
             key: "giaBan",
-            render: (giaBan) => <span>{giaBan}</span>,
+            render: (giaBan) => <span>{fixMoney(giaBan)}</span>,
         },
         {
             title: "Số lượng tồn",
@@ -147,6 +167,15 @@ function DoiSanPham({ dataDoi, setSanPhamDoi, number }) {
                 );
                 return;
             }
+            if (dataSearch.data.soLuongTon <= 0) {
+                openNotification(
+                    "error",
+                    "Hệ thống",
+                    "Sản phẩm hết hàng",
+                    "bottomRight"
+                );
+                return;
+            }
             setData([...data, dataSearch.data]);
         }
     }
@@ -174,16 +203,16 @@ function DoiSanPham({ dataDoi, setSanPhamDoi, number }) {
         <>
             {contextHolder}
             <Tooltip
-                title="Cập nhật"
-                onClick={() => {
-                    setIsShow(true);
-                }}
+                title="Đổi sản phẩm"
             >
                 <Button
                     style={{
                         color: "green",
-                        width: "100%",
+                        width: "200px",
                         marginTop: "4px",
+                    }}
+                    onClick={() => {
+                        setIsShow(true);
                     }}
                     icon={<FaRegPenToSquare />}
                 >
@@ -219,8 +248,7 @@ function DoiSanPham({ dataDoi, setSanPhamDoi, number }) {
                             return;
                         }
                     }
-                    dataDoi[number] = data;
-                    setSanPhamDoi([...dataDoi]);
+                    setSanPhamDoi([...data]);
                     setIsShow(false);
                 }}
                 onCancel={() => {

@@ -1,16 +1,12 @@
 package it.lab.controller;
 
 import com.google.gson.*;
-import it.lab.entity.SuKienGiamGia;
 import it.lab.iservice.ICRMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
@@ -35,10 +31,6 @@ public class CRMController {
         return ResponseEntity.ok(_crmService.doanhThuTheo12Thang());
     }
 
-    @RequestMapping(value = "/taosukiengoiy", method = RequestMethod.POST)
-    public ResponseEntity<?> taoSuKienGoiY(@RequestBody String suKienGiamGia) {
-        return ResponseEntity.ok(_crmService.themSuKien(gson.fromJson(suKienGiamGia, SuKienGiamGia.class)));
-    }
 
     @RequestMapping(value = "/laydoanhso10sanphamtop", method = RequestMethod.GET)
     public ResponseEntity<?> layDoanhSo10SanPhamTop() {

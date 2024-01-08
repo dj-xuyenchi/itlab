@@ -65,9 +65,6 @@ public class SanPham {
     private ChatLieu chatLieu;
     @OneToMany(mappedBy = "sanPham")
     @JsonIgnore
-    private List<SanPhamSuKien> sanPhamSuKienList;
-    @OneToMany(mappedBy = "sanPham")
-    @JsonIgnore
     private List<HinhAnhSanPham> hinhAnhSanPhamList;
     @OneToMany(mappedBy = "sanPham")
     @JsonIgnore

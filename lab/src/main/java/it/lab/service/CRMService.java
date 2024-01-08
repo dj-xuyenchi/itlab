@@ -2,7 +2,6 @@ package it.lab.service;
 
 import it.lab.dto.*;
 import it.lab.entity.NguoiDung;
-import it.lab.entity.SuKienGiamGia;
 import it.lab.enums.APIStatus;
 import it.lab.enums.TrangThaiHoaDon;
 import it.lab.enums.TrangThaiSuKienGiamGia;
@@ -26,8 +25,6 @@ public class CRMService implements ICRMService {
     private HoaDonRepo _hoaDonRepo;
     @Autowired
     private HoaDonChiTietRepo _hoaDonChiTiet;
-    @Autowired
-    private SuKienGiamGiaRepo _suKienGiamGiaRepo;
     @Autowired
     private SanPhamRepo _sanPhamRepo;
     @Autowired
@@ -64,17 +61,6 @@ public class CRMService implements ICRMService {
         return res;
     }
 
-    @Override
-    public APIStatus themSuKien(SuKienGiamGia suKienGiamGia) {
-        suKienGiamGia.setNgayTao(LocalDateTime.now());
-        if (suKienGiamGia.getNgayBatDau().isBefore(LocalDateTime.now())) {
-            suKienGiamGia.setTrangThai(TrangThaiSuKienGiamGia.HOATDONG);
-        } else {
-            suKienGiamGia.setTrangThai(TrangThaiSuKienGiamGia.DANGUNG);
-        }
-        _suKienGiamGiaRepo.save(suKienGiamGia);
-        return APIStatus.THANHCONG;
-    }
 
     @Override
     public List<DoanhSoSanPham12Thang> thongKeBan12Thang() {
