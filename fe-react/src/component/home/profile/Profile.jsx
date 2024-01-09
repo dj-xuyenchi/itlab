@@ -12,6 +12,7 @@ import { MdOutlineLocalShipping, MdSecurity } from "react-icons/md";
 import { RiBillLine } from "react-icons/ri";
 import DoiMatKhau from "./DoiMatKhau";
 import DiaChiNhanHang from "./DiaChiNhanHang";
+import HoaDon from "./hoadonnguoidung/HoaDon";
 
 const items = [
   {
@@ -60,6 +61,7 @@ function Profile() {
         <div className="content-profile">
           {current === "profile" ? <ChiTietNguoiDung /> : ""}
           {current === "security" ? <DoiMatKhau /> : ""}
+          {current === "bill" ? <HoaDon /> : ""}
           {current === "address" ? <DiaChiNhanHang /> : ""}
         </div>
       </div>

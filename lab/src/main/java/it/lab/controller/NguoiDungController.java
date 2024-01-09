@@ -69,4 +69,25 @@ public class NguoiDungController {
     public ResponseEntity<?> layDiaChi(@RequestParam Long nguoiDungId) {
         return ResponseEntity.ok(_nguoiDungService.layDiaChiNguoiDung(nguoiDungId));
     }
+
+    @RequestMapping(value = "/layhoadonchonguoidung", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonChoByIdND(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_nguoiDungService.layHoaDonChoNguoiDung(nguoiDungId));
+    }
+    @RequestMapping(value = "/layhoadonchogiaonguoidung", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonChoGiaoByIdND(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_nguoiDungService.layHoaDonChoGiaoNguoiDung(nguoiDungId));
+    }
+    @RequestMapping(value = "/layhoadondanggiaonguoidung", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonDangGiaoByIdND(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_nguoiDungService.layHoaDonDangGiaoNguoiDung(nguoiDungId));
+    }
+    @RequestMapping(value = "/layhoadonhoanthanhnguoidung", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonHoanThanhByIdND(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_nguoiDungService.layHoaDonHoanThanhNguoiDung(nguoiDungId));
+    }
+    @RequestMapping(value = "/layhoadonhuynguoidung", method = RequestMethod.GET)
+    public ResponseEntity<?> layHoaDonHuyByIdND(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_nguoiDungService.layHoaDonHuyNguoiDung(nguoiDungId));
+    }
 }

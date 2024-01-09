@@ -12,7 +12,9 @@ import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.iservice.INguoiDungService;
 import it.lab.modelcustom.request.DoiMatKhau;
 import it.lab.modelcustom.request.NguoiDungRequest;
+import it.lab.modelcustom.respon.*;
 import it.lab.repository.DiaChiRepo;
+import it.lab.repository.HoaDonRepo;
 import it.lab.repository.NguoiDungRepo;
 import it.lab.repository.RankKhachHangRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,8 @@ public class NguoiDungService implements INguoiDungService {
     private RankKhachHangRepo _rankKhachHangRepo;
     @Autowired
     private DiaChiRepo _diaChiRepo;
-
+    @Autowired
+    private HoaDonRepo _hoaDonRepo;
     @Override
     public Page<NguoiDungDTO> layHetNguoiDung() {
         return new Page<NguoiDungDTO>(NguoiDungDTO.fromCollection(_nguoiDungRepo.findAll()), 0, 10000);
@@ -121,5 +124,35 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
         _nguoiDungRepo.save(nguoiDung);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
+    }
+
+    @Override
+    public List<HoaDonCho> layHoaDonChoNguoiDung(Long nguoiDungId) {
+        NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
+        return HoaDonCho.fromCollection(_hoaDonRepo.findHoaDonsByNguoiMua(ng));
+    }
+
+    @Override
+    public List<HoaDonChoGiao> layHoaDonChoGiaoNguoiDung(Long nguoiDungId) {
+        NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
+        return HoaDonChoGiao.fromCollection(_hoaDonRepo.findHoaDonsByNguoiMua(ng));
+    }
+
+    @Override
+    public List<HoaDonDangGiao> layHoaDonDangGiaoNguoiDung(Long nguoiDungId) {
+        NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
+        return HoaDonDangGiao.fromCollection(_hoaDonRepo.findHoaDonsByNguoiMua(ng));
+    }
+
+    @Override
+    public List<HoaDonHoanThanh> layHoaDonHoanThanhNguoiDung(Long nguoiDungId) {
+        NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
+        return HoaDonHoanThanh.fromCollection(_hoaDonRepo.findHoaDonsByNguoiMua(ng));
+    }
+
+    @Override
+    public List<HoaDonHuy> layHoaDonHuyNguoiDung(Long nguoiDungId) {
+        NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
+        return HoaDonHuy.fromCollection(_hoaDonRepo.findHoaDonsByNguoiMua(ng));
     }
 }

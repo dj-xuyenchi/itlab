@@ -9,6 +9,7 @@ import it.lab.enums.APIStatus;
 import it.lab.enums.CapNhat;
 import it.lab.modelcustom.request.DoiMatKhau;
 import it.lab.modelcustom.request.NguoiDungRequest;
+import it.lab.modelcustom.respon.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,4 +29,14 @@ public interface INguoiDungService {
     public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId);
 
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDung, MultipartFile anhdaidien) throws IOException;
+
+    public List<HoaDonCho> layHoaDonChoNguoiDung(Long nguoiDungId);
+
+    public List<HoaDonChoGiao> layHoaDonChoGiaoNguoiDung(Long nguoiDungId);
+
+    public List<HoaDonDangGiao> layHoaDonDangGiaoNguoiDung(Long nguoiDungId);
+
+    public List<HoaDonHoanThanh> layHoaDonHoanThanhNguoiDung(Long nguoiDungId);
+
+    public List<HoaDonHuy> layHoaDonHuyNguoiDung(Long nguoiDungId);
 }
