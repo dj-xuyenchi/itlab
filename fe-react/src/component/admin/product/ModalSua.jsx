@@ -18,7 +18,7 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { PlusOutlined } from "@ant-design/icons";
 
-function ModalSua({ id,thuocTinh, setData }) {
+function ModalSua({ id, thuocTinh, setData }) {
   const [form] = useForm()
   const { Option } = Select;
   const [sanPham, setSanPham] = useState(undefined);
@@ -72,9 +72,9 @@ function ModalSua({ id,thuocTinh, setData }) {
       thietKeId: e.value,
     });
   }
-  
-  
-  
+
+
+
   function handleSetNhom(e) {
     setSanPham({
       ...sanPham,
@@ -202,7 +202,7 @@ function ModalSua({ id,thuocTinh, setData }) {
       );
       return;
     }
-    if (hinhAnh && hinhAnh.length< 2) {
+    if (hinhAnh && hinhAnh.length < 2) {
       openNotification(
         "error",
         "Hệ thống",
@@ -217,10 +217,9 @@ function ModalSua({ id,thuocTinh, setData }) {
     form2.append("file1", hinhAnh[0]);
     form2.append("file2", hinhAnh[1]);
     form2.append("data", JSON.stringify(sanPham));
-    
+
 
     const data = await useSanPhamStore.actions.suaSanPham(form2);
-    console.log("Toàn bộ dữ liệu sản phẩm sẽ được gửi đi:", form2);
     if (data.data.status == "THANHCONG") {
       form.resetFields();
       openNotification(
@@ -230,7 +229,7 @@ function ModalSua({ id,thuocTinh, setData }) {
         "bottomRight"
       );
       setSanPham({
-       ...sanPham
+        ...sanPham
       });
     } else {
       openNotification(
@@ -270,12 +269,12 @@ function ModalSua({ id,thuocTinh, setData }) {
       //   setThietKeSelected({ value: data.data.thietKe.id, label: data.data.thietKe.tenThietKe });
       // }
     }
-  
+
     if (isModalOpen) {
       layDuLieu();
     }
   }, [id, isModalOpen]);
-  
+
 
   return (
     <>
@@ -302,171 +301,171 @@ function ModalSua({ id,thuocTinh, setData }) {
           </Button>,
         ]}
       >
-         {sanPham ? (
-        <Form
-          form={form}
-          name="wrap"
-          labelCol={{
-            flex: "110px",
-          }}
-          labelAlign="left"
-          labelWrap
-          wrapperCol={{
-            flex: 1,
-          }}
-          colon={false}
-          style={{
-            maxWidth: 600,
-          }}
-        >
+        {sanPham ? (
+          <Form
+            form={form}
+            name="wrap"
+            labelCol={{
+              flex: "110px",
+            }}
+            labelAlign="left"
+            labelWrap
+            wrapperCol={{
+              flex: 1,
+            }}
+            colon={false}
+            style={{
+              maxWidth: 600,
+            }}
+          >
 
-          <Form.Item label="Tên sản phẩm">
-            <Input value={sanPham.tenSanPham} onChange={handleSetTenSP} />
-          </Form.Item>
-          <Form.Item label="Giá nhập">
-            <InputNumber
-              formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
-              style={{
-                width: "100%",
-              }}
-              min={0}
-              value={sanPham.giaNhap}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              onChange={handleSetGiaNhap}
-            />
-          </Form.Item>
-          <Form.Item label="Giá bán">
-            <InputNumber
-              formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
-              style={{
-                width: "100%",
-              }}
-              value={sanPham.giaBan}
-              min={0}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              onChange={handleSetGiaBan}
-            />
-          </Form.Item>
-          <Form.Item label="Thông tin chi tiết">
-            <Input value={sanPham.moTa} onChange={handleSetMoTa} />
-          </Form.Item>
-          <Form.Item label="Trạng thái sản phẩm">
-          <Select
-          labelInValue
-          value={sanPham.trangThai ? { value: sanPham.trangThai } : undefined} 
-          style={{ width: "100%" }}
-          onChange={(selectedOption) => handleSetTrangThai(selectedOption)}
-        >
-          {trangThaiOptions.map((option) => (
-            <Select.Option key={option.value} value={option.value}>
-              {option.label}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-          <Form.Item label="Thiết kế">
-            <Select
-              labelInValue
-              optionLabelProp="children"
-              style={{ width: "100%" }}
-              rules={[{ required: true }]}
-              defaultValue={sanPham.thietKe.tenThietKe}
-              onChange={(e) => {
-                setSanPham({
-                  ...sanPham,
-                  thietKeId: e.value,
-                });
-              }}
-            >
-              {thuocTinh?.thietKeList.map((option) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.tenThietKe}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+            <Form.Item label="Tên sản phẩm">
+              <Input value={sanPham.tenSanPham} onChange={handleSetTenSP} />
+            </Form.Item>
+            <Form.Item label="Giá nhập">
+              <InputNumber
+                formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
+                style={{
+                  width: "100%",
+                }}
+                min={0}
+                value={sanPham.giaNhap}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                onChange={handleSetGiaNhap}
+              />
+            </Form.Item>
+            <Form.Item label="Giá bán">
+              <InputNumber
+                formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
+                style={{
+                  width: "100%",
+                }}
+                value={sanPham.giaBan}
+                min={0}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                onChange={handleSetGiaBan}
+              />
+            </Form.Item>
+            <Form.Item label="Thông tin chi tiết">
+              <Input value={sanPham.moTa} onChange={handleSetMoTa} />
+            </Form.Item>
+            <Form.Item label="Trạng thái sản phẩm">
+              <Select
+                labelInValue
+                value={sanPham.trangThai ? { value: sanPham.trangThai } : undefined}
+                style={{ width: "100%" }}
+                onChange={(selectedOption) => handleSetTrangThai(selectedOption)}
+              >
+                {trangThaiOptions.map((option) => (
+                  <Select.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Thiết kế">
+              <Select
+                labelInValue
+                optionLabelProp="children"
+                style={{ width: "100%" }}
+                rules={[{ required: true }]}
+                defaultValue={sanPham.thietKe.tenThietKe}
+                onChange={(e) => {
+                  setSanPham({
+                    ...sanPham,
+                    thietKeId: e.value,
+                  });
+                }}
+              >
+                {thuocTinh?.thietKeList.map((option) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.tenThietKe}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
 
-          <Form.Item label="Chất liệu">
-            <Select
-              labelInValue
-              optionLabelProp="children"
-              defaultValue={sanPham.chatLieu.tenChatLieu}
-              style={{
-                width: "100%",
-              }}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              onChange={handleSetChatLieu}
-            >
-              {thuocTinh
-                ? thuocTinh.chatLieuList.map((option) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.tenChatLieu}
-                  </Select.Option>
-                ))
-                : ""}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Nhóm sản phẩm">
-            <Select
-              labelInValue
-              optionLabelProp="children"
-              defaultValue={sanPham.nhomSanPham.tenNhom}
-              style={{
-                width: "100%",
-              }}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              onChange={handleSetNhom}
-            >
-              {thuocTinh
-                ? thuocTinh.nhomSanPhamList.map((option) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.tenNhom}
-                  </Select.Option>
-                ))
-                : ""}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Upload">
-            <Upload
-              listType="picture-card"
-              multiple
-              customRequest={() => { }}
-              {...props}
-              maxCount={2}
-              fileList={fileList}
-            >
-              <div>
-                <PlusOutlined />
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Upload
+            <Form.Item label="Chất liệu">
+              <Select
+                labelInValue
+                optionLabelProp="children"
+                defaultValue={sanPham.chatLieu.tenChatLieu}
+                style={{
+                  width: "100%",
+                }}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                onChange={handleSetChatLieu}
+              >
+                {thuocTinh
+                  ? thuocTinh.chatLieuList.map((option) => (
+                    <Select.Option key={option.id} value={option.id}>
+                      {option.tenChatLieu}
+                    </Select.Option>
+                  ))
+                  : ""}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Nhóm sản phẩm">
+              <Select
+                labelInValue
+                optionLabelProp="children"
+                defaultValue={sanPham.nhomSanPham.tenNhom}
+                style={{
+                  width: "100%",
+                }}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                onChange={handleSetNhom}
+              >
+                {thuocTinh
+                  ? thuocTinh.nhomSanPhamList.map((option) => (
+                    <Select.Option key={option.id} value={option.id}>
+                      {option.tenNhom}
+                    </Select.Option>
+                  ))
+                  : ""}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Upload">
+              <Upload
+                listType="picture-card"
+                multiple
+                customRequest={() => { }}
+                {...props}
+                maxCount={2}
+                fileList={fileList}
+              >
+                <div>
+                  <PlusOutlined />
+                  <div
+                    style={{
+                      marginTop: 8,
+                    }}
+                  >
+                    Upload
+                  </div>
                 </div>
-              </div>
-            </Upload>
-          </Form.Item>
+              </Upload>
+            </Form.Item>
 
-        </Form>
+          </Form>
         ) : (
           ""
         )}

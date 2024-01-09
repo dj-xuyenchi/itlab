@@ -57,7 +57,6 @@ public class VoucherNguoiDungService {
 
                         // Set other properties from the voucher to nguoiDungVoucher
                         nguoiDungVoucher.setHanSuDung(voucher.getNgayKetThuc());
-                        nguoiDungVoucher.setLoaiGiam(voucher.getLoaiGiam());
                         nguoiDungVoucher.setGiaTriGiam(voucher.getGiaTriGiam());
 
                         // Thêm voucher cho người dùng
@@ -127,7 +126,6 @@ public class VoucherNguoiDungService {
 
                         // Set other properties from the voucher to nguoiDungVoucher
                         nguoiDungVoucher.setHanSuDung(voucher.getNgayKetThuc());
-                        nguoiDungVoucher.setLoaiGiam(voucher.getLoaiGiam());
                         nguoiDungVoucher.setGiaTriGiam(voucher.getGiaTriGiam());
 
                         nguoiDungVoucherRepo.save(nguoiDungVoucher);

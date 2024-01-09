@@ -12,6 +12,7 @@ import ModalD from './ModalD';
 import ModalA from './ModalA';
 import MenuAdmin from '../layout/menu/MenuAdmin';
 import Header from '../layout/header/Header';
+import { fixMoney } from '../../../extensions/fixMoney';
 
 
 export default function Voucher() {
@@ -102,12 +103,6 @@ export default function Voucher() {
 
     const columns = [
         {
-            title: 'Id',
-            dataIndex: 'id',
-            key: 'id',
-            ...getColumnSearchProps('id'),
-        },
-        {
             title: 'Tên Voucher',
             dataIndex: 'tenVoucher',
             key: 'tenVoucher',
@@ -118,29 +113,16 @@ export default function Voucher() {
             title: 'Mã Voucher',
             dataIndex: 'maVoucher',
             key: 'maVoucher',
-        },
+        }
+        ,
         {
-            title: 'Loại giảm',
-            dataIndex: 'loaiGiam',
-            key: 'loaiGiam',
-            render: (text) => (
-              <span style={{ color: text.toLowerCase() === 'ngung' ? 'red' : 'green' }}>
-                {text.toLowerCase() === 'giamthang' ? 'Giảm thẳng' : (text.toLowerCase() === 'phantram' ? 'Phần trăm' : text)}
-              </span>
-            ),
-          }
-          
-        , {
             title: 'Mức giảm',
             dataIndex: 'giaTriGiam',
             key: 'giaTriGiamDisplay',
             render: (giaTriGiam, record) => {
-                if (record.loaiGiam === 'PHANTRAM') {
-                    return `${giaTriGiam} %`;
-                } else if (record.loaiGiam === 'GIAMTHANG') {
-                    return `${giaTriGiam}` + ' ₫';
-                }
-                return giaTriGiam;
+                <>
+                    <span>{fixMoney(giaTriGiam)}</span>
+                </>
             },
         },
         {
@@ -174,28 +156,16 @@ export default function Voucher() {
                 </span>
             )
         },
-
-        {
-            title: "Ngày cập nhật",
-            dataIndex: "ngayCapNhat",
-            key: "ngayCapNhat",
-            width: "15%",
-            render: (ngayCapNhat) => (
-
-                <>{ngayCapNhat ? <span>{moment(ngayCapNhat).format('DD/MM/YYYY')}</span> : <Tag color="processing">Chưa cập nhật</Tag>}</>
-            ),
-        },
         {
             title: 'Trạng thái',
             dataIndex: 'trangThai',
             key: 'trangThai',
             render: (text) => (
                 <span style={{ color: text.toLowerCase() === 'ngung' ? 'red' : 'green' }}>
-                     {text.toLowerCase() === 'ngung' ? <CloseCircleOutlined /> : (text.toLowerCase() === 'dienra' ? <PauseCircleOutlined /> : text)}
+                    {text.toLowerCase() === 'ngung' ? <CloseCircleOutlined /> : (text.toLowerCase() === 'dienra' ? <PauseCircleOutlined /> : text)}
                 </span>
             ),
         },
-
         {
             title: 'Cập nhật',
             dataIndex: '',
@@ -248,7 +218,7 @@ export default function Voucher() {
     };
 
 
-      
+
 
     return (
         <div>
@@ -269,17 +239,17 @@ export default function Voucher() {
 
 
                 </div>
-               
-                    <Table
-                        columns={columns}
-                        dataSource={searchResults}
-                        loading={loading}
-                        pagination={{ pageSize: 10 }}
-                        key={resetTable ? 'reset' : 'table'}
-                        style={{ margin: '10px' ,display: 'inline-block'}} />
-                </div>
+
+                <Table
+                    columns={columns}
+                    dataSource={searchResults}
+                    loading={loading}
+                    pagination={{ pageSize: 10 }}
+                    key={resetTable ? 'reset' : 'table'}
+                    style={{ margin: '10px', display: 'inline-block' }} />
             </div>
-       
+        </div>
+
     );
 }
 

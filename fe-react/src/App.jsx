@@ -31,6 +31,7 @@ import ChinhSachBaoMat from "./component/policy/ChinhSachBaoMat";
 import Voucher from "./component/admin/voucher/Voucher";
 import GiftVoucher from "./component/admin/giftvoucher/GiftVoucher";
 import ThanhToanVnPay from "./component/admin/bantaiquay/ThanhToanVnPay";
+import Voucher2 from "./component/admin/voucher2/Voucher2";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -59,7 +60,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/admin/voucher" element={<Voucher />} />
+        <Route path="/admin/voucher" element={<Voucher2 />} />
         <Route path="/admin/giftvoucher" element={<GiftVoucher />} />
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />

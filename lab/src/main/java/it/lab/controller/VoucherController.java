@@ -114,13 +114,7 @@ public ResponseEntity<?> layDuLieu123() throws IOException {
 
     @PostMapping(value = "/addVoucher")
     public Voucher create(@RequestBody Voucher voucher) {
-        if (voucher.getTrangThai() == null) {
-            voucher.setTrangThai(TrangThaiVoucher.DIENRA);
-        }if (voucher.getLoaiGiam().equals(LoaiGiam.GIAMTHANG) ){
-            voucher.setLoaiGiam(LoaiGiam.GIAMTHANG);
-        }else {
-            voucher.setLoaiGiam(LoaiGiam.PHANTRAM);
-        }
+
         // Tạo một chuỗi random từ các ký tự số, chữ cái và ký tự đặc biệt
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder randomPart = new StringBuilder();
@@ -131,11 +125,9 @@ public ResponseEntity<?> layDuLieu123() throws IOException {
         }
 
         // Kết hợp với chuỗi thông thường
-        voucher.setMaVoucher( randomPart.toString());
 
 //        voucher.setMaVoucher("V" + System.currentTimeMillis());
 //        voucher.setMaVoucher(UUID.randomUUID().toString());
-        voucher.setNgayTao(LocalDate.now());
         return voucherRepo.save(voucher);
     }
 
@@ -161,12 +153,9 @@ public ResponseEntity<?> layDuLieu123() throws IOException {
 
         if (OV.isPresent()) {
             Voucher oldVoucher = OV.get();
-            oldVoucher.setLoaiGiam(newVoucher.getLoaiGiam());
             oldVoucher.setGiaTriGiam(newVoucher.getGiaTriGiam());
-            oldVoucher.setMaVoucher(newVoucher.getMaVoucher());
             oldVoucher.setSoLuong(newVoucher.getSoLuong());
             oldVoucher.setTenVoucher(newVoucher.getTenVoucher());
-            oldVoucher.setNgayCapNhat(currentDate);
             voucherRepo.save(oldVoucher);
 
             return new ResponseEntity<>(oldVoucher, HttpStatus.OK);

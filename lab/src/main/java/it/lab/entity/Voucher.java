@@ -29,12 +29,10 @@ public class Voucher {
     private String tenVoucher;
     @Column(name = "giatrigiam")
     private Double giaTriGiam;
-    @Column(name = "loaigiam")
-    private LoaiGiam loaiGiam;
     @Column(name = "ngaytao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
-    private LocalDate ngayCapNhat;
+    private LocalDateTime ngayCapNhat;
     @Column(name = "ngayketthuc")
     private LocalDateTime ngayKetThuc;
     @Column(name = "soluong")

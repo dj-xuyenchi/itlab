@@ -84,12 +84,6 @@ export default function Voucher() {
 
     const columns = [
         {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-            ...getColumnSearchProps('id'),
-        },
-        {
             title: 'Mã người dùng',
             dataIndex: 'maNguoiDung',
             key: 'maNguoiDung',
@@ -100,16 +94,6 @@ export default function Voucher() {
             dataIndex: 'anhDaiDien',
             key: 'anhDaiDien',
             render: (anhDaiDien) => <img src={anhDaiDien} alt="Ảnh đại diện" style={{ width: '50px', height: '50px' }} />,
-        },
-        {
-            title: 'Số điện thoại',
-            dataIndex: 'soDienThoai',
-            key: 'soDienThoai',
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
         },
         {
             title: 'Các voucher',
@@ -129,15 +113,15 @@ export default function Voucher() {
                 </Space>
             ),
         },
-        
-        
-        
-        
+
+
+
+
     ];
 
     useEffect(() => {
         loadGiftVouchers();
-      }, [resetTable, tableKey]);
+    }, [resetTable, tableKey]);
 
     const loadGiftVouchers = async () => {
         try {
@@ -151,7 +135,7 @@ export default function Voucher() {
         } finally {
             setLoading(false);
         }
-    
+
         setResetTableGift(false);
     };
 
@@ -168,7 +152,7 @@ export default function Voucher() {
 
     const handleTableReload = () => {
         setTableKey(Date.now()); // Update the tableKey to trigger a re-render
-      };
+    };
 
     return (
         <div>
@@ -185,11 +169,11 @@ export default function Voucher() {
                     }}
                 >
                     <Space>
-                    <ModalU onActionSuccess={handleTableReload}/>
-                    
-                    <AddGift onActionSuccess={handleTableReload}/>
+                        <ModalU onActionSuccess={handleTableReload} />
+
+                        <AddGift onActionSuccess={handleTableReload} />
                     </Space>
-                   
+
                 </div>
 
                 <Table
