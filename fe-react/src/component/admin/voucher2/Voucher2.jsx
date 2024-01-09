@@ -2,7 +2,7 @@ import "./style.css";
 import MenuAdmin from "../layout/menu/MenuAdmin";
 import Header from "../layout/header/Header";
 import React, { useEffect, useRef, useState } from "react";
-import { } from "@ant-design/icons";
+import {} from "@ant-design/icons";
 import { Input, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import "./style.css";
@@ -147,11 +147,7 @@ function Voucher2() {
       dataIndex: "tenVoucher",
       width: "10%",
       ...getColumnSearchProps("tenVoucher"),
-      render: (tenVoucher) => (
-        <>
-          {tenVoucher}
-        </>
-      ),
+      render: (tenVoucher) => <>{tenVoucher}</>,
     },
     {
       title: "Số lượng tạo",
@@ -194,15 +190,19 @@ function Voucher2() {
       width: "10%",
       render: (trangThai) => (
         <>
-          <span>{fixTrangThaiVoucher(trangThai)}</span>
+          {trangThai === "DIENRA" ? (
+            <Tag color="success"> {fixTrangThaiVoucher(trangThai)}</Tag>
+          ) : (
+            <Tag color="error"> {fixTrangThaiVoucher(trangThai)}</Tag>
+          )}
         </>
       ),
     },
     {
       title: "Thao tác",
-      dataIndex: "giaTriGiam",
+      dataIndex: "trangThai",
       width: "15%",
-      render: (giaTriGiam, record) => (
+      render: (trangThai, record) => (
         <>
           <div>
             <ModalSua duLieu={record} fetchData={handleLayDuLieu} />
@@ -210,15 +210,15 @@ function Voucher2() {
         </>
       ),
     },
-  ]
-  const [data, setData] = useState(undefined)
+  ];
+  const [data, setData] = useState(undefined);
   async function handleLayDuLieu() {
     const data = await useVoucher.actions.layVouchet();
-    setData(data.data)
+    setData(data.data);
   }
   useEffect(() => {
-    handleLayDuLieu()
-  }, [])
+    handleLayDuLieu();
+  }, []);
 
   return (
     <>

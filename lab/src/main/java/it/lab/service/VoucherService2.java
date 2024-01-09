@@ -1,9 +1,13 @@
 package it.lab.service;
 
+import it.lab.dto.NguoiDungVoucherDTO;
 import it.lab.dto.VoucherDTO;
+import it.lab.entity.NguoiDungVoucher;
 import it.lab.entity.Voucher;
 import it.lab.enums.TrangThaiVoucher;
 import it.lab.iservice.IVoucherService;
+import it.lab.modelcustom.respon.NguoiDungVoucherSoLuong;
+import it.lab.repository.NguoiDungVoucherRepo;
 import it.lab.repository.VoucherRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,8 @@ import java.util.stream.Collectors;
 public class VoucherService2 implements IVoucherService {
     @Autowired
     private VoucherRepo _voucherRepo;
+    @Autowired
+    private NguoiDungVoucherRepo _nguoiDungVoucher;
     private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     @Override
@@ -61,5 +67,13 @@ public class VoucherService2 implements IVoucherService {
                 .map(x -> {
                     return VoucherDTO.fromEntity(x);
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<NguoiDungVoucherSoLuong> layHetVoucherNguoiDung(Long voucherId) {
+        Voucher voucher = _voucherRepo.findById(voucherId).get();
+        List<NguoiDungVoucher> list = _nguoiDungVoucher.findNguoiDungVouchersByVoucher(voucher);
+        for(list)
+        return _voucherRepo.;
     }
 }

@@ -13,7 +13,7 @@ import { useState } from "react";
 import { Menu } from "antd";
 import { RiRefundFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { BsPercent } from 'react-icons/bs';
+import { BsPercent } from "react-icons/bs";
 import { FcIdea } from "react-icons/fc";
 function getItem(label, key, icon, children, type) {
   return {
@@ -84,11 +84,7 @@ const items = [
     "62",
     <BsShopWindow />
   ),
-  getItem(
-    <Link to={"/admin/doitra"}>Đổi trả</Link>,
-    "64",
-    <RiRefundFill />
-  ),
+  getItem(<Link to={"/admin/doitra"}>Đổi trả</Link>, "64", <RiRefundFill />),
   getItem("Đánh giá doanh số", "sub5", <FaTag />, [
     getItem(
       <Link to={"/admin/crm"}>Sản phẩm doanh thu</Link>,
@@ -96,16 +92,7 @@ const items = [
       <FcIdea />
     ),
   ]),
-  getItem(
-    <Link to={"/admin/voucher"}>Voucher</Link>,
-    "68",
-    <BsPercent />
-  ),
-  getItem(
-    <Link to={"/admin/giftvoucher"}>Gift Voucher</Link>,
-    "68",
-    <BsPercent />
-  ),
+  getItem(<Link to={"/admin/voucher"}>Voucher</Link>, "68", <BsPercent />),
 ];
 
 const rootSubmenuKeys = ["sub1", "sub2", "sub4"];

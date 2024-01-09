@@ -35,8 +35,6 @@ public class NguoiDungVoucher {
     private LocalDateTime hanSuDung;
     @Column(name = "giatrigiam")
     private Double giaTriGiam;
-    @Column(name = "loaigiam")
-    private LoaiGiam loaiGiam;
     @Column(name = "trangthai")
     private TrangThaiNguoiDungVoucher trangThai;
     @JsonIgnore

@@ -45,4 +45,8 @@ public class VoucherController2 {
         _voucherService.xoaVoucher(voucherId);
         return ResponseEntity.ok("");
     }
+    @GetMapping(value = "laydanhsachnguoidungcovoucher")
+    public ResponseEntity<?> layDanhSachNguoiDungVoucher(@RequestParam Long voucherId) {
+        return ResponseEntity.ok(_voucherService.layHetVoucherNguoiDung(voucherId));
+    }
 }
