@@ -14,5 +14,19 @@ export const useVoucher = {
         async xoaVouchet(payload) {
             return axiosIns.get('/api/voucher2/xoavoucher?voucherId=' + payload)
         },
+        async layNguoiDungVoucher(payload) {
+            return axiosIns.get('/api/voucher2/laydanhsachnguoidungcovoucher?voucherId=' + payload)
+        },
+        async themVoucherChoNguoiDung(payload) {
+            return axiosIns.get('/api/voucher2/themvoucherchonguoidung?nguoiDungId=' + payload.nguoiDungId
+                + "&voucherId=" + payload.voucherId
+                + "&soLuong=" + payload.soLuong
+            )
+        },
+        async themToanHeThong(payload) {
+            return axiosIns.get('/api/voucher2/themtoanhethong?voucherId=' + payload.voucherId
+                + "&soLuong=" + payload.soLuong
+            )
+        },
     },
 }

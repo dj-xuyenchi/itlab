@@ -1,5 +1,6 @@
 package it.lab.controller;
 //import java.util.UUID;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -43,56 +44,55 @@ public class VoucherController {
     @Autowired
     VoucherNguoiDungService voucherNguoiDungService;
 
-    @Scheduled(fixedRate = 600000) // 10 minutes = 10 * 60 * 1000 milliseconds
-    public void checkExpirationStatus() {
-        List<Voucher> vouchers = voucherRepo.findAll();
-        LocalDateTime currentDateTime = LocalDateTime.now(); // Change to LocalDateTime
-
-        for (Voucher voucher : vouchers) {
-            if (voucher.getNgayKetThuc().isBefore(currentDateTime)) {
-                // Set the status to NGUNG if ngayKetThuc is after or equal to currentDate
-                voucher.setTrangThai(TrangThaiVoucher.NGUNG);
-            }
-        }
-        // Save the updated vouchers
-        voucherRepo.saveAll(vouchers);
-    }
+//    @Scheduled(fixedRate = 600000) // 10 minutes = 10 * 60 * 1000 milliseconds
+//    public void checkExpirationStatus() {
+//        List<Voucher> vouchers = voucherRepo.findAll();
+//        LocalDateTime currentDateTime = LocalDateTime.now(); // Change to LocalDateTime
+//
+//        for (Voucher voucher : vouchers) {
+//            if (voucher.getNgayKetThuc().isBefore(currentDateTime)) {
+//                // Set the status to NGUNG if ngayKetThuc is after or equal to currentDate
+//                voucher.setTrangThai(TrangThaiVoucher.NGUNG);
+//            }
+//        }
+//        // Save the updated vouchers
+//        voucherRepo.saveAll(vouchers);
+//    }
 
     // Endpoint to retrieve vouchers
-    @RequestMapping("/test")
-    public ResponseEntity<List<Voucher>> layDuLieu() throws IOException {
-        // Trigger the scheduled expiration check task
-        checkExpirationStatus();
-
-        // Return the vouchers
-        List<Voucher> vouchers = voucherRepo.findAll();
-        return ResponseEntity.ok(vouchers);
-    }
+//    @RequestMapping("/test")
+//    public ResponseEntity<List<Voucher>> layDuLieu() throws IOException {
+//        // Trigger the scheduled expiration check task
+//        checkExpirationStatus();
+//
+//        // Return the vouchers
+//        List<Voucher> vouchers = voucherRepo.findAll();
+//        return ResponseEntity.ok(vouchers);
+//    }
 //
 
 
-
-//////
-@Scheduled(fixedRate = 600000) // 10 minutes = 10 * 60 * 1000 milliseconds
-public void checkExpirationStatusNguoiDung() {
-    List<NguoiDungVoucher> nguoiDungVouchers = nguoiDungVoucherRepo.findAll();
-    LocalDateTime currentDate = LocalDateTime.now();
-
-
-    for (NguoiDungVoucher nguoiDungVoucher : nguoiDungVouchers) {
-        if (nguoiDungVoucher.getHanSuDung().isBefore(currentDate)) {
-            nguoiDungVoucher.setTrangThai(TrangThaiNguoiDungVoucher.HETHAN);
-        }
-    }
-    // Save the updated vouchers only if modifications were made
-        nguoiDungVoucherRepo.saveAll(nguoiDungVouchers);
-
-}
+    //////
+//    @Scheduled(fixedRate = 600000) // 10 minutes = 10 * 60 * 1000 milliseconds
+//    public void checkExpirationStatusNguoiDung() {
+//        List<NguoiDungVoucher> nguoiDungVouchers = nguoiDungVoucherRepo.findAll();
+//        LocalDateTime currentDate = LocalDateTime.now();
+//
+//
+//        for (NguoiDungVoucher nguoiDungVoucher : nguoiDungVouchers) {
+//            if (nguoiDungVoucher.getHanSuDung().isBefore(currentDate)) {
+//                nguoiDungVoucher.setTrangThai(TrangThaiNguoiDungVoucher.HETHAN);
+//            }
+//        }
+//        // Save the updated vouchers only if modifications were made
+//        nguoiDungVoucherRepo.saveAll(nguoiDungVouchers);
+//
+//    }
 
     @GetMapping(value = "/12323")
     public ResponseEntity<?> layDuLieu44() {
         try {
-            checkExpirationStatusNguoiDung();
+     //       checkExpirationStatusNguoiDung();
             List<NguoiDungVoucher> vouchers = nguoiDungVoucherRepo.findAll();
             return ResponseEntity.ok(vouchers);
         } catch (Exception e) {
@@ -102,14 +102,10 @@ public void checkExpirationStatusNguoiDung() {
     }
 
 
-@RequestMapping(value = "/123", method = RequestMethod.GET)
-public ResponseEntity<?> layDuLieu123() throws IOException {
-    return ResponseEntity.ok(nguoiDungVoucherRepo.getAllTang());
-}
-
-
-
-
+    @RequestMapping(value = "/123", method = RequestMethod.GET)
+    public ResponseEntity<?> layDuLieu123() throws IOException {
+        return ResponseEntity.ok(nguoiDungVoucherRepo.getAllTang());
+    }
 
 
     @PostMapping(value = "/addVoucher")
@@ -132,7 +128,6 @@ public ResponseEntity<?> layDuLieu123() throws IOException {
     }
 
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Voucher> viewUpdate(@PathVariable("id") Long id) {
         Optional<Voucher> voucherOptional = voucherRepo.findById(id);
@@ -147,7 +142,7 @@ public ResponseEntity<?> layDuLieu123() throws IOException {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Voucher> update( @RequestBody Voucher newVoucher,@PathVariable Long id) {
+    public ResponseEntity<Voucher> update(@RequestBody Voucher newVoucher, @PathVariable Long id) {
         Optional<Voucher> OV = voucherRepo.findById(id);
         LocalDate currentDate = LocalDate.now();
 
@@ -163,13 +158,14 @@ public ResponseEntity<?> layDuLieu123() throws IOException {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PatchMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<Voucher> voucher = voucherRepo.findById(id);
 
         if (voucher.isPresent()) {
             Voucher existingVoucher = voucher.get();
-            if (  existingVoucher.getTrangThai() == TrangThaiVoucher.DIENRA ) {
+            if (existingVoucher.getTrangThai() == TrangThaiVoucher.DIENRA) {
                 existingVoucher.setTrangThai(TrangThaiVoucher.NGUNG);
                 voucherRepo.save(existingVoucher);
                 return new ResponseEntity<>(existingVoucher, HttpStatus.OK);
@@ -190,21 +186,19 @@ public ResponseEntity<?> layDuLieu123() throws IOException {
 
     //them voucher
 
-@GetMapping("/giftvoucher")
-public ResponseEntity<?> layGiftVoucher() throws IOException {
-    return ResponseEntity.ok(nguoiDungRepo.getAllTangVoucher());
-}
+    @GetMapping("/giftvoucher")
+    public ResponseEntity<?> layGiftVoucher() throws IOException {
+        return ResponseEntity.ok(nguoiDungRepo.getAllTangVoucher());
+    }
 
-//
-@GetMapping("/voucher-combox")
-public ResponseEntity<List<Voucher>> getAllVouchers() {
-    List<Voucher> vouchers = voucherRepo.getVouCherHD();
-    return new ResponseEntity<>(vouchers, HttpStatus.OK);
-}
+    //
+    @GetMapping("/voucher-combox")
+    public ResponseEntity<List<Voucher>> getAllVouchers() {
+        List<Voucher> vouchers = voucherRepo.getVouCherHD();
+        return new ResponseEntity<>(vouchers, HttpStatus.OK);
+    }
 
     // Endpoint to add a voucher for all users
-
-
 
 
     @PostMapping("/addVoucherForAllUsers")
@@ -235,7 +229,6 @@ public ResponseEntity<List<Voucher>> getAllVouchers() {
     }
 
 
-
     @PostMapping("/add-nguoidung")
     public ResponseEntity<?> addVoucherForSelectedUsers(
             @RequestParam(name = "nguoiDungId", required = false) List<Long> nguoiDungIds,
@@ -253,9 +246,6 @@ public ResponseEntity<List<Voucher>> getAllVouchers() {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-
 
 
 }

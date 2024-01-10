@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class NguoiDungVoucherSoLuong {
     private NguoiDungDTO nguoiDungDTO;
-    private Long daDung;
-    private Long chuaDung;
-    private Long hetHan;
+    private Integer daDung;
+    private Integer chuaDung;
+    private Integer hetHan;
 }

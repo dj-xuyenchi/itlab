@@ -23,6 +23,7 @@ public class VoucherController2 {
             return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString());
         }
     }).create();
+
     @GetMapping(value = "layhetvoucher")
     public ResponseEntity<?> layHetVoucher() {
         return ResponseEntity.ok(_voucherService.layVoucher());
@@ -30,14 +31,13 @@ public class VoucherController2 {
 
     @PostMapping(value = "themvoucher")
     public ResponseEntity<?> themVoucher(@RequestBody String voucher) {
-        _voucherService.themVoucher(gson.fromJson(voucher,VoucherDTO.class));
+        _voucherService.themVoucher(gson.fromJson(voucher, VoucherDTO.class));
         return ResponseEntity.ok("");
     }
 
     @PostMapping(value = "suavoucher")
     public ResponseEntity<?> suaVoucher(@RequestBody VoucherDTO voucher) {
-        _voucherService.suaVoucher(voucher);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(_voucherService.suaVoucher(voucher));
     }
 
     @GetMapping(value = "xoavoucher")
@@ -45,8 +45,21 @@ public class VoucherController2 {
         _voucherService.xoaVoucher(voucherId);
         return ResponseEntity.ok("");
     }
+
     @GetMapping(value = "laydanhsachnguoidungcovoucher")
     public ResponseEntity<?> layDanhSachNguoiDungVoucher(@RequestParam Long voucherId) {
         return ResponseEntity.ok(_voucherService.layHetVoucherNguoiDung(voucherId));
+    }
+
+    @GetMapping(value = "themvoucherchonguoidung")
+    public ResponseEntity<?> themVoucherChoNguoiDung(@RequestParam Long nguoiDungId,
+                                                     @RequestParam Long voucherId,
+                                                     @RequestParam Integer soLuong) {
+        return ResponseEntity.ok(_voucherService.themVoucherChoNguoiDung(nguoiDungId,voucherId,soLuong));
+    }
+    @GetMapping(value = "themtoanhethong")
+    public ResponseEntity<?> themToanHeThong(@RequestParam Long voucherId,
+                                             @RequestParam Integer soLuong) {
+        return ResponseEntity.ok(_voucherService.phatChoToanHeThong(voucherId,soLuong));
     }
 }

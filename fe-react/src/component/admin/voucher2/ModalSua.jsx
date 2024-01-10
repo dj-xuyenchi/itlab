@@ -18,7 +18,6 @@ import moment from "moment";
 import { checkEmpty } from "../../../extensions/checkEmpty";
 function ModalSua({ duLieu, fetchData }) {
   const [form] = useForm();
-  console.log(duLieu);
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -77,9 +76,13 @@ function ModalSua({ duLieu, fetchData }) {
       return;
     }
     const data = await useVoucher.actions.suaVouchet(voucher);
+    if (data.data === 2) {
+      openNotification("error", "Hệ thống", "Số lượng sửa đổi nhỏ hơn số Voucher đã phát", "bottomRight");
+      return
+    }
     fetchData();
     setIsModalOpen(false);
-    openNotification("success", "Hệ thống", "Tạo thành công", "bottomRight");
+    openNotification("success", "Hệ thống", "Cập nhật thành công", "bottomRight");
   }
   const formatter = (value) => {
     if (value === "" || value === undefined) {
@@ -98,10 +101,13 @@ function ModalSua({ duLieu, fetchData }) {
   return (
     <>
       {contextHolder}
-      <Tooltip title="Cập nhật">
+      <Tooltip title="Cập nhật" style={{
+      }}>
         <Button
           style={{
             color: "green",
+            marginRight: "4px"
+
           }}
           shape="circle"
           icon={<FaRegPenToSquare />}
@@ -115,7 +121,7 @@ function ModalSua({ duLieu, fetchData }) {
         cancelButtonProps={{ style: { display: "none" } }}
         title={"Cập nhật voucher"}
         open={isModalOpen}
-        onOk={() => {}}
+        onOk={() => { }}
         onCancel={() => {
           setIsModalOpen(false);
         }}
@@ -230,7 +236,7 @@ function ModalSua({ duLieu, fetchData }) {
           </Form.Item>
           <Form.Item label="Trạng thái">
             <Switch
-              checked={voucher.trangThai === 0 ? true : false}
+              checked={voucher.trangThai === "DIENRA" ? true : false}
               onChange={(e) => {
                 setVoucher({
                   ...voucher,

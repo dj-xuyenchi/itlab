@@ -47,5 +47,15 @@ public interface NguoiDungVoucherRepo extends JpaRepository<NguoiDungVoucher, Lo
             """, nativeQuery = true)
     public List<NguoiDungSoLuongVoucher> getSoLuongVoucherNguoiDung(@Param("voucherId") Long voucherId);
 
+    @Query(value = """
+            select distinct nguoidungid from nguoidungvoucher where voucherid = :voucherId
+                        """, nativeQuery = true)
+    public List<Long> layNguoiDungCuaVoucher(@Param("voucherId") Long voucherId);
 
+    @Query(value = """
+            select distinct nguoidungid from nguoidungvoucher where voucherid = :voucherId
+                        """, nativeQuery = true)
+    public List<Long> laySoLuong(@Param("voucherId") Long voucherId);
+
+    public List<NguoiDungVoucher> findNguoiDungVouchersByNguoiDungAndVoucher(NguoiDung ng, Voucher voucher);
 }

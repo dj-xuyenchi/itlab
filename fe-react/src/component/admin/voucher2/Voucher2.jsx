@@ -2,7 +2,7 @@ import "./style.css";
 import MenuAdmin from "../layout/menu/MenuAdmin";
 import Header from "../layout/header/Header";
 import React, { useEffect, useRef, useState } from "react";
-import {} from "@ant-design/icons";
+import { } from "@ant-design/icons";
 import { Input, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import "./style.css";
@@ -14,6 +14,7 @@ import { fixMoney } from "../../../extensions/fixMoney";
 import ModalThem from "./ModalThem";
 import ModalSua from "./ModalSua";
 import { fixTrangThaiVoucher } from "../../../extensions/fixTrangThaiVoucher";
+import ModalNguoiDungCuaVoucher from "./ModalNguoiDungCuaVoucher";
 function Voucher2() {
   const searchInput = useRef(null);
 
@@ -206,6 +207,7 @@ function Voucher2() {
         <>
           <div>
             <ModalSua duLieu={record} fetchData={handleLayDuLieu} />
+            {trangThai === "DIENRA" && <ModalNguoiDungCuaVoucher voucherId={record.id} />}
           </div>
         </>
       ),

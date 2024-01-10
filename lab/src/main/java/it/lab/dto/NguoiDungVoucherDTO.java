@@ -23,7 +23,6 @@ public class NguoiDungVoucherDTO {
     private Voucher voucher;
     private LocalDateTime hanSuDung;
     private Double giaTriGiam;
-    private LoaiGiam loaiGiam;
     private TrangThaiNguoiDungVoucher trangThai;
     private List<HoaDon> giamList;
 
@@ -34,7 +33,6 @@ public class NguoiDungVoucherDTO {
                 entity.getVoucher(),
                 entity.getHanSuDung(),
                 entity.getGiaTriGiam(),
-                entity.getLoaiGiam(),
                 entity.getTrangThai(),
                 entity.getGiamList()
         );
