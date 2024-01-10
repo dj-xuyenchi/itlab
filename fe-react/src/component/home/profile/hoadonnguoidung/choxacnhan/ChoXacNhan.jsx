@@ -10,6 +10,9 @@ import {
   Space,
   Table,
   notification,
+  Col,
+  Tag,
+  Divider
 } from "antd";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { selectLanguage } from "../../../../../language/selectLanguage";
@@ -21,8 +24,10 @@ import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../../extensions/fixNgayThang";
 import sapXepTheoNgayTao from "../../../../../extensions/sapXepNgayTao";
 import { useParams } from "react-router-dom";
-function ChoGiaoHang() {
+import HoaDonChiTiet from "./HoaDonChiTiet";
+function ChoXacNhan() {
   const param = useParams();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -83,188 +88,78 @@ function ChoGiaoHang() {
     clearFilters();
     setSearchText("");
   };
-  const hasSelected = selectedRowKeys.length > 0;
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Tìm kiếm ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: "block",
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1677ff" : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-  const columns = [
-    {
-      title: "Mã HĐ",
-      dataIndex: "maHoaDon",
-      width: "10%",
-      ...getColumnSearchProps("maHoaDon"),
-    },
-    {
-      title: "Tên khách hàng",
-      dataIndex: "tenKhachHang",
-      width: "20%",
-      ...getColumnSearchProps("tenKhachHang"),
-    },
-    {
-      title: "Số điện thoại",
-      dataIndex: "soDienThoai",
-      width: "15%",
-      ...getColumnSearchProps("soDienThoai"),
-    },
-    {
-      title: "Giá trị HĐ",
-      dataIndex: "hoaDonChiTietList",
-      width: "15%",
-      render: (hoaDonChiTietList) => <span>
-        {fixMoney(hoaDonChiTietList ?
-          hoaDonChiTietList.reduce((pre, cur) => {
-            return pre + (cur.soLuong * cur.donGia)
-          }, 0) : 0)
-        }
-      </span>,
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "ngayTao",
-      width: "20%",
-      sorter: (a, b) => a - b,
-      render: (item) => <span>{fixNgayThang(item)}</span>,
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "trangThai",
-      width: "15%",
-    },
- 
-  ];
+
   const [data, setData] = useState([]);
   async function layDuLieu() {
     const ketQua = await useHoaDonChoStore.actions.fetchHoaDonCho(param.id);
-    console.log("kết quả chờ xác nhận", ketQua)
     if (ketQua && ketQua.data) {
       setData(ketQua.data);
     }
   }
-  
+
   useEffect(() => {
     layDuLieu();
   }, []);
-  
+
   return (
     <>
       {contextHolder}
-      <div className="choxacnhan">
-        <Table
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={sapXepTheoNgayTao(data)}
-        />
-        <Row
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-
-
-        </Row>
-      </div>
+      <Divider />
+      {data && data.map((item) => {
+        return <>
+          <Row>
+          <Col span={24}>
+              <p >
+              <span className="favorite-tag">Yêu thích</span>
+                <span className="red-text-h4">
+                 {item.trangThai}
+                </span>
+              </p>
+            </Col>
+            
+            <Col span={24} >
+              <Row key={item.key} style={{ marginBottom: '5px' }}>
+                <Col span={4}>
+                  <img
+                    src={item.hoaDonChiTietList[0].sanPhamChiTiet.hinhAnh}
+                    alt="Product"
+                    style={{ width: '75%' }}
+                  />
+                </Col>
+                <Col span={18} style={{ paddingTop: '10px' }}>
+                  <h3 >{item.hoaDonChiTietList[0].sanPhamChiTiet.tenSanPham}</h3>
+                  <p style={{ paddingTop: '10px' }}>{item.hoaDonChiTietList[0].sanPhamChiTiet.kichThuoc.tenKichThuoc} - {item.hoaDonChiTietList[0].sanPhamChiTiet.mauSac.tenMau}</p>
+                  <div  >Số lượng: {item.hoaDonChiTietList[0].soLuong}</div>
+                </Col>
+              </Row>
+            </Col>
+            <Divider />
+            <Col span={24}>
+              <p style={{ textAlign: 'right' }}>
+                Thành tiền:
+                <span className="red-text-h3">
+                  {fixMoney(item.hoaDonChiTietList[0].soLuong * item.hoaDonChiTietList[0].donGia)}
+                </span>
+              </p>
+            </Col>
+            <Col span={24} style={{ paddingTop: '10px' }}>
+            <p>
+                Ngày mua: <Tag color="#2db7f5">
+                  {fixNgayThang(item.ngayTao)}
+                </Tag>
+                
+                  <Button type="primary" style={{marginLeft:'200px',marginRight: '8px'}}>Đánh Giá</Button>
+                  <Button style={{ marginRight: '8px' }}>Liên Hệ Người Bán</Button>
+                  <Button>Mua Lại</Button>
+                  </p>
+                  
+            </Col>
+          </Row>
+          <Divider />
+        </>
+      })}
     </>
   );
 }
 
-export default ChoGiaoHang;
+export default ChoXacNhan;

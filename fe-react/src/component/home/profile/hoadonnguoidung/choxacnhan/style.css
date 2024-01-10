@@ -3,3 +3,27 @@
     padding: 12px 24px;
     background-color: #ffffff;
 }
+.red-text-h3 {
+    color: red;
+    padding-left: 10px;
+    font-size: .999rem;
+    line-height: 24px;
+  }
+
+  .red-text-h4 {
+    color: red;
+    padding-left: 10px;
+    font-size: .800;
+    text-transform: uppercase;
+    float: right;
+  }
+  .favorite-tag {
+    background-color: #ff7875; /* Or any color you want */
+    color: white;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 12px; /* Adjust the size as needed */
+    margin-right: 8px; /* Space between the tag and the following text */
+    font-weight: bold;
+  }
+  

@@ -18,5 +18,8 @@ export const useNguoiDungStore = {
             const response = await axiosIns.get(`/api/nguoi-dung/laydiachinguoidung?nguoiDungId=` + payload)
             return response
         },
+        async layChiTietHoaDon(payload) {
+            return axiosIns.get('/api/admin/layhoadonbyid?hoaDonId=' + payload)
+        },
     },
 }

@@ -11,5 +11,8 @@ export const useHoaDonChoStore = {
         async huyHoaDon(payload) {
             return axiosIns.post('/api/admin/huyhoadon', payload)
         },
+        async layChiTietHoaDon(payload) {
+            return axiosIns.get('/api/admin/layhoadonbyid?hoaDonId=' + payload)
+        },
     },
 }
