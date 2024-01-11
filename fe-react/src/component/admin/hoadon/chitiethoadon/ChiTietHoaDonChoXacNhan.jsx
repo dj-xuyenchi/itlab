@@ -833,6 +833,38 @@ function ChiTietHoaDonChoXacNhan({
             </Col>
           </Row>
           <Row>
+            <h6>Voucher áp dụng</h6>
+          </Row>
+          <Row
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginTop: "14px",
+              marginBottom: "14px",
+            }}
+          >
+            <Col span={3} style={{}}>
+              Mã giảm giá:
+            </Col>
+            <Col span={8}>
+              <Input
+                disabled
+                value={hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.voucher.tenVoucher : "Chưa chọn"}
+              />
+            </Col>
+            <Col span={3} style={{}} offset={1}>
+              Giá trị giảm:
+            </Col>
+            <Col span={8}>
+              <Input
+                disabled
+                value={hoaDonChiTiet.voucherGiam ? fixMoney(
+                  hoaDonChiTiet.voucherGiam.giaTriGiam
+                ) : 0}
+              />
+            </Col>
+          </Row>
+          <Row>
             <h6>Phương thức thanh toán</h6>
           </Row>
           <Row
@@ -861,7 +893,7 @@ function ChiTietHoaDonChoXacNhan({
                 value={fixMoney(
                   hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
                     return pre + (cur.soLuong * cur.donGia)
-                  }, 0) + hoaDonChiTiet.phiVanChuyen)
+                  }, 0) + hoaDonChiTiet.phiVanChuyen - (hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.giaTriGiam : 0))
                 }
               />
             </Col>

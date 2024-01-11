@@ -2,6 +2,7 @@ package it.lab.iservice;
 
 import it.lab.dto.NguoiDungVoucherDTO;
 import it.lab.dto.VoucherDTO;
+import it.lab.entity.Voucher;
 import it.lab.modelcustom.respon.NguoiDungVoucherSoLuong;
 
 import java.util.List;
@@ -21,5 +22,5 @@ public interface IVoucherService {
 
     public int phatChoToanHeThong(Long voucherId, Integer soLuong);
 
-    public
+    public List<VoucherDTO> layHetVoucherSuDungCuaNguoiDung(Long nguoiDungId);
 }

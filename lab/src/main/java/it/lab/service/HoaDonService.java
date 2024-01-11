@@ -8,10 +8,7 @@ import it.lab.dto.SanPhamChiTietDTO;
 import it.lab.dto.SanPhamDTO;
 import it.lab.entity.*;
 import it.lab.entity.SanPhamChiTiet;
-import it.lab.enums.APIStatus;
-import it.lab.enums.TrangThaiDiaChi;
-import it.lab.enums.TrangThaiHoaDon;
-import it.lab.enums.XacNhanHoaDonEnum;
+import it.lab.enums.*;
 import it.lab.iservice.IHoaDonService;
 import it.lab.modelcustom.respon.*;
 import it.lab.repository.*;
@@ -29,6 +26,8 @@ public class HoaDonService implements IHoaDonService {
     @Autowired
     private HoaDonRepo _hoaDonRepo;
     @Autowired
+    private NguoiDungVoucherRepo _nguoiDungVoucherRepo;
+    @Autowired
     private HoaDonChiTietRepo _hoaDonChiTietRepo;
     @Autowired
     private SanPhamChiTietRepo _sanPhamChiTietRepo;
@@ -36,6 +35,7 @@ public class HoaDonService implements IHoaDonService {
     private DiaChiRepo _diaChiRepo;
     @Autowired
     private NguoiDungRepo _nguoiDungRepo;
+
     @Override
     public Page<HoaDonCho> layHetHoaDonCho() {
         return new Page<HoaDonCho>(HoaDonCho.fromCollection(_hoaDonRepo.findAll()), 0, 100000);
@@ -153,6 +153,7 @@ public class HoaDonService implements IHoaDonService {
 //                _sanPhamChiTietRepo.save(sp.get());
 //            }
 //            if (check) {
+            hd.get().setNgayThanhToan(LocalDateTime.now());
             hd.get().setTrangThai(TrangThaiHoaDon.DAGIAO);
             _hoaDonRepo.save(hd.get());
             //   }
@@ -167,6 +168,10 @@ public class HoaDonService implements IHoaDonService {
             Optional<HoaDon> hd = _hoaDonRepo.findById(hdId);
             if (hd.isEmpty()) {
                 continue;
+            }
+            if (hd.get().getVoucherGiam() != null) {
+                hd.get().getVoucherGiam().setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
+                _nguoiDungVoucherRepo.save(hd.get().getVoucherGiam());
             }
             hd.get().setTrangThai(TrangThaiHoaDon.CUAHANGHUY);
             _hoaDonRepo.save(hd.get());

@@ -186,7 +186,7 @@ function MauSac() {
       key: "maChatLieu",
       align: "center",
       width: "15%",
-      render: (id) => (
+      render: (id, record) => (
         <div
           style={{
             display: "flex",
@@ -194,7 +194,7 @@ function MauSac() {
           }}
         >
           <ModalView id={id} />
-          <ModalCapNhat id={id} setData={setData} />
+          <ModalCapNhat data={record} setData={setData} />
           <ModalXoa id={id} setData={setData} />
         </div>
       ),

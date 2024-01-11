@@ -42,7 +42,7 @@ public class HoaDonCho {
     public static List<HoaDonCho> fromCollection(List<HoaDon> collection) {
         List<HoaDonCho> to = new ArrayList<>();
         collection.forEach(x -> {
-           if(x.getTrangThai()== TrangThaiHoaDon.CHOXACNHAN||x.getTrangThai()== TrangThaiHoaDon.CHOTHANHTOANBANKING){
+           if(x.getTrangThai()== TrangThaiHoaDon.CHOXACNHAN){
                to.add(fromEntity(x));
            }
         });

@@ -7,6 +7,7 @@ import QuantityField from "../productdetail/QuantityField";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { useState } from "react";
 import { InputNumber } from "antd";
+import { checkEmpty } from "../../../extensions/checkEmpty";
 function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
   const language = useSelector(selectLanguage);
   const [soLuong, setSoLuong] = useState(item.soLuong);
@@ -86,6 +87,9 @@ function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
               }}
             >
               <InputNumber min={0} max={max} defaultValue={soLuong} value={soLuong} onChange={(e) => {
+                if (!e) {
+                  return
+                }
                 if (isNaN(e)) {
                   return
                 }

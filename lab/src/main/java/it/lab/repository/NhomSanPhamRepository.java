@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface NhomSanPhamRepository extends JpaRepository<NhomSanPham,Long> {
-    public boolean existsByTenNhomContains(String ten);
+    public boolean existsByTenNhomEquals(String ten);
 
     @Query(value = "SELECT nsp.tenthietke, COUNT(ctsp.id) AS soluongao " +
             "FROM nhomsanpham nsp " +

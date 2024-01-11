@@ -370,7 +370,7 @@ function ProductDetail() {
                         handleChonKichThuoc(item);
                       }}
                     >
-                      <span>{item.maKichThuoc}</span>
+                      <span>{item.tenKichThuoc}</span>
                     </div>
                   );
                 })}

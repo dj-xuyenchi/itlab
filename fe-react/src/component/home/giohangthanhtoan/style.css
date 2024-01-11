@@ -75,6 +75,11 @@
     font-size: 15px;
     text-transform: uppercase;
     margin-left: 12px;
+    cursor: pointer;
+}
+
+.content .list .option .voucher .app:hover {
+    color: #787878;
 }
 
 .checkout {
@@ -116,5 +121,10 @@
 }
 
 .btn-transaction:hover {
+    cursor: pointer;
+}
+
+.voucher:hover {
+    background-color: #e3e3e3;
     cursor: pointer;
 }

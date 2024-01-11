@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ThietKeRepository extends JpaRepository<ThietKe,Long> {
-    public boolean existsByTenThietKeContains(String ten);
+    public boolean existsByTenThietKeEquals(String ten);
 }

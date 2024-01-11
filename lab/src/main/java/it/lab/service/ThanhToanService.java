@@ -10,6 +10,7 @@ import it.lab.dto.PhuongThucVanChuyenDTO;
 import it.lab.entity.*;
 import it.lab.enums.APIStatus;
 import it.lab.enums.TrangThaiHoaDon;
+import it.lab.enums.TrangThaiNguoiDungVoucher;
 import it.lab.iservice.IThanhToan;
 import it.lab.modelcustom.request.TaoHoaDonOnline;
 import it.lab.modelcustom.respon.CheckOut;
@@ -23,11 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ThanhToanService implements IThanhToan {
     @Autowired
     private GioHangRepo _gioHangRepo;
+    @Autowired
+    private VoucherRepo _voucherRepo;
+    @Autowired
+    private NguoiDungVoucherRepo _nguoiDungVoucherRepo;
     @Autowired
     private NguoiDungRepo _nguoiDungRepo;
     @Autowired
@@ -84,6 +90,15 @@ public class ThanhToanService implements IThanhToan {
         NguoiDung nguoiMua = dc.get().getNguoiDung();
         HoaDon hd = new HoaDon();
         hd.setDiaChiGiao(dc.get());
+        if (yeuCau.getVoucherId() != null) {
+            Voucher v = _voucherRepo.findById(yeuCau.getVoucherId()).get();
+            List<NguoiDungVoucher> lst = _nguoiDungVoucherRepo.findNguoiDungVouchersByNguoiDungAndVoucher(nguoiMua, v)
+                    .stream().filter(x->x.getTrangThai()==TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+            NguoiDungVoucher ndv = lst.get(0);
+            ndv.setTrangThai(TrangThaiNguoiDungVoucher.DASUDUNG);
+            hd.setVoucherGiam(ndv);
+            _nguoiDungVoucherRepo.save(ndv);
+        }
         hd.setGhiChu(yeuCau.getGhiChu());
         hd.setNgayTao(LocalDateTime.now());
         hd.setNguoiMua(nguoiMua);
@@ -102,7 +117,6 @@ public class ThanhToanService implements IThanhToan {
         //    guiThongBaoChoNhanVien(thongBao);
         _hoaDonRepo.save(hd);
         hd.setMaHoaDon("HD" + hd.getId());
-        hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _hoaDonRepo.save(hd);
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
@@ -137,6 +151,12 @@ public class ThanhToanService implements IThanhToan {
         }
         NguoiDung nguoiMua = dc.get().getNguoiDung();
         HoaDon hd = new HoaDon();
+        if (yeuCau.getVoucherId() != null) {
+            Voucher v = _voucherRepo.findById(yeuCau.getVoucherId()).get();
+            List<NguoiDungVoucher> lst = _nguoiDungVoucherRepo.findNguoiDungVouchersByNguoiDungAndVoucher(nguoiMua, v)
+                    .stream().filter(x->x.getTrangThai()==TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+            hd.setVoucherGiam(lst.get(0));
+        }
         hd.setDiaChiGiao(dc.get());
         hd.setGhiChu(yeuCau.getGhiChu());
         hd.setNgayTao(LocalDateTime.now());
@@ -156,8 +176,8 @@ public class ThanhToanService implements IThanhToan {
         hd.setMaHoaDon("HD" + hd.getId());
         hd.setHoaDonChiTietList(taoHoaDonChiTiet(ghList, hd.getId()));
         _hoaDonRepo.save(hd);
-      //  _gioHangRepo.deleteAll(ghList);
-      //  thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
+        //  _gioHangRepo.deleteAll(ghList);
+        //  thayDoiSoLuongKhiConfirmHoaDon(hd.getId());
         return hd.getMaHoaDon();
     }
 
@@ -172,6 +192,10 @@ public class ThanhToanService implements IThanhToan {
             _gioHangRepo.deleteAll(ghList);
             thayDoiSoLuongKhiConfirmHoaDon(hoaDon.get().getId());
             hoaDon.get().setNgayThanhToan(LocalDateTime.now());
+            if (hoaDon.get().getVoucherGiam() != null) {
+                hoaDon.get().getVoucherGiam().setTrangThai(TrangThaiNguoiDungVoucher.DASUDUNG);
+                _nguoiDungVoucherRepo.save(hoaDon.get().getVoucherGiam());
+            }
             hoaDon.get().setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
             _hoaDonRepo.save(hoaDon.get());
         } else {
@@ -185,7 +209,6 @@ public class ThanhToanService implements IThanhToan {
         HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
         for (GioHang gh : gioHangList) {
             SanPhamChiTiet spct = _sanPhamChiTietRepo.findById(gh.getSanPhamChiTiet().getId()).get();
-            spct.setSoLuongTon(spct.getSoLuongTon() - gh.getSoLuong());
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setNgayTao(LocalDateTime.now());
             hoaDonChiTiet.setSanPhamChiTiet(spct);

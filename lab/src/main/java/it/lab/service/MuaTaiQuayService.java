@@ -4,10 +4,7 @@ import it.lab.common.Template;
 import it.lab.config.Config;
 import it.lab.dto.*;
 import it.lab.entity.*;
-import it.lab.enums.TrangThaiDiaChi;
-import it.lab.enums.TrangThaiHoaDon;
-import it.lab.enums.TrangThaiNguoiDung;
-import it.lab.enums.TrangThaiQuetMa;
+import it.lab.enums.*;
 import it.lab.iservice.IMuaTaiQuayService;
 import it.lab.modelcustom.request.DiaChiMoi;
 import it.lab.modelcustom.request.MuaTaiQuay2;
@@ -23,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MuaTaiQuayService implements IMuaTaiQuayService {
@@ -44,6 +42,10 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     private RankKhachHangRepo _rankKhachRepo;
     @Autowired
     private SanPhamRepo _sanPhamRepo;
+    @Autowired
+    private VoucherRepo _voucherRepo;
+    @Autowired
+    private NguoiDungVoucherRepo _nguoiDungVoucherRepo;
 
     @Override
     public List<HoaDonChoTaiCuaHang> layDanhSachTaiCuaHang() {
@@ -277,6 +279,16 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuay2.getHoaDonId()).get();// nếu ko chọn địa chỉ thì cột địa chỉ trên HD là null
         hoaDon = setDiaChiChoHoaDon(hoaDon, muaTaiQuay2);
         hoaDon = setKhachHang(hoaDon, muaTaiQuay2.getKhachHangId());
+        if (muaTaiQuay2.getVoucherId() != null) {
+            NguoiDung ng = _nguoiDungRepo.findById(muaTaiQuay2.getKhachHangId()).get();
+            Voucher v = _voucherRepo.findById(muaTaiQuay2.getVoucherId()).get();
+            List<NguoiDungVoucher> lst = _nguoiDungVoucherRepo.findNguoiDungVouchersByNguoiDungAndVoucher(ng, v)
+                    .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+            NguoiDungVoucher ndv = lst.get(0);
+            ndv.setTrangThai(TrangThaiNguoiDungVoucher.DASUDUNG);
+            hoaDon.setVoucherGiam(ndv);
+            _nguoiDungVoucherRepo.save(ndv);
+        }
         _hoaDonRepo.save(hoaDon);
         //Lấy tại cửa hàng
         if (muaTaiQuay2.getThanhToanBang() == 1) {
@@ -314,6 +326,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     private String tienMat(HoaDon hoaDon, MuaTaiQuay2 muaTaiQuay2) {
         hoaDon.setGhiChu(muaTaiQuay2.getGhiChu());
         hoaDon.setNgayCapNhat(LocalDateTime.now());
+        hoaDon.setNgayThanhToan(LocalDateTime.now());
         PhuongThucThanhToan pttt = _phuongThucThanhToanRepo.findById(2l).get();
         hoaDon.setPhuongThucThanhToan(pttt);
         thayDoiSoLuongKhiConfirmHoaDon(hoaDon.getId());
@@ -334,7 +347,11 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         hoaDon.setGhiChu(muaTaiQuay2.getGhiChu());
         hoaDon.setNgayCapNhat(LocalDateTime.now());
         _hoaDonRepo.save(hoaDon);
-        return taoLinkVnPay(hoaDon.getMaHoaDon(), (long) (hoaDon.getGiaTriHd() + (hoaDon.getPhiGiaoHang() == null ? 0 : hoaDon.getPhiGiaoHang())));
+        Long giaTri = (long) (hoaDon.getGiaTriHd() + (hoaDon.getPhiGiaoHang() == null ? 0 : hoaDon.getPhiGiaoHang()));
+        if (hoaDon.getVoucherGiam() != null) {
+            giaTri = giaTri - hoaDon.getVoucherGiam().getGiaTriGiam().longValue();
+        }
+        return taoLinkVnPay(hoaDon.getMaHoaDon(), giaTri);
     }
 
 
@@ -353,7 +370,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(1l).get());
             hoaDon.setDiaChiGiao(taoDiaChi(muaTaiQuay2));
             hoaDon.setPhiGiaoHang(muaTaiQuay2.getPhiGiaoHang());
-            diaChiId=0l;
+            diaChiId = 0l;
         }
         if (muaTaiQuay2.getTaoDiaChi() == 2) {
             DiaChi diaChi = _diaChiRepo.findById(muaTaiQuay2.getDiaChiId()).get();

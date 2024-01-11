@@ -183,7 +183,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<NhomSanPhamDTO> suaNhomSanPham(NhomSanPham nhomSanPham) {
-        if (_nhomSanPhamRepo.existsByTenNhomContains(nhomSanPham.getTenNhom())) {
+        if (_nhomSanPhamRepo.existsByTenNhomEquals(nhomSanPham.getTenNhom())) {
             return null;
         }
         NhomSanPham nhomSanPhamGoc = _nhomSanPhamRepo.findById(nhomSanPham.getId()).get();
@@ -195,7 +195,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<NhomSanPhamDTO> themNhomSanPham(NhomSanPham nhomSanPham) {
-        if (_nhomSanPhamRepo.existsByTenNhomContains(nhomSanPham.getTenNhom())) {
+        if (_nhomSanPhamRepo.existsByTenNhomEquals(nhomSanPham.getTenNhom())) {
             return null;
         }
         nhomSanPham.setNgayTao(LocalDateTime.now());
@@ -237,7 +237,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<ThietKeDTO> suaThietKe(ThietKe thietKe) {
-        if (_thietKeRepo.existsByTenThietKeContains(thietKe.getTenThietKe())) {
+        if (_thietKeRepo.existsByTenThietKeEquals(thietKe.getTenThietKe())) {
             return null;
         }
         ThietKe thietKeGoc = _thietKeRepo.findById(thietKe.getId()).get();
@@ -249,7 +249,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<ThietKeDTO> themThietKe(ThietKe thietKe) {
-        if (_thietKeRepo.existsByTenThietKeContains(thietKe.getTenThietKe())) {
+        if (_thietKeRepo.existsByTenThietKeEquals(thietKe.getTenThietKe())) {
             return null;
         }
         thietKe.setNgayTao(LocalDateTime.now());
@@ -281,7 +281,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<MauSacDTO> suaMauSac(MauSac mauSac) {
-        if (_mauSacRepo.existsByTenMauContains(mauSac.getTenMau())) {
+        if (_mauSacRepo.existsByTenMauEquals(mauSac.getTenMau())) {
             return null;
         }
         MauSac mauSacGoc = _mauSacRepo.findById(mauSac.getId()).get();
@@ -294,7 +294,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<MauSacDTO> themMauSac(MauSac mauSac) {
-        if (_mauSacRepo.existsByTenMauContains(mauSac.getTenMau())) {
+        if (_mauSacRepo.existsByTenMauEquals(mauSac.getTenMau())) {
             return null;
         }
         mauSac.setNgayTao(LocalDateTime.now());
@@ -326,7 +326,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<KichThuocDTO> suaKichThuoc(KichThuoc kichThuoc) {
-        if (_kichThuocRepo.existsByTenKichThuocContains(kichThuoc.getTenKichThuoc())) {
+        if (_kichThuocRepo.existsByTenKichThuocEquals(kichThuoc.getTenKichThuoc())) {
             return null;
         }
         KichThuoc kichThuocGoc = _kichThuocRepo.findById(kichThuoc.getId()).get();
@@ -338,7 +338,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<KichThuocDTO> themKichThuoc(KichThuoc kichThuoc) {
-        if (_kichThuocRepo.existsByTenKichThuocContains(kichThuoc.getTenKichThuoc())) {
+        if (_kichThuocRepo.existsByTenKichThuocEquals(kichThuoc.getTenKichThuoc())) {
             return null;
         }
         kichThuoc.setNgayTao(LocalDateTime.now());

@@ -240,7 +240,7 @@ function ModalSua({ duLieu, fetchData }) {
               onChange={(e) => {
                 setVoucher({
                   ...voucher,
-                  trangThai: e ? 0 : 1,
+                  trangThai: e ? "DIENRA" : "NGUNG",
                 });
               }}
             />

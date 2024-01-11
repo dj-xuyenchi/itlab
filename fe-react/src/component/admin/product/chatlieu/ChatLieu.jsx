@@ -16,8 +16,6 @@ import { useForm } from "antd/es/form/Form";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 function ChatLieu() {
   const [form] = useForm()
-  const language = useSelector(selectLanguage);
-  const dispath = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [chatLieu, setChatLieu] = useState({
@@ -179,7 +177,7 @@ function ChatLieu() {
       key: "maChatLieu",
       align: "center",
       width: "15%",
-      render: (id) => (
+      render: (id, record) => (
         <div
           style={{
             display: "flex",
@@ -187,7 +185,7 @@ function ChatLieu() {
           }}
         >
           <ModalView id={id} />
-          <ModalCapNhat id={id} setData={setData} />
+          <ModalCapNhat data={record} setData={setData} />
           <ModalXoa id={id} setData={setData} />
         </div>
       ),

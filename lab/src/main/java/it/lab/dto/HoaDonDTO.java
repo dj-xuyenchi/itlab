@@ -37,7 +37,7 @@ public class HoaDonDTO {
     private Double giaTriHd;
     private Double phiVanChuyen;
     private TrangThaiHoaDon trangThai;
-    private NguoiDungVoucher voucherGiam;
+    private NguoiDungVoucherDTO voucherGiam;
     private NguoiDung nhanVien;
     private String lyDoTuChoiDoi;
     private List<BinhLuanDanhGia> binhLuanDanhGiaList;
@@ -67,7 +67,7 @@ public class HoaDonDTO {
                 entity.getGiaTriHd(),
                 entity.getPhiGiaoHang(),
                 entity.getTrangThai(),
-                entity.getVoucherGiam(),
+                entity.getVoucherGiam() != null ? NguoiDungVoucherDTO.fromEntity(entity.getVoucherGiam()) : null,
                 entity.getNhanVien(),
                 entity.getLyDoTuChoiTra(),
                 entity.getBinhLuanDanhGiaList(),

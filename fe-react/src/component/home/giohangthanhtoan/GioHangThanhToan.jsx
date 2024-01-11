@@ -7,6 +7,7 @@ import {
   Divider,
   Empty,
   Input,
+  Modal,
   Radio,
   Row,
   Select,
@@ -33,6 +34,9 @@ function GioHangThanhToan() {
   const [ghiChu, setGhiChu] = useState("");
   const [diaChiChon, setDiaChiChon] = useState(undefined);
   const [phuongThucThanhToan, setPhuongThucThanhToan] = useState(0);
+  const [maGiamGia, setMaGiamGia] = useState(undefined);
+  const [listVoucher, setListVoucher] = useState(undefined);
+  const [isMaGiamShow, setIsMaGiamShow] = useState(false);
   const options = [];
   const size = "large";
   const [api, contextHolder] = notification.useNotification();
@@ -51,8 +55,20 @@ function GioHangThanhToan() {
       });
     }
   };
+  function handleCheckTongThanhToanLonHon0() {
+    const check = soTienPhaiTra + phiVanChuyen - (maGiamGia ? maGiamGia.giaTriGiam : 0);
+    if (check <= 0) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Tổng giá trị đơn hàng phải lớn hơn 0đ!",
+        "bottomRight"
+      );
+      return false
+    }
+    return true
+  }
   async function handleTaoRequest() {
-    console.log(phuongThucThanhToan);
     if (phuongThucThanhToan === 0) {
       openNotification(
         "error",
@@ -65,6 +81,9 @@ function GioHangThanhToan() {
     if (duLieuThanhToan.data.sanPhamList.length === 0) {
       openNotification("error", "Hệ thống", "Giỏ hàng trống", "bottomRight");
       return;
+    }
+    if (!handleCheckTongThanhToanLonHon0()) {
+      return
     }
     for (var item of duLieuThanhToan.data.sanPhamList) {
       if (item.soLuong > item.sanPhamChiTiet.soLuongTon) {
@@ -90,6 +109,7 @@ function GioHangThanhToan() {
         phuongThucVanChuyenId: 1,
         gia: soTienPhaiTra,
         phiVanChuyen: phiVanChuyen,
+        voucherId: maGiamGia && maGiamGia.id
       });
       window.location.href = request.data;
     } else {
@@ -100,8 +120,9 @@ function GioHangThanhToan() {
         phuongThucVanChuyenId: 1,
         gia: soTienPhaiTra,
         phiVanChuyen: phiVanChuyen,
+        voucherId: maGiamGia && maGiamGia.id
       });
-      window.location.href = 'http://localhost:3000/checkout';
+      window.location.href = 'http://localhost:3000/vnpay/checkout';
     }
   }
   function handleChonDiaChi(e) {
@@ -149,6 +170,10 @@ function GioHangThanhToan() {
     });
     setPhiVanChuyen(giaShip.data.data.total);
   }
+  async function handleLayVoucher() {
+    const data = await useGioHangStore.actions.layVoucherNguoiDung(JSON.parse(localStorage.getItem("user")).data.nguoiDung.id)
+    setListVoucher(data.data)
+  }
   useEffect(() => {
     async function handleLayGioHang() {
       const data = await useGioHangStore.actions.layDuLieuThanhToan(
@@ -157,6 +182,7 @@ function GioHangThanhToan() {
       setDuLieuThanhToan(data.data);
     }
     handleLayGioHang();
+    handleLayVoucher()
   }, []);
   async function handleCapNhatSoLuongSanPhamGioHang(gioHangId, soLuongMoi) {
     const data = await useGioHangStore.actions.capNhatSoLuongSanPhamGioHang({
@@ -472,13 +498,69 @@ function GioHangThanhToan() {
                     <p className="title">Nhập mã giảm giá ưu đãi</p>
                     <Input
                       size="large"
-                      placeholder="Nhập mã giảm giá"
+                      placeholder="Chọn mã giảm giá"
                       style={{
                         backgroundColor: "white",
                         width: "70%",
                       }}
+                      value={maGiamGia && maGiamGia.maVoucher}
+                      onClick={() => {
+                        setMaGiamGia(undefined)
+                      }}
                     />
-                    <span className="app">Áp dụng</span>
+                    <span className="app" onClick={() => { setIsMaGiamShow(true) }}>Chọn mã</span>
+                    <Modal
+                      title="Voucher tài khoản"
+                      open={isMaGiamShow}
+                      onOk={() => {
+                        setIsMaGiamShow(false);
+                      }}
+                      onCancel={() => {
+                        setIsMaGiamShow(false);
+                      }}
+                      centered
+                    >
+                      {
+                        listVoucher && listVoucher.map((item) => {
+                          return <>
+                            <div className="voucher" style={{
+                              height: "60px",
+                              borderRadius: "5px",
+                              padding: "4px",
+                              display: 'flex',
+                              alignItems: "center",
+                              flexDirection: "row",
+                              marginBottom: "4px"
+                            }}
+                              onClick={() => {
+                                setMaGiamGia(item)
+                                setIsMaGiamShow(false)
+                              }}
+                            >
+                              <div>
+                                <img style={{
+                                  height: "46px",
+                                  width: "auto"
+                                }} src="https://routine.vn/media/logo/websites/1/logo-black-2x.png" alt="s" />
+                              </div>
+                              <div style={{
+                                marginLeft: "12px"
+                              }}>
+                                <p style={{
+                                  marginBottom: "2px",
+                                  fontSize: "14px",
+                                  fontWeight: 550
+                                }}>{item.tenVoucher + " - " + item.maVoucher}</p>
+                                <p style={{
+                                  marginBottom: "0",
+                                  color: "red"
+                                }}>{"-" + fixMoney(item.giaTriGiam)}</p>
+                              </div>
+                            </div>
+                          </>
+                        })
+                      }
+                    </Modal>
                   </div>
                   <div className="checkout">
                     <p className="title">Tạm tính</p>
@@ -496,6 +578,7 @@ function GioHangThanhToan() {
                       >
                         <div>
                           <p>Số lượng</p>
+                          <p>Voucher</p>
                           <p>Tạm tính</p>
                           <p>Phí vận chuyển</p>
                         </div>
@@ -510,20 +593,28 @@ function GioHangThanhToan() {
                           <p
                             style={{
                               textAlign: "right",
+                              color: "red"
                             }}
                           >
                             {soLuong}
                           </p>
                           <p
                             style={{
-                              textAlign: "right",
+                              textAlign: "right", color: "red"
+                            }}
+                          >
+                            {maGiamGia ? fixMoney(maGiamGia.giaTriGiam) : "Không áp dụng"}
+                          </p>
+                          <p
+                            style={{
+                              textAlign: "right", color: "red"
                             }}
                           >
                             {fixMoney(soTienPhaiTra)}
                           </p>
                           <p
                             style={{
-                              textAlign: "right",
+                              textAlign: "right", color: "red"
                             }}
                           >
                             {fixMoney(phiVanChuyen)}
@@ -563,7 +654,7 @@ function GioHangThanhToan() {
                               lineHeight: "23px",
                             }}
                           >
-                            {fixMoney(soTienPhaiTra + phiVanChuyen)}
+                            {fixMoney(soTienPhaiTra + phiVanChuyen - (maGiamGia ? maGiamGia.giaTriGiam : 0))}
                           </p>
                         </div>
                       </div>

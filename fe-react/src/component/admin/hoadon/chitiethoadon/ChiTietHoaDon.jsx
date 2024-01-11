@@ -796,8 +796,8 @@ function ChiTietHoaDon({
                 value={
                   hoaDonChiTiet.diaChiGiao &&
                   hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                    " " +
-                    hoaDonChiTiet.diaChiGiao.nguoiNhan
+                  " " +
+                  hoaDonChiTiet.diaChiGiao.nguoiNhan
                 }
               />
             </Col>
@@ -906,6 +906,43 @@ function ChiTietHoaDon({
               />
             </Col>
           </Row>
+          {
+            hoaDonChiTiet.voucherGiam && <>
+              <Row>
+                <h6>Voucher áp dụng</h6>
+              </Row>
+              <Row
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "14px",
+                  marginBottom: "14px",
+                }}
+              >
+                <Col span={3} style={{}}>
+                  Mã giảm giá:
+                </Col>
+                <Col span={8}>
+                  <Input
+                    disabled
+                    value={hoaDonChiTiet.voucherGiam.voucher.tenVoucher}
+                  />
+                </Col>
+                <Col span={3} style={{}} offset={1}>
+                  Giá trị giảm:
+                </Col>
+                <Col span={8}>
+                  <Input
+                    disabled
+                    value={fixMoney(
+                      hoaDonChiTiet.voucherGiam.giaTriGiam
+                    )}
+                  />
+                </Col>
+              </Row>
+            </>
+          }
+
           <Row>
             <h6>Phương thức thanh toán</h6>
           </Row>
@@ -939,7 +976,7 @@ function ChiTietHoaDon({
                         return pre + cur.soLuong * cur.donGia;
                       }
                       return pre;
-                    }, 0) + hoaDonChiTiet.phiVanChuyen
+                    }, 0) + hoaDonChiTiet.phiVanChuyen - (hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.giaTriGiam : 0)
                   )}
                 />
               </Col>
@@ -971,7 +1008,7 @@ function ChiTietHoaDon({
                   value={fixMoney(
                     hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
                       return pre + cur.soLuong * cur.donGia;
-                    }, 0) + hoaDonChiTiet.phiVanChuyen
+                    }, 0) + hoaDonChiTiet.phiVanChuyen - (hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.giaTriGiam : 0)
                   )}
                 />
               </Col>
@@ -1050,13 +1087,13 @@ function ChiTietHoaDon({
                           >
                             {data
                               ? data.map((option) => (
-                                  <Select.Option
-                                    key={option.id}
-                                    value={option.id}
-                                  >
-                                    {option.tenSanPham}
-                                  </Select.Option>
-                                ))
+                                <Select.Option
+                                  key={option.id}
+                                  value={option.id}
+                                >
+                                  {option.tenSanPham}
+                                </Select.Option>
+                              ))
                               : ""}
                           </Select>
                         </Col>

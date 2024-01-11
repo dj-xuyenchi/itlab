@@ -7,7 +7,6 @@ import { QRCode } from "antd";
 import { useGioHangStore } from "./useGioHangStore";
 import { useEffect } from "react";
 function HuyDon() {
-    const language = useSelector(selectLanguage);
     const search = window.location.search;
     const params = new URLSearchParams(search);
     const vnp_TransactionStatus = params.get('vnp_TransactionStatus');
@@ -24,7 +23,8 @@ function HuyDon() {
     return (
         <>
             <Header />
-            {vnp_TransactionStatus === 0 ? <div style={{
+
+            {vnp_TransactionStatus === "00" ? <div style={{
             }}>
                 <div style={{
                     display: 'flex',
@@ -54,8 +54,7 @@ function HuyDon() {
                     {/* <div className="btn-transaction">Lịch sử giao dịch</div>
                     <div className="btn-transaction">Tải biên lai</div> */}
                 </div>
-            </div> : ""}
-            {vnp_TransactionStatus == 2 ? <div style={{
+            </div> : <div style={{
             }}>
                 <div style={{
                     display: 'flex',
@@ -83,7 +82,7 @@ function HuyDon() {
                 }}>
                     <div className="btn-transaction">Lịch sử giao dịch</div>
                 </div>
-            </div> : ""}
+            </div>}
 
         </>
     );

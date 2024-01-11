@@ -32,6 +32,7 @@ import Voucher from "./component/admin/voucher/Voucher";
 import GiftVoucher from "./component/admin/giftvoucher/GiftVoucher";
 import ThanhToanVnPay from "./component/admin/bantaiquay/ThanhToanVnPay";
 import Voucher2 from "./component/admin/voucher2/Voucher2";
+import ThanhToanChoXacNhan from "./component/home/giohangthanhtoan/ThanhToanChoXacNhan";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -69,6 +70,7 @@ function App() {
         <Route path="/thanhtoan" element={<GioHangThanhToan />} />
         <Route path="/admin/sanpham" element={<Product />} />
         <Route path="/vnpay/ketqua" element={<HuyDon />} />
+        <Route path="/vnpay/checkout" element={<ThanhToanChoXacNhan />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/admin/hoadon" element={<HoaDon />} />
         <Route path="/admin/dashboard" element={<DashBoard />} />

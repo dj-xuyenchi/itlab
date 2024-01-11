@@ -24,4 +24,5 @@ public class MuaTaiQuay2 {
     private DiaChiMoi diaChiMoi;
     private String ghiChu;
     private Double phiGiaoHang;
+    private Long voucherId;
 }

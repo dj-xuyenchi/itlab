@@ -7,8 +7,6 @@ import { fixMoney } from "../../../extensions/fixMoney";
 import { fixTrangThai } from "../../../extensions/fixTrangThai";
 function InHoaDon({ data }) {
     const generatePdf = () => {
-        console.log(data);
-
         const content = document.getElementById('content-to-export');
         html2pdf(content);
     };
@@ -149,9 +147,12 @@ function InHoaDon({ data }) {
                         marginTop: "12px"
                     }}>
                         <div>
+                            {data.voucherGiam && <p>Áp mã:   <span style={{
+                                color: 'red'
+                            }}>{fixMoney(data.voucherGiam.giaTriGiam)}</span></p>}
                             <p>Tổng tiền hàng:   <span style={{
                                 color: 'red'
-                            }}>{fixMoney(data.giaTriHd)}</span></p>
+                            }}>{fixMoney(data.giaTriHd - (data.voucherGiam ? data.voucherGiam.giaTriGiam : 0))}</span></p>
                             <p>Phí ship: <span style={{
                                 color: 'red'
                             }}>{fixMoney(data.phiVanChuyen)}</span></p>

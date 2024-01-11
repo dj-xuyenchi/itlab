@@ -30,5 +30,9 @@ export const useGioHangStore = {
             const response = await axiosIns.get(`/api/vnpay/checkthanhtoan?maHd=` + payload.maHd + "&status=" + payload.status)
             return response
         },
+        async layVoucherNguoiDung(payload) {
+            const response = await axiosIns.get(`/api/voucher2/layvouchernguoidung?nguoiDungId=` + payload)
+            return response
+        },
     },
 }

@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -142,9 +143,9 @@ public class VoucherService2 implements IVoucherService {
     @Override
     //1 là thành công. 2 là ko đủ số lượng
     public int phatChoToanHeThong(Long voucherId, Integer soLuong) {
-        List<NguoiDung> lstNd = _nguoiDungRepo.findAll().stream().filter(x->x.getTrangThai()!=TrangThaiNguoiDung.BIKHOA).collect(Collectors.toList());
+        List<NguoiDung> lstNd = _nguoiDungRepo.findAll().stream().filter(x -> x.getTrangThai() != TrangThaiNguoiDung.BIKHOA).collect(Collectors.toList());
         Voucher voucher = _voucherRepo.findById(voucherId).get();
-        if (voucher.getSoLuong() < lstNd.size()*soLuong) {
+        if (voucher.getSoLuong() < lstNd.size() * soLuong) {
             return 2;
         }
         List<NguoiDungVoucher> lst = new ArrayList<>();
@@ -163,5 +164,18 @@ public class VoucherService2 implements IVoucherService {
         }
         _nguoiDungVoucher.saveAll(lst);
         return 1;
+    }
+
+    @Override
+    public List<VoucherDTO> layHetVoucherSuDungCuaNguoiDung(Long nguoiDungId) {
+        NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
+        List<NguoiDungVoucher> lst = _nguoiDungVoucher.findNguoiDungVouchersByNguoiDung(ng)
+                .stream().filter(x->x.getTrangThai()==TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+        Set<Voucher> voucherRe = lst.stream()
+                .filter(x -> x.getVoucher().getTrangThai() == TrangThaiVoucher.DIENRA)
+                .map(x -> {
+                    return x.getVoucher();
+                }).collect(Collectors.toList()).stream().collect(Collectors.toSet());
+        return VoucherDTO.fromCollection(voucherRe.stream().toList());
     }
 }

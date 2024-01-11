@@ -55,11 +55,17 @@ public class VoucherController2 {
     public ResponseEntity<?> themVoucherChoNguoiDung(@RequestParam Long nguoiDungId,
                                                      @RequestParam Long voucherId,
                                                      @RequestParam Integer soLuong) {
-        return ResponseEntity.ok(_voucherService.themVoucherChoNguoiDung(nguoiDungId,voucherId,soLuong));
+        return ResponseEntity.ok(_voucherService.themVoucherChoNguoiDung(nguoiDungId, voucherId, soLuong));
     }
+
     @GetMapping(value = "themtoanhethong")
     public ResponseEntity<?> themToanHeThong(@RequestParam Long voucherId,
                                              @RequestParam Integer soLuong) {
-        return ResponseEntity.ok(_voucherService.phatChoToanHeThong(voucherId,soLuong));
+        return ResponseEntity.ok(_voucherService.phatChoToanHeThong(voucherId, soLuong));
+    }
+
+    @GetMapping(value = "layvouchernguoidung")
+    public ResponseEntity<?> themToanHeThong(@RequestParam Long nguoiDungId) {
+        return ResponseEntity.ok(_voucherService.layHetVoucherSuDungCuaNguoiDung(nguoiDungId));
     }
 }

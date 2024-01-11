@@ -178,7 +178,7 @@ function NhomSanPham() {
       key: "maChatLieu",
       align: "center",
       width: "15%",
-      render: (id) => (
+      render: (id, record) => (
         <div
           style={{
             display: "flex",
@@ -186,7 +186,7 @@ function NhomSanPham() {
           }}
         >
           <ModalView id={id} />
-          <ModalCapNhat id={id} setData={setData} />
+          <ModalCapNhat data={record} setData={setData} />
           <ModalXoa id={id} setData={setData} />
         </div>
       ),
@@ -298,7 +298,6 @@ function NhomSanPham() {
                 >
                   <Form.Item
                     label="Tên nhóm"
-                    name="Tên nhóm"
                     rules={[
                       {
                         required: true,
