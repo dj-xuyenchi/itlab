@@ -32,6 +32,7 @@ import { useGHN } from "../../../../plugins/ghnapi";
 import { IoMdPrint } from "react-icons/io";
 import InHoaDon from "../InHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
+import InHoaDonDoiTra from "../InHoaDonDoiTra";
 function ChiTietHoaDon({
   hoaDonId,
   type2 = false,
@@ -609,7 +610,7 @@ function ChiTietHoaDon({
               }}
               span={24}
             >
-              {!type && <InHoaDon data={hoaDonChiTiet} />}
+              {!type && (hoaDonChiTiet.trangThai === "DADOITRA" ? <InHoaDonDoiTra data={hoaDonChiTiet} /> : <InHoaDon data={hoaDonChiTiet} />)}
             </Col>
           </Row>
           <Row

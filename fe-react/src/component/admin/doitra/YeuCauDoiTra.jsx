@@ -271,8 +271,6 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
         soLuongDoiTra: soDoi[item] ? soDoi[item] : 0,
       };
     }
-    console.log(duLieuDoiTra);
-
     if (sanPhamDoi.length === 0) {
       openNotification(
         "error",

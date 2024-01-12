@@ -3,6 +3,7 @@ package it.lab.service;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.dto.NguoiDungVoucherDTO;
 import it.lab.dto.VoucherDTO;
+import it.lab.entity.HoaDon;
 import it.lab.entity.NguoiDung;
 import it.lab.entity.NguoiDungVoucher;
 import it.lab.entity.Voucher;
@@ -11,6 +12,7 @@ import it.lab.enums.TrangThaiNguoiDungVoucher;
 import it.lab.enums.TrangThaiVoucher;
 import it.lab.iservice.IVoucherService;
 import it.lab.modelcustom.respon.NguoiDungVoucherSoLuong;
+import it.lab.repository.HoaDonRepo;
 import it.lab.repository.NguoiDungRepo;
 import it.lab.repository.NguoiDungVoucherRepo;
 import it.lab.repository.VoucherRepo;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 public class VoucherService2 implements IVoucherService {
     @Autowired
     private VoucherRepo _voucherRepo;
+    @Autowired
+    private HoaDonRepo _hoaDonRepo;
     @Autowired
     private NguoiDungRepo _nguoiDungRepo;
     @Autowired
@@ -187,5 +191,23 @@ public class VoucherService2 implements IVoucherService {
                     return x.getVoucher();
                 }).collect(Collectors.toList()).stream().collect(Collectors.toSet());
         return VoucherDTO.fromCollection(voucherRe.stream().toList());
+    }
+
+    @Override
+    public void doiVoucherHoaDon(Long hoaDonId, Long voucherId) {
+        HoaDon hd = _hoaDonRepo.findById(hoaDonId).get();
+        Voucher voucher = _voucherRepo.findById(voucherId).get();
+        NguoiDung nd = hd.getNguoiMua();
+        NguoiDungVoucher ndv = hd.getVoucherGiam();
+        ndv.setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
+        _nguoiDungVoucher.save(ndv);
+        var lstVoucher = _nguoiDungVoucher.findNguoiDungVouchersByNguoiDungAndVoucher(nd, voucher)
+                .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG)
+                .collect(Collectors.toList());
+        NguoiDungVoucher ndv2 = lstVoucher.get(0);
+        ndv2.setTrangThai(TrangThaiNguoiDungVoucher.DASUDUNG);
+        hd.setVoucherGiam(ndv2);
+        _hoaDonRepo.save(hd);
+        _nguoiDungVoucher.save(ndv2);
     }
 }

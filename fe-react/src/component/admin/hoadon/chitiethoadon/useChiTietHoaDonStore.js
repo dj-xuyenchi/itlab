@@ -37,5 +37,8 @@ export const useChiTietHoaDonStore = {
         async taoDiaChi(payload) {
             return axiosIns.post('/api/admin/taodiachi', payload)
         },
+        async doiVoucherHoaDon(payload) {
+            return axiosIns.get('/api/voucher2/doivoucherhoadon?hoaDonId=' + payload.hoaDonId + "&voucherId=" + payload.voucherId)
+        },
     },
 }

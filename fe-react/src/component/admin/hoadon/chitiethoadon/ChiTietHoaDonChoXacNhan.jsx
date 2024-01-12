@@ -35,6 +35,8 @@ import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 import { useNguoiDungStore } from "../../../home/profile/useNguoiDungStore";
 import ModalThemDiaChi from "./ModalThemDiaChi";
 import ModalXoaChiTiet from "./ModalXoaChiTiet";
+import ModalChonVoucher from "../../bantaiquay/ModalChonVoucher";
+import ModalDoiVoucher from "./ModalDoiVoucher";
 function ChiTietHoaDonChoXacNhan({
   hoaDonId,
   type2 = false,
@@ -833,7 +835,7 @@ function ChiTietHoaDonChoXacNhan({
             </Col>
           </Row>
           <Row>
-            <h6>Voucher áp dụng</h6>
+            <ModalDoiVoucher fetData={layDuLieu} hoaDonId={hoaDonChiTiet.id} khachHang={hoaDonChiTiet.nguoiMua} />
           </Row>
           <Row
             style={{

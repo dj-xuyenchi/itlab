@@ -68,4 +68,12 @@ public class VoucherController2 {
     public ResponseEntity<?> themToanHeThong(@RequestParam Long nguoiDungId) {
         return ResponseEntity.ok(_voucherService.layHetVoucherSuDungCuaNguoiDung(nguoiDungId));
     }
+
+    @GetMapping(value = "doivoucherhoadon")
+    public ResponseEntity<?> doiHoaDonVoucher(@RequestParam Long hoaDonId,
+                                              @RequestParam Long voucherId
+    ) {
+        _voucherService.doiVoucherHoaDon(hoaDonId, voucherId);
+        return ResponseEntity.ok("");
+    }
 }

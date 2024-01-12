@@ -298,6 +298,7 @@ function NhomSanPham() {
                 >
                   <Form.Item
                     label="Tên nhóm"
+                    name="Tên nhóm"
                     rules={[
                       {
                         required: true,
