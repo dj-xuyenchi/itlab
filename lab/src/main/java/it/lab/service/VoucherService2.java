@@ -65,7 +65,17 @@ public class VoucherService2 implements IVoucherService {
         }
         voucher.setNgayCapNhat(LocalDateTime.now());
         _voucherRepo.save(voucher.toEntity());
+        capNhatVoucherChuaSuDung(v);
         return 1;
+    }
+
+    private void capNhatVoucherChuaSuDung(Voucher voucher) {
+        List<NguoiDungVoucher> ndv = _nguoiDungVoucher.findNguoiDungVouchersByVoucher(voucher)
+                .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+        for (var item : ndv) {
+            item.setGiaTriGiam(voucher.getGiaTriGiam());
+        }
+        _nguoiDungVoucher.saveAll(ndv);
     }
 
     @Override
@@ -170,7 +180,7 @@ public class VoucherService2 implements IVoucherService {
     public List<VoucherDTO> layHetVoucherSuDungCuaNguoiDung(Long nguoiDungId) {
         NguoiDung ng = _nguoiDungRepo.findById(nguoiDungId).get();
         List<NguoiDungVoucher> lst = _nguoiDungVoucher.findNguoiDungVouchersByNguoiDung(ng)
-                .stream().filter(x->x.getTrangThai()==TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+                .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
         Set<Voucher> voucherRe = lst.stream()
                 .filter(x -> x.getVoucher().getTrangThai() == TrangThaiVoucher.DIENRA)
                 .map(x -> {

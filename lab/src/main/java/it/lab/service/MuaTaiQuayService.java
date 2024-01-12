@@ -279,21 +279,30 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         HoaDon hoaDon = _hoaDonRepo.findById(muaTaiQuay2.getHoaDonId()).get();// nếu ko chọn địa chỉ thì cột địa chỉ trên HD là null
         hoaDon = setDiaChiChoHoaDon(hoaDon, muaTaiQuay2);
         hoaDon = setKhachHang(hoaDon, muaTaiQuay2.getKhachHangId());
-        if (muaTaiQuay2.getVoucherId() != null) {
-            NguoiDung ng = _nguoiDungRepo.findById(muaTaiQuay2.getKhachHangId()).get();
-            Voucher v = _voucherRepo.findById(muaTaiQuay2.getVoucherId()).get();
-            List<NguoiDungVoucher> lst = _nguoiDungVoucherRepo.findNguoiDungVouchersByNguoiDungAndVoucher(ng, v)
-                    .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
-            NguoiDungVoucher ndv = lst.get(0);
-            ndv.setTrangThai(TrangThaiNguoiDungVoucher.DASUDUNG);
-            hoaDon.setVoucherGiam(ndv);
-            _nguoiDungVoucherRepo.save(ndv);
-        }
         _hoaDonRepo.save(hoaDon);
         //Lấy tại cửa hàng
         if (muaTaiQuay2.getThanhToanBang() == 1) {
+            if (muaTaiQuay2.getVoucherId() != null) {
+                NguoiDung ng = _nguoiDungRepo.findById(muaTaiQuay2.getKhachHangId()).get();
+                Voucher v = _voucherRepo.findById(muaTaiQuay2.getVoucherId()).get();
+                List<NguoiDungVoucher> lst = _nguoiDungVoucherRepo.findNguoiDungVouchersByNguoiDungAndVoucher(ng, v)
+                        .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+                NguoiDungVoucher ndv = lst.get(0);
+                hoaDon.setVoucherGiam(ndv);
+                _nguoiDungVoucherRepo.save(ndv);
+            }
             return vnpay(hoaDon, muaTaiQuay2);
         } else {
+            if (muaTaiQuay2.getVoucherId() != null) {
+                NguoiDung ng = _nguoiDungRepo.findById(muaTaiQuay2.getKhachHangId()).get();
+                Voucher v = _voucherRepo.findById(muaTaiQuay2.getVoucherId()).get();
+                List<NguoiDungVoucher> lst = _nguoiDungVoucherRepo.findNguoiDungVouchersByNguoiDungAndVoucher(ng, v)
+                        .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+                NguoiDungVoucher ndv = lst.get(0);
+                ndv.setTrangThai(TrangThaiNguoiDungVoucher.DASUDUNG);
+                hoaDon.setVoucherGiam(ndv);
+                _nguoiDungVoucherRepo.save(ndv);
+            }
             return tienMat(hoaDon, muaTaiQuay2);
         }
     }
@@ -305,6 +314,11 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
             return 0;
         }
         if (trangThai.equals("00")) {
+            if (hoaDon.get().getVoucherGiam() != null) {
+               NguoiDungVoucher ndv = hoaDon.get().getVoucherGiam();
+               ndv.setTrangThai(TrangThaiNguoiDungVoucher.DASUDUNG);
+                _nguoiDungVoucherRepo.save(ndv);
+            }
             thayDoiSoLuongKhiConfirmHoaDon(hoaDon.get().getId());
             hoaDon.get().setNgayThanhToan(LocalDateTime.now());
             if (hoaDon.get().getPhuongThucVanChuyen().getId() == 1) {

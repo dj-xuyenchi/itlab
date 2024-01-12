@@ -301,6 +301,8 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
         "bottomRight"
       );
       setData2();
+      setIsModalOpen(false);
+
     } else {
       openNotification(
         "error",
@@ -308,8 +310,8 @@ function YeuCauDoiTra({ hoaDonId, setData2 }) {
         "Tổng giá trị hóa đơn sau khi đổi phải lớn hơn hoặc bằng giá trị cũ",
         "bottomRight"
       );
+      return
     }
-    setIsModalOpen(false);
   }
 
   return (
