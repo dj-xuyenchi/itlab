@@ -6,6 +6,7 @@ import it.lab.config.NguoiDungData;
 import it.lab.config.NguoiDungUserDetails;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
+import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.iservice.IAuthService;
 import it.lab.repository.NguoiDungRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,26 @@ public class AuthController {
         return ResponseEntity.ok(_authService.dangKyTaiKhoan(nguoiDung));
     }
 
+    @RequestMapping(value = "/xacnhantaikhoan", method = RequestMethod.GET)
+    public ResponseEntity<?> xacNhanTaiKhoan(@RequestParam String code) {
+        return ResponseEntity.ok(_authService.xacNhanTaiKhoan(code));
+    }
+
+    @RequestMapping(value = "/guilaima", method = RequestMethod.GET)
+    public ResponseEntity<?> guiLaiMa(@RequestParam Long id) {
+        return ResponseEntity.ok(_authService.guiLaiMa(id));
+    }
+
+    @RequestMapping(value = "/doimatkhau", method = RequestMethod.GET)
+    public ResponseEntity<?> doiMatKhau(@RequestParam String code, @RequestParam String matKhauMoi) {
+        return ResponseEntity.ok(_authService.doiMatKhau(code, matKhauMoi));
+    }
+
+    @RequestMapping(value = "/quenmatkhau", method = RequestMethod.GET)
+    public ResponseEntity<?> quenMatKhau(@RequestParam String email) {
+        return ResponseEntity.ok(_authService.quenMatKhau(email));
+    }
+
     @RequestMapping(value = "/dangnhap", method = RequestMethod.POST)
     public ResponseEntity<?> dangNhap(@RequestBody LoginRequest login) throws Exception {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUserName(), login.getPassword()));
@@ -48,6 +69,9 @@ public class AuthController {
         Optional<NguoiDung> ng = _nguoiDungRepo.findNguoiDungByEmailEquals(login.getUserName());
         if (ng.isEmpty()) {
             ResponseEntity.ok(1);
+        }
+        if (ng.get().getTrangThai() == TrangThaiNguoiDung.CHOXACNHAN) {
+            return ResponseEntity.ok(1);
         }
         NguoiDungData re = new NguoiDungData(NguoiDungDTO.fromEntity(ng.get()), jwt, roles);
         return ResponseEntity.ok(re);

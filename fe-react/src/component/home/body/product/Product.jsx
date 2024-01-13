@@ -24,9 +24,7 @@ function Product() {
     <>
       <div className="product-container">
         <div className="sub-filter">
-          <div className="total">
-            {"20 " + language.body.product.subFilter.sort.total}
-          </div>
+          <div className="total"></div>
           <div style={{ paddingRight: "10px" }}>
             <span className="title">
               {language.body.product.subFilter.sort.title}

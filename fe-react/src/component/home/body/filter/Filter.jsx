@@ -31,6 +31,7 @@ function Filter({ handleFilter, page, pageSize }) {
   const [checkedList3, setCheckedList3] = useState([]);
   const [checkedList4, setCheckedList4] = useState([]);
   const [filterMauSac, setFilterMauSac] = useState([]);
+  const [gia, setGia] = useState(undefined);
   const [filterNhomSanPham, setFilterNhomSanPham] = useState([]);
   const [filterKichThuoc, setFilterKichThuoc] = useState([]);
   const [filterChatLieu, setFilterChatLieu] = useState([]);
@@ -118,9 +119,9 @@ function Filter({ handleFilter, page, pageSize }) {
                     mauSac: [],
                     chatLieu: [],
                     nhomSanPham: [],
-                    kichThuoc: []
-                  }
-                })
+                    kichThuoc: [],
+                  },
+                });
               }}
             >
               Xóa tất cả
@@ -176,17 +177,17 @@ function Filter({ handleFilter, page, pageSize }) {
                           pageSize: pageSize,
                           filter: {
                             mauSac: filterMauSac.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             chatLieu: filterChatLieu.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             nhomSanPham: e,
                             kichThuoc: filterKichThuoc.map((item) => {
-                              return item.id
-                            })
-                          }
-                        })
+                              return item.id;
+                            }),
+                          },
+                        });
                       }}
                     />
                   </div>
@@ -240,17 +241,17 @@ function Filter({ handleFilter, page, pageSize }) {
                           pageSize: pageSize,
                           filter: {
                             mauSac: filterMauSac.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             chatLieu: e,
                             nhomSanPham: filterNhomSanPham.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             kichThuoc: filterKichThuoc.map((item) => {
-                              return item.id
-                            })
-                          }
-                        })
+                              return item.id;
+                            }),
+                          },
+                        });
                       }}
                     />
                   </div>
@@ -304,17 +305,17 @@ function Filter({ handleFilter, page, pageSize }) {
                           pageSize: pageSize,
                           filter: {
                             mauSac: filterMauSac.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             chatLieu: filterChatLieu.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             nhomSanPham: filterNhomSanPham.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
-                            kichThuoc: e
-                          }
-                        })
+                            kichThuoc: e,
+                          },
+                        });
                       }}
                     />
                   </div>
@@ -369,16 +370,16 @@ function Filter({ handleFilter, page, pageSize }) {
                           filter: {
                             mauSac: e,
                             chatLieu: filterChatLieu.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             nhomSanPham: filterNhomSanPham.map((item) => {
-                              return item.id
+                              return item.id;
                             }),
                             kichThuoc: filterKichThuoc.map((item) => {
-                              return item.id
-                            })
-                          }
-                        })
+                              return item.id;
+                            }),
+                          },
+                        });
                       }}
                     />
                   </div>
@@ -426,32 +427,11 @@ function Filter({ handleFilter, page, pageSize }) {
                           min={100000}
                           max={10000000}
                           defaultValue={[500000, 2000000]}
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col span={11}>
-                        <InputNumber
-                          min={1}
-                          max={20}
-                          style={{ width: "100%" }}
-                          value={onChangeSlider}
-                          onChange={onChangeSlider}
-                        />
-                      </Col>
-                      <Col
-                        span={2}
-                        className="d-flex align-items-center justify-content-center"
-                      >
-                        -
-                      </Col>
-                      <Col span={11}>
-                        <InputNumber
-                          min={1}
-                          max={20}
-                          style={{ width: "100%" }}
-                          value={onChangeSlider}
-                          onChange={onChangeSlider}
+                          value={gia}
+                          onChange={(e) => {
+                            console.log(e);
+                            setGia(e);
+                          }}
                         />
                       </Col>
                     </Row>
@@ -461,7 +441,7 @@ function Filter({ handleFilter, page, pageSize }) {
             </Accordion>
           )}
         </div>
-      </div >
+      </div>
     </>
   );
 }

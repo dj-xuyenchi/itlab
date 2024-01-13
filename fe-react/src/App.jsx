@@ -33,6 +33,14 @@ import GiftVoucher from "./component/admin/giftvoucher/GiftVoucher";
 import ThanhToanVnPay from "./component/admin/bantaiquay/ThanhToanVnPay";
 import Voucher2 from "./component/admin/voucher2/Voucher2";
 import ThanhToanChoXacNhan from "./component/home/giohangthanhtoan/ThanhToanChoXacNhan";
+import SignIn from "./component/login/SignIn";
+import ThanhCong from "./component/login/ThanhCong";
+import CornfirmTaiKhoan from "./component/login/ConfirmTaiKhoan";
+import XacNhanThanhCong from "./component/login/XacNhanThanhCong";
+import QuenMatKhau from "./component/login/QuenMatKhau";
+import ThanhCong2 from "./component/login/ThanhCong2";
+import DoiMatKhau from "./component/login/DoiMatKhau";
+import DoiThanhCong from "./component/login/DoiThanhCong";
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -65,7 +73,15 @@ function App() {
         <Route path="/admin/giftvoucher" element={<GiftVoucher />} />
         <Route path="/*" element={<NotFound />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login/:status" element={<Login />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/quenmatkhau" element={<QuenMatKhau />} />
+        <Route path="/xacnhanthanhcong" element={<XacNhanThanhCong />} />
+        <Route path="/thanhcongcheckemail/:id" element={<ThanhCong />} />
+        <Route path="/thanhcongcheckemail2/" element={<ThanhCong2 />} />
+        <Route path="/doimatkhau/:id" element={<DoiMatKhau />} />
+        <Route path="/doithanhcong" element={<DoiThanhCong />} />
+        <Route path="/xacnhan/:id" element={<CornfirmTaiKhoan />} />
         <Route path="/sanpham/:id" element={<ProductDetail />} />
         <Route path="/thanhtoan" element={<GioHangThanhToan />} />
         <Route path="/admin/sanpham" element={<Product />} />
@@ -91,8 +107,6 @@ function App() {
         <Route path="/gioi-thieu" element={<GioiThieu />} />
         <Route path="/chinh-sach-bao-mat" element={<ChinhSachBaoMat />} />
       </Routes>
-
-
     </>
   );
 }

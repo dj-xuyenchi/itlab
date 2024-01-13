@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { GrSystem } from "react-icons/gr";
 import { MdConnectWithoutContact, MdOutlinePolicy } from "react-icons/md";
 function MenuLeft({ open, setOpen }) {
-  const language = useSelector(selectLanguage);
   const [placement, setPlacement] = useState("left");
   var nguoiDung = JSON.parse(localStorage.getItem("user"))?.data;
   function handleCloseMenu() {
@@ -24,10 +23,10 @@ function MenuLeft({ open, setOpen }) {
         key={placement}
       >
         <Row>
-          {nguoiDung?.quyenList.includes("ROLE_ADMIN") && (
+          {nguoiDung?.quyenList.includes("ROLE_EMPLOYEE") && (
             <Col span={24}>
               <div
-              className="item-nav"
+                className="item-nav"
                 onClick={() => {
                   window.location = "http://localhost:3000/admin/dashboard";
                 }}

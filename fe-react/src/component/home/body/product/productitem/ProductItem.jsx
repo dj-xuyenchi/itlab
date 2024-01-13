@@ -22,7 +22,7 @@ function ProductItem({ item }) {
     <>
       <div className="product-item-container">
         <div className="product-item-detail">
-          <Link to={"/sanpham/" + item.id} >
+          <Link to={"/sanpham/" + item.id}>
             <div className="product-imgs">
               <img ref={imgRef} src={item.hinhAnh1} alt="san pham" />
               {/* <div className="sales">
@@ -36,11 +36,9 @@ function ProductItem({ item }) {
           <div className="product-detail">
             <div className="product-name-container">
               <span>{item.tenSanPham}</span>
-              <PiHeartStraight />
             </div>
             <div className="product-cost">{fixMoney(item.giaBan)}</div>
-            <div className="product-color">
-            </div>
+            <div className="product-color"></div>
           </div>
         </div>
       </div>

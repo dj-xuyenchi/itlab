@@ -20,7 +20,6 @@ function Header() {
   const [openGioHang, setOpenGioHang] = useState(false);
   const [openYeuThich, setOpenYeuThich] = useState(false);
   const [openMenuLeft, setOpenMenuLeft] = useState(false);
-  const [openSearch, setOpenSearch] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -130,7 +129,7 @@ function Header() {
                     handleRedirect();
                     return;
                   } else {
-                    window.location = "http://localhost:3000/login";
+                    window.location = "http://localhost:3000/login/page1";
                   }
                 }}
               >

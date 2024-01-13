@@ -15,6 +15,7 @@ import { RiRefundFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { BsPercent } from "react-icons/bs";
 import { FcIdea } from "react-icons/fc";
+import { checkAdmin, checkRole } from "../../../../extensions/checkRole";
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -75,29 +76,35 @@ const items = [
     <RiBillLine />
   ),
   getItem(
-    <Link to={"/admin/nguoidung"}>Quản lý người dùng</Link>,
-    "63",
-    <FaUserFriends />
-  ),
-  getItem(
     <Link to={"/admin/bantaiquay"}>Bán hàng tại quầy</Link>,
     "62",
     <BsShopWindow />
   ),
   getItem(<Link to={"/admin/doitra"}>Đổi trả</Link>, "64", <RiRefundFill />),
-  getItem("Đánh giá doanh số", "sub5", <FaTag />, [
-    getItem(
-      <Link to={"/admin/crm"}>Sản phẩm doanh thu</Link>,
-      "65",
-      <FcIdea />
-    ),
-  ]),
   getItem(<Link to={"/admin/voucher"}>Voucher</Link>, "68", <BsPercent />),
 ];
-
+if (checkAdmin()) {
+  items.push(
+    getItem(
+      <Link to={"/admin/nguoidung"}>Quản lý người dùng</Link>,
+      "63",
+      <FaUserFriends />
+    )
+  );
+  items.push(
+    getItem("Đánh giá doanh số", "sub5", <FaTag />, [
+      getItem(
+        <Link to={"/admin/crm"}>Sản phẩm doanh thu</Link>,
+        "65",
+        <FcIdea />
+      ),
+    ])
+  );
+}
 const rootSubmenuKeys = ["sub1", "sub2", "sub4"];
 function MenuAdmin() {
-  const language = useSelector(selectLanguage);
+  checkRole();
+
   const [openKeys, setOpenKeys] = useState(["sub1"]);
 
   const onOpenChange = (keys) => {
