@@ -29,10 +29,10 @@ const Footer = () => {
             <h3>CÔNG TY</h3>
             <ul>
               <li><Link to="/gioi-thieu">Giới thiệu về ROUTINE</Link></li>
-              <li><a href="tuyen-dung.html">Tuyển dụng</a></li>
+              {/* <li><a href="tuyen-dung.html">Tuyển dụng</a></li>
               <li><a href="tin-thoi-trang.html">Tin thời trang</a></li>
-              <li><a href="hop-tac.html">Hợp tác nhượng quyền</a></li>
-              <li><a href="lien-he.html">Liên hệ</a></li>
+              <li><a href="hop-tac.html">Hợp tác nhượng quyền</a></li> */}
+              <li><a href="/thong-tin-lien-he">Liên hệ</a></li>
             </ul>
             <div className="social-media">
               <h5>KẾT NỐI VỚI CHÚNG TÔI</h5>
@@ -55,12 +55,12 @@ const Footer = () => {
           <div className="link-category">
             <h3>CHÍNH SÁCH KHÁCH HÀNG</h3>
             <ul>
-              <li><a href="chinh-sach-khach-hang-than-thiet.html">Chính sách khách hàng thân thiết</a></li>
-              <li><a href="chinh-sach-doi-tra.html">Chính sách đổi trả</a></li>
-              <li><a href="chinh-sach-bao-hanh.html">Chính sách bảo hành</a></li>
+              {/* <li><a href="/gioi-thieu">Giới thiệu về Routine</a></li> */}
+              <li><a href="/chinh-sach-doi-tra">Chính sách đổi trả</a></li>
+              <li><a href="/luu-y-mua-hang">Lưu ý khi mua hàng</a></li>
               <li><Link to="/chinh-sach-bao-mat">Chính sách bảo mật</Link></li>
-              <li><a href="cau-hoi-thuong-gap.html">Câu hỏi thường gặp</a></li>
-              <li><a href="huong-dan-mua-hang-online.html">Hướng dẫn mua hàng online</a></li>
+              <li><a href="/phuong-thuc-thanh-toan">Phương thức thanh toán</a></li>
+              <li><a href="/huong-dan-dat-hang">Hướng dẫn mua hàng online</a></li>
             </ul>
           </div>
           <div className="link-category">
