@@ -1,38 +1,34 @@
 import { Button, Card, Divider, Input, notification } from "antd";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 import { selectLanguage } from "../../language/selectLanguage";
 import { useLoginStore } from "./useLoginStore";
 function Login() {
+  const { status } = useParams();
   const [api, contextHolder] = notification.useNotification();
   const language = useSelector(selectLanguage);
-  const dispath = useDispatch();
-  const [typeError, setTypeError] = useState(undefined);
   const [loginPayload, setLoginPayload] = useState({
     userName: "",
     password: "",
   });
   async function handleLogin() {
-    const login = await useLoginStore.actions.dangNhap(loginPayload);
-    setLoginPayload({
-      userName: "",
-      password: "",
-    });
-    if (login.data == 1) {
-      localStorage.removeItem("user");
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Sai tên tài khoản hoặc mật khẩu",
-        "bottomRight"
-      );
-      // window.location.href = process.env.REACT_APP_FRONTEND_URL + "login";
-      return;
-    }
-    localStorage.setItem("user", JSON.stringify(login));
-    window.location.href = process.env.REACT_APP_FRONTEND_URL;
+    try {
+      const login = await useLoginStore.actions.dangNhap(loginPayload);
+      setLoginPayload({
+        userName: "",
+        password: "",
+      });
+      if (login.data == 1) {
+        localStorage.removeItem("user");
+        window.location.href =
+          process.env.REACT_APP_FRONTEND_URL + "login/page2";
+        return;
+      }
+      localStorage.setItem("user", JSON.stringify(login));
+      window.location.href = process.env.REACT_APP_FRONTEND_URL;
+    } catch (e) {}
   }
   function handleUpdateUserName(e) {
     setLoginPayload({
@@ -47,24 +43,7 @@ function Login() {
       userName: loginPayload.userName,
     });
   }
-  // const loginWithGoogle = async () => {
-  //     const authUrl = await getGoogleAuthUrl();
-  //     // dieu huong sang google
-  //     console.log(authUrl);
-  //     window.location.href = authUrl;
-  // };
 
-  // const urlParams = new URLSearchParams(window.location.search);
-  // const code = urlParams.get("code");
-  // if (code) {
-  //     const getUser = async () => {
-  //         const user = await exchangeCodeForToken(code);
-  //         // đã lấy được info
-  //         //  const info = await getUserInfo(user.token);
-  //         // console.log(info);
-  //     };
-  //     getUser();
-  // }
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
       api.error({
@@ -80,6 +59,7 @@ function Login() {
       });
     }
   };
+  console.log(status);
   return (
     <>
       {contextHolder}
@@ -92,8 +72,10 @@ function Login() {
         <div className="login-option">
           <div className="login-option-site">
             <div className="login-option-header">
-              <img src={require("../../assets/login/logo-noname.png")} alt="" />
-              <h3>Routine</h3>
+              <img
+                src="https://routine.vn/media/amasty/webp/logo/websites/1/logo-black-2x_png.webp"
+                alt="s"
+              />
               <p>Áo nam</p>
               <label htmlFor="">{language.login.userName}</label>
               <Input
@@ -111,8 +93,16 @@ function Login() {
                 placeholder={language.login.passwordPlaceHolder}
                 className="input"
               />
-              <Link>{language.login.forgotPass}</Link>
-              {typeError ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Link to={"/quenmatkhau"}>{language.login.forgotPass}</Link>
+                <Link to={"/signin"}>Bạn chưa có tài khoản?</Link>
+              </div>
+              {status === "page2" && (
                 <Card
                   style={{
                     width: "100%",
@@ -124,10 +114,7 @@ function Login() {
                   }}
                 >
                   <p className="wrong">{language.login.wrong}</p>
-                  <p className="wait">{language.login.wait}</p>
                 </Card>
-              ) : (
-                ""
               )}
 
               <Button size="large" onClick={handleLogin}>

@@ -8,7 +8,6 @@ import {
     notification,
 } from "antd";
 import React, { useState } from "react";
-import { useChatLieuStore } from "./useChatLieuStore";
 import { FaRegPenToSquare } from "react-icons/fa6";
 function ModalThemDiaChi({ id, setData, handle }) {
     const [chatLieu, setChatLieu] = useState({
