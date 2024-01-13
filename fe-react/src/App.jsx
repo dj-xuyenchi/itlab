@@ -33,6 +33,16 @@ import GiftVoucher from "./component/admin/giftvoucher/GiftVoucher";
 import ThanhToanVnPay from "./component/admin/bantaiquay/ThanhToanVnPay";
 import Voucher2 from "./component/admin/voucher2/Voucher2";
 import ThanhToanChoXacNhan from "./component/home/giohangthanhtoan/ThanhToanChoXacNhan";
+import Doitra from "./component/policy/Doitra";
+import Phuongthucthanhtoan from "./component/policy/Phuongthucthanhtoan";
+import Huongdandathang from "./component/policy/Huongdandathang";
+import Luuymuahang from "./component/policy/Luuykhimuahang";
+
+import Thongtin from "./component/policy/Thongtin";
+
+
+
+
 function App() {
   const dispath = useDispatch();
   const disPath = useDispatch();
@@ -90,6 +100,13 @@ function App() {
         <Route path="/admin/vnpaytrangthai" element={<ThanhToanVnPay />} />
         <Route path="/gioi-thieu" element={<GioiThieu />} />
         <Route path="/chinh-sach-bao-mat" element={<ChinhSachBaoMat />} />
+        <Route path="/chinh-sach-doi-tra" element={<Doitra />} />
+        <Route path="/phuong-thuc-thanh-toan" element={<Phuongthucthanhtoan />} />
+        <Route path="/thong-tin-lien-he" element={<Thongtin/>} />
+        <Route path="/huong-dan-dat-hang" element={<Huongdandathang/>} />
+        <Route path="/luu-y-mua-hang" element={<Luuymuahang/>} />
+
+
       </Routes>
 
 

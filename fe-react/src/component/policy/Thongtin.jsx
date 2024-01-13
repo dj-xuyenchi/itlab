@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom';
 import { Menu, Layout } from 'antd';
 
 const { Sider, Content } = Layout;
-
 const GioiThieu = () => {
   return (
     
-
     <Layout className="wrapper">
       <Sider width={300} className="sidebar" theme="light">
         <Menu theme="light" mode="vertical" style={{ padding: '100px 0',paddingLeft:'45px' }}>
@@ -38,21 +36,26 @@ const GioiThieu = () => {
 
       <Layout className="content-layout">
         <Content className="content custom-content">
-          <h1 style={{ fontSize: '28px', marginBottom: '20px' }}>Chính sách bảo mật</h1>
-          
-          <ul>
-            <li>Chính sách bảo mật này nhằm giúp bạn hiểu về cách website thu thập và sử dụng thông tin cá nhân của mình thông qua việc sử dụng trang web, bao gồm mọi thông tin có thể<br /> cung cấp thông qua trang web khi bạn đăng ký tài khoản, đăng ký nhận thông tin liên lạc từ Routine, hoặc khi bạn mua sản phẩm, dịch vụ, yêu cầu thêm thông tin dịch vụ từ Routine.</li>
-            <li>Routine sử dụng thông tin cá nhân của bạn để liên lạc khi cần thiết liên quan đến việc bạn sử dụng website của Routine, để trả lời các câu hỏi hoặc gửi tài liệu và thông tin bạn yêu cầu.</li>
-            <li>Trang web của Routine coi trọng việc bảo mật thông tin của khách hàng và sử dụng các biện pháp tốt nhất để bảo vệ thông tin cũng như việc thanh toán của Routine.</li>
-            <li>Thông tin của bạn sẽ được lưu trữ tại hệ thống dữ liệu bán hàng của Routine mãi mãi cho tới khi bạn muốn thay đổi bằng cách liên hệ qua số hotline: 0399999365</li>
-            <li>Mọi thông tin giao dịch sẽ được bảo mật hoàn toàn ngoại trừ trường hợp cơ quan pháp luật yêu cầu cung cấp.</li>
-          </ul>
+          <h1 style={{ fontSize: '28px', marginBottom: '20px' }}>Contact Us</h1>
+            <p>Chúng tôi luôn nỗ lực mỗi ngày để mang đến cho khách hàng những sản phẩm và dịch vụ tốt nhất.</p>
+            <br />
+            <p>Thời gian làm việc: Thứ Hai - Chủ Nhật, 10:00 AM - 9:00 PM</p>
+            <br />
+            <p>Các kênh liên hệ:</p>
+            <ul>
+                <li>Hotline chăm sóc khách hàng: <span>1900 63 65 91</span></li>
+                <li>Hotline mua hàng: <span>039 999 9365</span></li>
+                <li>Email: <span>cskh@routine.vn</span></li>
+                <li>Danh sách cửa hàng: <span>Hệ thống cửa hàng Routine trên toàn quốc</span></li>
+                <li>Mạng xã hội: <span>Facebook - Instagram - Zalo - TikTok</span></li>
+                <li>Hợp tác nhượng quyền kinh doanh: 039 246 8886</li>
 
+            </ul>
 
         </Content>
-      </Layout>
+        </Layout>
     </Layout>
- 
+
 
   );
 };
