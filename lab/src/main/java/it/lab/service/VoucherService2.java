@@ -198,9 +198,11 @@ public class VoucherService2 implements IVoucherService {
         HoaDon hd = _hoaDonRepo.findById(hoaDonId).get();
         Voucher voucher = _voucherRepo.findById(voucherId).get();
         NguoiDung nd = hd.getNguoiMua();
-        NguoiDungVoucher ndv = hd.getVoucherGiam();
-        ndv.setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
-        _nguoiDungVoucher.save(ndv);
+        if(hd.getVoucherGiam()!=null){
+            NguoiDungVoucher ndv = hd.getVoucherGiam();
+            ndv.setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
+            _nguoiDungVoucher.save(ndv);
+        }
         var lstVoucher = _nguoiDungVoucher.findNguoiDungVouchersByNguoiDungAndVoucher(nd, voucher)
                 .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG)
                 .collect(Collectors.toList());

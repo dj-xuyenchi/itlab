@@ -695,7 +695,7 @@ function BanTaiQuay() {
                           })
                           : ""}
                         <Radio value={-1}>Tạo mới</Radio>
-                        <Radio value={-2}>Không dùng</Radio>
+                        <Radio value={-2}>Lấy tại cửa hàng</Radio>
                       </Space>{" "}
                     </Radio.Group>
                   </Row>
