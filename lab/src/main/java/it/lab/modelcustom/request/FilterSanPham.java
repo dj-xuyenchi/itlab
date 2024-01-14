@@ -10,10 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FilterSanPham {
-    private Long[] mauSac={};
-    private Long[] kichThuoc={};
-    private Long[] chatLieu={};
-    private Long[] nhomSanPham={};
+    private Long[] mauSac = {};
+    private Long[] kichThuoc = {};
+    private Long[] chatLieu = {};
+    private Long[] nhomSanPham = {};
     private Long min;
     private Long max;
     private String keyWord;

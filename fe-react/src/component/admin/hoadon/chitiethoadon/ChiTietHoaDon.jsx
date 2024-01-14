@@ -610,7 +610,15 @@ function ChiTietHoaDon({
               }}
               span={24}
             >
-              {!type && (hoaDonChiTiet.trangThai === "DADOITRA" ? <InHoaDonDoiTra data={hoaDonChiTiet} /> : <InHoaDon data={hoaDonChiTiet} />)}
+              {!type && hoaDonChiTiet.trangThai === "DADOITRA" && (
+                <InHoaDonDoiTra data={hoaDonChiTiet} />
+              )}
+              {!type && hoaDonChiTiet.trangThai === "DAGIAO" && (
+                <InHoaDon data={hoaDonChiTiet} />
+              )}
+              {!type && hoaDonChiTiet.trangThai === "TUCHOIDOI" && (
+                <InHoaDon data={hoaDonChiTiet} />
+              )}
             </Col>
           </Row>
           <Row
@@ -797,8 +805,8 @@ function ChiTietHoaDon({
                 value={
                   hoaDonChiTiet.diaChiGiao &&
                   hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                  " " +
-                  hoaDonChiTiet.diaChiGiao.nguoiNhan
+                    " " +
+                    hoaDonChiTiet.diaChiGiao.nguoiNhan
                 }
               />
             </Col>
@@ -907,8 +915,8 @@ function ChiTietHoaDon({
               />
             </Col>
           </Row>
-          {
-            hoaDonChiTiet.voucherGiam && <>
+          {hoaDonChiTiet.voucherGiam && (
+            <>
               <Row>
                 <h6>Voucher áp dụng</h6>
               </Row>
@@ -935,14 +943,12 @@ function ChiTietHoaDon({
                 <Col span={8}>
                   <Input
                     disabled
-                    value={fixMoney(
-                      hoaDonChiTiet.voucherGiam.giaTriGiam
-                    )}
+                    value={fixMoney(hoaDonChiTiet.voucherGiam.giaTriGiam)}
                   />
                 </Col>
               </Row>
             </>
-          }
+          )}
 
           <Row>
             <h6>Phương thức thanh toán</h6>
@@ -977,7 +983,11 @@ function ChiTietHoaDon({
                         return pre + cur.soLuong * cur.donGia;
                       }
                       return pre;
-                    }, 0) + hoaDonChiTiet.phiVanChuyen - (hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.giaTriGiam : 0)
+                    }, 0) +
+                      hoaDonChiTiet.phiVanChuyen -
+                      (hoaDonChiTiet.voucherGiam
+                        ? hoaDonChiTiet.voucherGiam.giaTriGiam
+                        : 0)
                   )}
                 />
               </Col>
@@ -1009,7 +1019,11 @@ function ChiTietHoaDon({
                   value={fixMoney(
                     hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
                       return pre + cur.soLuong * cur.donGia;
-                    }, 0) + hoaDonChiTiet.phiVanChuyen - (hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.giaTriGiam : 0)
+                    }, 0) +
+                      hoaDonChiTiet.phiVanChuyen -
+                      (hoaDonChiTiet.voucherGiam
+                        ? hoaDonChiTiet.voucherGiam.giaTriGiam
+                        : 0)
                   )}
                 />
               </Col>
@@ -1088,13 +1102,13 @@ function ChiTietHoaDon({
                           >
                             {data
                               ? data.map((option) => (
-                                <Select.Option
-                                  key={option.id}
-                                  value={option.id}
-                                >
-                                  {option.tenSanPham}
-                                </Select.Option>
-                              ))
+                                  <Select.Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.tenSanPham}
+                                  </Select.Option>
+                                ))
                               : ""}
                           </Select>
                         </Col>

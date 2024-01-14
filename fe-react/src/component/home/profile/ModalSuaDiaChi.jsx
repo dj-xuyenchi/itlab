@@ -9,11 +9,11 @@ import {
   notification,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { GrChapterAdd } from "react-icons/gr";
-import { useChiTietHoaDonStore } from "./useChiTietHoaDonStore";
 import { useForm } from "antd/es/form/Form";
-import { useGHN } from "../../../../plugins/ghnapi";
-function ModalThemDiaChi({ fetData, idNguoiDung }) {
+import { useGHN } from "../../../plugins/ghnapi";
+import { checkEmpty } from "../../../extensions/checkEmpty";
+import { useNguoiDungStore } from "./useNguoiDungStore";
+function ModalSuaDiaChi({ fetData, data2 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = useForm();
   const [api, contextHolder] = notification.useNotification();
@@ -32,11 +32,7 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
       });
     }
   };
-  const [diaChiMoi, setDiaChiMoi] = useState({
-    tinh: "Chọn tỉnh",
-    huyen: "Chọn huyện",
-    xa: "Chọn xã",
-  });
+  const [diaChiMoi, setDiaChiMoi] = useState(data2);
   const [danhSachTinh, setDanhSachTinh] = useState(undefined);
   const [danhSachHuyen, setDanhSachHuyen] = useState(undefined);
   const [danhSachXa, setDanhSachXa] = useState(undefined);
@@ -69,15 +65,36 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
       xa: e.label,
     });
   }
-  async function handleTaoDiaChi() {
-    const data = await useChiTietHoaDonStore.actions.taoDiaChi({
-      ...diaChiMoi,
-      nguoiDung: {
-        id: idNguoiDung,
-      },
-    });
-    fetData();
+  async function handleSuaDiaChi() {
+    if (!checkEmpty(diaChiMoi.hoNguoiNhan)) {
+      openNotification("error", "Hệ thống", "Mời nhập họ", "bottomRight");
+      return;
+    }
+    if (!checkEmpty(diaChiMoi.nguoiNhan)) {
+      openNotification("error", "Hệ thống", "Mời nhập tên", "bottomRight");
+      return;
+    }
+    if (!checkEmpty(diaChiMoi.soDienThoai)) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Mời nhập số điện thoại",
+        "bottomRight"
+      );
+      return;
+    }
+    if (!checkEmpty(diaChiMoi.chiTietDiaChi)) {
+      openNotification(
+        "error",
+        "Hệ thống",
+        "Mời nhập chi tiết địa chỉ",
+        "bottomRight"
+      );
+      return;
+    }
+    const data = await useNguoiDungStore.actions.capNhatDiaChi(diaChiMoi);
     openNotification("success", "Hệ thống", "Tạo thành công", "bottomRight");
+    fetData();
     setIsModalOpen(false);
   }
   useEffect(() => {
@@ -86,21 +103,20 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
   return (
     <>
       {contextHolder}
-      <Tooltip title="Tạo địa chỉ mới">
-        <Button
-          style={{
-            color: "green",
-          }}
-          icon={<GrChapterAdd />}
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-        >
-          Tạo mới
-        </Button>
-      </Tooltip>
+      <Button
+        style={{
+          color: "blue",
+        }}
+        type="text"
+        size="small"
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
+      >
+        Chỉnh sửa
+      </Button>
       <Modal
-        title="Tạo mới địa chỉ"
+        title="Cập nhật địa chỉ"
         open={isModalOpen}
         onCancel={() => {
           setIsModalOpen(false);
@@ -123,11 +139,10 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
           style={{
             maxWidth: 768,
           }}
-          onFinish={handleTaoDiaChi}
+          onFinish={handleSuaDiaChi}
         >
           <Form.Item
             label="Họ người nhận"
-            name="Họ người nhận"
             rules={[
               {
                 required: true,
@@ -145,10 +160,8 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
               }}
             />
           </Form.Item>
-
           <Form.Item
             label="Tên người nhận"
-            name="Tên người nhận"
             rules={[
               {
                 required: true,
@@ -168,7 +181,6 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
           </Form.Item>
           <Form.Item
             label="Số điện thoại"
-            name="Số điện thoại"
             rules={[
               {
                 required: true,
@@ -188,7 +200,6 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
           </Form.Item>
           <Form.Item
             label="Tỉnh/TP"
-            name="Tỉnh/TP"
             rules={[
               {
                 required: true,
@@ -222,7 +233,6 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
           </Form.Item>
           <Form.Item
             label="Quận/huyện"
-            name="Quận/huyện"
             rules={[
               {
                 required: true,
@@ -256,7 +266,6 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
           </Form.Item>
           <Form.Item
             label="Xã/phường"
-            name="Xã/phường"
             rules={[
               {
                 required: true,
@@ -290,7 +299,6 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
           </Form.Item>
           <Form.Item
             label="Chi tiết địa chỉ"
-            name="Chi tiết địa chỉ"
             rules={[
               {
                 required: true,
@@ -311,7 +319,7 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
           </Form.Item>
           <Form.Item label="Action">
             <Button type="primary" htmlType="submit">
-              Tạo mới
+              Cập nhật
             </Button>
           </Form.Item>
         </Form>
@@ -320,4 +328,4 @@ function ModalThemDiaChi({ fetData, idNguoiDung }) {
   );
 }
 
-export default ModalThemDiaChi;
+export default ModalSuaDiaChi;

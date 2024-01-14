@@ -122,4 +122,10 @@ public class NguoiDungService implements INguoiDungService {
         _nguoiDungRepo.save(nguoiDung);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
+
+    @Override
+    public void capNhatDiaChi(DiaChiDTO diaChi) {
+        diaChi.setNgayCapNhat(LocalDateTime.now());
+        _diaChiRepo.save(diaChi.toEntity());
+    }
 }

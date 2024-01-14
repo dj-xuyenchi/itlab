@@ -63,6 +63,9 @@ public class GioHangService implements IGioHangService {
 
     @Override
     public ResponObject<CheckOut, APIStatus> capNhatSoLuongGioHang(Long nguoiDungId, Long gioHangId, Integer soLuongMoi) {
+        if (soLuongMoi == null) {
+            return _thanhToanService.layDuLieuThanhToan(nguoiDungId);
+        }
         Optional<GioHang> gh = _gioHangRepo.findById(gioHangId);
         if (gh.isEmpty()) {
             return new ResponObject<CheckOut, APIStatus>(null, APIStatus.THATBAI, "Giỏ hàng không tồn tại!");

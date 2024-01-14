@@ -3,13 +3,15 @@ import "./style.css";
 import { selectLanguage } from "../../../language/selectLanguage";
 import { AiOutlineClose } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import QuantityField from "../productdetail/QuantityField";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { useState } from "react";
 import { InputNumber } from "antd";
-import { checkEmpty } from "../../../extensions/checkEmpty";
-function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
-  const language = useSelector(selectLanguage);
+function SanPhamItem({
+  item,
+  handleCapNhatSoLuongSanPhamGioHang,
+  max,
+  handleXoaGioHang,
+}) {
   const [soLuong, setSoLuong] = useState(item.soLuong);
   return (
     <>
@@ -76,7 +78,9 @@ function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
                 {"Màu " +
                   item.sanPhamChiTiet.mauSac.tenMau +
                   " - " +
-                  item.sanPhamChiTiet.kichThuoc.tenKichThuoc}
+                  item.sanPhamChiTiet.kichThuoc.tenKichThuoc +
+                  "- Số lượng còn: " +
+                  item.sanPhamChiTiet.soLuongTon}
               </span>
             </div>
             <div
@@ -86,16 +90,22 @@ function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
                 marginTop: "8px",
               }}
             >
-              <InputNumber min={0} max={max} defaultValue={soLuong} value={soLuong} onChange={(e) => {
-                if (!e) {
-                  return
-                }
-                if (isNaN(e)) {
-                  return
-                }
-                handleCapNhatSoLuongSanPhamGioHang(item.id, e)
-                setSoLuong(e)
-              }} />
+              <InputNumber
+                min={0}
+                max={max}
+                defaultValue={soLuong}
+                value={soLuong}
+                onChange={(e) => {
+                  if (!e) {
+                    return;
+                  }
+                  if (isNaN(e)) {
+                    return;
+                  }
+                  handleCapNhatSoLuongSanPhamGioHang(item.id, e);
+                  setSoLuong(e);
+                }}
+              />
             </div>
             <div
               style={{
@@ -111,6 +121,9 @@ function SanPhamItem({ item, handleCapNhatSoLuongSanPhamGioHang, max }) {
           style={{
             width: "3%",
             fontSize: "12px !important",
+          }}
+          onClick={() => {
+            handleXoaGioHang(item.id);
           }}
         >
           <AiOutlineClose />

@@ -9,17 +9,13 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Stack,
 } from "@chakra-ui/react";
 import { Col, InputNumber, Radio, Row, Slider, Space, Tag } from "antd";
 import { Checkbox as ckr } from "antd";
 import { useEffect, useState } from "react";
-import { fixMoney } from "../../../../extensions/fixMoney";
-import Tag1 from "../../../common/tag/Tag1";
 import { useFilterStore } from "./useFilter";
 function Filter({ handleFilter, page, pageSize }) {
   const language = useSelector(selectLanguage);
-  const [value, setValue] = useState(undefined);
   const [thuocTinh, setThuocTinh] = useState(undefined);
   async function layThuocTinh() {
     const data = await useFilterStore.actions.layThuocTinh();
@@ -31,25 +27,14 @@ function Filter({ handleFilter, page, pageSize }) {
   const [checkedList3, setCheckedList3] = useState([]);
   const [checkedList4, setCheckedList4] = useState([]);
   const [filterMauSac, setFilterMauSac] = useState([]);
-  const [gia, setGia] = useState(undefined);
   const [filterNhomSanPham, setFilterNhomSanPham] = useState([]);
   const [filterKichThuoc, setFilterKichThuoc] = useState([]);
   const [filterChatLieu, setFilterChatLieu] = useState([]);
   useEffect(() => {
     layThuocTinh();
   }, []);
-
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
-  const formatter = (value) => {
-    return fixMoney(value);
-  };
-  const [inputValue, setInputValue] = useState(1);
-  const [inputValueSlider, setInputValueSlider] = useState(1);
-  const onChangeSlider = (newValue) => {
-    setInputValue(newValue);
-  };
+  const [min, setMin] = useState(undefined);
+  const [max, setMax] = useState(undefined);
   const [option, setOption] = useState(undefined);
   return (
     <>
@@ -186,6 +171,8 @@ function Filter({ handleFilter, page, pageSize }) {
                             kichThuoc: filterKichThuoc.map((item) => {
                               return item.id;
                             }),
+                            min: min,
+                            max: max,
                           },
                         });
                       }}
@@ -250,6 +237,8 @@ function Filter({ handleFilter, page, pageSize }) {
                             kichThuoc: filterKichThuoc.map((item) => {
                               return item.id;
                             }),
+                            min: min,
+                            max: max,
                           },
                         });
                       }}
@@ -314,6 +303,8 @@ function Filter({ handleFilter, page, pageSize }) {
                               return item.id;
                             }),
                             kichThuoc: e,
+                            min: min,
+                            max: max,
                           },
                         });
                       }}
@@ -378,6 +369,8 @@ function Filter({ handleFilter, page, pageSize }) {
                             kichThuoc: filterKichThuoc.map((item) => {
                               return item.id;
                             }),
+                            min: min,
+                            max: max,
                           },
                         });
                       }}
@@ -402,35 +395,61 @@ function Filter({ handleFilter, page, pageSize }) {
                       width: "90%",
                     }}
                   >
-                    <Radio.Group onChange={onChange} value={value}>
-                      <Space direction="vertical">
-                        {language.body.filter.item.cost.option.map(
-                          (item, index) => {
-                            return (
-                              <Radio value={item.type} key={index}>
-                                {item.name}
-                              </Radio>
-                            );
-                          }
-                        )}
-                      </Space>
-                    </Radio.Group>
                     <Row>
                       <Col span={24}>
-                        <Slider
-                          range={{
-                            draggableTrack: true,
-                          }}
-                          tooltip={{
-                            formatter,
-                          }}
-                          min={100000}
-                          max={10000000}
-                          defaultValue={[500000, 2000000]}
-                          value={gia}
+                        <InputNumber
+                          min={1}
+                          value={min}
                           onChange={(e) => {
-                            console.log(e);
-                            setGia(e);
+                            setMin(e);
+                            handleFilter({
+                              page: page,
+                              pageSize: pageSize,
+                              filter: {
+                                mauSac: filterMauSac.map((item) => {
+                                  return item.id;
+                                }),
+                                chatLieu: filterChatLieu.map((item) => {
+                                  return item.id;
+                                }),
+                                nhomSanPham: filterNhomSanPham.map((item) => {
+                                  return item.id;
+                                }),
+                                kichThuoc: filterKichThuoc.map((item) => {
+                                  return item.id;
+                                }),
+                                min: e,
+                                max: max,
+                              },
+                            });
+                          }}
+                        />
+                        <span> - </span>
+                        <InputNumber
+                          min={1}
+                          value={max}
+                          onChange={(e) => {
+                            setMax(e);
+                            handleFilter({
+                              page: page,
+                              pageSize: pageSize,
+                              filter: {
+                                mauSac: filterMauSac.map((item) => {
+                                  return item.id;
+                                }),
+                                chatLieu: filterChatLieu.map((item) => {
+                                  return item.id;
+                                }),
+                                nhomSanPham: filterNhomSanPham.map((item) => {
+                                  return item.id;
+                                }),
+                                kichThuoc: filterKichThuoc.map((item) => {
+                                  return item.id;
+                                }),
+                                min: min,
+                                max: e,
+                              },
+                            });
                           }}
                         />
                       </Col>

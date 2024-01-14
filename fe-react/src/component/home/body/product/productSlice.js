@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import sapXepTheoGiaTien from "../../../../extensions/sapXepSanPham";
 const INIT_PRODUCT = {
     isLoading: true,
     data: [{}, {}, {}, {}, {}],
@@ -20,6 +21,9 @@ export default createSlice({
             state.pageTotal = action.payload.data.pageTotal;
             state.pageItem = action.payload.data.pageItem;
             state.pageNumber = action.payload.data.pageNumber;
+        },
+        setSapXep: (state, action) => {
+            state.data = sapXepTheoGiaTien([...action.payload.data], action.payload.type)
         }
     }
 })

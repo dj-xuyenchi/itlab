@@ -5,20 +5,26 @@ import { InputNumber, notification } from "antd";
 import { useGioHangStore } from "../giohangthanhtoan/useGioHangStore";
 import { useState } from "react";
 function GioHangItem({ handleLayGioHang, item }) {
-  const user = JSON.parse(localStorage.getItem("user"))?.data.nguoiDung
-  const [soLuong, setSoLuong] = useState(item.soLuong)
+  const user = JSON.parse(localStorage.getItem("user"))?.data.nguoiDung;
+  const [soLuong, setSoLuong] = useState(item.soLuong);
   async function handleXoaGioHang() {
-    const data = await useGioHangStore.actions.xoaGioHang(item.id)
-    handleLayGioHang()
+    const data = await useGioHangStore.actions.xoaGioHang(item.id);
+    handleLayGioHang();
   }
   async function handleSuaSoLuong(soLuong) {
-    setSoLuong(soLuong)
+    if (!soLuong) {
+      return;
+    }
+    if (isNaN(soLuong)) {
+      return;
+    }
+    setSoLuong(soLuong);
     const data = await useGioHangStore.actions.capNhatSoLuongSanPhamGioHang({
       nguoiDungId: user.id,
       gioHangId: item.id,
-      soLuongMoi: soLuong
-    })
-    handleLayGioHang()
+      soLuongMoi: soLuong,
+    });
+    handleLayGioHang();
   }
 
   return (
@@ -49,14 +55,13 @@ function GioHangItem({ handleLayGioHang, item }) {
               height: "180px",
               width: "auto",
               borderRadius: "10px",
-
             }}
           />
         </div>
         <div
           style={{
             marginLeft: "4px",
-            width: "176px"
+            width: "176px",
           }}
         >
           <div
@@ -95,12 +100,14 @@ function GioHangItem({ handleLayGioHang, item }) {
             </div>
           </div>
           <div>
-            <p>
-              {fixMoney(item.sanPhamChiTiet.giaBan)}
-            </p>
+            <p>{fixMoney(item.sanPhamChiTiet.giaBan)}</p>
           </div>
           <div>
-            <InputNumber onChange={handleSuaSoLuong} defaultValue={item.soLuong} value={soLuong} />
+            <InputNumber
+              onChange={handleSuaSoLuong}
+              defaultValue={item.soLuong}
+              value={soLuong}
+            />
           </div>
         </div>
       </div>

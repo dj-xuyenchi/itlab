@@ -1,6 +1,7 @@
 package it.lab.controller;
 
 import com.google.gson.Gson;
+import it.lab.dto.DiaChiDTO;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
 import it.lab.iservice.INguoiDungService;
@@ -68,5 +69,11 @@ public class NguoiDungController {
     @RequestMapping(value = "/laydiachinguoidung", method = RequestMethod.GET)
     public ResponseEntity<?> layDiaChi(@RequestParam Long nguoiDungId) {
         return ResponseEntity.ok(_nguoiDungService.layDiaChiNguoiDung(nguoiDungId));
+    }
+
+    @RequestMapping(value = "/suadiachi", method = RequestMethod.POST)
+    public ResponseEntity<?> suaDiaChi(@RequestBody DiaChiDTO diaChi) {
+        _nguoiDungService.capNhatDiaChi(diaChi);
+        return ResponseEntity.ok("");
     }
 }

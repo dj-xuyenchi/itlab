@@ -32,6 +32,7 @@ public class SanPhamController {
             Optional<Long> mauSacId,
             Optional<Long> loaiSanPhamId,
             Optional<Long> kichThuocId,
+
             String keyWord
             ) {
         return ResponseEntity.ok(_sanPhamService.phanTrangSanPhamTrangChu(

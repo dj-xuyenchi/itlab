@@ -28,4 +28,6 @@ public interface INguoiDungService {
     public List<DiaChiDTO> layDiaChiNguoiDung(Long nguoiDungId);
 
     public ResponObject<String, APIStatus> themNguoiDung(NguoiDungRequest nguoiDung, MultipartFile anhdaidien) throws IOException;
+
+    public void capNhatDiaChi(DiaChiDTO diaChi);
 }

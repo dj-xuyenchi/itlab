@@ -18,5 +18,9 @@ export const useNguoiDungStore = {
             const response = await axiosIns.get(`/api/nguoi-dung/laydiachinguoidung?nguoiDungId=` + payload)
             return response
         },
+        async capNhatDiaChi(payload) {
+            const response = await axiosIns.post(`/api/nguoi-dung/suadiachi`, payload)
+            return response
+        },
     },
 }

@@ -14,14 +14,12 @@ public class LocalDateTypeAdapter implements JsonSerializer<LocalDateTime>, Json
     @Override
     public JsonElement serialize(LocalDateTime localDateTime, Type srcType,
                                  JsonSerializationContext context) {
-
         return new JsonPrimitive(formatter.format(localDateTime));
     }
 
     @Override
     public LocalDateTime deserialize(JsonElement json, Type typeOfT,
                                      JsonDeserializationContext context) throws JsonParseException {
-
         return LocalDateTime.parse(json.getAsString(), formatter);
     }
 

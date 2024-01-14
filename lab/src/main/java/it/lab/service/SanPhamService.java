@@ -103,6 +103,12 @@ public class SanPhamService implements ISanPhamService {
         if (filterSanPham.getChatLieu().length >= 1) {
             list = list.stream().filter(x -> Arrays.asList(filterSanPham.getChatLieu()).contains(x.getChatLieu().getId())).toList();
         }
+        if (filterSanPham.getMax() != null) {
+            list = list.stream().filter(x -> x.getGiaBan() < filterSanPham.getMax()).toList();
+        }
+        if (filterSanPham.getMin() != null) {
+            list = list.stream().filter(x -> x.getGiaBan() > filterSanPham.getMin()).toList();
+        }
         if (filterSanPham.getMauSac().length >= 1) {
             list = list.stream().filter(x -> {
                 for (var item : x.getSanPhamChiTietList()) {
@@ -139,7 +145,6 @@ public class SanPhamService implements ISanPhamService {
         } catch (Exception e) {
             return null;
         }
-
     }
 
     @Override
