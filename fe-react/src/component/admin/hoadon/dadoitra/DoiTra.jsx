@@ -20,6 +20,7 @@ import { useHoaDonChoStore } from "./useHoaDonChoStore";
 import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 import sapXepTheoNgayTao from "../../../../extensions/sapXepNgayTao";
+import ChiTietHoaDonDoi from "../chitiethoadon/ChiTietHoaDonDoi";
 
 function DoiTra() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -217,8 +218,8 @@ function DoiTra() {
           {fixMoney(
             hoaDonChiTietList
               ? hoaDonChiTietList.reduce((pre, cur) => {
-                  return pre + cur.soLuong * cur.donGia;
-                }, 0)
+                return pre + cur.soLuong * cur.donGia;
+              }, 0)
               : 0
           )}
         </span>
@@ -228,7 +229,6 @@ function DoiTra() {
       title: "Ngày tạo",
       dataIndex: "ngayTao",
       width: "20%",
-      sorter: (a, b) => a - b,
       render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
@@ -274,12 +274,12 @@ function DoiTra() {
           {fixMoney(
             hoaDonChiTietList
               ? hoaDonChiTietList.reduce((pre, cur) => {
-                  if (cur.trangThai === 2) {
-                    return pre + cur.soLuong * cur.donGia;
-                  } else {
-                    return pre;
-                  }
-                }, 0)
+                if (cur.trangThai === 2) {
+                  return pre + cur.soLuong * cur.donGia;
+                } else {
+                  return pre;
+                }
+              }, 0)
               : 0
           )}
         </span>
@@ -302,7 +302,7 @@ function DoiTra() {
       width: "10%",
       align: "center",
       render: (id) => (
-        <ChiTietHoaDon hoaDonId={id} showDoi={true} type={false} />
+        <ChiTietHoaDonDoi hoaDonId={id} showDoi={true} type={false} />
       ),
     },
   ];

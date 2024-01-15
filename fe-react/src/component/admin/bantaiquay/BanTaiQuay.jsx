@@ -1390,6 +1390,14 @@ function BanTaiQuay() {
                         {sanPhamChiTiet
                           ? sanPhamChiTiet.map((option) => (
                             <Select.Option key={option.id} value={option.id}>
+                              <span
+                                style={{
+                                  fontWeight: "700",
+                                  marginRight: "4px"
+                                }}
+                              >
+                                Tồn: {option.soLuongTon}
+                              </span>
                               {option.tenSanPham}
                               <Tag
                                 color="success"
@@ -1402,14 +1410,7 @@ function BanTaiQuay() {
                               <Tag color="processing">
                                 {option.kichThuoc.tenKichThuoc}
                               </Tag>
-                              <span
-                                style={{
-                                  fontWeight: "700",
-                                  marginLeft: "12px",
-                                }}
-                              >
-                                Số lượng còn: {option.soLuongTon}
-                              </span>
+
                             </Select.Option>
                           ))
                           : ""}

@@ -203,7 +203,6 @@ function ChoGiaoHang() {
       title: "Ngày tạo",
       dataIndex: "ngayTao",
       width: "20%",
-      sorter: (a, b) => a - b,
       render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
@@ -274,7 +273,7 @@ function ChoGiaoHang() {
             justifyContent: "flex-end",
           }}
         >
-        
+
           <Button
             style={{
               marginLeft: "12px",

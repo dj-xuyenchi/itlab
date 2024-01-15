@@ -214,7 +214,6 @@ function HoaDonHuy() {
       title: "Ngày tạo",
       dataIndex: "ngayTao",
       width: "20%",
-      sorter: (a, b) => a - b,
       render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {

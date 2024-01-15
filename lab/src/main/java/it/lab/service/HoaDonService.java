@@ -154,6 +154,7 @@ public class HoaDonService implements IHoaDonService {
 //            }
 //            if (check) {
             hd.get().setNgayThanhToan(LocalDateTime.now());
+            hd.get().setNgayGiao(LocalDateTime.now());
             hd.get().setTrangThai(TrangThaiHoaDon.DAGIAO);
             _hoaDonRepo.save(hd.get());
             //   }

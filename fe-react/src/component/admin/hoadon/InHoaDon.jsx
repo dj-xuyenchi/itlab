@@ -11,8 +11,10 @@ function InHoaDon({ data }) {
         html2pdf(content);
     };
     const date = new Date()
+    const tongTien = data.hoaDonChiTietList.reduce((pre, cur) => {
+        return pre + (cur.soLuong * cur.donGia)
+    }, 0)
     return (
-
         <>
             <Button type="primary" onClick={() => {
                 generatePdf()
@@ -147,15 +149,18 @@ function InHoaDon({ data }) {
                         marginTop: "12px"
                     }}>
                         <div>
-                            {data.voucherGiam && <p>Áp mã:   <span style={{
-                                color: 'red'
-                            }}>{fixMoney(data.voucherGiam.giaTriGiam)}</span></p>}
                             <p>Tổng tiền hàng:   <span style={{
                                 color: 'red'
-                            }}>{fixMoney(data.giaTriHd - (data.voucherGiam ? data.voucherGiam.giaTriGiam : 0))}</span></p>
+                            }}>{fixMoney(tongTien)}</span></p>
                             <p>Phí ship: <span style={{
                                 color: 'red'
                             }}>{fixMoney(data.phiVanChuyen)}</span></p>
+                            {data.voucherGiam && <p>Áp mã:   <span style={{
+                                color: 'red'
+                            }}>{fixMoney(data.voucherGiam.giaTriGiam)}</span></p>}
+                            <p>Thanh toán:   <span style={{
+                                color: 'red'
+                            }}>{fixMoney(tongTien + data.phiVanChuyen - (data.voucherGiam ? data.voucherGiam.giaTriGiam : 0))}</span></p>
                             <p>Trạng thái hóa đơn: <span style={{
                                 color: 'red'
                             }}>{fixTrangThai(data.trangThai)}</span> </p>

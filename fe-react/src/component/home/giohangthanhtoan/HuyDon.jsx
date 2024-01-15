@@ -31,7 +31,7 @@ function HuyDon() {
                     justifyContent: 'center',
                     width: "100%"
                 }}>
-                    <QRCode size={320} type="canvas" value="https://ant.design/" />
+                    {/* <QRCode size={320} type="canvas" value="https://ant.design/" /> */}
                 </div>
                 <div style={{
                     display: 'flex',

@@ -3,13 +3,14 @@ import { Button, Modal, Tooltip, notification } from "antd";
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useChiTietHoaDonStore } from "./useChiTietHoaDonStore";
-function ModalXoaChiTiet({ id, fetData }) {
+function ModalXoaChiTiet({ id, fetData, fetHoaDon }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
     handleXoaChatLieu();
+    fetHoaDon()
     setIsModalOpen(false);
   };
   const handleCancel = () => {

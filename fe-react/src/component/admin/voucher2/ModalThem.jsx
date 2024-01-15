@@ -107,7 +107,7 @@ function ModalThem({ fetchData }) {
         cancelButtonProps={{ style: { display: "none" } }}
         title={"Tạo voucher"}
         open={isModalOpen}
-        onOk={() => {}}
+        onOk={() => { }}
         onCancel={() => {
           setIsModalOpen(false);
         }}
@@ -214,6 +214,10 @@ function ModalThem({ fetchData }) {
             <DatePicker
               style={{
                 width: "100%",
+              }}
+              disabledDate={(e) => {
+                const today = new Date();
+                return e && e < today;
               }}
               onChange={(e, q) => {
                 setVoucher({

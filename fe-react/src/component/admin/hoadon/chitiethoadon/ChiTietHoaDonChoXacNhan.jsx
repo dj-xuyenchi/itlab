@@ -38,6 +38,7 @@ import ModalXoaChiTiet from "./ModalXoaChiTiet";
 import ModalChonVoucher from "../../bantaiquay/ModalChonVoucher";
 import ModalDoiVoucher from "./ModalDoiVoucher";
 function ChiTietHoaDonChoXacNhan({
+  fetHoaDon,
   hoaDonId,
   type2 = false,
   type = false,
@@ -63,14 +64,8 @@ function ChiTietHoaDonChoXacNhan({
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen2, setIsModalOpen2] = useState({});
   const [isModalDiaChi, setModalDiaChi] = useState(false);
-  function setModalSanPhamHienThi(id, value) {
-    setIsModalOpen2({
-      ...isModalOpen2,
-      [id]: value,
-    });
-  }
+
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -227,6 +222,7 @@ function ChiTietHoaDonChoXacNhan({
       soLuongMoi: e,
     });
     handleLayPhiVanChuyenGHN();
+    fetHoaDon()
   }
 
   const columns2 = [
@@ -355,6 +351,7 @@ function ChiTietHoaDonChoXacNhan({
             }
             if (!isNaN(e)) {
               handleThayDoiSoLuong(e, record);
+              fetHoaDon()
             } else {
               return;
             }
@@ -363,11 +360,11 @@ function ChiTietHoaDonChoXacNhan({
       ),
     },
     {
-      title: "Số lượng đổi",
-      dataIndex: "sanPhamChiTiet",
-      key: "sanPhamChiTiet",
+      title: "Số lượng tồn",
+      dataIndex: "id",
+      key: "id",
       width: "10%",
-      render: (sanPhamChiTiet, record) => <span>{record.soLuongDoiTra}</span>,
+      render: (id, record) => <>{record.sanPhamChiTiet.soLuongTon}</>,
     },
     {
       title: "Giá nhập",
@@ -392,7 +389,7 @@ function ChiTietHoaDonChoXacNhan({
       width: "10%",
       render: (id) => (
         <>
-          <ModalXoaChiTiet id={id} fetData={layDuLieu} />
+          <ModalXoaChiTiet id={id} fetData={layDuLieu} fetHoaDon={fetHoaDon} />
         </>
       ),
     },
@@ -442,6 +439,7 @@ function ChiTietHoaDonChoXacNhan({
       "bottomRight"
     );
     handleLayPhiVanChuyenGHN();
+    fetHoaDon()
   }
   return (
     <>

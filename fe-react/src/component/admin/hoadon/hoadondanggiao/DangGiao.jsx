@@ -198,7 +198,7 @@ function DangGiao() {
       ...getColumnSearchProps("soDienThoai"),
     },
     {
-    
+
       title: "Giá trị HĐ",
       dataIndex: "hoaDonChiTietList",
       width: "15%",
@@ -215,7 +215,6 @@ function DangGiao() {
       title: "Ngày tạo",
       dataIndex: "ngayTao",
       width: "20%",
-      sorter: (a, b) => a - b,
       render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
@@ -294,7 +293,7 @@ function DangGiao() {
             justifyContent: "flex-end",
           }}
         >
-        
+
           <Button
             style={{
               marginLeft: "12px",

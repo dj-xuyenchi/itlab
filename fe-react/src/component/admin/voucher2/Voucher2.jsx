@@ -136,7 +136,7 @@ function Voucher2() {
       title: "Mã Voucher",
       dataIndex: "maVoucher",
       width: "10%",
-      ...getColumnSearchProps("maSanPham"),
+      ...getColumnSearchProps("maVoucher"),
       render: (maSanPham) => (
         <>
           <Tag color="success"> {maSanPham}</Tag>

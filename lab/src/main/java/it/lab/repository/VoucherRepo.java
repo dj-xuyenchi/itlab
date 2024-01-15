@@ -16,6 +16,9 @@ public interface VoucherRepo extends JpaRepository<Voucher, Long> {
 
     Voucher findVoucherById(Long id);
 
+    List<Voucher> findVouchersByNgayKetThucBefore(LocalDateTime ldt);
+
+    List<Voucher> findVouchersByNgayKetThucAfter(LocalDateTime ldt);
 
     @Query("SELECT v FROM Voucher v WHERE v.ngayKetThuc < :currentDateTime")
     List<Voucher> findVouchersWithEndDateAfter(@Param("currentDateTime") LocalDateTime currentDateTime);

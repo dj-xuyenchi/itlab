@@ -4,20 +4,17 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Input,
-  Menu,
   Modal,
   Row,
   Space,
   Table,
   notification,
 } from "antd";
-import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { selectLanguage } from "../../../../language/selectLanguage";
 import { fixMoney } from "../../../../extensions/fixMoney";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useHoaDonChoStore } from "./useHoaDonChoStore";
-import ChiTietHoaDon from "../chitiethoadon/ChiTietHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 import ChiTietHoaDonChoXacNhan from "../chitiethoadon/ChiTietHoaDonChoXacNhan";
 import sapXepTheoNgayTao from "../../../../extensions/sapXepNgayTao";
@@ -62,11 +59,8 @@ function ChoGiaoHang() {
     }
   };
 
-  const language = useSelector(selectLanguage);
-  const dispath = useDispatch();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -85,7 +79,6 @@ function ChoGiaoHang() {
     clearFilters();
     setSearchText("");
   };
-  const hasSelected = selectedRowKeys.length > 0;
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -223,7 +216,6 @@ function ChoGiaoHang() {
       title: "Ngày tạo",
       dataIndex: "ngayTao",
       width: "20%",
-      sorter: (a, b) => a - b,
       render: (item) => <span>{fixNgayThang(item)}</span>,
     },
     {
@@ -238,6 +230,7 @@ function ChoGiaoHang() {
       align: "center",
       render: (id) => (
         <ChiTietHoaDonChoXacNhan
+          fetHoaDon={layDuLieu}
           type2={true}
           hoaDonId={id}
           type={true}
@@ -253,11 +246,37 @@ function ChoGiaoHang() {
   }
   useEffect(() => {
     layDuLieu();
-  }, []);
+  }, [data]);
+  function handleCheckGia() {
+    for (var item of selectedRowKeys) {
+      var hoaDon = data.find((x) => {
+        return x.key == item;
+      })
+      if (!hoaDon) {
+        continue
+      }
+      const hoaDonChiTiet = hoaDon.hoaDon;
+      var tongTien = hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+        return pre + (cur.soLuong * cur.donGia)
+      }, 0) + hoaDonChiTiet.phiVanChuyen
+      if (hoaDonChiTiet.voucherGiam) {
+        tongTien -= hoaDonChiTiet.voucherGiam.giaTriGiam
+      }
+      if (tongTien < 0) {
+        openNotification("error", "Hệ thống", "Hóa đơn " + hoaDonChiTiet.maHoaDon + " tổng tiền thanh toán nhỏ hơn 0đ", "bottomRight");
+        return false
+      }
+    }
+    return true
+  }
   async function handleXacNhanHoaDon() {
+
     if (selectedRowKeys.length == 0) {
       openNotification("error", "Hệ thống", "Chưa chọn hóa đơn", "bottomRight");
       return;
+    }
+    if (!handleCheckGia()) {
+      return
     }
     const ketQua = await useHoaDonChoStore.actions.xacNhanHoaDon(
       selectedRowKeys

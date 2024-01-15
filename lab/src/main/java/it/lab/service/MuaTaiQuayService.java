@@ -396,6 +396,7 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
         if (diaChiId == null) {
             hoaDon.setPhuongThucVanChuyen(_phuongThucVanChuyenRepo.findById(3l).get());
             hoaDon.setPhiGiaoHang(0d);
+            hoaDon.setNgayGiao(LocalDateTime.now());
         }
         return hoaDon;
     }

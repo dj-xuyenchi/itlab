@@ -1,7 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import React, { useEffect, useState } from "react";
-import { selectLanguage } from "../../../../language/selectLanguage";
 import { fixMoney } from "../../../../extensions/fixMoney";
 import {
   Button,
@@ -33,7 +31,7 @@ import { IoMdPrint } from "react-icons/io";
 import InHoaDon from "../InHoaDon";
 import { fixNgayThang } from "../../../../extensions/fixNgayThang";
 import InHoaDonDoiTra from "../InHoaDonDoiTra";
-function ChiTietHoaDon({
+function ChiTietHoaDonDoi({
   hoaDonId,
   type2 = false,
   type = false,
@@ -528,11 +526,18 @@ function ChiTietHoaDon({
       ),
     },
     {
-      title: "Số lượng tồn",
-      dataIndex: "id",
-      key: "id",
+      title: "Lỗi",
+      dataIndex: "soLuongLoi",
+      key: "soLuongLoi",
       width: "10%",
-      render: (id, record) => <>{record.sanPhamChiTiet.soLuongTon}</>,
+      render: (soLuongLoi, record) => <span>{soLuongLoi}</span>,
+    },
+    {
+      title: "Đổi",
+      dataIndex: "soLuongDoi",
+      key: "soLuongDoi",
+      width: "10%",
+      render: (soLuongDoi, record) => <span>{soLuongDoi}</span>,
     },
     {
       title: "Giá nhập",
@@ -549,6 +554,13 @@ function ChiTietHoaDon({
       key: "donGia",
       width: "10%",
       render: (donGia) => <span>{fixMoney(donGia)}</span>,
+    },
+    {
+      title: "Ghi chú",
+      dataIndex: "id",
+      key: "id",
+      width: "10%",
+      render: (id, record) => <>{record.ghiChu}</>,
     },
   ];
   //
@@ -603,13 +615,13 @@ function ChiTietHoaDon({
               }}
               span={24}
             >
-              {hoaDonChiTiet.trangThai === "DADOITRA" && (
+              {!type && hoaDonChiTiet.trangThai === "DADOITRA" && (
                 <InHoaDonDoiTra data={hoaDonChiTiet} />
               )}
-              {hoaDonChiTiet.trangThai === "DAGIAO" && (
+              {!type && hoaDonChiTiet.trangThai === "DAGIAO" && (
                 <InHoaDon data={hoaDonChiTiet} />
               )}
-              {hoaDonChiTiet.trangThai === "TUCHOIDOI" && (
+              {!type && hoaDonChiTiet.trangThai === "TUCHOIDOI" && (
                 <InHoaDon data={hoaDonChiTiet} />
               )}
             </Col>
@@ -1206,4 +1218,4 @@ function ChiTietHoaDon({
   );
 }
 
-export default ChiTietHoaDon;
+export default ChiTietHoaDonDoi;

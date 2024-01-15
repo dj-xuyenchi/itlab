@@ -13,10 +13,8 @@ function InHoaDonDoiTra({ data }) {
     const date = new Date()
     var tongGiaTri = data.sauKhiDoi.reduce((pre, cur) => {
         return pre + (cur.soLuong * cur.donGia)
-    }, 0) + data.phiVanChuyen
-    if (data.voucherGiam) {
-        tongGiaTri -= data.voucherGiam.giaTriGiam
-    }
+    }, 0)
+
     return (
         <>
             <Button type="primary" onClick={() => {
@@ -219,15 +217,18 @@ function InHoaDonDoiTra({ data }) {
                         marginTop: "12px"
                     }}>
                         <div>
-                            {data.voucherGiam && <p>Áp mã:   <span style={{
-                                color: 'red'
-                            }}>{fixMoney(data.voucherGiam.giaTriGiam)}</span></p>}
                             <p>Tổng tiền hàng:   <span style={{
                                 color: 'red'
                             }}>{fixMoney(tongGiaTri)}</span></p>
                             <p>Phí ship: <span style={{
                                 color: 'red'
                             }}>{fixMoney(data.phiVanChuyen)}</span></p>
+                            {data.voucherGiam && <p>Áp mã:   <span style={{
+                                color: 'red'
+                            }}>{fixMoney(data.voucherGiam.giaTriGiam)}</span></p>}
+                            <p>Thanh toán:   <span style={{
+                                color: 'red'
+                            }}>{fixMoney(tongGiaTri + data.phiVanChuyen - (data.voucherGiam ? data.voucherGiam.giaTriGiam : 0))}</span></p>
                             <p>Trạng thái hóa đơn: <span style={{
                                 color: 'red'
                             }}>{fixTrangThai(data.trangThai)}</span> </p>

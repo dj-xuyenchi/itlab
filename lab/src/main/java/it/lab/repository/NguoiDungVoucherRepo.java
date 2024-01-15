@@ -35,8 +35,6 @@ public interface NguoiDungVoucherRepo extends JpaRepository<NguoiDungVoucher, Lo
             "GROUP BY b.id, b.maNguoiDung, b.anhDaiDien, b.soDienThoai, b.email")
     List<Object[]> getAllTang();
 
-    public List<NguoiDungVoucher> findNguoiDungVouchersByVoucher(Voucher voucher);
-
     public List<NguoiDungVoucher> findNguoiDungVouchersByNguoiDung(NguoiDung ng);
 
     @Query(value = """
@@ -58,4 +56,6 @@ public interface NguoiDungVoucherRepo extends JpaRepository<NguoiDungVoucher, Lo
     public List<Long> laySoLuong(@Param("voucherId") Long voucherId);
 
     public List<NguoiDungVoucher> findNguoiDungVouchersByNguoiDungAndVoucher(NguoiDung ng, Voucher voucher);
+
+    public List<NguoiDungVoucher> findNguoiDungVouchersByVoucher(Voucher voucher);
 }

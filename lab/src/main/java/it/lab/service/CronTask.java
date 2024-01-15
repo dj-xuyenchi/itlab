@@ -1,56 +1,46 @@
 package it.lab.service;
 
+import it.lab.dto.NguoiDungVoucherDTO;
 import it.lab.enums.TrangThaiHoaDon;
+import it.lab.enums.TrangThaiNguoiDungVoucher;
 import it.lab.enums.TrangThaiSuKienGiamGia;
+import it.lab.enums.TrangThaiVoucher;
 import it.lab.iservice.Cron;
 import it.lab.repository.HoaDonChiTietRepo;
 import it.lab.repository.HoaDonRepo;
+import it.lab.repository.NguoiDungVoucherRepo;
+import it.lab.repository.VoucherRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 public class CronTask implements Cron {
-    //"do.quanganh99zz@gmail.com", "hnfoowwjgkagrbxu", "smtp.gmail.com", "587"
-    //   Email email = new Email();
-//
 
     @Autowired
-    private HoaDonRepo _hoaDonRepo;
+    private VoucherRepo _voucherRepo;
     @Autowired
-    private HoaDonChiTietRepo _hoaDonChiTietRepo;
+    private NguoiDungVoucherRepo _nguoiDUngVoucherRepo;
+
     @Scheduled(cron = "15 * * * * ?")
-    public void guiBaoCaoHangNgay() {
-        //   doiTrangThaiSuKien();
-//       Excel.taoBaoCaoNgay();
-//
-//        email.sendContentAndMultipartToVer2("anhdqph19418@fpt.edu.vn", "ss","ss", Arrays.stream(new String[]{"/Users/quanganhdo/Documents/it/Template.xlsx"}).toList());
-    }
-
-    //  @Scheduled(cron = "0 0 3 * * ?")
-    //  @Scheduled(cron = "15 * * * * ?")
-    public void xoaHoaDonRac() {
-        var hoaDonRac = _hoaDonRepo.findAllByTrangThaiEquals(TrangThaiHoaDon.CHOTHANHTOANBANKING);
-        for(var item : hoaDonRac){
-            var hoaDonChiTiet = _hoaDonChiTietRepo.findHoaDonChiTietsByHoaDon(item);
-            _hoaDonChiTietRepo.deleteAll(hoaDonChiTiet);
-        }
-        _hoaDonRepo.deleteAll(hoaDonRac);
-    }
-
-
-
-
-
     @Override
-    public void guiBaoCaoHangTuan() {
-
-    }
-
-    @Override
-    public void guiBaoCaoHangThang() {
-
+    public void doiTrangThaiVoucher() {
+//        var voucher = _voucherRepo.findVouchersByNgayKetThucBefore(LocalDateTime.now());
+//        for (var item : voucher) {
+//            if (item.getTrangThai() == TrangThaiVoucher.NGUNG) {
+//                continue;
+//            }
+//            item.setTrangThai(TrangThaiVoucher.NGUNG);
+//            var nguoiDungVoucher = _nguoiDUngVoucherRepo.findNguoiDungVouchersByVoucher(item)
+//                    .stream().filter(x -> x.getTrangThai() == TrangThaiNguoiDungVoucher.SUDUNG).collect(Collectors.toList());
+//            for (var ndv : nguoiDungVoucher) {
+//                ndv.setTrangThai(TrangThaiNguoiDungVoucher.HETHAN);
+//            }
+//            _nguoiDUngVoucherRepo.saveAll(nguoiDungVoucher);
+//        }
+//        _voucherRepo.saveAll(voucher);
     }
 }
