@@ -1,5 +1,7 @@
 package it.lab.service;
 
+import it.lab.common.Email;
+import it.lab.common.EmailHoaDon;
 import it.lab.entity.HoaDon;
 import it.lab.entity.HoaDonChiTiet;
 import it.lab.entity.SanPham;
@@ -29,6 +31,7 @@ public class DoiTraService implements IDoiTraService {
     private SanPhamChiTietRepo _sanPhamChiTietRepo;
     @Autowired
     private SanPhamRepo _sanPhamRepo;
+    private Email e = new Email();
     @Override
     public List<HoaDonChiTiet> layHoaDonChiTietCuaHoaDon(Long hoaDonId) {
         HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
@@ -109,12 +112,14 @@ public class DoiTraService implements IDoiTraService {
             return 2;
         }
         doiTraSanPham(doiTra);
+
         return 1;
     }
 
     private void doiTraSanPham(DoiTra2 doiTra) {
         HoaDon hd = _hoaDonRepo.findById(doiTra.getHoaDonId()).get();
         hd.setTrangThai(TrangThaiHoaDon.DADOITRA);
+        e.sendContentHTML(hd.getNguoiMua().getEmail(),"Đổi trả hóa đơn thành công", EmailHoaDon.guiEmailKhiDoiTraTemplate(hd));
         for (var item : doiTra.getSanPhamTra()) {
             HoaDonChiTiet hdct = _hoaDonChiTietRepo.findById(item.getChiTietId()).get();
             hdct.setTrangThai(1);
@@ -185,6 +190,7 @@ public class DoiTraService implements IDoiTraService {
         HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
         hoaDon.setTrangThai(TrangThaiHoaDon.TUCHOIDOI);
         _hoaDonRepo.save(hoaDon);
+        e.sendContentHTML(hoaDon.getNguoiMua().getEmail(),"Từ chối đổi trả đơn hàng", EmailHoaDon.guiEmailKhiXacNhanTemplate(hoaDon));
         return true;
     }
 }

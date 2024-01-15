@@ -95,11 +95,11 @@ public class HoaDonService implements IHoaDonService {
                     break;
                 }
                 sp.get().setSoLuongTon(sp.get().getSoLuongTon() - hdChiTiet.getSoLuong());
-                e.sendContentHTML(hd.get().getNguoiMua().getEmail(),"Xác nhận hóa đơn thành công", EmailHoaDon.guiEmailKhiXacNhanTemplate(hd.get()));
                 _sanPhamChiTietRepo.save(sp.get());
             }
             if (check) {
                 hd.get().setTrangThai(TrangThaiHoaDon.CHOGIAOHANG);
+                e.sendContentHTML(hd.get().getNguoiMua().getEmail(),"Xác nhận hóa đơn thành công", EmailHoaDon.guiEmailKhiXacNhanTemplate(hd.get()));
                 _hoaDonRepo.save(hd.get());
             }
         }
@@ -129,6 +129,7 @@ public class HoaDonService implements IHoaDonService {
 //            }
 //            if (check) {
             hd.get().setTrangThai(TrangThaiHoaDon.DANGGIAO);
+            e.sendContentHTML(hd.get().getNguoiMua().getEmail(),"Đơn hàng của quý khách đang được giao", EmailHoaDon.guiEmailKhiXacNhanTemplate(hd.get()));
             _hoaDonRepo.save(hd.get());
             //   }
         }
@@ -160,6 +161,7 @@ public class HoaDonService implements IHoaDonService {
             hd.get().setNgayThanhToan(LocalDateTime.now());
             hd.get().setNgayGiao(LocalDateTime.now());
             hd.get().setTrangThai(TrangThaiHoaDon.DAGIAO);
+            e.sendContentHTML(hd.get().getNguoiMua().getEmail(),"Đơn hàng của quý khách đã được giao thành công", EmailHoaDon.guiEmailKhiXacNhanTemplate(hd.get()));
             _hoaDonRepo.save(hd.get());
             //   }
         }
@@ -179,6 +181,7 @@ public class HoaDonService implements IHoaDonService {
                 _nguoiDungVoucherRepo.save(hd.get().getVoucherGiam());
             }
             hd.get().setTrangThai(TrangThaiHoaDon.CUAHANGHUY);
+            e.sendContentHTML(hd.get().getNguoiMua().getEmail(),"Đơn hàng của quý khách đã bị hủy", EmailHoaDon.guiEmailKhiXacNhanTemplate(hd.get()));
             _hoaDonRepo.save(hd.get());
         }
         return new ResponObject<List<String>, XacNhanHoaDonEnum>(null, XacNhanHoaDonEnum.THANHCONG, "Thành công");

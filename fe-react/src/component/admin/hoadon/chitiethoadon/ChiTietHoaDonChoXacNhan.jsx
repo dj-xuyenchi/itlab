@@ -222,7 +222,7 @@ function ChiTietHoaDonChoXacNhan({
       soLuongMoi: e,
     });
     handleLayPhiVanChuyenGHN();
-    fetHoaDon()
+    fetHoaDon();
   }
 
   const columns2 = [
@@ -351,7 +351,7 @@ function ChiTietHoaDonChoXacNhan({
             }
             if (!isNaN(e)) {
               handleThayDoiSoLuong(e, record);
-              fetHoaDon()
+              fetHoaDon();
             } else {
               return;
             }
@@ -439,7 +439,7 @@ function ChiTietHoaDonChoXacNhan({
       "bottomRight"
     );
     handleLayPhiVanChuyenGHN();
-    fetHoaDon()
+    fetHoaDon();
   }
   return (
     <>
@@ -543,11 +543,14 @@ function ChiTietHoaDonChoXacNhan({
               Giá trị:
             </Col>
             <Col span={8}>
-              <Input disabled value={fixMoney(
-                hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
-                  return pre + (cur.soLuong * cur.donGia)
-                }, 0))
-              } />
+              <Input
+                disabled
+                value={fixMoney(
+                  hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
+                    return pre + cur.soLuong * cur.donGia;
+                  }, 0)
+                )}
+              />
             </Col>
           </Row>
           <Row
@@ -721,8 +724,20 @@ function ChiTietHoaDonChoXacNhan({
                 value={
                   hoaDonChiTiet.diaChiGiao &&
                   hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                  " " +
-                  hoaDonChiTiet.diaChiGiao.nguoiNhan
+                    " " +
+                    hoaDonChiTiet.diaChiGiao.nguoiNhan
+                }
+              />
+            </Col>
+            <Col span={3} style={{}} offset={1}>
+              SDT người nhận:
+            </Col>
+            <Col span={6}>
+              <Input
+                disabled
+                value={
+                  hoaDonChiTiet.diaChiGiao &&
+                  hoaDonChiTiet.diaChiGiao.soDienThoai
                 }
               />
             </Col>
@@ -833,7 +848,11 @@ function ChiTietHoaDonChoXacNhan({
             </Col>
           </Row>
           <Row>
-            <ModalDoiVoucher fetData={layDuLieu} hoaDonId={hoaDonChiTiet.id} khachHang={hoaDonChiTiet.nguoiMua} />
+            <ModalDoiVoucher
+              fetData={layDuLieu}
+              hoaDonId={hoaDonChiTiet.id}
+              khachHang={hoaDonChiTiet.nguoiMua}
+            />
           </Row>
           <Row
             style={{
@@ -849,7 +868,11 @@ function ChiTietHoaDonChoXacNhan({
             <Col span={8}>
               <Input
                 disabled
-                value={hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.voucher.tenVoucher : "Chưa chọn"}
+                value={
+                  hoaDonChiTiet.voucherGiam
+                    ? hoaDonChiTiet.voucherGiam.voucher.tenVoucher
+                    : "Chưa chọn"
+                }
               />
             </Col>
             <Col span={3} style={{}} offset={1}>
@@ -858,9 +881,11 @@ function ChiTietHoaDonChoXacNhan({
             <Col span={8}>
               <Input
                 disabled
-                value={hoaDonChiTiet.voucherGiam ? fixMoney(
-                  hoaDonChiTiet.voucherGiam.giaTriGiam
-                ) : 0}
+                value={
+                  hoaDonChiTiet.voucherGiam
+                    ? fixMoney(hoaDonChiTiet.voucherGiam.giaTriGiam)
+                    : 0
+                }
               />
             </Col>
           </Row>
@@ -892,9 +917,13 @@ function ChiTietHoaDonChoXacNhan({
                 disabled
                 value={fixMoney(
                   hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
-                    return pre + (cur.soLuong * cur.donGia)
-                  }, 0) + hoaDonChiTiet.phiVanChuyen - (hoaDonChiTiet.voucherGiam ? hoaDonChiTiet.voucherGiam.giaTriGiam : 0))
-                }
+                    return pre + cur.soLuong * cur.donGia;
+                  }, 0) +
+                    hoaDonChiTiet.phiVanChuyen -
+                    (hoaDonChiTiet.voucherGiam
+                      ? hoaDonChiTiet.voucherGiam.giaTriGiam
+                      : 0)
+                )}
               />
             </Col>
           </Row>
@@ -970,10 +999,10 @@ function ChiTietHoaDonChoXacNhan({
                       >
                         {data
                           ? data.map((option) => (
-                            <Select.Option key={option.id} value={option.id}>
-                              {option.tenSanPham}
-                            </Select.Option>
-                          ))
+                              <Select.Option key={option.id} value={option.id}>
+                                {option.tenSanPham}
+                              </Select.Option>
+                            ))
                           : ""}
                       </Select>
                     </Col>

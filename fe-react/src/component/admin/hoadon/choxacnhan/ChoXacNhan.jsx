@@ -246,7 +246,7 @@ function ChoGiaoHang() {
   }
   useEffect(() => {
     layDuLieu();
-  }, [data]);
+  }, []);
   function handleCheckGia() {
     for (var item of selectedRowKeys) {
       var hoaDon = data.find((x) => {

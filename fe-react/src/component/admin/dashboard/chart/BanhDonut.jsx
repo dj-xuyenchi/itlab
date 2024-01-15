@@ -55,7 +55,6 @@ function BanhDonut() {
                             },
                             data: [
                                 { value: data.taiKhoanMoiThang, name: 'Tài Khoản Mới Trong Tháng' },
-                                { value: data.tongSoLuongCRM, name: 'Số Lượng CRM' },
                                 { value: data.tongSoLuongNhanVien, name: 'Số Lượng Nhân Viên' },
                                 { value: data.tongSoLuongKhachHang, name: 'Số Lượng Khách Hàng' },
                                 { value: data.tongSoLuongAdmin, name: 'Số Lượng Admin' },

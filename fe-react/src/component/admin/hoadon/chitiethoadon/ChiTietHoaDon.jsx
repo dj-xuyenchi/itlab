@@ -798,8 +798,20 @@ function ChiTietHoaDon({
                 value={
                   hoaDonChiTiet.diaChiGiao &&
                   hoaDonChiTiet.diaChiGiao.hoNguoiNhan +
-                  " " +
-                  hoaDonChiTiet.diaChiGiao.nguoiNhan
+                    " " +
+                    hoaDonChiTiet.diaChiGiao.nguoiNhan
+                }
+              />
+            </Col>{" "}
+            <Col span={3} style={{}} offset={1}>
+              SDT người nhận:
+            </Col>
+            <Col span={6}>
+              <Input
+                disabled
+                value={
+                  hoaDonChiTiet.diaChiGiao &&
+                  hoaDonChiTiet.diaChiGiao.soDienThoai
                 }
               />
             </Col>
@@ -977,10 +989,10 @@ function ChiTietHoaDon({
                       }
                       return pre;
                     }, 0) +
-                    hoaDonChiTiet.phiVanChuyen -
-                    (hoaDonChiTiet.voucherGiam
-                      ? hoaDonChiTiet.voucherGiam.giaTriGiam
-                      : 0)
+                      hoaDonChiTiet.phiVanChuyen -
+                      (hoaDonChiTiet.voucherGiam
+                        ? hoaDonChiTiet.voucherGiam.giaTriGiam
+                        : 0)
                   )}
                 />
               </Col>
@@ -1013,10 +1025,10 @@ function ChiTietHoaDon({
                     hoaDonChiTiet.hoaDonChiTietList.reduce((pre, cur) => {
                       return pre + cur.soLuong * cur.donGia;
                     }, 0) +
-                    hoaDonChiTiet.phiVanChuyen -
-                    (hoaDonChiTiet.voucherGiam
-                      ? hoaDonChiTiet.voucherGiam.giaTriGiam
-                      : 0)
+                      hoaDonChiTiet.phiVanChuyen -
+                      (hoaDonChiTiet.voucherGiam
+                        ? hoaDonChiTiet.voucherGiam.giaTriGiam
+                        : 0)
                   )}
                 />
               </Col>
@@ -1095,13 +1107,13 @@ function ChiTietHoaDon({
                           >
                             {data
                               ? data.map((option) => (
-                                <Select.Option
-                                  key={option.id}
-                                  value={option.id}
-                                >
-                                  {option.tenSanPham}
-                                </Select.Option>
-                              ))
+                                  <Select.Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.tenSanPham}
+                                  </Select.Option>
+                                ))
                               : ""}
                           </Select>
                         </Col>
