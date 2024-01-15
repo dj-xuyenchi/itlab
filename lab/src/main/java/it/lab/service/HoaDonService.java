@@ -1,5 +1,7 @@
 package it.lab.service;
 
+import it.lab.common.Email;
+import it.lab.common.EmailHoaDon;
 import it.lab.common.Page;
 import it.lab.common.ResponObject;
 import it.lab.dto.DiaChiDTO;
@@ -35,6 +37,7 @@ public class HoaDonService implements IHoaDonService {
     private DiaChiRepo _diaChiRepo;
     @Autowired
     private NguoiDungRepo _nguoiDungRepo;
+    private Email e = new Email();
 
     @Override
     public Page<HoaDonCho> layHetHoaDonCho() {
@@ -92,6 +95,7 @@ public class HoaDonService implements IHoaDonService {
                     break;
                 }
                 sp.get().setSoLuongTon(sp.get().getSoLuongTon() - hdChiTiet.getSoLuong());
+                e.sendContentHTML(hd.get().getNguoiMua().getEmail(),"Xác nhận hóa đơn thành công", EmailHoaDon.guiEmailKhiXacNhanTemplate(hd.get()));
                 _sanPhamChiTietRepo.save(sp.get());
             }
             if (check) {
