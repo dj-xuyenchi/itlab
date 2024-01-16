@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -514,7 +515,22 @@ public class SanPhamService implements ISanPhamService {
     }
 
     @Override
-    public Object capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile multipartFile, MultipartFile multipartFile1) {
-        return null;
+    public Page<SanPhamDTO> capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile multipartFile, MultipartFile multipartFile1) throws IOException {
+        SanPham sp = _sanPhamRepository.findById(sanPhamRequest.getId()).get();
+        if (multipartFile != null) {
+            sp.setHinhAnh1(CloudinaryUpload.uploadFile(multipartFile));
+            sp.setHinhAnh2(CloudinaryUpload.uploadFile(multipartFile1));
+        }
+        sp.setTenSanPham(sanPhamRequest.getTenSanPham());
+        sp.setGiaBan(sanPhamRequest.getGiaBan());
+        sp.setGiaNhap(sanPhamRequest.getGiaNhap());
+        sp.setNgayCapNhat(LocalDateTime.now());
+        sp.setMoTa(sanPhamRequest.getMoTa());
+        sp.setTrangThai(sanPhamRequest.getTrangThai());
+        sp.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId()).get());
+        sp.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId()).get());
+        sp.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId()).get());
+        _sanPhamRepository.save(sp);
+        return layHetSanPham();
     }
 }

@@ -17,16 +17,15 @@ import { useForm } from "antd/es/form/Form";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { useSanPhamStore } from "./useSanPhamStore";
 import { PlusOutlined } from "@ant-design/icons";
+import TextArea from "antd/es/input/TextArea";
+import { checkEmpty } from "../../../extensions/checkEmpty";
 
 function ModalSua({ id, thuocTinh, setData }) {
-  const [form] = useForm()
-  const { Option } = Select;
+  const [form] = useForm();
   const [sanPham, setSanPham] = useState(undefined);
   const trangThaiOptions = [
-    { value: 'DANGBAN', label: 'Đang bán' },
-    { value: 'HETHANG', label: 'Hết hàng' },
-    { value: 'NGUNGBAN', label: 'Ngừng bán' },
-    { value: 'CHAYSUKIEN', label: 'Chạy sự kiện' },
+    { value: "DANGBAN", label: "Đang bán" },
+    { value: "NGUNGBAN", label: "Ngừng bán" },
   ];
   function handleSetTenSP(e) {
     setSanPham({
@@ -53,27 +52,11 @@ function ModalSua({ id, thuocTinh, setData }) {
     });
   }
   function handleSetTrangThai(selectedOption) {
-    setSanPham(prevSanPham => ({
+    setSanPham((prevSanPham) => ({
       ...prevSanPham,
-      trangThai: selectedOption.value
+      trangThai: selectedOption.value,
     }));
   }
-  // function handleSetThietKe(selectedOption) {
-  //   setThietKeSelected(selectedOption);
-  //   setSanPham((prevSanPham) => ({
-  //     ...prevSanPham,
-  //     thietKeId: selectedOption.value, // Chỉ cần dùng thietKeId
-  //   }));
-  // }
-
-  function handleSetThietKe(e) {
-    setSanPham({
-      ...sanPham,
-      thietKeId: e.value,
-    });
-  }
-
-
 
   function handleSetNhom(e) {
     setSanPham({
@@ -89,7 +72,6 @@ function ModalSua({ id, thuocTinh, setData }) {
   }
   const [fileList, setFileList] = useState([]);
   const [hinhAnh, setHinhAnh] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const props = {
     beforeUpload: (file) => {
       return false;
@@ -149,7 +131,7 @@ function ModalSua({ id, thuocTinh, setData }) {
     }
   };
   async function handleSuaSanPham() {
-    if (sanPham.tenSanPham == "") {
+    if (!checkEmpty(sanPham.tenSanPham)) {
       openNotification(
         "error",
         "Hệ thống",
@@ -193,62 +175,23 @@ function ModalSua({ id, thuocTinh, setData }) {
       );
       return;
     }
-    if (!hinhAnh) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Cần 2 hình ảnh",
-        "bottomRight"
-      );
-      return;
-    }
-    if (hinhAnh && hinhAnh.length < 2) {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Cần 2 hình ảnh",
-        "bottomRight"
-      );
-      return;
-    }
 
-    setIsLoading(true);
     var form2 = new FormData();
-    form2.append("file1", hinhAnh[0]);
-    form2.append("file2", hinhAnh[1]);
-    form2.append("data", JSON.stringify(sanPham));
-
-
-    const data = await useSanPhamStore.actions.suaSanPham(form2);
-    if (data.data.status == "THANHCONG") {
-      form.resetFields();
-      openNotification(
-        "success",
-        "Hệ thống",
-        "Sửa sản phẩm thành công",
-        "bottomRight"
-      );
-      setSanPham({
-        ...sanPham
-      });
-    } else {
-      openNotification(
-        "error",
-        "Hệ thống",
-        "Sửa sản phẩm thất bại",
-        "bottomRight"
-      );
-      setSanPham({
-        tenSanPham: "",
-        giaBan: 0,
-        giaNhap: 0,
-        soLuong: 0,
-      });
+    if (hinhAnh.length > 1) {
+      form2.append("file1", hinhAnh[0]);
+      form2.append("file2", hinhAnh[1]);
     }
-    setData(data.data.data);
-    setFileList([]);
+    form2.append("data", JSON.stringify(sanPham));
+    const data = await useSanPhamStore.actions.suaSanPham(form2);
+    form.resetFields();
+    openNotification(
+      "success",
+      "Hệ thống",
+      "Sửa sản phẩm thành công",
+      "bottomRight"
+    );
+    setData();
     setIsModalOpen(false);
-    setIsLoading(false);
   }
   useEffect(() => {
     async function layDuLieu() {
@@ -262,19 +205,15 @@ function ModalSua({ id, thuocTinh, setData }) {
         id: data.data.id,
       });
       setFileList([
-        { uid: '1', url: data.data.hinhAnh1, name: 'Hình ảnh 1' },
-        { uid: '2', url: data.data.hinhAnh2, name: 'Hình ảnh 2' }
+        { uid: "1", url: data.data.hinhAnh1, name: "Hình ảnh 1" },
+        { uid: "2", url: data.data.hinhAnh2, name: "Hình ảnh 2" },
       ]);
-      // if(data.data.thietKe && data.data.thietKe.id) {
-      //   setThietKeSelected({ value: data.data.thietKe.id, label: data.data.thietKe.tenThietKe });
-      // }
     }
 
     if (isModalOpen) {
       layDuLieu();
     }
   }, [id, isModalOpen]);
-
 
   return (
     <>
@@ -318,14 +257,15 @@ function ModalSua({ id, thuocTinh, setData }) {
               maxWidth: 600,
             }}
           >
-
             <Form.Item label="Tên sản phẩm">
               <Input value={sanPham.tenSanPham} onChange={handleSetTenSP} />
             </Form.Item>
             <Form.Item label="Giá nhập">
               <InputNumber
-                formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
+                formatter={(value) =>
+                  ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                parser={(value) => value.replace(/\đ\s?|(,*)/g, "")}
                 style={{
                   width: "100%",
                 }}
@@ -341,8 +281,10 @@ function ModalSua({ id, thuocTinh, setData }) {
             </Form.Item>
             <Form.Item label="Giá bán">
               <InputNumber
-                formatter={(value) => ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                parser={(value) => value.replace(/\đ\s?|(,*)/g, '')}
+                formatter={(value) =>
+                  ` ${value}đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                parser={(value) => value.replace(/\đ\s?|(,*)/g, "")}
                 style={{
                   width: "100%",
                 }}
@@ -357,14 +299,22 @@ function ModalSua({ id, thuocTinh, setData }) {
               />
             </Form.Item>
             <Form.Item label="Thông tin chi tiết">
-              <Input value={sanPham.moTa} onChange={handleSetMoTa} />
+              <TextArea
+                rows={4}
+                value={sanPham.moTa}
+                onChange={handleSetMoTa}
+              />
             </Form.Item>
             <Form.Item label="Trạng thái sản phẩm">
               <Select
                 labelInValue
-                value={sanPham.trangThai ? { value: sanPham.trangThai } : undefined}
+                value={
+                  sanPham.trangThai ? { value: sanPham.trangThai } : undefined
+                }
                 style={{ width: "100%" }}
-                onChange={(selectedOption) => handleSetTrangThai(selectedOption)}
+                onChange={(selectedOption) =>
+                  handleSetTrangThai(selectedOption)
+                }
               >
                 {trangThaiOptions.map((option) => (
                   <Select.Option key={option.value} value={option.value}>
@@ -412,10 +362,10 @@ function ModalSua({ id, thuocTinh, setData }) {
               >
                 {thuocTinh
                   ? thuocTinh.chatLieuList.map((option) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.tenChatLieu}
-                    </Select.Option>
-                  ))
+                      <Select.Option key={option.id} value={option.id}>
+                        {option.tenChatLieu}
+                      </Select.Option>
+                    ))
                   : ""}
               </Select>
             </Form.Item>
@@ -436,10 +386,10 @@ function ModalSua({ id, thuocTinh, setData }) {
               >
                 {thuocTinh
                   ? thuocTinh.nhomSanPhamList.map((option) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.tenNhom}
-                    </Select.Option>
-                  ))
+                      <Select.Option key={option.id} value={option.id}>
+                        {option.tenNhom}
+                      </Select.Option>
+                    ))
                   : ""}
               </Select>
             </Form.Item>
@@ -447,7 +397,7 @@ function ModalSua({ id, thuocTinh, setData }) {
               <Upload
                 listType="picture-card"
                 multiple
-                customRequest={() => { }}
+                customRequest={() => {}}
                 {...props}
                 maxCount={2}
                 fileList={fileList}
@@ -464,7 +414,6 @@ function ModalSua({ id, thuocTinh, setData }) {
                 </div>
               </Upload>
             </Form.Item>
-
           </Form>
         ) : (
           ""

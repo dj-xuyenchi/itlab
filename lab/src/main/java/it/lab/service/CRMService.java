@@ -10,6 +10,7 @@ import it.lab.modelcustom.respon.DoanhThu;
 import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,10 +41,9 @@ public class CRMService implements ICRMService {
     }
 
     @Override
-    public List<DoanhThu> doanhThuTheo12Thang() {
+    public List<DoanhThu> doanhThuTheo12Thang(Integer nam) {
         List<DoanhThu> res = new ArrayList<>();
-        Long namHienTai = (long) LocalDate.now().getYear();
-        var hoaDonList = _hoaDonRepo.findAll().stream().filter(x -> x.getNgayTao().getYear() == namHienTai && (x.getTrangThai() == TrangThaiHoaDon.DAGIAO || x.getTrangThai() == TrangThaiHoaDon.DADOITRA)).toList();
+        var hoaDonList = _hoaDonRepo.findAll().stream().filter(x -> x.getNgayTao().getYear() == nam && (x.getTrangThai() == TrangThaiHoaDon.DAGIAO || x.getTrangThai() == TrangThaiHoaDon.DADOITRA || x.getTrangThai() == TrangThaiHoaDon.TUCHOIDOI)).toList();
         for (int i = 1; i < 13; i++) {
             int thang = i;
             double total = 0d;
@@ -63,14 +63,14 @@ public class CRMService implements ICRMService {
 
 
     @Override
-    public List<DoanhSoSanPham12Thang> thongKeBan12Thang() {
+    public List<DoanhSoSanPham12Thang> thongKeBan12Thang(Integer nam) {
         List<DoanhSoSanPham12Thang> res = new ArrayList<>();
-        var sanPhamTop12 = _sanPhamRepo.laySanPham12Thang();
+        var sanPhamTop12 = _sanPhamRepo.laySanPham12Thang(nam);
         for (var item : sanPhamTop12) {
             DoanhSoSanPham12Thang ds = new DoanhSoSanPham12Thang();
             List<Integer> doanhSo = new ArrayList<>();
             for (int i = 1; i < 13; i++) {
-                Integer spDs = _sanPhamRepo.layDoanhSo(i, item.getSanPhamId());
+                Integer spDs = _sanPhamRepo.layDoanhSo(i, item.getSanPhamId(), nam);
                 doanhSo.add(spDs == null ? 0 : spDs);
             }
             ds.setDoanhSo(doanhSo);

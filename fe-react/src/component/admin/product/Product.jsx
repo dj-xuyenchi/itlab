@@ -272,7 +272,7 @@ function Product() {
   }
   const [thuocTinh, setThuocTinh] = useState(undefined);
   const fetchData = async () => {
-    const data = await useSanPhamStore.actions.fetchSanPham(1, 10000);
+    const data = await useSanPhamStore.actions.layHetSanPham();
     if (data.data.data.length == 0) {
       return
     }

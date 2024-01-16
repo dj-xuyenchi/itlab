@@ -59,11 +59,19 @@ export const useSanPhamStore = {
             })
         },
         async suaSanPham(payload) {
-            return axiosIns.post('/api/sanpham/capnhatsanpham', payload
+            return axiosIns.post('/api/sanpham/capnhatsanpham', payload, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
             )
         },
         async laySanPhamById(payload) {
             return axiosIns.get('/api/sanpham/laysanphamId?sanPhamId=' + payload
+            )
+        },
+        async layHetSanPham() {
+            return axiosIns.get('/api/sanpham/laysanphamadmin'
             )
         },
     },

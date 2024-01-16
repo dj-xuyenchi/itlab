@@ -27,18 +27,20 @@ public class CRMController {
     }
 
     @RequestMapping(value = "/laydoanhthu12thang", method = RequestMethod.GET)
-    public ResponseEntity<?> layDoanhThu12Thang() {
-        return ResponseEntity.ok(_crmService.doanhThuTheo12Thang());
+    public ResponseEntity<?> layDoanhThu12Thang(
+            @RequestParam Integer nam
+    ) {
+        return ResponseEntity.ok(_crmService.doanhThuTheo12Thang(nam));
     }
 
 
     @RequestMapping(value = "/laydoanhso10sanphamtop", method = RequestMethod.GET)
-    public ResponseEntity<?> layDoanhSo10SanPhamTop() {
-        return ResponseEntity.ok(_crmService.thongKeBan12Thang());
+    public ResponseEntity<?> layDoanhSo10SanPhamTop(@RequestParam Integer nam) {
+        return ResponseEntity.ok(_crmService.thongKeBan12Thang(nam));
     }
 
     @RequestMapping(value = "/laydoanhsochitiet", method = RequestMethod.GET)
-    public ResponseEntity<?> layDoanhSoChiTiet(@RequestParam Long sanPhamId,@RequestParam Long truoc,@RequestParam Long sau) {
-        return ResponseEntity.ok(_crmService.thongKeChiTietCuaSanPham(sanPhamId,truoc,sau));
+    public ResponseEntity<?> layDoanhSoChiTiet(@RequestParam Long sanPhamId, @RequestParam Long truoc, @RequestParam Long sau) {
+        return ResponseEntity.ok(_crmService.thongKeChiTietCuaSanPham(sanPhamId, truoc, sau));
     }
 }

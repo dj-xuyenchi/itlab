@@ -7,7 +7,11 @@ export const useNguoiDungStore = {
             return response
         },
         async capNhatThongTin(payload) {
-            const response = await axiosIns.post(`/api/nguoi-dung/capnhatnguoidung`, payload)
+            const response = await axiosIns.post(`/api/nguoi-dung/capnhatnguoidung`, payload, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             return response
         },
         async doiMatKhau(payload) {

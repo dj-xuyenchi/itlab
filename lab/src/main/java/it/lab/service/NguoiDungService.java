@@ -56,7 +56,9 @@ public class NguoiDungService implements INguoiDungService {
         NguoiDung nguoiDung = ng.get();
         nguoiDung.setTen(nguoiDungRequest.getTen());
         nguoiDung.setHo(nguoiDungRequest.getHo());
-        nguoiDung.setMatKhau(_bcrypt.encode(nguoiDungRequest.getMatKhau()));
+        if(nguoiDungRequest.getMatKhau()!=null){
+            nguoiDung.setMatKhau(_bcrypt.encode(nguoiDungRequest.getMatKhau()));
+        }
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
         nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());

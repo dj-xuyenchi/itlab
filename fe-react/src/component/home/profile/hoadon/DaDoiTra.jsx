@@ -13,12 +13,12 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useHoaDonNguoiDung } from "./useHoaDonStore";
 import { fixMoney } from "../../../../extensions/fixMoney";
-function ChoXacNhan({ nguoiDungId }) {
+function DaDoiTra({ nguoiDungId }) {
   const [data, setData] = useState(undefined);
   async function handleLayHoaDonCho() {
     const fet = await useHoaDonNguoiDung.actions.layHoaDon({
       nguoiDungId: nguoiDungId,
-      type: 1,
+      type: 6,
     });
     setData(fet.data);
   }
@@ -58,8 +58,107 @@ function ChoXacNhan({ nguoiDungId }) {
                     width: "100%",
                   }}
                 >
+                  <h5
+                    style={{
+                      fontSize: "14px",
+                      fontFamily: "sans-serif",
+                      margin: "12px 0px",
+                    }}
+                  >
+                    Sản phẩm ban đầu
+                  </h5>
                   {item.hoaDonChiTietList &&
                     item.hoaDonChiTietList.map((item2) => {
+                      if (item2.trangThai === 2) {
+                        return "";
+                      }
+                      return (
+                        <>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              marginBottom: "8px",
+                              cursor: "pointer",
+                              width: "100%",
+                            }}
+                          >
+                            <Image
+                              src={item2.sanPhamChiTiet.hinhAnh}
+                              style={{
+                                height: "120px",
+                                width: "80px",
+                              }}
+                            />
+                            <div
+                              style={{
+                                marginLeft: "8px",
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <Link
+                                to={
+                                  "http://localhost:3000/sanpham/" +
+                                  item2.sanPhamChiTiet.sanPham.id
+                                }
+                              >
+                                <span className="ten-san-pham">
+                                  {item2.sanPhamChiTiet.tenSanPham}
+                                </span>
+                              </Link>
+                              <div>
+                                <Tag color="#108ee9">
+                                  {item2.sanPhamChiTiet.mauSac.tenMau}
+                                </Tag>
+                                <Tag color="#108ee9">
+                                  {item2.sanPhamChiTiet.kichThuoc.tenKichThuoc}
+                                </Tag>
+                              </div>
+                              <span
+                                style={{
+                                  color: "red",
+                                }}
+                              >
+                                X {item2.soLuong} cái
+                              </span>
+                              <div>
+                                <span
+                                  style={{
+                                    color: "red",
+                                  }}
+                                >
+                                  {fixMoney(item2.donGia) + "/1"}
+                                </span>
+                              </div>
+                              <div>
+                                <span
+                                  style={{
+                                    color: "red",
+                                  }}
+                                >
+                                  {fixMoney(item2.donGia * item2.soLuong)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })}
+                  <h5
+                    style={{
+                      fontSize: "14px",
+                      fontFamily: "sans-serif",
+                      margin: "12px 0px",
+                    }}
+                  >
+                    Sau đổi trả
+                  </h5>
+                  {item.hoaDonChiTietList &&
+                    item.hoaDonChiTietList.map((item2) => {
+                      if (item2.trangThai === 1) {
+                        return "";
+                      }
                       return (
                         <>
                           <div
@@ -161,6 +260,9 @@ function ChoXacNhan({ nguoiDungId }) {
                       >
                         {fixMoney(
                           item.hoaDonChiTietList.reduce((pre, cur) => {
+                            if (cur.trangThai === 1) {
+                              return pre;
+                            }
                             return pre + cur.soLuong * cur.donGia;
                           }, 0)
                         )}
@@ -234,6 +336,9 @@ function ChoXacNhan({ nguoiDungId }) {
                       >
                         {fixMoney(
                           item.hoaDonChiTietList.reduce((pre, cur) => {
+                            if (cur.trangThai === 1) {
+                              return pre;
+                            }
                             return pre + cur.soLuong * cur.donGia;
                           }, 0) +
                             item.phiVanChuyen -
@@ -251,4 +356,4 @@ function ChoXacNhan({ nguoiDungId }) {
   );
 }
 
-export default ChoXacNhan;
+export default DaDoiTra;

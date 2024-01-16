@@ -13,12 +13,12 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useHoaDonNguoiDung } from "./useHoaDonStore";
 import { fixMoney } from "../../../../extensions/fixMoney";
-function ChoXacNhan({ nguoiDungId }) {
+function HoanThanh({ nguoiDungId }) {
   const [data, setData] = useState(undefined);
   async function handleLayHoaDonCho() {
     const fet = await useHoaDonNguoiDung.actions.layHoaDon({
       nguoiDungId: nguoiDungId,
-      type: 1,
+      type: 4,
     });
     setData(fet.data);
   }
@@ -251,4 +251,4 @@ function ChoXacNhan({ nguoiDungId }) {
   );
 }
 
-export default ChoXacNhan;
+export default HoanThanh;
