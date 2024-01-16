@@ -3,6 +3,7 @@ import "./style.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHoaDonNguoiDung } from "./useHoaDonStore";
+import { fixMoney } from "../../../../extensions/fixMoney";
 function ChoXacNhan({ nguoiDungId }) {
     const [data, setData] = useState(undefined)
     async function handleLayHoaDonCho() {
@@ -17,22 +18,24 @@ function ChoXacNhan({ nguoiDungId }) {
     }, [])
     return (
         <>
-            <Row>
+            <Row style={{
+                width: "100%"
+            }}>
                 {data && data.map((item) => {
-                    return <Row>
-                        <Row>
-                            <h3 style={{
-                                color: "red",
-                                fontSize: "16px",
-                                lineHeight: "24px",
-                                fontFamily: "sans-serif",
-                                whiteSpace: "nowrap"
-                            }}>Chờ xác nhận</h3>
-                            <Divider />
+                    return <Row style={{
+                        width: "100%"
+                    }}>
+                        <Divider />
+                        <h5>Mã HD: {item.maHoaDon}</h5>
+                        <Row style={{
+                            marginTop: "12px", width: "100%"
+                        }}>
                             {item.hoaDonChiTietList && item.hoaDonChiTietList.map((item2) => {
                                 return <div style={{
                                     display: "flex",
-                                    flexDirection: "row"
+                                    flexDirection: "row",
+                                    marginBottom: "8px",
+                                    cursor: "pointer"
                                 }}>
                                     <Image src={item2.sanPhamChiTiet.hinhAnh} style={{
                                         height: "120px",
@@ -47,11 +50,21 @@ function ChoXacNhan({ nguoiDungId }) {
                                         <div>
                                             <Tag color="#108ee9">{item2.sanPhamChiTiet.mauSac.tenMau}</Tag>
                                             <Tag color="#108ee9">{item2.sanPhamChiTiet.kichThuoc.tenKichThuoc}</Tag>
+
+                                        </div>
+                                        <span style={{
+                                            color: "red"
+                                        }}>X {item2.soLuong} cái</span>
+                                        <div>
+                                            <span style={{
+                                                color: "red"
+                                            }}>{fixMoney(item2.donGia)}</span>
                                         </div>
                                     </div>
 
                                 </div>
                             })}
+                            <Divider />
                         </Row>
                     </Row>
                 })}
