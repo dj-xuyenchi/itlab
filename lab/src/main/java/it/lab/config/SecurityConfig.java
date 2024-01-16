@@ -57,8 +57,8 @@ public class SecurityConfig {
                         "ADMIN",
                         "EMPLOYEE",
                         "CUSTOMER")
-                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "EMPLOYEE")
-                .requestMatchers("/api/nhanvien/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "EMPLOYEE","CUSTOMER")
+                .requestMatchers("/api/nhanvien/**").hasAnyRole("ADMIN", "EMPLOYEE","CUSTOMER")
              //   .requestMatchers("/api/crm/**").hasAnyRole("CRM","ADMIN")
                 .anyRequest().permitAll()
         )

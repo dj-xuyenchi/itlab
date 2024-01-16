@@ -1,6 +1,7 @@
 package it.lab.repository;
 
 import it.lab.entity.HoaDon;
+import it.lab.entity.NguoiDung;
 import it.lab.enums.TrangThaiHoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface HoaDonRepo extends JpaRepository<HoaDon, Long> {
     public List<HoaDon> findAllByTrangThaiEquals(TrangThaiHoaDon trangThai);
+
+    public List<HoaDon> findHoaDonsByNguoiMua(NguoiDung ng);
 
     public Optional<HoaDon> findHoaDonByMaHoaDon(String maHd);
 

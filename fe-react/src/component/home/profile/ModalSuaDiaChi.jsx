@@ -93,7 +93,7 @@ function ModalSuaDiaChi({ fetData, data2 }) {
       return;
     }
     const data = await useNguoiDungStore.actions.capNhatDiaChi(diaChiMoi);
-    openNotification("success", "Hệ thống", "Tạo thành công", "bottomRight");
+    openNotification("success", "Hệ thống", "Cập nhật thành công", "bottomRight");
     fetData();
     setIsModalOpen(false);
   }
@@ -221,13 +221,13 @@ function ModalSuaDiaChi({ fetData, data2 }) {
             >
               {danhSachTinh
                 ? danhSachTinh.map((option) => (
-                    <Select.Option
-                      key={option.ProvinceID}
-                      value={option.ProvinceID}
-                    >
-                      {option.NameExtension[0]}
-                    </Select.Option>
-                  ))
+                  <Select.Option
+                    key={option.ProvinceID}
+                    value={option.ProvinceID}
+                  >
+                    {option.NameExtension[0]}
+                  </Select.Option>
+                ))
                 : ""}
             </Select>
           </Form.Item>
@@ -254,13 +254,13 @@ function ModalSuaDiaChi({ fetData, data2 }) {
             >
               {danhSachHuyen
                 ? danhSachHuyen.map((option) => (
-                    <Select.Option
-                      key={option.DistrictID}
-                      value={option.DistrictID}
-                    >
-                      {option.DistrictName}
-                    </Select.Option>
-                  ))
+                  <Select.Option
+                    key={option.DistrictID}
+                    value={option.DistrictID}
+                  >
+                    {option.DistrictName}
+                  </Select.Option>
+                ))
                 : ""}
             </Select>
           </Form.Item>
@@ -287,13 +287,13 @@ function ModalSuaDiaChi({ fetData, data2 }) {
             >
               {danhSachXa
                 ? danhSachXa.map((option) => (
-                    <Select.Option
-                      key={option.WardCode}
-                      value={option.WardCode}
-                    >
-                      {option.NameExtension[0]}
-                    </Select.Option>
-                  ))
+                  <Select.Option
+                    key={option.WardCode}
+                    value={option.WardCode}
+                  >
+                    {option.NameExtension[0]}
+                  </Select.Option>
+                ))
                 : ""}
             </Select>
           </Form.Item>
