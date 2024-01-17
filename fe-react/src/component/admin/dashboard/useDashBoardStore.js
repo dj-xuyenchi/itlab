@@ -8,5 +8,8 @@ export const useDashBoardStore = {
         async layDoanhSoNgay() {
             return axiosIns.get('/api/thong-ke/doanhsotrongngay')
         },
+        async theoNgay(payload) {
+            return axiosIns.post('/api/thong-ke/thongkengay', payload)
+        },
     },
 }

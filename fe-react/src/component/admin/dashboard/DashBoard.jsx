@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Button, Col, DatePicker, Row, Select, Space, Table, message } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Row,
+  Select,
+  Space,
+  Table,
+  message,
+} from "antd";
 import axios from "axios";
 import MenuAdmin from "../layout/menu/MenuAdmin";
 import Header from "../layout/header/Header";
@@ -11,9 +20,9 @@ import { useCrm } from "../crm/crmStore";
 import ThongKeBar from "../crm/BarChart";
 import DoanhSoNgay from "./DoanhSoNgay";
 import BieuDoGiaiDoan from "./BieuDoGiaiDoan";
-
+import dayjs from "dayjs";
+import { useDashBoardStore } from "./useDashBoardStore";
 function DashBoard() {
-
   const [nam, setNam] = useState(2024);
   const [profit, setProfit] = useState(undefined);
   async function handleLayDoanhThu12Thang() {
@@ -35,10 +44,14 @@ function DashBoard() {
     }
     setYear(arr);
   };
+
+  const [ngayThang, setNgayThang] = useState({});
+  async function handleTheoNgay() {
+    const data = await useDashBoardStore.actions.theoNgay(ngayThang);
+  }
   useEffect(() => {
-  }, []);
-
-
+    handleTheoNgay();
+  }, [ngayThang]);
   return (
     <>
       <div>
@@ -57,13 +70,36 @@ function DashBoard() {
                 defaultValue={nam}
                 options={year}
               />
-              {/* <ThongKeBar
+              <ThongKeBar
                 subTitle="Đơn vị Đ"
                 data={profit}
                 title={"Doanh thu theo tháng " + nam}
-              /> */}
-              <BieuDoGiaiDoan />
+              />
             </Row>
+            {/* <Row style={{ backgroundColor: "#ffffff", padding: "12px 12px" }}>
+              <DatePicker
+                onChange={(e) => {
+                  setNgayThang({
+                    ...ngayThang,
+                    batDau: dayjs(e).format("YYYY-MM-DD"),
+                  });
+                }}
+                placeholder="Ngày bắt đầu"
+              />
+              <DatePicker
+                onChange={(e) => {
+                  setNgayThang({
+                    ...ngayThang,
+                    ketThuc: dayjs(e).format("YYYY-MM-DD"),
+                  });
+                }}
+                style={{
+                  marginLeft: "12px",
+                }}
+                placeholder="Ngày kết thúc"
+              />
+              <BieuDoGiaiDoan />
+            </Row> */}
             <Row style={{ marginTop: "12px" }}>
               <div style={{ width: "49%", backgroundColor: "#ffffff" }}>
                 <BanhDonut />

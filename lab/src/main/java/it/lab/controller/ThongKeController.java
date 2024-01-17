@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.sql.Date;
 
 import it.lab.iservice.IThongKeService;
+import it.lab.modelcustom.request.NgayThang;
 import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -66,6 +67,15 @@ public class ThongKeController {
     @RequestMapping(value = "/doanhsotrongngay", method = RequestMethod.GET)
     public ResponseEntity<?> layDoanhSoNgay() {
         return ResponseEntity.ok(_thongKeService.doanhThuTrongNgay());
+    }
+
+    @RequestMapping(value = "/thongkengay", method = RequestMethod.POST)
+    public ResponseEntity<?> thongKeNgay(
+            @RequestBody NgayThang ngayThang
+    ) {
+        System.out.println(ngayThang.getBatDau());
+        System.out.println(ngayThang.getKetThuc());
+        return ResponseEntity.ok("_thongKeService.doanhThuTrongNgay()");
     }
 
     @GetMapping("/thong-ke-thuoc-tinh")

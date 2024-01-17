@@ -31,6 +31,7 @@ public class ThongKeService implements IThongKeService {
                     total += item2.getDonGia() * item2.getSoLuong();
                 }
             }
+            total-=item.getPhiGiaoHang();
         }
         return total;
     }
