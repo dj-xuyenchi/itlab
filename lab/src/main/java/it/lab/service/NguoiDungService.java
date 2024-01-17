@@ -84,8 +84,7 @@ public class NguoiDungService implements INguoiDungService {
             return new ResponObject<>(null, CapNhat.THATBAI, "Thất bại");
         }
         NguoiDung nguoiDungRepo = ng.get();
-        String matKhauMaHoa = _bcrypt.encode(matKhau.getMatKhauCu());
-        if (!matKhauMaHoa.equals(nguoiDungRepo.getMatKhau())) {
+        if (!_bcrypt.matches(matKhau.getMatKhauCu(), ng.get().getMatKhau())) {
             return new ResponObject<>(null, CapNhat.MATKHAUCUSAI, "Thất bại");
         }
         nguoiDungRepo.setMatKhau(_bcrypt.encode(matKhau.getMatKhauMoi()));

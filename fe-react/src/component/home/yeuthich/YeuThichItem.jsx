@@ -2,10 +2,11 @@ import "./style.css";
 import { AiOutlineClose } from "react-icons/ai";
 import { fixMoney } from "../../../extensions/fixMoney";
 import { useYeuThich } from "./useYeuThich";
+import { Link } from "react-router-dom";
 function YeuThichItem({ item, handleLayYeuThich }) {
   async function handleXoaYeuThich() {
-    const data = await useYeuThich.actions.xoaYeuThich(item.id)
-    handleLayYeuThich()
+    const data = await useYeuThich.actions.xoaYeuThich(item.id);
+    handleLayYeuThich();
   }
   return (
     <>
@@ -35,14 +36,13 @@ function YeuThichItem({ item, handleLayYeuThich }) {
               height: "180px",
               width: "auto",
               borderRadius: "10px",
-
             }}
           />
         </div>
         <div
           style={{
             marginLeft: "4px",
-            width: "176px"
+            width: "176px",
           }}
         >
           <div
@@ -63,7 +63,17 @@ function YeuThichItem({ item, handleLayYeuThich }) {
                 fontWeight: 500,
               }}
             >
-              {item.sanPhamChiTiet.tenSanPham}
+              <Link
+                to={
+                  "http://localhost:3000/sanpham/" +
+                  item.sanPhamChiTiet.sanPham.id
+                }
+                style={{
+                  color: "black",
+                }}
+              >
+                {item.sanPhamChiTiet.tenSanPham}
+              </Link>
             </div>
             <div
               style={{
@@ -81,11 +91,8 @@ function YeuThichItem({ item, handleLayYeuThich }) {
             </div>
           </div>
           <div>
-            <p>
-              {fixMoney(item.sanPhamChiTiet.giaBan)}
-            </p>
+            <p>{fixMoney(item.sanPhamChiTiet.giaBan)}</p>
           </div>
-
         </div>
       </div>
     </>

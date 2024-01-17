@@ -205,6 +205,15 @@ function ProductDetail() {
   }, []);
 
   async function handleThemYeuThich() {
+    if (!handleSetSanPhamTuOption()) {
+      openNotification(
+        "error",
+        language.systemNotification.system,
+        language.chiTietSanPham.chonSanPham,
+        "bottomRight"
+      );
+      return;
+    }
     if (sanPhamDangTim == null) {
       openNotification(
         "error",
@@ -212,7 +221,7 @@ function ProductDetail() {
         language.chiTietSanPham.chonSanPham,
         "bottomRight"
       );
-      return
+      return;
     }
     if (user.nguoiDung.id === -1) {
       openNotification(
@@ -226,11 +235,11 @@ function ProductDetail() {
     const data = await useSanPhamChiTiet.actions.themYeuThich({
       nguoiDungId: user.nguoiDung.id,
       sanPhamChiTietId: sanPhamDangTim.id,
-    })
+    });
     openNotification(
       "success",
       language.systemNotification.system,
-      "Thêm thành công",
+      "Thành công",
       "bottomRight"
     );
   }
@@ -352,7 +361,6 @@ function ProductDetail() {
                   {sanPhamChon.kichThuoc.tenKichThuoc}
                 </span>
                 <ChonSize />
-
               </div>
               <div
                 style={{
@@ -450,7 +458,7 @@ function ProductDetail() {
                   display: "flex",
                   alignItems: "center",
                   justifyItems: "center",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 <AiOutlineHeart />
@@ -472,41 +480,63 @@ function ProductDetail() {
         <div className="danh-gia">
           <h3>Thông tin sản phẩm</h3>
           <div className="star">
-            <div style={{
-              padding: "12px"
-            }}>
-              <Row style={{
-                width: "100%"
-              }}>
+            <div
+              style={{
+                padding: "12px",
+              }}
+            >
+              <Row
+                style={{
+                  width: "100%",
+                }}
+              >
                 <Col span={24}>
-                  Thiết kế: <span style={{
-                    fontSize: "15px",
-                    fontWeight: 600
-                  }}>
-                    {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.thietKe.tenThietKe : ""}
+                  Thiết kế:{" "}
+                  <span
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {sanPham.sanPhamDTO
+                      ? sanPham.sanPhamDTO.thietKe.tenThietKe
+                      : ""}
                   </span>
                 </Col>
                 <Col span={24}>
-                  Nhóm sản phẩm: <span style={{
-                    fontSize: "15px",
-                    fontWeight: 600
-                  }}>
-                    {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.nhomSanPham.tenNhom : ""}
+                  Nhóm sản phẩm:{" "}
+                  <span
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {sanPham.sanPhamDTO
+                      ? sanPham.sanPhamDTO.nhomSanPham.tenNhom
+                      : ""}
                   </span>
                 </Col>
                 <Col span={24}>
-                  Chất liệu: <span style={{
-                    fontSize: "15px",
-                    fontWeight: 600
-                  }}>
-                    {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.chatLieu.tenChatLieu : ""}
+                  Chất liệu:{" "}
+                  <span
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {sanPham.sanPhamDTO
+                      ? sanPham.sanPhamDTO.chatLieu.tenChatLieu
+                      : ""}
                   </span>
                 </Col>
                 <Col span={24}>
-                  Mô tả: <span style={{
-                    fontSize: "15px",
-                    fontWeight: 600
-                  }}>
+                  Mô tả:{" "}
+                  <span
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: 600,
+                    }}
+                  >
                     {sanPham.sanPhamDTO ? sanPham.sanPhamDTO.moTa : ""}
                   </span>
                 </Col>
