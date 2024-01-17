@@ -73,6 +73,9 @@ public class AuthController {
         if (ng.get().getTrangThai() == TrangThaiNguoiDung.CHOXACNHAN) {
             return ResponseEntity.ok(1);
         }
+        if (ng.get().getTrangThai() == TrangThaiNguoiDung.BIKHOA) {
+            return ResponseEntity.ok(1);
+        }
         NguoiDungData re = new NguoiDungData(NguoiDungDTO.fromEntity(ng.get()), jwt, roles);
         return ResponseEntity.ok(re);
     }

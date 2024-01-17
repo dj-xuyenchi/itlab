@@ -92,10 +92,10 @@ function GioHangThanhToan() {
           "error",
           "Hệ thống",
           "Sản phẩm " +
-            item.sanPhamChiTiet.sanPham.tenSanPham +
-            " còn lại " +
-            item.sanPhamChiTiet.soLuongTon +
-            " chiếc",
+          item.sanPhamChiTiet.sanPham.tenSanPham +
+          " còn lại " +
+          item.sanPhamChiTiet.soLuongTon +
+          " chiếc",
           "bottomRight"
         );
         return;
@@ -318,20 +318,20 @@ function GioHangThanhToan() {
                         <Space direction="vertical">
                           {duLieuThanhToan
                             ? duLieuThanhToan.data.diaChiDTOList.map(
-                                (item, index) => {
-                                  return (
-                                    <Radio value={item.id} key={index}>
-                                      {item.nguoiDung.ho +
-                                        " " +
-                                        item.nguoiDung.ten +
-                                        "," +
-                                        item.soDienThoai +
-                                        " " +
-                                        item.chiTietDiaChi}
-                                    </Radio>
-                                  );
-                                }
-                              )
+                              (item, index) => {
+                                return (
+                                  <Radio value={item.id} key={index}>
+                                    {item.hoNguoiNhan +
+                                      " " +
+                                      item.nguoiNhan +
+                                      "," +
+                                      item.soDienThoai +
+                                      " " +
+                                      item.chiTietDiaChi}
+                                  </Radio>
+                                );
+                              }
+                            )
                             : ""}
                         </Space>
                       </Radio.Group>
@@ -405,7 +405,7 @@ function GioHangThanhToan() {
                         <Input
                           disabled
                           placeholder="Tên người nhận"
-                          value={diaChiChon ? diaChiChon.nguoiDung.ten : ""}
+                          value={diaChiChon ? diaChiChon.nguoiNhan : ""}
                           size={size}
                           style={{
                             backgroundColor: "#F1F1F1",
@@ -421,7 +421,7 @@ function GioHangThanhToan() {
                         <Input
                           disabled
                           placeholder="Họ người nhận"
-                          value={diaChiChon ? diaChiChon.nguoiDung.ho : ""}
+                          value={diaChiChon ? diaChiChon.hoNguoiNhan : ""}
                           size={size}
                           style={{
                             backgroundColor: "#F1F1F1",
@@ -693,8 +693,8 @@ function GioHangThanhToan() {
                           >
                             {fixMoney(
                               soTienPhaiTra +
-                                phiVanChuyen -
-                                (maGiamGia ? maGiamGia.giaTriGiam : 0)
+                              phiVanChuyen -
+                              (maGiamGia ? maGiamGia.giaTriGiam : 0)
                             )}
                           </p>
                         </div>

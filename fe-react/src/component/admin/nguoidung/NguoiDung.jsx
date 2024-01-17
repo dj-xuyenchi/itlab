@@ -182,10 +182,11 @@ function NguoiDung() {
 
     {
       title: "Ảnh đại diện",
-      dataIndex: "anhDaiDien",
-      key: "anhDaiDien",
+      dataIndex: "ten",
+      key: "ten",
       width: "30%",
-      render: (anhDaiDien, record) => (
+      ...getColumnSearchProps("ten"),
+      render: (ten, record) => (
         <>
           <div style={{
             display: "flex",
@@ -202,12 +203,12 @@ function NguoiDung() {
               borderRadius: "50%",
               border: "1px solid black"
             }}>
-              <img src={anhDaiDien} style={{ width: "auto", height: "40px" }} />
+              <img src={record.anhDaiDien} style={{ width: "auto", height: "40px" }} />
             </div>
             <span style={{
               lineHeight: "40px",
               marginLeft: "4px"
-            }}>{record.ten}</span>
+            }}>{ten}</span>
           </div>
         </>
       ),
@@ -228,7 +229,6 @@ function NguoiDung() {
       dataIndex: "ngayTao",
       key: "ngayTao",
       width: "15%",
-      ...getColumnSearchProps("ngayTao"),
       render: (text) => {
         return text ? dayjs(text).format('DD/MM/YYYY HH:mm:ss') : "Mới";
       },
@@ -251,7 +251,6 @@ function NguoiDung() {
       dataIndex: "trangThai",
       key: "trangThai",
       width: "15%",
-      ...getColumnSearchProps("trangThai"),
       render: text => {
         if (text === "HOATDONG") {
           return "Hoạt Động";

@@ -112,7 +112,6 @@ public class DoiTraService implements IDoiTraService {
             return 2;
         }
         doiTraSanPham(doiTra);
-
         return 1;
     }
 
@@ -128,13 +127,15 @@ public class DoiTraService implements IDoiTraService {
             hdct.setSoLuongDoi(item.getSoLuongDoiTra());
             hdct.setGhiChu(item.getGhiChu());
             SanPhamChiTiet sp = hdct.getSanPhamChiTiet();
-            sp.setSoLuongTon(sp.getSoLuongTon()+hdct.getSoLuong());
+            sp.setSoLuongTon(sp.getSoLuongTon()+item.getSoLuongDoiTra());
             sp.setSoLuongLoi(sp.getSoLuongLoi()+item.getSoLuongLoi());
             sp.setSoLuongTraHang(sp.getSoLuongTraHang()+item.getSoLuongDoiTra());
+            sp.setSoLuongDaBan(sp.getSoLuongDaBan()-item.getSoLuongDoiTra()-item.getSoLuongLoi());
             SanPham sanPham = sp.getSanPham();
-            sanPham.setSoLuongTon(sanPham.getSoLuongTon()+hdct.getSoLuong());
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon()+item.getSoLuongDoiTra());
             sanPham.setSoLuongLoi(sanPham.getSoLuongLoi()+item.getSoLuongLoi());
             sanPham.setSoLuongTraHang(sanPham.getSoLuongTraHang()+item.getSoLuongDoiTra());
+            sanPham.setSoLuongDaBan(sanPham.getSoLuongDaBan()-item.getSoLuongDoiTra()-item.getSoLuongLoi());
             if(hdct.getSoLuong()>item.getSoLuong()){
                 HoaDonChiTiet hdctMoi = new HoaDonChiTiet();
                 hdctMoi.setNgayTao(LocalDateTime.now());
@@ -143,8 +144,6 @@ public class DoiTraService implements IDoiTraService {
                 hdctMoi.setSanPhamChiTiet(sp);
                 hdctMoi.setDonGia(sp.getGiaBan());
                 hdctMoi.setTrangThai(2);
-                sp.setSoLuongTon(sp.getSoLuongTon()-(hdct.getSoLuong()-item.getSoLuong()));
-                sanPham.setSoLuongTon(sanPham.getSoLuongTon()-(hdct.getSoLuong()-item.getSoLuong()));
                 _hoaDonChiTietRepo.save(hdctMoi);
             }
             _sanPhamRepo.save(sanPham);

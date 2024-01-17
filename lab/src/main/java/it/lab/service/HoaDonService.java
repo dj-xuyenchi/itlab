@@ -36,6 +36,8 @@ public class HoaDonService implements IHoaDonService {
     @Autowired
     private DiaChiRepo _diaChiRepo;
     @Autowired
+    private SanPhamRepo _sanPhamRepo;
+    @Autowired
     private NguoiDungRepo _nguoiDungRepo;
     private Email e = new Email();
 
@@ -95,6 +97,11 @@ public class HoaDonService implements IHoaDonService {
                     break;
                 }
                 sp.get().setSoLuongTon(sp.get().getSoLuongTon() - hdChiTiet.getSoLuong());
+                sp.get().setSoLuongDaBan(sp.get().getSoLuongDaBan()+ hdChiTiet.getSoLuong());
+                SanPham sanPham = sp.get().getSanPham();
+                sanPham.setSoLuongTon(sanPham.getSoLuongTon()- hdChiTiet.getSoLuong());
+                sanPham.setSoLuongDaBan(sanPham.getSoLuongDaBan()+ hdChiTiet.getSoLuong());
+                _sanPhamRepo.save(sanPham);
                 _sanPhamChiTietRepo.save(sp.get());
             }
             if (check) {

@@ -161,7 +161,7 @@ function ModalDanhGiaChiTiet({ data }) {
                             <Row style={{
                                 marginBottom: "4px"
                             }}>
-                                <Col span={24}>
+                                {/* <Col span={24}>
                                     <Select
                                         defaultValue={nam.truoc}
                                         style={{
@@ -190,7 +190,7 @@ function ModalDanhGiaChiTiet({ data }) {
                                         }}
                                         options={options}
                                     />
-                                </Col>
+                                </Col> */}
                             </Row>
                             <SoSanhKhoangThoiGian title={
                                 {

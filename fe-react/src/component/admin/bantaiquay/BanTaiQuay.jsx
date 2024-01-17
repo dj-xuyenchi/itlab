@@ -1382,7 +1382,7 @@ function BanTaiQuay() {
                         defaultValue={"Chọn sản phẩm"}
                         onChange={handleChonSanPham}
                         filterOption={(input, option) =>
-                          option.children[0]
+                          option.children[1]
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                         }
