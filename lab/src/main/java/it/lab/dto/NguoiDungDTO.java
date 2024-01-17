@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -41,12 +42,17 @@ public class NguoiDungDTO {
     private List<NguoiDungVoucher> nguoiDungVoucherList;
     private List<QuyenNguoiDung> quyenNguoiDungList;
     private List<SanPhamYeuThich> sanPhamYeuThichList;
+    List<Quyen> quyens;
 
     public static NguoiDungDTO fromEntity(NguoiDung ng) {
-        if(ng==null){
+        if (ng == null) {
             return null;
         }
-        return new NguoiDungDTO(ng.getId(), ng.getMaNguoiDung(), ng.getEmail(), null, ng.getTen(), ng.getHo(), ng.getAnhDaiDien(), ng.getSoDienThoai(), ng.getGioiTinh(), ng.getDiem(), ng.getTrangThai(), ng.getNgayTao(), ng.getNgayCapNhat(), ng.getRankKhachHang(), null, ng.getDiaChiList(), null, null, null, null, null, null);
+        return new NguoiDungDTO(ng.getId(), ng.getMaNguoiDung(), ng.getEmail(), null, ng.getTen(), ng.getHo(), ng.getAnhDaiDien(), ng.getSoDienThoai(), ng.getGioiTinh(), ng.getDiem(), ng.getTrangThai(), ng.getNgayTao(), ng.getNgayCapNhat(), ng.getRankKhachHang(), null, ng.getDiaChiList(), null, null, null, null, ng.getQuyenNguoiDungList(), null
+        ,ng.getQuyenNguoiDungList().stream().map(x->{
+            return x.getQuyen();
+        }).collect(Collectors.toList())
+        );
     }
 
     public static List<NguoiDungDTO> fromCollection(List<NguoiDung> collection) {

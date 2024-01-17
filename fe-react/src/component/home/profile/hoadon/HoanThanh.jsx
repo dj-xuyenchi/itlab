@@ -45,11 +45,11 @@ function HoanThanh({ nguoiDungId }) {
                   Mã HD: {item.maHoaDon} -{" "}
                   {item.diaChiGiao
                     ? "Giao đến " +
-                      item.diaChiGiao.xa +
-                      " " +
-                      item.diaChiGiao.huyen +
-                      " " +
-                      item.diaChiGiao.tinh
+                    item.diaChiGiao.xa +
+                    " " +
+                    item.diaChiGiao.huyen +
+                    " " +
+                    item.diaChiGiao.tinh
                     : "Mua tại cửa hàng"}
                 </h5>
                 <Row
@@ -148,7 +148,7 @@ function HoanThanh({ nguoiDungId }) {
                     >
                       <span
                         style={{
-                          width: "100px",
+                          width: "120px",
                           display: "block",
                         }}
                       >
@@ -174,7 +174,7 @@ function HoanThanh({ nguoiDungId }) {
                     >
                       <span
                         style={{
-                          width: "100px",
+                          width: "120px",
                           display: "block",
                         }}
                       >
@@ -196,7 +196,7 @@ function HoanThanh({ nguoiDungId }) {
                     >
                       <span
                         style={{
-                          width: "100px",
+                          width: "120px",
                           display: "block",
                         }}
                       >
@@ -220,7 +220,7 @@ function HoanThanh({ nguoiDungId }) {
                     >
                       <span
                         style={{
-                          width: "100px",
+                          width: "120px",
                           display: "block",
                         }}
                       >
@@ -236,8 +236,8 @@ function HoanThanh({ nguoiDungId }) {
                           item.hoaDonChiTietList.reduce((pre, cur) => {
                             return pre + cur.soLuong * cur.donGia;
                           }, 0) +
-                            item.phiVanChuyen -
-                            (item.voucherGiam ? item.voucherGiam.giaTriGiam : 0)
+                          item.phiVanChuyen -
+                          (item.voucherGiam ? item.voucherGiam.giaTriGiam : 0)
                         )}
                       </span>
                     </div>

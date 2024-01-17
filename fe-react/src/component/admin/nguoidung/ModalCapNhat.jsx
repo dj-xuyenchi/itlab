@@ -32,6 +32,7 @@ function ModalThemSua({ id, setData }) {
     gioiTinh: "",
     soDienThoai: "",
     anhDaiDien: "",
+    quyens: []
   });
   const [fileList, setFileList] = useState([]);
   const [hinhAnh, setHinhAnh] = useState([]);
@@ -87,6 +88,12 @@ function ModalThemSua({ id, setData }) {
       openNotification("error", "Hệ thống", "Tên là bắt buộc", "bottomRight");
       return;
     }
+    if (nguoiDung.matKhau) {
+      if (nguoiDung.matKhau.length < 8) {
+        openNotification("error", "Hệ thống", "Mật khẩu lớn hơn 8 ký tự", "bottomRight");
+        return;
+      }
+    }
     setIsLoading(true);
     const formData = new FormData();
     if (hinhAnh.length > 0) {
@@ -118,6 +125,16 @@ function ModalThemSua({ id, setData }) {
       setIsModalOpen(false);
     }
   }
+  const options = [{
+    label: "Khách hàng",
+    value: "1"
+  }, {
+    label: "Nhân viên",
+    value: "2"
+  }, {
+    label: "ADMIN",
+    value: "3"
+  },];
 
   async function layDuLieu2() {
     const data = await useNguoiDungStore.actions.layRankKhachHang();
@@ -136,6 +153,7 @@ function ModalThemSua({ id, setData }) {
       form.setFieldsValue({
         trangThai: data.data.trangThai === 'HOATDONG',
         gioiTinh: data.data.gioiTinh ? "Nam" : "Nữ",
+
       });
     }
     if (isModalOpen) {
@@ -231,25 +249,65 @@ function ModalThemSua({ id, setData }) {
               value={nguoiDung.matKhau}
             />
           </Form.Item>
-          <Form.Item label="Ảnh đại diện">
-            <Upload
-              listType="picture-card"
-              customRequest={() => { }}
-              {...props}
-              maxCount={1}
-              fileList={fileList}
+          <Form.Item
+            label="Số Điện Thoại"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input value={nguoiDung.soDienThoai}
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  s: e.target.value,
+                });
+              }} />
+          </Form.Item>
+          <Form.Item
+            label="Quyền"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select
+              mode="multiple"
+              allowClear
+              style={{
+                width: '100%',
+              }}
+              defaultValue={nguoiDung.quyens}
+              placeholder="Chọn quyền"
+              onChange={(e) => {
+                setNguoiDung({
+                  ...nguoiDung,
+                  quyen: e
+                })
+              }}
+              options={options}
+            />
+          </Form.Item>
+
+
+          <Form.Item
+            label="Giới Tính"
+            name="gioiTinh"
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng chọn giới tính!'
+              },
+            ]}
+          >
+            <Radio.Group
+              onChange={(e) => setNguoiDung({ ...nguoiDung, gioiTinh: e.target.value === "Nam" })}
             >
-              <div>
-                <PlusOutlined />
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Ảnh đại diện
-                </div>
-              </div>
-            </Upload>
+              <Radio value="Nam">Nam</Radio>
+              <Radio value="Nữ">Nữ</Radio>
+            </Radio.Group>
           </Form.Item>
           <Form.Item
             label="Trạng Thái"
@@ -270,40 +328,25 @@ function ModalThemSua({ id, setData }) {
             >Hoạt động
             </Checkbox>
           </Form.Item>
-          <Form.Item
-            label="Số Điện Thoại"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input value={nguoiDung.soDienThoai}
-              onChange={(e) => {
-                setNguoiDung({
-                  ...nguoiDung,
-                  s: e.target.value,
-                });
-              }} />
-          </Form.Item>
-          <Form.Item
-            label="Giới Tính"
-            name="gioiTinh"
-            rules={[
-              {
-                required: true,
-                message: 'Vui lòng chọn giới tính!'
-              },
-            ]}
-          >
-            <Radio.Group
-              onChange={(e) => setNguoiDung({ ...nguoiDung, gioiTinh: e.target.value === "Nam" })}
+          <Form.Item label="Ảnh đại diện">
+            <Upload
+              listType="picture-card"
+              {...props}
+              maxCount={1}
+              fileList={fileList}
             >
-              <Radio value="Nam">Nam</Radio>
-              <Radio value="Nữ">Nữ</Radio>
-            </Radio.Group>
+              <div>
+                <PlusOutlined />
+                <div
+                  style={{
+                    marginTop: 8,
+                  }}
+                >
+                  Ảnh đại diện
+                </div>
+              </div>
+            </Upload>
           </Form.Item>
-
         </Form>
       </Modal>
     </>

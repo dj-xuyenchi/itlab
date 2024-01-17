@@ -1,6 +1,7 @@
 package it.lab.repository;
 
 import it.lab.entity.NguoiDung;
+import it.lab.entity.Quyen;
 import it.lab.entity.QuyenNguoiDung;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,7 @@ import java.util.List;
 public interface QuyenNguoiDungRepo extends JpaRepository<QuyenNguoiDung, Long> {
     public List<QuyenNguoiDung> findAllByNguoiDungEquals(NguoiDung nguoiDung);
 
+    public List<QuyenNguoiDung> findQuyenNguoiDungsByNguoiDung(NguoiDung ng);
 
     //    thông kê có bao nhiêu nhân viên
 // Thống kê có bao nhiêu nhân viên với quyenid là '2'

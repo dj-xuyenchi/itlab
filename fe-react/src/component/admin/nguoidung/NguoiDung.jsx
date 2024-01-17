@@ -404,13 +404,18 @@ function NguoiDung() {
       setIsModalOpen(false);
     }
   }
+  const options = [{
+    label: "Khách hàng",
+    value: "1"
+  }, {
+    label: "Nhân viên",
+    value: "2"
+  }, {
+    label: "ADMIN",
+    value: "3"
+  },];
 
-  function handleSetRankKhachHang(e) {
-    setNguoiDung({
-      ...nguoiDung,
-      rankKhachHangId: e.value,
-    });
-  }
+
   return (
     <>
       {contextHolder}
@@ -557,6 +562,31 @@ function NguoiDung() {
                     />
                   </Form.Item>
                   <Form.Item
+                    label="Quyền"
+                    name="Quyền"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      style={{
+                        width: '100%',
+                      }}
+                      placeholder="Chọn quyền"
+                      onChange={(e) => {
+                        setNguoiDung({
+                          ...nguoiDung,
+                          quyen: e
+                        })
+                      }}
+                      options={options}
+                    />
+                  </Form.Item>
+                  <Form.Item
                     label="Giới Tính"
                     name="gioiTinh"
                     rules={[
@@ -573,13 +603,18 @@ function NguoiDung() {
                       <Radio value="Nữ">Nữ</Radio>
                     </Radio.Group>
                   </Form.Item>
-                  <Form.Item label="Upload">
+                  <Form.Item label="Ảnh đại diện"
+                    name="Ảnh đại diện"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn Ảnh đại diện!'
+                      },
+                    ]}>
                     <Upload
                       listType="picture-card"
-                      multiple
-                      customRequest={() => { }}
                       {...props}
-                      maxCount={4}
+                      maxCount={1}
                       fileList={fileList}
                     >
                       <div>

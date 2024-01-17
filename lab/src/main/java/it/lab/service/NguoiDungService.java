@@ -6,15 +6,14 @@ import it.lab.common.ResponObject;
 import it.lab.dto.DiaChiDTO;
 import it.lab.dto.NguoiDungDTO;
 import it.lab.entity.NguoiDung;
+import it.lab.entity.QuyenNguoiDung;
 import it.lab.enums.APIStatus;
 import it.lab.enums.CapNhat;
 import it.lab.enums.TrangThaiNguoiDung;
 import it.lab.iservice.INguoiDungService;
 import it.lab.modelcustom.request.DoiMatKhau;
 import it.lab.modelcustom.request.NguoiDungRequest;
-import it.lab.repository.DiaChiRepo;
-import it.lab.repository.NguoiDungRepo;
-import it.lab.repository.RankKhachHangRepo;
+import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,10 @@ public class NguoiDungService implements INguoiDungService {
     private RankKhachHangRepo _rankKhachHangRepo;
     @Autowired
     private DiaChiRepo _diaChiRepo;
+    @Autowired
+    private QuyenNguoiDungRepo _quyenNguoiDungRepo;
+    @Autowired
+    private QuyenRepo _quyenRepo;
 
     @Override
     public Page<NguoiDungDTO> layHetNguoiDung() {
@@ -56,7 +59,7 @@ public class NguoiDungService implements INguoiDungService {
         NguoiDung nguoiDung = ng.get();
         nguoiDung.setTen(nguoiDungRequest.getTen());
         nguoiDung.setHo(nguoiDungRequest.getHo());
-        if(nguoiDungRequest.getMatKhau()!=null){
+        if (nguoiDungRequest.getMatKhau() != null) {
             nguoiDung.setMatKhau(_bcrypt.encode(nguoiDungRequest.getMatKhau()));
         }
         nguoiDung.setEmail(nguoiDungRequest.getEmail());
@@ -68,6 +71,9 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setTrangThai(nguoiDungRequest.getTrangThai());
         nguoiDung.setNgayCapNhat(LocalDateTime.now());
         _nguoiDungRepo.save(nguoiDung);
+        if(nguoiDungRequest.getQuyen()!=null){
+        themQuyenNguoiDung(nguoiDungRequest,nguoiDung);
+        }
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
 
@@ -119,10 +125,41 @@ public class NguoiDungService implements INguoiDungService {
         nguoiDung.setTrangThai(TrangThaiNguoiDung.HOATDONG);
         nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
         nguoiDung.setAnhDaiDien(CloudinaryUpload.uploadFile(anhdaidien));
+
         _nguoiDungRepo.save(nguoiDung);
         nguoiDung.setMaNguoiDung("MEM" + nguoiDung.getId());
         _nguoiDungRepo.save(nguoiDung);
+        themQuyenNguoiDung(nguoiDungRequest, nguoiDung);
         return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
+    }
+
+    private void themQuyenNguoiDung(NguoiDungRequest nguoiDungRequest, NguoiDung nguoiDung) {
+        var lst = _quyenNguoiDungRepo.findQuyenNguoiDungsByNguoiDung(nguoiDung);
+        _quyenNguoiDungRepo.deleteAll(lst);
+        QuyenNguoiDung khachHang = new QuyenNguoiDung();
+        khachHang.setNguoiDung(nguoiDung);
+        khachHang.setNgayTao(LocalDateTime.now());
+        khachHang.setQuyen(_quyenRepo.findById(1l).get());
+        _quyenNguoiDungRepo.save(khachHang);
+        for (var item : nguoiDungRequest.getQuyen()) {
+            if (item == 1) {
+                continue;
+            }
+            if (item == 2) {
+                QuyenNguoiDung qnd = new QuyenNguoiDung();
+                qnd.setNguoiDung(nguoiDung);
+                qnd.setNgayTao(LocalDateTime.now());
+                qnd.setQuyen(_quyenRepo.findById(2l).get());
+                _quyenNguoiDungRepo.save(qnd);
+            }
+            if (item == 3) {
+                QuyenNguoiDung qnd = new QuyenNguoiDung();
+                qnd.setNguoiDung(nguoiDung);
+                qnd.setNgayTao(LocalDateTime.now());
+                qnd.setQuyen(_quyenRepo.findById(3l).get());
+                _quyenNguoiDungRepo.save(qnd);
+            }
+        }
     }
 
     @Override

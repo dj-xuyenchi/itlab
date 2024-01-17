@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,7 +23,6 @@ public class NguoiDungRequest {
     private String soDienThoai;
     private Boolean gioiTinh;
     private Integer diem;
-    private Long rankKhachHangId;
     private TrangThaiNguoiDung trangThai;
-
+    private List<Integer> quyen;
 }
