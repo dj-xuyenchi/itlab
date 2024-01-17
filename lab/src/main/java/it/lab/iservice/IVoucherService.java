@@ -22,6 +22,7 @@ public interface IVoucherService {
 
     public int phatChoToanHeThong(Long voucherId, Integer soLuong);
 
+
     public List<VoucherDTO> layHetVoucherSuDungCuaNguoiDung(Long nguoiDungId);
 
     public void doiVoucherHoaDon(Long hoaDonId, Long voucherId);

@@ -11,6 +11,7 @@ import { MdInfoOutline } from "react-icons/md";
 import { useVoucher } from "./useVoucher";
 import ModalThemVoucherChoNguoiDung from "./ModalThemVoucherChoNguoiDung";
 import ModalThemToanHeThong from "./ModalThemToanHeThong";
+import ModalThemCho1CaNhan from "./ModalThemCho1CaNhan";
 function ModalNguoiDungCuaVoucher({ voucherId }) {
     const [api, contextHolder] = notification.useNotification();
     const openNotification = (type, title, des, placement) => {
@@ -156,6 +157,7 @@ function ModalNguoiDungCuaVoucher({ voucherId }) {
                 width={800}
             >
                 <ModalThemToanHeThong voucherId={voucherId} fetchData={handleLayNguoiDung} />
+                <ModalThemCho1CaNhan voucherId={voucherId} fetchData={handleLayNguoiDung} />
                 <Table
                     columns={columns}
                     dataSource={data}

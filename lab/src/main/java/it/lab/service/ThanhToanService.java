@@ -123,7 +123,6 @@ public class ThanhToanService implements IThanhToan {
         _gioHangRepo.deleteAll(ghList);
         return null;
     }
-
     private void guiThongBaoChoNhanVien(String thongBao) {
         List<NguoiDung> lst = _nguoiDungRepo.findAll().stream().filter(x -> {
             for (var item : x.getQuyenNguoiDungList()) {

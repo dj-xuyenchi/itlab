@@ -1,10 +1,19 @@
-import { Button, Form, InputNumber, Modal, Tooltip, notification } from "antd";
+import {
+  Button,
+  Form,
+  InputNumber,
+  Modal,
+  Select,
+  Tooltip,
+  notification,
+} from "antd";
 import "./style.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { useVoucher } from "./useVoucher";
 import { FaPlus } from "react-icons/fa6";
-function ModalThemVoucherChoNguoiDung({ nguoiDungId, voucherId, fetchData }) {
+import { useBanTaiQuayStore } from "../bantaiquay/useBanTaiQuayStore";
+function ModalThemCho1CaNhan({ voucherId, fetchData }) {
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, title, des, placement) => {
     if (type === "error") {
@@ -24,6 +33,7 @@ function ModalThemVoucherChoNguoiDung({ nguoiDungId, voucherId, fetchData }) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [soLuong, setSoLuong] = useState(0);
+  const [nguoiDungId, setNguoiDungId] = useState(undefined);
   const [form] = useForm();
   async function handleThemVoucher() {
     const data = await useVoucher.actions.themVoucherChoNguoiDung({
@@ -46,7 +56,14 @@ function ModalThemVoucherChoNguoiDung({ nguoiDungId, voucherId, fetchData }) {
     }
     return String(parseInt(value, 10));
   };
-
+  const [danhSachKhachHang, setDanhSachKhachHang] = useState(undefined);
+  async function layDanhSachKhachHang() {
+    const data = await useBanTaiQuayStore.actions.layDanhSachKhachHang();
+    setDanhSachKhachHang(data.data);
+  }
+  useEffect(() => {
+    layDanhSachKhachHang();
+  }, []);
   // Hàm parser để trả về giá trị số nguyên
   const parser = (value) => {
     if (value === "" || value === undefined) {
@@ -57,22 +74,23 @@ function ModalThemVoucherChoNguoiDung({ nguoiDungId, voucherId, fetchData }) {
   return (
     <>
       {contextHolder}
-      <Tooltip title="Thêm số lượng" style={{}}>
+      <Tooltip title="Phát cho cá nhân">
         <Button
           style={{
             color: "green",
           }}
-          shape="circle"
           icon={<FaPlus />}
           onClick={() => {
             setIsModalOpen(true);
           }}
-        />
+        >
+          Phát cho cá nhân
+        </Button>
       </Tooltip>
       <Modal
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
-        title={"Thêm voucher cho người dùng"}
+        title={"Phát voucher cho cá nhân"}
         open={isModalOpen}
         onOk={() => {}}
         onCancel={() => {
@@ -94,6 +112,45 @@ function ModalThemVoucherChoNguoiDung({ nguoiDungId, voucherId, fetchData }) {
           }}
           onFinish={handleThemVoucher}
         >
+          <Form.Item
+            label="Người dùng"
+            name="Người dùng"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn người dùng",
+              },
+            ]}
+          >
+            <Select
+              style={{
+                width: "100%",
+              }}
+              showSearch
+              labelInValue
+              onChange={(e) => {
+                setNguoiDungId(e.value);
+              }}
+              defaultValue={"Chọn khách hàng"}
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {danhSachKhachHang
+                ? danhSachKhachHang.map((option) => (
+                    <Select.Option key={option.id} value={option.id}>
+                      {option.ho +
+                        " " +
+                        option.ten +
+                        " - " +
+                        option.maNguoiDung +
+                        " - " +
+                        option.soDienThoai}
+                    </Select.Option>
+                  ))
+                : ""}
+            </Select>
+          </Form.Item>
           <Form.Item
             label="Số lượng"
             name="Số lượng"
@@ -131,4 +188,4 @@ function ModalThemVoucherChoNguoiDung({ nguoiDungId, voucherId, fetchData }) {
   );
 }
 
-export default ModalThemVoucherChoNguoiDung;
+export default ModalThemCho1CaNhan;
