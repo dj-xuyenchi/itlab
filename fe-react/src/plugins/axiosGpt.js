@@ -1,6 +1,6 @@
 import axios from 'axios'
 const backendUrl = 'https://api.openai.com';
-const KEY = "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";
+const KEY = "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";
 
 const axiosGpt = axios.create({
     // You can add your headers here

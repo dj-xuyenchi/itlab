@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,11 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Long> {
     public List<HoaDon> findHoaDonsByNguoiMua(NguoiDung ng);
 
     public Optional<HoaDon> findHoaDonByMaHoaDon(String maHd);
+
+    @Query(value = """
+            select * FROM  hoadon hd where Year(hd.ngaygiao) = :nam and month(hd.ngaygiao) =:thang and day(hd.ngaygiao) =:ngay
+            """, nativeQuery = true)
+    public List<HoaDon> thongKeNgay(Integer nam, Integer thang, Integer ngay);
 
     @Query(value = """
             select sum(hdct.soluong* hdct.dongia) FROM hoadonchitiet hdct

@@ -5,5 +5,8 @@ export const useDashBoardStore = {
         async taiBaoCao() {
             return axiosIns.get('/api/file/baocao')
         },
+        async layDoanhSoNgay() {
+            return axiosIns.get('/api/thong-ke/doanhsotrongngay')
+        },
     },
 }

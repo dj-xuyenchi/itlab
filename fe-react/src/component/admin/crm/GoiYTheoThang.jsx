@@ -65,7 +65,7 @@ function GoiYTheoThang({ thang, profit }) {
             }
             if (content[i] != undefined) {
                 dataChat = dataChat + content[i];
-                if (showContentSpan.current !== undefined) {
+                if (showContentSpan.current?.innerHTML) {
                     showContentSpan.current.innerHTML = dataChat;
                 }
                 i++;

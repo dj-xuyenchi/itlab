@@ -22,7 +22,7 @@ function DanhGiaTop10SanPham({ nam }) {
       }
       if (content[i] != undefined) {
         dataChat = dataChat + content[i];
-        if (showContentSpan.current !== undefined) {
+        if (showContentSpan.current) {
           showContentSpan.current.innerHTML = dataChat;
         }
         i++;
@@ -38,7 +38,7 @@ function DanhGiaTop10SanPham({ nam }) {
       }
       if (content[i] != undefined) {
         dataChat = dataChat + content[i];
-        if (showContentSpan2.current !== undefined) {
+        if (showContentSpan2.current) {
           showContentSpan2.current.innerHTML = dataChat;
         }
         i++;
@@ -112,7 +112,7 @@ function DanhGiaTop10SanPham({ nam }) {
   async function handleLayDoanhSo() {
     const data = await useCrm.actions.layTopDoanhSo12Thang(nam);
     setData(data.data);
-    handleSendContext2GPT(data.data);
+    //  handleSendContext2GPT(data.data);
   }
   async function handleSendContext2GPT(data3) {
     const data2 = await useGpt.actions.chat(doanhSo10SanPhamDanhGia(data3));
@@ -124,8 +124,8 @@ function DanhGiaTop10SanPham({ nam }) {
       handleLayDoanhSo();
       handleSetText(
         "Dựa vào dữ liệu doanh số của cửa hàng đây là TOP 10 sản phẩm bán chạy nhất trong năm " +
-          nam +
-          "."
+        nam +
+        "."
       );
     }
   }, [isShow]);

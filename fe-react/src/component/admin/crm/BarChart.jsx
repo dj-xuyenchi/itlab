@@ -34,7 +34,7 @@ function ThongKeBar({
         trigger: "axis",
       },
       legend: {
-        data: ["Chi", "Thu"],
+        data: ["Vốn", "Thu"],
       },
       toolbox: {
         show: true,

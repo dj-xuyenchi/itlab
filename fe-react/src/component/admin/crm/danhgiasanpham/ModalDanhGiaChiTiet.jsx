@@ -35,8 +35,8 @@ function ModalDanhGiaChiTiet({ data }) {
     const [api, contextHolder] = notification.useNotification();
     const [chiTietDoanhSo, setChiTietDoanhSo] = useState(undefined)
     const [nam, setNam] = useState({
-        truoc: 2022,
-        sau: 2023
+        truoc: 2023,
+        sau: 2024
     })
     const [done, setDone] = useState(false)
     const showContentSpan1 = useRef(undefined)
@@ -52,7 +52,7 @@ function ModalDanhGiaChiTiet({ data }) {
             }
             if (content[i] != undefined) {
                 dataChat = dataChat + content[i]
-                if (ref.current !== undefined) {
+                if (ref.current) {
                     ref.current.innerHTML = dataChat
                 }
                 i++
@@ -68,8 +68,6 @@ function ModalDanhGiaChiTiet({ data }) {
         handleSendContext2GPT(danhGiaSanPham(data))
         handleSendContext2GPT2(soSanhTheoNam(data2.data, nam, data))
     }
-
-
 
     async function handleSendContext2GPT(context) {
         const data2 = await useGpt.actions.chat(context)
@@ -90,6 +88,7 @@ function ModalDanhGiaChiTiet({ data }) {
     // }, [done])
     useEffect(() => {
         if (isShow) {
+            handleOption()
             handleLayChiTiet()
             if (showContentSpan1) {
                 handleSetText("Dưới đây là đánh giá chi tiết về " + data.sanPham.tenSanPham + " của tôi.", showContentSpan1)
@@ -101,6 +100,17 @@ function ModalDanhGiaChiTiet({ data }) {
             handleLayChiTiet()
         }
     }, [nam])
+    const [options, setOptions] = useState([])
+    function handleOption() {
+        var arr = []
+        for (var i = 2000; i <= new Date().getFullYear(); i++) {
+            arr.push({
+                value: i,
+                label: i
+            })
+        }
+        setOptions(arr)
+    }
     return (
         <>
             {contextHolder}
@@ -123,7 +133,9 @@ function ModalDanhGiaChiTiet({ data }) {
                 }}>
                 <div
                     id="content-to-export"
-
+                    style={{
+                        width: "100%"
+                    }}
                 >
                     <p ref={showContentSpan1}></p>
                     <BieuDo12Thang data={data.doanhSo} />
@@ -161,16 +173,7 @@ function ModalDanhGiaChiTiet({ data }) {
                                                 truoc: e
                                             })
                                         }}
-                                        options={[
-                                            {
-                                                value: 2022,
-                                                label: '2022',
-                                            },
-                                            {
-                                                value: 2023,
-                                                label: '2023',
-                                            },
-                                        ]}
+                                        options={options}
                                     />
                                     <Select
                                         defaultValue={nam.sau}
@@ -185,16 +188,7 @@ function ModalDanhGiaChiTiet({ data }) {
                                                 sau: e
                                             })
                                         }}
-                                        options={[
-                                            {
-                                                value: 2022,
-                                                label: '2022',
-                                            },
-                                            {
-                                                value: 2023,
-                                                label: '2023',
-                                            },
-                                        ]}
+                                        options={options}
                                     />
                                 </Col>
                             </Row>

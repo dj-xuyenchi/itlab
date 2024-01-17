@@ -31,7 +31,7 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Long> {
             join hoadon hd on hd.id = hdct.hoadonid
             join sanphamchitiet spct on spct.id = hdct.sanphamchitietid
             join sanpham sp on sp.id = spct.sanphamid
-            where sp.id = :sanPhamId and YEAR(hd.ngaytao) = :nam and MONTH(hd.ngaytao) = :thang and hd.trangthai in (1,8)
+            where sp.id = :sanPhamId and YEAR(hd.ngaytao) = :nam and MONTH(hd.ngaytao) = :thang and hd.trangthai in (1,9,10)
             """, nativeQuery = true)
     public Long doanhSoThangCuaSanPham(@Param("sanPhamId") Long sanPhamId, @Param("nam") Long nam, @Param("thang") Integer thang);
 }

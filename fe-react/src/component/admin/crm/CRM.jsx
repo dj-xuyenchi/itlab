@@ -43,7 +43,7 @@ function CRM() {
     const data = await useGpt.actions.chat(context);
     handleSetText(
       data.data.choices[0].message.content +
-        `\n
+      `\n
         Dưới đây là một vài gợi ý về chiến lược kinh doanh
         `
     );

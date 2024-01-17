@@ -92,7 +92,7 @@ if (checkAdmin()) {
     )
   );
   items.push(
-    getItem("Đánh giá doanh số", "sub5", <FaTag />, [
+    getItem("Đánh giá", "sub5", <FaTag />, [
       getItem(
         <Link to={"/admin/crm"}>Sản phẩm doanh thu</Link>,
         "65",

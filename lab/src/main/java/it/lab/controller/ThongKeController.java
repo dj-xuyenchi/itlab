@@ -1,8 +1,10 @@
 package it.lab.controller;
+
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.sql.Date;
 
+import it.lab.iservice.IThongKeService;
 import it.lab.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,16 +13,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -55,11 +54,18 @@ public class ThongKeController {
 
     @Autowired
     private NhomSanPhamRepository nhomSanPhamRepository;
+    @Autowired
+    private IThongKeService _thongKeService;
 
     //thong ke tai khoan c rank
     @GetMapping("/rank")
     public List<Object[]> getTotalRevenueByUser() {
         return repositoryRank.findTotalRevenueByUser();
+    }
+
+    @RequestMapping(value = "/doanhsotrongngay", method = RequestMethod.GET)
+    public ResponseEntity<?> layDoanhSoNgay() {
+        return ResponseEntity.ok(_thongKeService.doanhThuTrongNgay());
     }
 
     @GetMapping("/thong-ke-thuoc-tinh")
@@ -149,7 +155,6 @@ public class ThongKeController {
     }
 
 
-
     // thong ke 12 thang bang bieu do doanh thu tung thang-yyyy
     @GetMapping("/bieu-do")
     public List<BigDecimal> getBieuDoData() {
@@ -164,8 +169,6 @@ public class ThongKeController {
         }
         return doanhThuTheoThang;
     }
-
-
 
 
     private static final String[] MONTH_NAMES = {
@@ -206,9 +209,6 @@ public class ThongKeController {
     }
 
 
-
-
-
     //top san pham ban chay thang
     @GetMapping("/san-pham-ban-chay")
     public ResponseEntity<?> getSanPhamBanChayTrongThang(
@@ -237,7 +237,6 @@ public class ThongKeController {
         List<Object[]> topSellingProducts = repositoryHDCT.SanPhamBanChayTrongThang(selectedMonth, selectedYear);
         return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
     }
-
 
 
     @GetMapping("/thong-ke-san-pham-tron")

@@ -9,7 +9,7 @@ export const useGpt = {
                 messages: [
                     {
                         role: "user",
-                        content: paylay,
+                        content: paylay ? paylay : "Xin chào!",
                     },
                 ],
                 temperature: 0,
