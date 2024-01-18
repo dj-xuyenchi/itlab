@@ -187,6 +187,15 @@ public class HoaDonService implements IHoaDonService {
                 hd.get().getVoucherGiam().setTrangThai(TrangThaiNguoiDungVoucher.SUDUNG);
                 _nguoiDungVoucherRepo.save(hd.get().getVoucherGiam());
             }
+            for (var item: hd.get().getHoaDonChiTietList()) {
+                SanPhamChiTiet spct = item.getSanPhamChiTiet();
+                spct.setSoLuongTon(spct.getSoLuongTon()+item.getSoLuong());
+                SanPham sp = spct.getSanPham();
+                sp.setSoLuongTon(sp.getSoLuongTon()+item.getSoLuong());
+                _sanPhamChiTietRepo.save(spct);
+                _sanPhamRepo.save(sp);
+//                spct.setSoLuongDaBan(spct.get);
+            }
             hd.get().setTrangThai(TrangThaiHoaDon.CUAHANGHUY);
             e.sendContentHTML(hd.get().getNguoiMua().getEmail(),"Đơn hàng của quý khách đã bị hủy", EmailHoaDon.guiEmailKhiXacNhanTemplate(hd.get()));
             _hoaDonRepo.save(hd.get());
@@ -214,9 +223,17 @@ public class HoaDonService implements IHoaDonService {
             return true;
         }
         Double giaTriCu = hdct.getDonGia() * hdct.getSoLuong();
-        hdct.setSoLuong(soLuongMoi);
+        SanPhamChiTiet spct = hdct.getSanPhamChiTiet();
+        spct.setSoLuongTon(spct.getSoLuongTon()+hdct.getSoLuong()-soLuongMoi);
+        spct.setSoLuongDaBan(spct.getSoLuongDaBan()+hdct.getSoLuong()-soLuongMoi);
+        SanPham sp = spct.getSanPham();
+        sp.setSoLuongTon(sp.getSoLuongTon()+hdct.getSoLuong()-soLuongMoi);
+        sp.setSoLuongDaBan(sp.getSoLuongDaBan()+hdct.getSoLuong()-soLuongMoi);
         Double giaTriMoi = hdct.getDonGia() * hdct.getSoLuong();
         hd.setGiaTriHd(hd.getGiaTriHd() - giaTriCu + giaTriMoi);
+        hdct.setSoLuong(soLuongMoi);
+        _sanPhamRepo.save(sp);
+        _sanPhamChiTietRepo.save(spct);
         _hoaDonChiTietRepo.save(hdct);
         _hoaDonRepo.save(hd);
         return true;
