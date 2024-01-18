@@ -81,6 +81,10 @@ public class MuaTaiQuayService implements IMuaTaiQuayService {
     public List<HoaDonChiTietDTO> themSanPhamVaoHoaDon(Long hoaDonId, Long sanPhamId) {
         HoaDon hoaDon = _hoaDonRepo.findById(hoaDonId).get();
         SanPhamChiTiet sanPhamChiTiet = _sanPhamChiTietRepo.findById(sanPhamId).get();
+        var hoaDonChiTiet = _hoaDonChiTietRepo.findHoaDonChiTietByHoaDonAndSanPhamChiTiet(hoaDon,sanPhamChiTiet);
+        if(hoaDonChiTiet.isPresent()){
+            return gioHangCuaHoaDon(hoaDonId);
+        }
         HoaDonChiTiet hoaDonNew = new HoaDonChiTiet();
         hoaDonNew.setHoaDon(hoaDon);
         hoaDonNew.setSoLuong(0);

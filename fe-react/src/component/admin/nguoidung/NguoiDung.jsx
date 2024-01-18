@@ -32,7 +32,7 @@ function NguoiDung() {
     trangThai: "BIKHOA",
   });
   const [fileList, setFileList] = useState([]);
-  const [hinhAnh, setHinhAnh] = useState([]);
+  const [hinhAnh, setHinhAnh] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
   const props = {
@@ -456,6 +456,7 @@ function NguoiDung() {
                   }}
                   labelAlign="left"
                   labelWrap
+                  onFinish={handleThemNguoiDung}
                   wrapperCol={{
                     flex: 1,
                   }}
@@ -633,7 +634,6 @@ function NguoiDung() {
                     <Button
                       type="primary"
                       htmlType="submit"
-                      onClick={handleThemNguoiDung}
                     >
                       Thêm mới
                     </Button>

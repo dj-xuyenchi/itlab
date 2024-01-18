@@ -58,6 +58,7 @@ public class NguoiDungController {
     @RequestMapping(value = "/themnguoidung", method = RequestMethod.POST)
     public ResponseEntity<?> themNguoiDung(@RequestPart("anhDaiDien") MultipartFile data, @RequestPart("data") String nguoiDung) throws IOException {
         Gson gson = new Gson();
+        System.out.println(nguoiDung);
         return ResponseEntity.ok(_nguoiDungService.themNguoiDung(gson.fromJson(nguoiDung, NguoiDungRequest.class), data));
     }
 
